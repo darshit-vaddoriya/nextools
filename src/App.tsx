@@ -13,6 +13,7 @@ import {
   updateHomeMeta, updateToolMeta, updateCategoryMeta, updatePrivacyMeta,
   updateAllToolsMeta, parseRoute, buildPath,
 } from './utils/seo';
+import { trackPageView } from './utils/analytics';
 import {
   FileText, FileSpreadsheet, Image, Video, Music,
   Code, Shield, Palette, Calculator, Globe, Cpu,
@@ -199,6 +200,15 @@ export const App: React.FC = () => {
   }, [currentView, activeToolId, activeCategoryView]);
 
   useEffect(() => { syncMeta(); }, [syncMeta]);
+
+  const isFirstRender = React.useRef(true);
+  useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
+    }
+    trackPageView(window.location.pathname, document.title);
+  }, [currentView, activeToolId, activeCategoryView]);
 
   useEffect(() => {
     const onPopState = () => {
