@@ -1,16 +1,13 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { SunMedium, Focus, Wind, Blend, Download, RefreshCcw } from 'lucide-react';
+import { Download, RefreshCcw } from 'lucide-react';
 import {
   loadImage, canvasFromImage, canvasExport, downloadBlob, createResult,
-  getPixelData, putPixelData, applyConvolution, applyMedian, applyUnsharp, clamp,
+  getPixelData, putPixelData, applyMedian, applyUnsharp,
   type ProcessedImage,
 } from './ImageUtils';
+import { errorMessage } from '../../utils/errorMessage';
 import { DropZone, ResultPanel, ErrorNotice } from './ImageShared';
 import { useExportProgress } from './ExportProgress';
-
-const PRESET_KERNEL = [0, -1, 0, -1, 5, -1, 0, -1, 0];
-const PRESET_BLUR = [1, 2, 1, 2, 4, 2, 1, 2, 1];
-const PRESET_EDGE = [0, -1, 0, -1, 4, -1, 0, -1, 0];
 
 function Slider({ label, value, min, max, step, onChange, display }: {
   label: string; value: number; min: number; max: number; step?: number;
@@ -93,8 +90,8 @@ export const ImageAdjustTool: React.FC = () => {
         setResult(createResult(blob, canvas.width, canvas.height, 'image-adjusted', ext));
         report(100, 'Done');
       });
-    } catch (e: any) {
-      setError(e?.message || 'Adjust failed.');
+    } catch (e) {
+      setError(errorMessage(e, 'Adjust failed.'))
     }
   };
 
@@ -182,8 +179,8 @@ export const ImageSharpenTool: React.FC = () => {
         setResult(createResult(blob, canvas.width, canvas.height, 'image-sharpened', ext));
         report(100, 'Done');
       });
-    } catch (e: any) {
-      setError(e?.message || 'Sharpen failed.');
+    } catch (e) {
+      setError(errorMessage(e, 'Sharpen failed.'))
     }
   };
 
@@ -263,8 +260,8 @@ export const NoiseReductionTool: React.FC = () => {
         setResult(createResult(blob, canvas.width, canvas.height, 'image-denoised', ext));
         report(100, 'Done');
       });
-    } catch (e: any) {
-      setError(e?.message || 'Denoise failed.');
+    } catch (e) {
+      setError(errorMessage(e, 'Denoise failed.'))
     }
   };
 
@@ -373,8 +370,8 @@ export const BlurBackgroundTool: React.FC = () => {
         setResult(createResult(blob, canvas.width, canvas.height, 'image-blurred-bg', ext));
         report(100, 'Done');
       });
-    } catch (e: any) {
-      setError(e?.message || 'Blur failed.');
+    } catch (e) {
+      setError(errorMessage(e, 'Blur failed.'))
     }
   };
 

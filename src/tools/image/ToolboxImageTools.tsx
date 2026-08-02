@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
-import { Binary, Image as ImageIcon, Palette as PaletteIcon, ShieldOff, Download, Copy } from 'lucide-react';
+import { Image as ImageIcon, ShieldOff, Download, Copy } from 'lucide-react';
 import { CopyButton } from '../../components/CopyButton';
 import {
   loadImage, canvasFromImage, canvasExport, downloadBlob, downloadDataUrl,
-  createResult, getPixelData, formatBytes, hexToRgb, clamp,
+  createResult, formatBytes,
   type ProcessedImage,
 } from './ImageUtils';
+import { errorMessage } from '../../utils/errorMessage';
 import { DropZone, ResultPanel, ErrorNotice } from './ImageShared';
 import { Select } from '../../components/Select';
 import { useExportProgress } from './ExportProgress';
@@ -83,8 +84,8 @@ export const SvgConverterTool: React.FC = () => {
         setResult(createResult(blob, canvas.width, canvas.height, 'converted', ext));
         report(100, 'Done');
       });
-    } catch (e: any) {
-      setError(e?.message || 'Rasterization failed.');
+    } catch (e) {
+      setError(errorMessage(e, 'Rasterization failed.'))
     }
   };
 
@@ -208,8 +209,8 @@ export const IcoGeneratorTool: React.FC = () => {
     try {
       const blob = await makeIcoBlob(img);
       setResult({ blob, url: URL.createObjectURL(blob), width: 256, height: 256, fileName: 'favicon.ico' });
-    } catch (e: any) {
-      setError(e?.message || 'ICO generation failed.');
+    } catch (e) {
+      setError(errorMessage(e, 'ICO generation failed.'))
     } finally {
       setBusy(false);
     }
@@ -404,8 +405,8 @@ export const ImageMetadataTool: React.FC = () => {
         setResult(createResult(blob, canvas.width, canvas.height, 'image-stripped', ext));
         report(100, 'Done');
       });
-    } catch (e: any) {
-      setError(e?.message || 'Strip failed.');
+    } catch (e) {
+      setError(errorMessage(e, 'Strip failed.'))
     }
   };
 
@@ -451,7 +452,6 @@ export const ImageMetadataTool: React.FC = () => {
 
 // ─── PALETTE GENERATOR ──────────────────────────────────────
 function extractPalette(canvas: HTMLCanvasElement, count = 8): string[] {
-  const ctx = canvas.getContext('2d')!;
   const small = document.createElement('canvas');
   small.width = 64;
   small.height = 64;

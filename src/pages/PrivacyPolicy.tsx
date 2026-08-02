@@ -39,7 +39,7 @@ export const PrivacyPolicy: React.FC<PrivacyPolicyProps> = ({ onBack }) => {
           {[
             { icon: Cpu, title: '100% Client-Side', desc: 'Every tool (PDF, Video, WASM AI, Code formatters) runs locally on your device hardware using JavaScript and WebAssembly.', color: 'text-emerald-500', bg: 'dark:bg-emerald-500/10 bg-emerald-50' },
             { icon: Lock, title: 'Zero Data Upload', desc: 'Your files, PDFs, videos and code are never sent to an external server. They stay in your browser while you work.', color: 'text-indigo-500', bg: 'dark:bg-indigo-500/10 bg-indigo-50' },
-            { icon: HardDrive, title: 'No Account Needed', desc: 'No registration, sign-up, or email addresses are ever required. NexTools is completely free and accessible instantly.', color: 'text-sky-500', bg: 'dark:bg-sky-500/10 bg-sky-50' },
+            { icon: HardDrive, title: 'No Account Needed', desc: 'No registration, sign-up, or email addresses are ever required. NextTool is completely free and accessible instantly.', color: 'text-sky-500', bg: 'dark:bg-sky-500/10 bg-sky-50' },
           ].map(item => {
             const Icon = item.icon;
             return (
@@ -58,29 +58,29 @@ export const PrivacyPolicy: React.FC<PrivacyPolicyProps> = ({ onBack }) => {
         <div className="space-y-6 text-[13px] dark:text-zinc-300 text-slate-600 leading-relaxed pt-4 border-t dark:border-dark-border border-slate-200">
           <div>
             <h3 className="text-[15px] font-bold dark:text-white text-slate-900 mb-2">1. Data Handling & Security</h3>
-            <p>When you use NexTools, processing occurs entirely within your browser environment using modern browser technologies like WebCrypto API, HTML5 Canvas, WebAssembly (FFmpeg, Tesseract), and ONNX WebGPU AI models. No HTTP requests carry your file data to any server.</p>
+            <p>When you use NextTool, processing occurs entirely within your browser environment using modern browser technologies like WebCrypto API, HTML5 Canvas, WebAssembly (FFmpeg, Tesseract), and ONNX WebGPU AI models. No HTTP requests carry your file data to any server.</p>
           </div>
 
           <div>
             <h3 className="text-[15px] font-bold dark:text-white text-slate-900 mb-2">2. Local Storage Usage</h3>
-            <p>NexTools uses <code className="px-1.5 py-0.5 rounded dark:bg-dark-bg bg-slate-100 text-xs font-mono">localStorage</code> exclusively to preserve your theme preference (Dark/Light mode) and recent tools history locally on your computer. It never leaves your computer.</p>
+            <p>NextTool uses <code className="px-1.5 py-0.5 rounded dark:bg-dark-bg bg-slate-100 text-xs font-mono">localStorage</code> exclusively to preserve your theme preference (Dark/Light mode) and recent tools history locally on your computer. It never leaves your computer.</p>
           </div>
 
           <div>
             <h3 className="text-[15px] font-bold dark:text-white text-slate-900 mb-2">3. Advertising & Monetization</h3>
-            <p>To keep all tools free without subscription fees or login walls, NexTools may display advertisements served by Google AdSense. These ads do not have access to your processed files or tool inputs.</p>
+            <p>To keep all tools free without subscription fees or login walls, NextTool may display advertisements served by Google AdSense. These ads do not have access to your processed files or tool inputs.</p>
           </div>
 
           <div>
             <h3 className="text-[15px] font-bold dark:text-white text-slate-900 mb-2">4. Third-Party Services</h3>
-            <p>NexTools is a static site. The HTML, CSS and JavaScript are served over HTTPS from a content delivery network. No server-side computations or database operations occur, and fonts are self-hosted so no external font services load on your device.</p>
+            <p>NextTool is a static site. The HTML, CSS and JavaScript are served over HTTPS from a content delivery network. No server-side computations or database operations occur, and fonts are self-hosted so no external font services load on your device.</p>
           </div>
         </div>
 
         {/* Last Updated */}
         <div className="pt-4 border-t dark:border-dark-border border-slate-200 text-[11px] dark:text-zinc-600 text-slate-400 flex items-center gap-2">
           <Layers className="w-3.5 h-3.5 text-indigo-500" />
-          <span>Last updated: August 1, 2026 • NexTools © 2026</span>
+          <span>Last updated: August 1, 2026 • NextTool © 2026</span>
         </div>
       </div>
     </div>

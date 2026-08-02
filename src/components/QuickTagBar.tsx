@@ -1,6 +1,6 @@
 import React from 'react';
 import { TOOLS } from '../config/tools';
-import { Flame, TrendingUp } from 'lucide-react';
+import { Flame } from 'lucide-react';
 
 interface QuickTagBarProps {
   onSelectTool: (toolId: string) => void;

@@ -42,7 +42,7 @@ export const Footer: React.FC<FooterProps> = ({ onOpenPrivacy, onSelectTool, onS
                 </span>
               </div>
               <span className="text-[16px] font-bold tracking-[-0.02em] dark:text-white text-slate-900">
-                Nex<span className="text-indigo-500">Tools</span>
+                Next<span className="text-indigo-500">Tool</span>
               </span>
             </div>
             <p className="mt-3 text-[13px] dark:text-zinc-500 text-slate-500 leading-relaxed max-w-sm">
@@ -132,7 +132,7 @@ export const Footer: React.FC<FooterProps> = ({ onOpenPrivacy, onSelectTool, onS
 
         {/* Bottom */}
         <div className="mt-10 pt-6 border-t dark:border-dark-border border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-2 text-[12px] dark:text-zinc-600 text-slate-400">
-          <span>© 2026 NexTools. All rights reserved.</span>
+          <span>© 2026 NextTool. All rights reserved.</span>
           <span className="dark:text-zinc-700 text-slate-500">{TOOLS.length} tools · client-side only</span>
         </div>
       </div>

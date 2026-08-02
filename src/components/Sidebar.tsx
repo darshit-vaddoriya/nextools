@@ -143,7 +143,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
               <Zap className="w-3.5 h-3.5 text-white" />
             </div>
             <div>
-              <p className="text-[11px] font-bold dark:text-indigo-300 text-indigo-700 leading-tight">NexTools Engine</p>
+              <p className="text-[11px] font-bold dark:text-indigo-300 text-indigo-700 leading-tight">NextTool Engine</p>
               <p className="text-[9.5px] dark:text-zinc-500 text-slate-500 mt-0.5 leading-tight">No login needed · always free</p>
             </div>
           </div>

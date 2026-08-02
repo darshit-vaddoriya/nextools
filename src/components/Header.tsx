@@ -37,7 +37,7 @@ export const Header: React.FC<HeaderProps> = ({
         <button
           onClick={onGoHome}
           className="flex items-center gap-2.5 shrink-0 select-none group min-w-0"
-          aria-label="NexTools Home"
+          aria-label="NextTool Home"
         >
           <div className="w-9 h-9 rounded-xl flex items-center justify-center shrink-0 bg-gradient-to-br from-indigo-500 to-violet-600
             group-hover:scale-105 transition-transform shadow-[0_2px_12px_rgba(99,102,241,0.4)]">
@@ -48,7 +48,7 @@ export const Header: React.FC<HeaderProps> = ({
 
           <div className="leading-tight text-left min-w-0">
             <div className="text-[16px] sm:text-[17px] font-bold tracking-[-0.03em] text-slate-900 dark:text-white whitespace-nowrap">
-              Nex<span className="text-indigo-500">Tools</span>
+              Next<span className="text-indigo-500">Tool</span>
             </div>
             <div className="hidden sm:block text-[9px] font-medium uppercase tracking-[0.1em] text-slate-400 dark:text-zinc-600 mt-0.5 whitespace-nowrap">
               Free Online Tools

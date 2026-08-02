@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { CopyButton } from '../components/CopyButton';
 import { FileDropWrapper } from '../components/FileDropWrapper';
 import { Upload, CheckCircle, AlertTriangle } from 'lucide-react';
@@ -10,15 +10,7 @@ export const Base64Tool: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const isFileRef = React.useRef(false);
 
-  React.useEffect(() => {
-    if (isFileRef.current) {
-      isFileRef.current = false;
-      return;
-    }
-    handleProcess();
-  }, [inputText, mode]);
-
-  const handleProcess = () => {
+  const handleProcess = useCallback(() => {
     if (!inputText) {
       setOutputText('');
       setError(null);
@@ -43,11 +35,19 @@ export const Base64Tool: React.FC = () => {
         setOutputText(decoded);
         setError(null);
       }
-    } catch (err: any) {
+    } catch {
       setError(mode === 'encode' ? 'Encoding failed.' : 'Invalid Base64 string.');
       setOutputText('');
     }
-  };
+  }, [inputText, mode]);
+
+  React.useEffect(() => {
+    if (isFileRef.current) {
+      isFileRef.current = false;
+      return;
+    }
+    handleProcess();
+  }, [inputText, mode, handleProcess]);
 
   const handleFile = (file: File) => {
     if (!file) return;
@@ -71,7 +71,7 @@ export const Base64Tool: React.FC = () => {
           setInputText(`File: ${file.name} (${file.size} bytes)`);
           setOutputText(decoded);
           setError(null);
-        } catch (err) {
+        } catch {
           setError('Invalid Base64 string.');
           setOutputText('');
         }

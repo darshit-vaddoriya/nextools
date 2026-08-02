@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from 'react';
-import { ToolCategory, Tool } from '../types';
+import { ToolCategory } from '../types';
 import { TOOLS } from '../config/tools';
 import {
   Search, ArrowLeft, ChevronRight, Star, X, Layers, FileText,

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Construction, Sparkles, ArrowRight, CheckCircle } from 'lucide-react';
+import { Construction, Sparkles, CheckCircle } from 'lucide-react';
 
 interface ToolPlaceholderProps {
   toolName: string;

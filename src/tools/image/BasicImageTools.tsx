@@ -5,6 +5,7 @@ import {
   baseNameFrom, clamp, formatBytes,
   type ProcessedImage,
 } from './ImageUtils';
+import { errorMessage } from '../../utils/errorMessage';
 import { DropZone, ResultPanel, ErrorNotice } from './ImageShared';
 import { Select } from '../../components/Select';
 import { useExportProgress } from './ExportProgress';
@@ -81,8 +82,8 @@ export const ImageResizeTool: React.FC = () => {
         setResult(createResult(blob, canvas.width, canvas.height, `${baseNameFrom('image')}-${canvas.width}x${canvas.height}`, ext));
         report(100, 'Done');
       });
-    } catch (e: any) {
-      setError(e?.message || 'Resize failed.');
+    } catch (e) {
+      setError(errorMessage(e, 'Resize failed.'))
     }
   };
 
@@ -181,8 +182,8 @@ export const ImageRotateTool: React.FC = () => {
         setResult(createResult(blob, nw, nh, `${baseNameFrom('image')}-rotated-${finalAngle}`, ext));
         report(100, 'Done');
       });
-    } catch (e: any) {
-      setError(e?.message || 'Rotation failed.');
+    } catch (e) {
+      setError(errorMessage(e, 'Rotation failed.'))
     }
   };
 
@@ -312,8 +313,8 @@ export const ImageFlipTool: React.FC = () => {
         setResult(createResult(blob, canvas.width, canvas.height, `${baseNameFrom('image')}-flip-${parts.join('') || 'none'}`, ext));
         report(100, 'Done');
       });
-    } catch (e: any) {
-      setError(e?.message || 'Flip failed.');
+    } catch (e) {
+      setError(errorMessage(e, 'Flip failed.'))
     }
   };
 
@@ -418,8 +419,8 @@ export const ImageConverterTool: React.FC = () => {
         out.push(createResult(blob, canvas.width, canvas.height, `${baseNameFrom(file.name)}.${ext}`, ext));
       }
       setResults(out);
-    } catch (e: any) {
-      setError(e?.message || 'Conversion failed for one or more files.');
+    } catch (e) {
+      setError(errorMessage(e, 'Conversion failed for one or more files.'))
     } finally {
       setBusyId(null);
     }
@@ -532,8 +533,8 @@ export const ImageCompressorTool: React.FC = () => {
       const blob = await blobFromCanvas(canvas, mime, quality / 100);
       const ext = mime === 'image/png' ? 'png' : mime === 'image/webp' ? 'webp' : 'jpg';
       setResult(createResult(blob, canvas.width, canvas.height, `${baseNameFrom('image')}-compressed`, ext));
-    } catch (e: any) {
-      setError(e?.message || 'Compression failed.');
+    } catch (e) {
+      setError(errorMessage(e, 'Compression failed.'))
     } finally {
       setBusy(false);
     }
@@ -698,8 +699,8 @@ export const ImageCropTool: React.FC = () => {
         setResult(createResult(blob, w, h, `${baseNameFrom('image')}-cropped`, ext));
         report(100, 'Done');
       });
-    } catch (e: any) {
-      setError(e?.message || 'Crop failed.');
+    } catch (e) {
+      setError(errorMessage(e, 'Crop failed.'))
     }
   };
 

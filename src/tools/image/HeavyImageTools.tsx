@@ -5,10 +5,11 @@ import { createWorker, PSM, type Worker } from 'tesseract.js';
 import { Select } from '../../components/Select';
 import { Clapperboard, QrCode, ScanText, ZoomIn, Download, Loader2, Film } from 'lucide-react';
 import {
-  loadImage, canvasFromImage, canvasExport, downloadBlob, createResult,
+  loadImage, canvasExport, downloadBlob, createResult,
   getPixelData, putPixelData, applyUnsharp, clamp,
   type ProcessedImage,
 } from './ImageUtils';
+import { errorMessage } from '../../utils/errorMessage';
 import { DropZone, ResultPanel, ErrorNotice } from './ImageShared';
 import { CopyButton } from '../../components/CopyButton';
 import { useExportProgress } from './ExportProgress';
@@ -103,8 +104,8 @@ export const GifConverterTool: React.FC = () => {
         setResult({ blob, url: URL.createObjectURL(blob), width, height: 0, fileName: 'animated.gif' });
         report(100, 'Done');
       });
-    } catch (e: any) {
-      setError(e?.message || 'GIF creation failed.');
+    } catch (e) {
+      setError(errorMessage(e, 'GIF creation failed.'))
     } finally {
       setBusy(false);
     }
@@ -164,8 +165,8 @@ type QrKind = 'url' | 'text' | 'wifi' | 'vcard';
 
 export const QrGeneratorTool: React.FC = () => {
   const [kind, setKind] = useState<QrKind>('url');
-  const [url, setUrl] = useState('https://nex-tools.vercel.app');
-  const [text, setText] = useState('Hello from NexTools!');
+  const [url, setUrl] = useState('https://nexttool.app');
+  const [text, setText] = useState('Hello from NextTool!');
   const [ssid, setSsid] = useState('MyWiFi');
   const [wifiPass, setWifiPass] = useState('');
   const [wifiEnc, setWifiEnc] = useState('WPA');
@@ -202,8 +203,8 @@ export const QrGeneratorTool: React.FC = () => {
         color: { dark: fg, light: bg },
       });
       setDataUrl(d);
-    } catch (e: any) {
-      setError(e?.message || 'QR generation failed.');
+    } catch (e) {
+      setError(errorMessage(e, 'QR generation failed.'))
     } finally {
       setBusy(false);
     }
@@ -409,8 +410,8 @@ export const OcrImageTool: React.FC = () => {
       const { data } = await worker.recognize(canvas, { rotateAuto: true });
       setText(data.text.trim());
       setStatus('done');
-    } catch (e: any) {
-      setError(e?.message || 'OCR failed - check your connection.');
+    } catch (e) {
+      setError(errorMessage(e, 'OCR failed - check your connection.'))
       setStatus('error');
     } finally {
       if (worker) await worker.terminate().catch(() => {});
@@ -518,8 +519,8 @@ export const AiUpscalerTool: React.FC = () => {
         setResult(createResult(blob, canvas.width, canvas.height, `image-${scale}x`, ext));
         report(100, 'Done');
       });
-    } catch (e: any) {
-      setError(e?.message || 'Upscale failed.');
+    } catch (e) {
+      setError(errorMessage(e, 'Upscale failed.'))
     }
   };
 

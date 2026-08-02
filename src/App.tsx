@@ -18,7 +18,7 @@ import {
   Code, Shield, Palette, Calculator, Globe, Cpu,
   Archive, Type, Presentation, Search,
   ChevronRight, ArrowLeft, Star, Clock,
-  CheckCircle2, ShieldCheck, ArrowRight, Zap, Info
+  CheckCircle2, ShieldCheck, ArrowRight, Zap, Info, Loader2
 } from 'lucide-react';
 
 import { JsonFormatter }          from './tools/JsonFormatter';
@@ -31,7 +31,6 @@ import { CaseConverter }          from './tools/CaseConverter';
 import { JwtDecoder }             from './tools/JwtDecoder';
 import { TextCounter }            from './tools/TextCounter';
 import { ColorPicker }            from './tools/ColorPicker';
-import { PdfMergeTool }           from './tools/PdfMergeTool';
 import { AiBgRemover }            from './tools/AiBgRemover';
 import {
   ImageResizeTool, ImageRotateTool, ImageFlipTool,
@@ -46,9 +45,6 @@ import {
 import {
   ImageWatermarkTool,
 } from './tools/image/AdvancedImageTools';
-import {
-  QrGeneratorTool, OcrImageTool, AiUpscalerTool,
-} from './tools/image/HeavyImageTools';
 import { WordTools }              from './tools/WordTools';
 import { ToolPlaceholder }        from './tools/ToolPlaceholder';
 
@@ -79,8 +75,44 @@ const ALL_CATEGORIES: {
   { id: 'archive',    name: 'Archive Tools',  icon: Archive,         iconColor: 'text-amber-600 dark:text-amber-400',   iconBg: 'bg-amber-100 dark:bg-amber-500/15',   desc: '0 tools - coming soon' },
 ];
 
+// ─── Lazy-loaded heavy tools (tesseract.js / qrcode) ─────────
+const HeavyToolFallback = () => (
+  <div className="rounded-2xl border dark:bg-dark-card dark:border-dark-border bg-white border-slate-200 p-8 flex items-center justify-center">
+    <div className="flex items-center gap-2.5 text-[13px] dark:text-zinc-400 text-slate-500">
+      <Loader2 className="w-4 h-4 animate-spin text-indigo-500" />
+      Loading tool…
+    </div>
+  </div>
+);
+
+const lazyComponent = (
+  loader: () => Promise<Record<string, unknown>>,
+  exportName: string,
+): React.FC => {
+  const Cmp = React.lazy(() =>
+    loader().then(m => ({ default: m[exportName] as React.ComponentType })),
+  );
+  return () => (
+    <React.Suspense fallback={<HeavyToolFallback />}>
+      <Cmp />
+    </React.Suspense>
+  );
+};
+
+const lazyTool = <K extends 'PdfMergeTool'>(
+  exportName: K,
+): React.FC =>
+  lazyComponent(() => import('./tools/PdfMergeTool'), exportName);
+
+const PdfMergeToolLazy = lazyTool('PdfMergeTool');
+
+const lazyToolHeavy = <K extends 'QrGeneratorTool' | 'OcrImageTool' | 'AiUpscalerTool'>(
+  exportName: K,
+): React.FC =>
+  lazyComponent(() => import('./tools/image/HeavyImageTools'), exportName);
+
 // ─── Fully implemented tools (routed to real components) ─────
-const IMPLEMENTED_TOOLS: Record<string, React.FC> = {
+const IMPLEMENTED_TOOLS: Record<string, React.ComponentType> = {
   'json-formatter':       JsonFormatter,
   'base64':               Base64Tool,
   'hash-generator':       HashGenerator,
@@ -93,7 +125,7 @@ const IMPLEMENTED_TOOLS: Record<string, React.FC> = {
   'text-counter':         TextCounter,
   'color-picker':         ColorPicker,
   'color-converter':      ColorPicker,
-  'pdf-merge':            PdfMergeTool,
+  'pdf-merge':            lazyTool('PdfMergeTool'),
   'ai-bg-remover':        AiBgRemover,
   'image-resize':         ImageResizeTool,
   'image-resize-image':   ImageResizeTool,
@@ -111,10 +143,10 @@ const IMPLEMENTED_TOOLS: Record<string, React.FC> = {
   'svg-to-png':           SvgConverterTool,
   'image-metadata':       ImageMetadataTool,
   'image-watermark':      ImageWatermarkTool,
-  'qr-generator':         QrGeneratorTool,
-  'qr-code-generator':    QrGeneratorTool,
-  'ocr-image':            OcrImageTool,
-  'ai-upscaler':          AiUpscalerTool,
+  'qr-generator':         lazyToolHeavy('QrGeneratorTool'),
+  'qr-code-generator':    lazyToolHeavy('QrGeneratorTool'),
+  'ocr-image':            lazyToolHeavy('OcrImageTool'),
+  'ai-upscaler':          lazyToolHeavy('AiUpscalerTool'),
 };
 
 // ─── Placeholder metadata per category (for un-built tools) ──
@@ -145,12 +177,17 @@ export const App: React.FC = () => {
 
   const [activeToolId,        setActiveToolId]        = useState(initRoute.toolId ?? '');
   const [isSearchOpen,        setIsSearchOpen]        = useState(false);
-  const [isDarkMode,          setIsDarkMode]          = useState(true);
+  const [isDarkMode,          setIsDarkMode]          = useState(() => {
+    try { return localStorage.getItem('nexttool-theme') === 'dark'; } catch { return false; }
+  });
   const [currentView,         setCurrentView]         = useState<'home'|'tool'|'category'|'privacy'|'all'>(initRoute.view);
   const [activeCategoryView,  setActiveCategoryView]  = useState<ToolCategory|null>(initRoute.category ?? null);
 
   useEffect(() => {
     document.documentElement.classList.toggle('dark', isDarkMode);
+    try { localStorage.setItem('nexttool-theme', isDarkMode ? 'dark' : 'light'); } catch { /* ignore */ }
+    const meta = document.querySelector('meta[name="theme-color"]');
+    if (meta) meta.setAttribute('content', isDarkMode ? '#0a0a0f' : '#ffffff');
   }, [isDarkMode]);
 
   const syncMeta = useCallback(() => {
@@ -203,10 +240,10 @@ export const App: React.FC = () => {
     navigate('tool', id);
     window.scrollTo({ top: 0, behavior: 'smooth' });
     try {
-      const recent = JSON.parse(localStorage.getItem('nextools-recent') || '[]');
+      const recent = JSON.parse(localStorage.getItem('nexttool-recent') || '[]');
       const filtered = recent.filter((r: string) => r !== id);
       filtered.unshift(id);
-      localStorage.setItem('nextools-recent', JSON.stringify(filtered.slice(0, 6)));
+      localStorage.setItem('nexttool-recent', JSON.stringify(filtered.slice(0, 6)));
     } catch { /* ignore */ }
   };
 
@@ -259,7 +296,7 @@ export const App: React.FC = () => {
         />
       );
     }
-    return <PdfMergeTool />;
+    return <PdfMergeToolLazy />;
   };
 
   return (
@@ -293,7 +330,7 @@ export const App: React.FC = () => {
           ? <CategoryView cat={activeCategoryView} onSelectTool={openTool} onBack={goHome} categories={ALL_CATEGORIES} />
           : currentView === 'all'
           ? <AllToolsView onSelectTool={openTool} onBack={goHome} categories={ALL_CATEGORIES} />
-          : <HomeView onSelectTool={openTool} onSelectCategory={openCategory} onOpenSearch={() => setIsSearchOpen(true)} activeToolId={activeToolId} />
+          : <HomeView onSelectTool={openTool} onSelectCategory={openCategory} onOpenSearch={() => setIsSearchOpen(true)} />
         }
       </main>
 
@@ -320,14 +357,13 @@ const HomeView: React.FC<{
   onSelectTool: (id: string) => void;
   onSelectCategory: (cat: ToolCategory | 'all') => void;
   onOpenSearch: () => void;
-  activeToolId: string;
-}> = ({ onSelectTool, onSelectCategory, onOpenSearch, activeToolId }) => {
+}> = ({ onSelectTool, onSelectCategory, onOpenSearch }) => {
   const popular = TOOLS.filter(t => t.isPopular).slice(0, 8);
 
   const [recentIds, setRecentIds] = useState<string[]>([]);
   useEffect(() => {
     try {
-      setRecentIds(JSON.parse(localStorage.getItem('nextools-recent') || '[]'));
+      setRecentIds(JSON.parse(localStorage.getItem('nexttool-recent') || '[]'));
     } catch { /* ignore */ }
   }, []);
 
@@ -557,7 +593,7 @@ const HomeView: React.FC<{
                 </div>
               </div>
               <button onClick={() => {
-                try { localStorage.removeItem('nextools-recent'); setRecentIds([]); } catch { /* ignore */ }
+                try { localStorage.removeItem('nexttool-recent'); setRecentIds([]); } catch { /* ignore */ }
               }} className="btn-ghost text-[12px] hidden sm:flex">
                 Clear <ChevronRight className="w-4 h-4" />
               </button>

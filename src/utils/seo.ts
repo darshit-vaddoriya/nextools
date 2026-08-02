@@ -1,8 +1,8 @@
 import { TOOLS } from '../config/tools';
 import { ToolCategory } from '../types';
 
-const SITE = 'https://nextools.app';
-const DEFAULT_TITLE = 'NexTools - Free Online Tools';
+const SITE = 'https://nexttool.app';
+const DEFAULT_TITLE = 'NextTool - Free Online Tools';
 const DEFAULT_DESC =
   'Free browser tools for PDF, image, developer and AI tasks. Files are processed on your own device, so nothing is uploaded.';
 
@@ -68,7 +68,7 @@ export function updateHomeMeta() {
   setJsonLd('page-jsonld', {
     '@context': 'https://schema.org',
     '@type': 'WebSite',
-    name: 'NexTools',
+    name: 'NextTool',
     url: `${SITE}/`,
     description: DEFAULT_DESC,
     potentialAction: {
@@ -83,7 +83,7 @@ export function updateToolMeta(toolId: string) {
   const tool = TOOLS.find(t => t.id === toolId);
   if (!tool) return updateHomeMeta();
 
-  const title = `${tool.name} | NexTools`;
+  const title = `${tool.name} | NextTool`;
   const desc = `${tool.description}. Files stay on your device, nothing is uploaded.`;
   const url = `${SITE}/tool/${tool.id}`;
 
@@ -112,7 +112,7 @@ export function updateToolMeta(toolId: string) {
 export function updateCategoryMeta(cat: ToolCategory) {
   const name = CATEGORY_NAMES[cat] ?? cat;
   const count = TOOLS.filter(t => t.category === cat).length;
-  const title = `${name} | NexTools`;
+  const title = `${name} | NextTool`;
   const desc = `Free ${name.toLowerCase()} that run in your browser without uploading your files anywhere.`;
   const url = `${SITE}/category/${cat}`;
 
@@ -128,7 +128,7 @@ export function updateCategoryMeta(cat: ToolCategory) {
   setJsonLd('page-jsonld', {
     '@context': 'https://schema.org',
     '@type': 'CollectionPage',
-    name: `${name} - NexTools`,
+    name: `${name} - NextTool`,
     url,
     description: desc,
     numberOfItems: count,
@@ -136,8 +136,8 @@ export function updateCategoryMeta(cat: ToolCategory) {
 }
 
 export function updatePrivacyMeta() {
-  const title = 'Privacy Policy | NexTools';
-  const desc = 'How NexTools protects your privacy. Tools run on your device and your files are never uploaded or tracked.';
+  const title = 'Privacy Policy | NextTool';
+  const desc = 'How NextTool protects your privacy. Tools run on your device and your files are never uploaded or tracked.';
   const url = `${SITE}/privacy`;
 
   document.title = title;
@@ -149,8 +149,8 @@ export function updatePrivacyMeta() {
 }
 
 export function updateAllToolsMeta() {
-  const title = 'All Tools | NexTools';
-  const desc = 'Browse all free NexTools utilities, from PDF and image tools to developer and AI helpers. Everything runs on your device.';
+  const title = 'All Tools | NextTool';
+  const desc = 'Browse all free NextTool utilities, from PDF and image tools to developer and AI helpers. Everything runs on your device.';
   const url = `${SITE}/all-tools`;
 
   document.title = title;
@@ -165,7 +165,7 @@ export function updateAllToolsMeta() {
   setJsonLd('page-jsonld', {
     '@context': 'https://schema.org',
     '@type': 'CollectionPage',
-    name: 'All NexTools',
+    name: 'All NextTool',
     url,
     description: desc,
     numberOfItems: TOOLS.length,

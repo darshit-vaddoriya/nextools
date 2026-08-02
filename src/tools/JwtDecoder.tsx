@@ -1,24 +1,23 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { CopyButton } from '../components/CopyButton';
-import { AlertTriangle, Clock, ShieldCheck, ShieldX } from 'lucide-react';
+import { errorMessage } from '../utils/errorMessage';
+import { AlertTriangle, ShieldCheck, ShieldX } from 'lucide-react';
 
 export const JwtDecoder: React.FC = () => {
   const [token, setToken] = useState<string>(
     'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyLCJleHAiOjE5MTYyMzkwMjJ9.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c'
   );
-  const [header, setHeader] = useState<any>(null);
-  const [payload, setPayload] = useState<any>(null);
+  const [header, setHeader] = useState<Record<string, unknown> | null>(null);
+  const [payload, setPayload] = useState<Record<string, unknown> | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => { decodeJwt(); }, [token]);
-
-  const base64UrlDecode = (str: string) => {
+  const base64UrlDecode = useCallback((str: string) => {
     let base64 = str.replace(/-/g, '+').replace(/_/g, '/');
     while (base64.length % 4) base64 += '=';
     return atob(base64);
-  };
+  }, []);
 
-  const decodeJwt = () => {
+  const decodeJwt = useCallback(() => {
     if (!token.trim()) { setHeader(null); setPayload(null); setError(null); return; }
     try {
       const parts = token.trim().split('.');
@@ -26,16 +25,18 @@ export const JwtDecoder: React.FC = () => {
       setHeader(JSON.parse(base64UrlDecode(parts[0])));
       setPayload(JSON.parse(base64UrlDecode(parts[1])));
       setError(null);
-    } catch (err: any) {
-      setError(err.message || 'Invalid JWT structure');
+    } catch (err) {
+      setError(errorMessage(err, 'Invalid JWT structure'));
       setHeader(null);
       setPayload(null);
     }
-  };
+  }, [token, base64UrlDecode]);
+
+  useEffect(() => { decodeJwt(); }, [token, decodeJwt]);
 
   const expInfo = payload?.exp
     ? (() => {
-        const d = new Date(payload.exp * 1000);
+        const d = new Date(Number(payload.exp) * 1000);
         return { dateString: d.toLocaleString(), isExpired: d.getTime() < Date.now() };
       })()
     : null;

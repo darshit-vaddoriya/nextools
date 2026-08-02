@@ -230,5 +230,5 @@ const missing = TOOLS
   .map(t => t.id);
 
 if (missing.length > 0) {
-  console.warn('[NexTools] Coming-soon tools missing planned features:', missing.join(', '));
+  console.warn('[NextTool] Coming-soon tools missing planned features:', missing.join(', '));
 }

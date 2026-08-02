@@ -1,14 +1,14 @@
-# NexTools
+# NextTool
 
 **Free online tools that run entirely in your browser.** Merge PDFs, convert documents, compress images, remove backgrounds with AI and more — no uploads, no accounts, no limits.
 
-> 🔗 **Live site:** [nextools.app](https://nextools.app)
+> 🔗 **Live site:** [nexttool.app](https://nexttool.app)
 
 ---
 
-## ✨ Why NexTools?
+## ✨ Why NextTool?
 
-Most "free" tool sites upload your files to a server. NexTools is different:
+Most "free" tool sites upload your files to a server. NextTool is different:
 
 - **100% client-side** — files are processed on your own device and never leave it
 - **Private by default** — no accounts, no tracking of your files, no upload limits

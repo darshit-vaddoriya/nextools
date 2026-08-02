@@ -135,8 +135,9 @@ export const AiBgRemover: React.FC = () => {
   };
 
   useEffect(() => {
+    const gen = genRef.current;
     return () => {
-      genRef.current++;
+      genRef.current = gen + 1;
       stopTimer();
       disposeWorker();
       if (originalUrlRef.current) URL.revokeObjectURL(originalUrlRef.current);

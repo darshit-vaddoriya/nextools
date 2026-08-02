@@ -1,6 +1,7 @@
 import React, { useState, useCallback, useRef } from 'react';
 import { PDFDocument } from 'pdf-lib';
 import { AdBanner } from '../components/AdBanner';
+import { errorMessage } from '../utils/errorMessage';
 import { FileText, Upload, Trash2, ArrowUp, ArrowDown, Download, CheckCircle, ShieldCheck, Loader2, AlertTriangle } from 'lucide-react';
 import { useExportProgress } from './image/ExportProgress';
 
@@ -127,8 +128,8 @@ export const PdfMergeTool: React.FC = () => {
         setMergedUrl(url);
         report(100, 'Done');
       });
-    } catch (err: any) {
-      setError(err?.message || 'Merge failed. Please try again.');
+    } catch (err) {
+      setError(errorMessage(err, 'Merge failed. Please try again.'));
     } finally {
       setIsProcessing(false);
     }

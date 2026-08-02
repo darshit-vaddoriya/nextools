@@ -4,7 +4,7 @@ import { BarChart2, Clock, FileText, Hash, AlignLeft } from 'lucide-react';
 
 export const TextCounter: React.FC = () => {
   const [text, setText] = useState<string>(
-    `This is a sample paragraph. NexTools runs all of its tools directly in your browser, so your files stay on your device. There is no upload, no account and no sign-up needed.`
+    `This is a sample paragraph. NextTool runs all of its tools directly in your browser, so your files stay on your device. There is no upload, no account and no sign-up needed.`
   );
 
   const words         = text.trim() ? text.trim().split(/\s+/).length : 0;

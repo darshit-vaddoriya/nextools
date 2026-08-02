@@ -117,7 +117,6 @@ export const NavDrawer: React.FC<NavDrawerProps> = ({
               <div className="flex-1 overflow-y-auto p-3 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2 content-start">
                 {catTools.map(tool => {
                   const isActive = activeToolId === tool.id;
-                  const catConf = CATS.find(c => c.id === tool.category);
                   return (
                     <button
                       key={tool.id}

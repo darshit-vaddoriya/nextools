@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { CopyButton } from '../components/CopyButton';
+import { errorMessage } from '../utils/errorMessage';
 import { AlertTriangle, CheckCircle } from 'lucide-react';
 
 export const RegexTester: React.FC = () => {
@@ -11,9 +12,7 @@ export const RegexTester: React.FC = () => {
   const [matches, setMatches] = useState<RegExpMatchArray[]>([]);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => { testRegex(); }, [pattern, flags, text]);
-
-  const testRegex = () => {
+  const testRegex = useCallback(() => {
     if (!pattern) { setMatches([]); setError(null); return; }
     const flagString = `${flags.g ? 'g' : ''}${flags.i ? 'i' : ''}${flags.m ? 'm' : ''}`;
     try {
@@ -25,11 +24,13 @@ export const RegexTester: React.FC = () => {
         const match = text.match(regex);
         setMatches(match ? [match] : []);
       }
-    } catch (err: any) {
-      setError(err.message || 'Invalid Regular Expression syntax');
+    } catch (err) {
+      setError(errorMessage(err, 'Invalid Regular Expression syntax'));
       setMatches([]);
     }
-  };
+  }, [pattern, flags, text]);
+
+  useEffect(() => { testRegex(); }, [pattern, flags, text, testRegex]);
 
   return (
     <div className="space-y-4">

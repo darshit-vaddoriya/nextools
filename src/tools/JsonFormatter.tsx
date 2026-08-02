@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { CopyButton } from '../components/CopyButton';
+import { errorMessage } from '../utils/errorMessage';
 import { Select } from '../components/Select';
 import { Play, Minimize2, Trash2, CheckCircle, AlertTriangle } from 'lucide-react';
 
@@ -7,7 +8,7 @@ export const JsonFormatter: React.FC = () => {
   const [input, setInput] = useState<string>(
     JSON.stringify(
       {
-        appName: "NexTools",
+        appName: "NextTool",
         version: "1.0.0",
         isPrivate: true,
         theme: "Dark & Light",
@@ -36,8 +37,8 @@ export const JsonFormatter: React.FC = () => {
       const parsed = JSON.parse(input);
       setOutput(JSON.stringify(parsed, null, indent));
       setError(null);
-    } catch (err: any) {
-      setError(err.message || 'Invalid JSON syntax');
+    } catch (err) {
+      setError(errorMessage(err, 'Invalid JSON syntax'));
     }
   };
 
@@ -47,8 +48,8 @@ export const JsonFormatter: React.FC = () => {
       const parsed = JSON.parse(input);
       setOutput(JSON.stringify(parsed));
       setError(null);
-    } catch (err: any) {
-      setError(err.message || 'Invalid JSON syntax');
+    } catch (err) {
+      setError(errorMessage(err, 'Invalid JSON syntax'));
     }
   };
 
@@ -72,7 +73,7 @@ export const JsonFormatter: React.FC = () => {
     setError(null);
   };
 
-  const renderJsonTree = (data: any, keyName?: string): React.ReactNode => {
+  const renderJsonTree = (data: unknown, keyName?: string): React.ReactNode => {
     if (typeof data === 'object' && data !== null) {
       const isArray = Array.isArray(data);
       return (
@@ -82,7 +83,7 @@ export const JsonFormatter: React.FC = () => {
             <span className="dark:text-zinc-400 text-slate-500">{isArray ? `Array(${data.length}) [` : 'Object {'}</span>
           </summary>
           <div className="border-l dark:border-zinc-800 border-slate-200 pl-2 my-1 space-y-0.5">
-            {Object.entries(data).map(([k, v]) => (
+            {Object.entries(data as Record<string, unknown>).map(([k, v]) => (
               <div key={k}>{renderJsonTree(v, k)}</div>
             ))}
           </div>
@@ -104,11 +105,11 @@ export const JsonFormatter: React.FC = () => {
     );
   };
 
-  let parsedTree: any = null;
+  let parsedTree: unknown = null;
   if (output) {
     try {
       parsedTree = JSON.parse(output);
-    } catch (e) {
+    } catch {
       parsedTree = null;
     }
   }

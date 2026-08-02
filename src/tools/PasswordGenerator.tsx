@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { CopyButton } from '../components/CopyButton';
-import { Lock, RefreshCw, ShieldCheck } from 'lucide-react';
+import { RefreshCw, ShieldCheck } from 'lucide-react';
 
 export const PasswordGenerator: React.FC = () => {
   const [length, setLength] = useState<number>(18);

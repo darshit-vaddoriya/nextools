@@ -1,237 +1,237 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://nextools.app/</loc>
+    <loc>https://nexttool.app/</loc>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://nextools.app/privacy</loc>
+    <loc>https://nexttool.app/privacy</loc>
     <changefreq>monthly</changefreq>
     <priority>0.3</priority>
   </url>
   <url>
-    <loc>https://nextools.app/category/pdf</loc>
+    <loc>https://nexttool.app/category/pdf</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://nextools.app/category/word</loc>
+    <loc>https://nexttool.app/category/word</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://nextools.app/category/image</loc>
+    <loc>https://nexttool.app/category/image</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://nextools.app/category/text</loc>
+    <loc>https://nexttool.app/category/text</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://nextools.app/category/dev</loc>
+    <loc>https://nexttool.app/category/dev</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://nextools.app/category/security</loc>
+    <loc>https://nexttool.app/category/security</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://nextools.app/category/color</loc>
+    <loc>https://nexttool.app/category/color</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://nextools.app/tool/pdf-merge</loc>
+    <loc>https://nexttool.app/tool/pdf-merge</loc>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://nextools.app/tool/docx-to-pdf</loc>
+    <loc>https://nexttool.app/tool/docx-to-pdf</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://nextools.app/tool/docx-to-html</loc>
+    <loc>https://nexttool.app/tool/docx-to-html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://nextools.app/tool/docx-to-markdown</loc>
+    <loc>https://nexttool.app/tool/docx-to-markdown</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://nextools.app/tool/docx-to-txt</loc>
+    <loc>https://nexttool.app/tool/docx-to-txt</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://nextools.app/tool/html-to-docx</loc>
+    <loc>https://nexttool.app/tool/html-to-docx</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://nextools.app/tool/markdown-to-docx</loc>
+    <loc>https://nexttool.app/tool/markdown-to-docx</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://nextools.app/tool/word-viewer</loc>
+    <loc>https://nexttool.app/tool/word-viewer</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://nextools.app/tool/word-metadata</loc>
+    <loc>https://nexttool.app/tool/word-metadata</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://nextools.app/tool/word-compare</loc>
+    <loc>https://nexttool.app/tool/word-compare</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://nextools.app/tool/word-remove-format</loc>
+    <loc>https://nexttool.app/tool/word-remove-format</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://nextools.app/tool/image-compressor</loc>
+    <loc>https://nexttool.app/tool/image-compressor</loc>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://nextools.app/tool/image-resize</loc>
+    <loc>https://nexttool.app/tool/image-resize</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://nextools.app/tool/image-crop</loc>
+    <loc>https://nexttool.app/tool/image-crop</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://nextools.app/tool/image-rotate</loc>
+    <loc>https://nexttool.app/tool/image-rotate</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://nextools.app/tool/image-flip</loc>
+    <loc>https://nexttool.app/tool/image-flip</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://nextools.app/tool/image-convert</loc>
+    <loc>https://nexttool.app/tool/image-convert</loc>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://nextools.app/tool/svg-converter</loc>
+    <loc>https://nexttool.app/tool/svg-converter</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://nextools.app/tool/ai-upscaler</loc>
+    <loc>https://nexttool.app/tool/ai-upscaler</loc>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://nextools.app/tool/ai-bg-remover</loc>
+    <loc>https://nexttool.app/tool/ai-bg-remover</loc>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://nextools.app/tool/image-sharpen</loc>
+    <loc>https://nexttool.app/tool/image-sharpen</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://nextools.app/tool/image-adjust</loc>
+    <loc>https://nexttool.app/tool/image-adjust</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://nextools.app/tool/color-picker</loc>
+    <loc>https://nexttool.app/tool/color-picker</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://nextools.app/tool/ocr-image</loc>
+    <loc>https://nexttool.app/tool/ocr-image</loc>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://nextools.app/tool/image-watermark</loc>
+    <loc>https://nexttool.app/tool/image-watermark</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://nextools.app/tool/image-metadata</loc>
+    <loc>https://nexttool.app/tool/image-metadata</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://nextools.app/tool/qr-generator</loc>
+    <loc>https://nexttool.app/tool/qr-generator</loc>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://nextools.app/tool/word-counter</loc>
+    <loc>https://nexttool.app/tool/word-counter</loc>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://nextools.app/tool/case-converter</loc>
+    <loc>https://nexttool.app/tool/case-converter</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://nextools.app/tool/regex-tester</loc>
+    <loc>https://nexttool.app/tool/regex-tester</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://nextools.app/tool/text-counter</loc>
+    <loc>https://nexttool.app/tool/text-counter</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://nextools.app/tool/json-formatter</loc>
+    <loc>https://nexttool.app/tool/json-formatter</loc>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://nextools.app/tool/base64</loc>
+    <loc>https://nexttool.app/tool/base64</loc>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://nextools.app/tool/jwt-decoder</loc>
+    <loc>https://nexttool.app/tool/jwt-decoder</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://nextools.app/tool/uuid-generator</loc>
+    <loc>https://nexttool.app/tool/uuid-generator</loc>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://nextools.app/tool/hash-generator</loc>
+    <loc>https://nexttool.app/tool/hash-generator</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://nextools.app/tool/password-generator</loc>
+    <loc>https://nexttool.app/tool/password-generator</loc>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://nextools.app/tool/color-converter</loc>
+    <loc>https://nexttool.app/tool/color-converter</loc>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>

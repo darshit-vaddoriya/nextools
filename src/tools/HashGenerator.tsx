@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { CopyButton } from '../components/CopyButton';
 import { Shield } from 'lucide-react';
 
 export const HashGenerator: React.FC = () => {
-  const [input, setInput] = useState<string>('NexTools - free online tools');
+  const [input, setInput] = useState<string>('NextTool - free online tools');
   const [hashes, setHashes] = useState<{
     sha256: string;
     sha1: string;
@@ -16,11 +16,7 @@ export const HashGenerator: React.FC = () => {
     md5: ''
   });
 
-  useEffect(() => {
-    generateHashes();
-  }, [input]);
-
-  const computeMD5 = (str: string): string => {
+  const computeMD5 = useCallback((str: string): string => {
     const rotateLeft = (x: number, c: number) => (x << c) | (x >>> (32 - c));
     const utf8 = unescape(encodeURIComponent(str));
     const bytes: number[] = [];
@@ -68,9 +64,9 @@ export const HashGenerator: React.FC = () => {
         .map(b => ('00' + b.toString(16)).slice(-2))
         .join('');
     return toHex(a0) + toHex(b0) + toHex(c0) + toHex(d0);
-  };
+  }, []);
 
-  const generateHashes = async () => {
+  const generateHashes = useCallback(async () => {
     if (!input) {
       setHashes({ sha256: '', sha1: '', sha512: '', md5: '' });
       return;
@@ -106,7 +102,11 @@ export const HashGenerator: React.FC = () => {
     } catch (e) {
       console.error(e);
     }
-  };
+  }, [input, computeMD5]);
+
+  useEffect(() => {
+    generateHashes();
+  }, [input, generateHashes]);
 
   return (
     <div className="space-y-5">

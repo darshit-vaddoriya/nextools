@@ -4,7 +4,7 @@ import path from 'path';
 import { writeFileSync, mkdirSync } from 'fs';
 import { TOOLS } from './src/config/tools';
 
-const SITE = 'https://nextools.app';
+const SITE = 'https://nexttool.app';
 
 function sitemapPlugin() {
   return {

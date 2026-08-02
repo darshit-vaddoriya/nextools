@@ -3,9 +3,10 @@ import { Stamp, LayoutGrid, Tags, ImagePlus, Download, Eye, X } from 'lucide-rea
 import { Select } from '../../components/Select';
 import {
   loadImage, canvasFromImage, canvasExport, downloadBlob, createResult,
-  baseNameFrom, clamp, formatBytes,
+  baseNameFrom, clamp,
   type ProcessedImage,
 } from './ImageUtils';
+import { errorMessage } from '../../utils/errorMessage';
 import { DropZone, ResultPanel, ErrorNotice } from './ImageShared';
 import { useExportProgress } from './ExportProgress';
 
@@ -64,7 +65,7 @@ const WATERMARK_POSITIONS = [
 
 export const ImageWatermarkTool: React.FC = () => {
   const [img, setImg] = useState<HTMLImageElement | null>(null);
-  const [text, setText] = useState('© NexTools');
+  const [text, setText] = useState('© NextTool');
   const [size, setSize] = useState(36);
   const [opacity, setOpacity] = useState(60);
   const [position, setPosition] = useState('br');
@@ -178,8 +179,8 @@ export const ImageWatermarkTool: React.FC = () => {
         setResult(createResult(blob, canvas.width, canvas.height, 'image-watermarked', ext));
         report(100, 'Done');
       });
-    } catch (e: any) {
-      setError(e?.message || 'Watermark failed.');
+    } catch (e) {
+      setError(errorMessage(e, 'Watermark failed.'))
     }
   };
 
@@ -317,8 +318,8 @@ export const BatchResizeTool: React.FC = () => {
         setResults(out);
         report(100, 'Done');
       });
-    } catch (e: any) {
-      setError(e?.message || 'Batch resize failed.');
+    } catch (e) {
+      setError(errorMessage(e, 'Batch resize failed.'))
     } finally {
       setBusy(false);
     }
@@ -396,8 +397,8 @@ export const BatchConvertTool: React.FC = () => {
         setResults(out);
         report(100, 'Done');
       });
-    } catch (e: any) {
-      setError(e?.message || 'Batch convert failed.');
+    } catch (e) {
+      setError(errorMessage(e, 'Batch convert failed.'))
     } finally {
       setBusy(false);
     }
@@ -549,8 +550,8 @@ export const ImageCollageTool: React.FC = () => {
         setResult(createResult(blob, canvas.width, canvas.height, 'collage', ext));
         report(100, 'Done');
       });
-    } catch (e: any) {
-      setError(e?.message || 'Collage failed.');
+    } catch (e) {
+      setError(errorMessage(e, 'Collage failed.'))
     }
   };
 
@@ -688,8 +689,8 @@ export const MemeGeneratorTool: React.FC = () => {
         setResult(createResult(blob, canvas.width, canvas.height, 'meme', ext));
         report(100, 'Done');
       });
-    } catch (e: any) {
-      setError(e?.message || 'Meme generation failed.');
+    } catch (e) {
+      setError(errorMessage(e, 'Meme generation failed.'))
     }
   };
 
