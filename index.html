@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- ── Favicon ───────────────────────────────────────── -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
+    <link rel="icon" type="image/png" sizes="192x192" href="/favicon-512.png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+
+    <!-- ── Primary SEO ───────────────────────────────────── -->
+    <title>NexTools - Free Online Tools</title>
+    <meta name="description" content="Free browser tools for PDF, image, developer and AI tasks. Files are processed on your own device, so nothing is uploaded." />
+    <meta name="keywords" content="free online tools, PDF merge, PDF compress, image compressor, background remover, video trimmer, JSON formatter, password generator, base64 encoder, UUID generator, free browser tools, client-side tools" />
+    <meta name="author" content="NexTools by DK" />
+    <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
+    <link rel="canonical" href="https://nextools.app/" />
+
+    <!-- ── Open Graph ─────────────────────────────────────── -->
+    <meta property="og:type"        content="website" />
+    <meta property="og:site_name"   content="NexTools" />
+    <meta property="og:url"         content="https://nextools.app/" />
+    <meta property="og:title"       content="NexTools - Free Online Tools" />
+    <meta property="og:description" content="Free PDF, image, video, developer and AI tools that run right in your browser. No uploads, no account, no cost." />
+    <meta property="og:image"       content="https://nextools.app/og-image.png" />
+    <meta property="og:image:width"  content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:locale"      content="en_US" />
+
+    <!-- ── Twitter Card ──────────────────────────────────── -->
+    <meta name="twitter:card"        content="summary_large_image" />
+    <meta name="twitter:site"        content="@nextools" />
+    <meta name="twitter:title"       content="NexTools - Free Online Tools" />
+    <meta name="twitter:description" content="Free PDF, image, video, AI and developer tools that run in your browser. No uploads or logins needed." />
+    <meta name="twitter:image"       content="https://nextools.app/og-image.png" />
+
+    <!-- ── Structured Data — WebSite + SearchAction ──────── -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": "NexTools",
+      "url": "https://nextools.app/",
+      "description": "Free browser-based tools for PDF, image, video, developer and AI tasks that run on your device.",
+      "author": {
+        "@type": "Person",
+        "name": "DK"
+      },
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": {
+          "@type": "EntryPoint",
+          "urlTemplate": "https://nextools.app/?q={search_term_string}"
+        },
+        "query-input": "required name=search_term_string"
+      }
+    }
+    </script>
+
+    <!-- ── Structured Data — SoftwareApplication ─────────── -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "NexTools",
+      "url": "https://nextools.app/",
+      "applicationCategory": "UtilitiesApplication",
+      "operatingSystem": "Web",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "description": "Free browser tools including PDF merge, image compressor, AI background remover, JSON formatter, video trimmer and more.",
+      "isAccessibleForFree": true
+    }
+    </script>
+
+    <!-- ── Structured Data — FAQPage ─────────────────────── -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Are NexTools really free?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Yes. Every tool on NexTools is free, with no hidden fees, premium tiers, or usage limits." }
+        },
+        {
+          "@type": "Question",
+          "name": "Do my files get uploaded to a server?",
+          "acceptedAnswer": { "@type": "Answer", "text": "No. All processing happens on your device, so your files are never sent anywhere." }
+        },
+        {
+          "@type": "Question",
+          "name": "Do I need to create an account?",
+          "acceptedAnswer": { "@type": "Answer", "text": "No account, no email, no sign-up required. Just open a tool and start using it immediately." }
+        },
+        {
+          "@type": "Question",
+          "name": "How is NexTools different from iLovePDF or SmallPDF?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Unlike cloud-based alternatives, NexTools processes everything locally for faster results, complete privacy, and no upload limits." }
+        }
+      ]
+    }
+    </script>
+
+    <!-- ── Fonts ──────────────────────────────────────────── -->
+    <!-- Self-hosted via @fontsource (see src/main.tsx) — koi external CDN request nahi -->
+
+    <!-- ── Theme color ────────────────────────────────────── -->
+    <meta name="theme-color" content="#0a0a0f" media="(prefers-color-scheme: dark)" />
+    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+  </head>
+  <body class="font-sans antialiased">
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
