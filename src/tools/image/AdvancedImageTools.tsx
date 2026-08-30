@@ -32,18 +32,18 @@ async function downloadAll(results: ProcessedImage[]) {
 function BatchResultList({ results, label }: { results: ProcessedImage[]; label: string }) {
   if (!results.length) return null;
   return (
-    <div className="rounded-2xl border dark:bg-dark-card dark:border-dark-border bg-white border-slate-200 p-4 space-y-3">
+    <div className="rounded-2xl border   bg-card border-border p-4 space-y-3">
       <div className="flex items-center justify-between">
-        <span className="text-xs font-semibold dark:text-zinc-300 text-slate-700">{label}</span>
+        <span className="text-xs font-semibold  text-muted-foreground">{label}</span>
         <button onClick={() => downloadAll(results)} className="btn-emerald text-xs px-3 py-1.5">
           <Download className="w-3.5 h-3.5" /> Download All
         </button>
       </div>
       <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
         {results.map(r => (
-          <div key={r.fileName} className="rounded-xl border dark:border-dark-border border-slate-200 overflow-hidden bg-slate-50 dark:bg-dark-bg">
+          <div key={r.fileName} className="rounded-xl border  border-border overflow-hidden bg-muted ">
             <img src={r.url} alt={r.fileName} className="h-24 w-full object-contain" />
-            <button onClick={() => downloadBlob(r.blob, r.fileName)} className="w-full py-1.5 text-[11px] font-semibold dark:text-indigo-400 text-indigo-600 hover:bg-indigo-500/10">
+            <button onClick={() => downloadBlob(r.blob, r.fileName)} className="w-full py-1.5 text-[11px] font-semibold text-primary hover:bg-primary/10">
               {r.fileName}
             </button>
           </div>
@@ -191,20 +191,20 @@ export const ImageWatermarkTool: React.FC = () => {
       ) : (
         <>
           {showPreview ? (
-            <div className="rounded-2xl border dark:bg-dark-card dark:border-dark-border bg-white border-slate-200 overflow-hidden">
-              <div className="flex items-center justify-between px-3 py-2 border-b dark:border-dark-border border-slate-200">
-                <span className="text-xs font-semibold dark:text-zinc-300 text-slate-700 flex items-center gap-1.5">
-                  <Eye className="w-3.5 h-3.5 text-indigo-500" />
+            <div className="rounded-2xl border   bg-card border-border overflow-hidden">
+              <div className="flex items-center justify-between px-3 py-2 border-b  border-border">
+                <span className="text-xs font-semibold  text-muted-foreground flex items-center gap-1.5">
+                  <Eye className="w-3.5 h-3.5 text-primary" />
                   Preview
                 </span>
-                <button onClick={() => setShowPreview(false)} className="flex items-center gap-1 text-[11px] font-medium dark:text-zinc-400 text-slate-500 hover:text-indigo-500 dark:hover:text-indigo-400 transition-colors">
+                <button onClick={() => setShowPreview(false)} className="flex items-center gap-1 text-[11px] font-medium  text-muted-foreground hover:text-primary  transition-colors">
                   <X className="w-3.5 h-3.5" /> Hide
                 </button>
               </div>
               <div className="flex items-center justify-center p-4 min-h-[300px]">
-                <div className="relative w-full max-w-lg h-[320px] rounded-xl overflow-hidden shadow-inner border border-slate-300 dark:border-slate-700">
+                <div className="relative w-full max-w-lg h-[320px] rounded-xl overflow-hidden shadow-inner border border-border">
                   <div
-                    className="absolute inset-0 flex items-center justify-center overflow-hidden bg-slate-200 dark:bg-slate-900"
+                    className="absolute inset-0 flex items-center justify-center overflow-hidden bg-muted"
                     style={{ clipPath: `polygon(0 0, ${sliderPos}% 0, ${sliderPos}% 100%, 0 100%)` }}
                   >
                     <img src={img.src} alt="Original" className="max-w-full max-h-full object-contain" />
@@ -219,7 +219,7 @@ export const ImageWatermarkTool: React.FC = () => {
                     }}
                   >
                     <img src={previewUrl} alt="Watermark preview" className="max-w-full max-h-full object-contain" />
-                    <span className="absolute top-2 right-2 px-2 py-1 bg-indigo-600 rounded text-[10px] uppercase tracking-wider text-white">Watermarked</span>
+                    <span className="absolute top-2 right-2 px-2 py-1 bg-primary rounded text-[10px] uppercase tracking-wider text-primary-foreground">Watermarked</span>
                   </div>
                   <input
                     type="range"
@@ -238,25 +238,25 @@ export const ImageWatermarkTool: React.FC = () => {
               <Eye className="w-3.5 h-3.5" /> Show preview
             </button>
           )}
-          <div className="rounded-xl border dark:bg-dark-card dark:border-dark-border bg-white border-slate-200 p-4 space-y-4">
+          <div className="rounded-xl border   bg-card border-border p-4 space-y-4">
             <label className="block text-xs">
               <span className="section-label mb-1 block">Watermark text</span>
               <input value={text} onChange={(e) => setText(e.target.value)} className="input-base w-full text-xs" placeholder="© Your Name" />
             </label>
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-1.5">
-                <div className="flex justify-between text-xs"><span className="dark:text-zinc-400 text-slate-600 font-medium">Size</span><span className="font-mono font-bold text-indigo-500">{size}px</span></div>
-                <input type="range" min={12} max={120} value={size} onChange={(e) => setSize(parseInt(e.target.value))} className="w-full h-1.5 accent-indigo-500 cursor-pointer" />
+                <div className="flex justify-between text-xs"><span className=" text-muted-foreground font-medium">Size</span><span className="font-mono font-bold text-primary">{size}px</span></div>
+                <input type="range" min={12} max={120} value={size} onChange={(e) => setSize(parseInt(e.target.value))} className="w-full h-1.5 accent-primary cursor-pointer" />
               </div>
               <div className="space-y-1.5">
-                <div className="flex justify-between text-xs"><span className="dark:text-zinc-400 text-slate-600 font-medium">Opacity</span><span className="font-mono font-bold text-indigo-500">{opacity}%</span></div>
-                <input type="range" min={5} max={100} value={opacity} onChange={(e) => setOpacity(parseInt(e.target.value))} className="w-full h-1.5 accent-indigo-500 cursor-pointer" />
+                <div className="flex justify-between text-xs"><span className=" text-muted-foreground font-medium">Opacity</span><span className="font-mono font-bold text-primary">{opacity}%</span></div>
+                <input type="range" min={5} max={100} value={opacity} onChange={(e) => setOpacity(parseInt(e.target.value))} className="w-full h-1.5 accent-primary cursor-pointer" />
               </div>
             </div>
             <div className="flex flex-wrap items-center gap-2">
-              <span className="text-xs dark:text-zinc-400 text-slate-600 font-medium mr-1">Position</span>
+              <span className="text-xs  text-muted-foreground font-medium mr-1">Position</span>
               {WATERMARK_POSITIONS.map(p => (
-                <button key={p.id} onClick={() => setPosition(p.id)} className={`btn-secondary text-[11px] px-3 py-1.5 ${position === p.id ? 'dark:bg-indigo-500/20 bg-indigo-100 border-indigo-300' : ''}`}>
+                <button key={p.id} onClick={() => setPosition(p.id)} className={`btn-secondary text-[11px] px-3 py-1.5 ${position === p.id ? 'bg-primary/10 border-primary' : ''}`}>
                   {p.label}
                 </button>
               ))}
@@ -329,9 +329,9 @@ export const BatchResizeTool: React.FC = () => {
     <div className="space-y-4">
       <DropZone onFiles={handleFiles} multiple label="Select images to resize" />
       {items.length > 0 && (
-        <div className="rounded-xl border dark:bg-dark-card dark:border-dark-border bg-white border-slate-200 p-4 space-y-3">
+        <div className="rounded-xl border   bg-card border-border p-4 space-y-3">
           <div className="flex flex-wrap items-center justify-between gap-3 text-xs">
-            <span className="dark:text-zinc-400 text-slate-500 font-mono">{items.length} file(s) · keeps aspect ratio</span>
+            <span className=" text-muted-foreground font-mono">{items.length} file(s) · keeps aspect ratio</span>
             <label className="flex items-center gap-2">
               <span className="section-label">Target width (px)</span>
               <input type="number" min={16} value={targetWidth} onChange={(e) => setTargetWidth(parseInt(e.target.value) || 1)} className="input-base w-24 font-mono" />
@@ -342,7 +342,7 @@ export const BatchResizeTool: React.FC = () => {
           </div>
           <div className="max-h-40 overflow-auto space-y-1">
             {items.map((it, i) => (
-              <div key={i} className="flex justify-between dark:text-zinc-500 text-slate-500 font-mono text-[11px]">
+              <div key={i} className="flex justify-between  text-muted-foreground font-mono text-[11px]">
                 <span>{it.name}</span><span>{it.width} × {it.height} → {Math.round(targetWidth)} × {Math.max(1, Math.round(it.height * targetWidth / it.width))}</span>
               </div>
             ))}
@@ -408,9 +408,9 @@ export const BatchConvertTool: React.FC = () => {
     <div className="space-y-4">
       <DropZone onFiles={handleFiles} multiple label="Select images to convert" />
       {items.length > 0 && (
-        <div className="rounded-xl border dark:bg-dark-card dark:border-dark-border bg-white border-slate-200 p-4 space-y-3">
+        <div className="rounded-xl border   bg-card border-border p-4 space-y-3">
           <div className="flex flex-wrap items-center justify-between gap-3 text-xs">
-            <span className="dark:text-zinc-400 text-slate-500 font-mono">{items.length} file(s)</span>
+            <span className=" text-muted-foreground font-mono">{items.length} file(s)</span>
             <label className="flex items-center gap-2">
               <span className="section-label">Convert to</span>
               <Select
@@ -466,7 +466,7 @@ export const BatchRenameTool: React.FC = () => {
     <div className="space-y-4">
       <DropZone onFiles={handleFiles} multiple label="Select files to rename" hint="Rename is instant - no re-encoding needed" />
       {items.length > 0 && (
-        <div className="rounded-xl border dark:bg-dark-card dark:border-dark-border bg-white border-slate-200 p-4 space-y-3 text-xs">
+        <div className="rounded-xl border   bg-card border-border p-4 space-y-3 text-xs">
           <div className="flex flex-wrap items-end gap-3">
             <label className="block">
               <span className="section-label mb-1 block">Prefix</span>
@@ -484,10 +484,10 @@ export const BatchRenameTool: React.FC = () => {
               <Tags className="w-3.5 h-3.5" /> Rename All
             </button>
           </div>
-          <div className="max-h-40 overflow-auto space-y-1 font-mono text-[11px] dark:text-zinc-500 text-slate-500">
+          <div className="max-h-40 overflow-auto space-y-1 font-mono text-[11px]  text-muted-foreground">
             {items.map((it, i) => (
               <div key={i} className="flex items-center gap-2">
-                <span className="truncate dark:text-zinc-400 text-slate-600">{it.name}</span>
+                <span className="truncate  text-muted-foreground">{it.name}</span>
                 <span className="text-emerald-500">→</span>
                 <span className="truncate">{newNames[i]}</span>
               </div>
@@ -559,7 +559,7 @@ export const ImageCollageTool: React.FC = () => {
     <div className="space-y-4">
       <DropZone onFiles={handleFiles} multiple label="Select images for your collage" />
       {items.length > 0 && (
-        <div className="rounded-xl border dark:bg-dark-card dark:border-dark-border bg-white border-slate-200 p-4 space-y-3 text-xs">
+        <div className="rounded-xl border   bg-card border-border p-4 space-y-3 text-xs">
           <div className="flex flex-wrap items-end gap-3">
             <label className="block">
               <span className="section-label mb-1 block">Columns</span>
@@ -575,12 +575,12 @@ export const ImageCollageTool: React.FC = () => {
             </label>
             <label className="block">
               <span className="section-label mb-1 block">Background</span>
-              <input type="color" value={bg} onChange={(e) => setBg(e.target.value)} className="h-8 w-14 rounded border dark:border-dark-border border-slate-300 cursor-pointer bg-transparent" />
+              <input type="color" value={bg} onChange={(e) => setBg(e.target.value)} className="h-8 w-14 rounded border  border-border cursor-pointer bg-transparent" />
             </label>
             <button onClick={build} className="btn-primary px-4 py-2">
               <LayoutGrid className="w-3.5 h-3.5" /> Build Collage
             </button>
-            <span className="font-mono text-[11px] dark:text-zinc-500 text-slate-400">Using {Math.min(items.length, 12)} of {items.length} images</span>
+            <span className="font-mono text-[11px]  text-muted-foreground">Using {Math.min(items.length, 12)} of {items.length} images</span>
           </div>
         </div>
       )}
@@ -700,7 +700,7 @@ export const MemeGeneratorTool: React.FC = () => {
         <DropZone onFiles={handleFiles} label="Select a meme image" compact />
       ) : (
         <>
-          <div className="rounded-2xl border dark:bg-dark-card dark:border-dark-border bg-white border-slate-200 overflow-hidden">
+          <div className="rounded-2xl border   bg-card border-border overflow-hidden">
             <img src={previewUrl} alt="Meme preview" className="max-h-[320px] mx-auto object-contain" />
           </div>
           <div className="grid grid-cols-2 gap-3">
@@ -714,8 +714,8 @@ export const MemeGeneratorTool: React.FC = () => {
             </label>
           </div>
           <div className="space-y-1.5">
-            <div className="flex justify-between text-xs"><span className="dark:text-zinc-400 text-slate-600 font-medium">Text size</span><span className="font-mono font-bold text-indigo-500">{fontSize}</span></div>
-            <input type="range" min={16} max={96} value={fontSize} onChange={(e) => setFontSize(parseInt(e.target.value))} className="w-full h-1.5 accent-indigo-500 cursor-pointer" />
+            <div className="flex justify-between text-xs"><span className=" text-muted-foreground font-medium">Text size</span><span className="font-mono font-bold text-primary">{fontSize}</span></div>
+            <input type="range" min={16} max={96} value={fontSize} onChange={(e) => setFontSize(parseInt(e.target.value))} className="w-full h-1.5 accent-primary cursor-pointer" />
           </div>
           <button onClick={exportImage} className="btn-primary text-xs px-4 py-2">
             <ImagePlus className="w-3.5 h-3.5" /> Export Meme

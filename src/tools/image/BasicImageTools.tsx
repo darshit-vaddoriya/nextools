@@ -93,7 +93,7 @@ export const ImageResizeTool: React.FC = () => {
         <DropZone onFiles={handleFiles} />
       ) : (
         <>
-          <div className="rounded-2xl border dark:bg-dark-card dark:border-dark-border bg-white border-slate-200 overflow-hidden">
+          <div className="rounded-2xl border   bg-card border-border overflow-hidden">
             <img src={img.src} alt="Original" className="max-h-[320px] mx-auto object-contain" />
           </div>
           <div className="grid grid-cols-2 gap-3">
@@ -106,12 +106,12 @@ export const ImageResizeTool: React.FC = () => {
               <input type="number" min={1} value={height} onChange={(e) => onHeight(parseInt(e.target.value) || 1)} className="input-base w-full font-mono" />
             </label>
           </div>
-          <div className="flex flex-wrap items-center gap-3 text-xs dark:text-zinc-400 text-slate-500">
+          <div className="flex flex-wrap items-center gap-3 text-xs  text-muted-foreground">
             <label className="flex items-center gap-1.5 cursor-pointer select-none">
-              <input type="checkbox" checked={lockAspect} onChange={(e) => setLockAspect(e.target.checked)} className="rounded text-indigo-500" />
+              <input type="checkbox" checked={lockAspect} onChange={(e) => setLockAspect(e.target.checked)} className="rounded text-primary" />
               Lock aspect ratio
             </label>
-            <span className="dark:text-zinc-600 text-slate-400 font-mono text-[11px]">Original: {origW} × {origH}</span>
+            <span className=" text-muted-foreground font-mono text-[11px]">Original: {origW} × {origH}</span>
           </div>
           <div className="flex flex-wrap items-center gap-3">
             <label className="block text-xs">
@@ -193,7 +193,7 @@ export const ImageRotateTool: React.FC = () => {
         <DropZone onFiles={handleFiles} />
       ) : (
         <>
-          <div className="rounded-2xl border dark:bg-dark-card dark:border-dark-border bg-white border-slate-200 overflow-hidden p-3">
+          <div className="rounded-2xl border   bg-card border-border overflow-hidden p-3">
             <img src={img.src} alt="Original" className="max-h-[300px] mx-auto object-contain" style={{ transform: `rotate(${angle}deg)`, transition: 'transform 0.1s linear' }} />
           </div>
           <div className="flex flex-wrap gap-2">
@@ -210,11 +210,11 @@ export const ImageRotateTool: React.FC = () => {
               Reset
             </button>
           </div>
-          <div className="rounded-xl border dark:bg-dark-card dark:border-dark-border bg-white border-slate-200 p-4 space-y-4">
+          <div className="rounded-xl border   bg-card border-border p-4 space-y-4">
             <div className="space-y-1.5">
               <div className="flex items-center justify-between text-xs">
                 <span className="section-label">Exact rotation</span>
-                <span className="font-mono font-bold text-indigo-500">{angle}°</span>
+                <span className="font-mono font-bold text-primary">{angle}°</span>
               </div>
               <input
                 type="range"
@@ -223,10 +223,10 @@ export const ImageRotateTool: React.FC = () => {
                 step={1}
                 value={angle}
                 onChange={(e) => setAngle(parseInt(e.target.value) || 0)}
-                className="w-full h-2 cursor-pointer accent-indigo-500"
+                className="w-full h-2 cursor-pointer accent-primary"
                 aria-label="Rotation angle"
               />
-              <div className="flex justify-between text-[10px] font-mono text-slate-400 dark:text-zinc-500">
+              <div className="flex justify-between text-[10px] font-mono text-muted-foreground ">
                 <span>0°</span><span>90°</span><span>180°</span><span>270°</span><span>360°</span>
               </div>
             </div>
@@ -247,7 +247,7 @@ export const ImageRotateTool: React.FC = () => {
                   max={100}
                   value={quality}
                   onChange={(e) => setQuality(parseInt(e.target.value) || 85)}
-                  className="w-full h-2 cursor-pointer accent-indigo-500"
+                  className="w-full h-2 cursor-pointer accent-primary"
                   aria-label="Output quality"
                 />
               </label>
@@ -324,18 +324,18 @@ export const ImageFlipTool: React.FC = () => {
         <DropZone onFiles={handleFiles} />
       ) : (
         <>
-          <div className="rounded-2xl border dark:bg-dark-card dark:border-dark-border bg-white border-slate-200 overflow-hidden">
+          <div className="rounded-2xl border   bg-card border-border overflow-hidden">
             <img src={img.src} alt="Original" className="max-h-[320px] mx-auto object-contain" style={{ transform: `${flipH ? 'scaleX(-1)' : ''} ${flipV ? 'scaleY(-1)' : ''}`, transition: 'transform 0.2s' }} />
           </div>
           <div className="flex flex-wrap gap-2">
-            <button onClick={() => setFlipH(p => !p)} className={`btn-secondary text-xs px-4 py-2 ${flipH ? 'dark:bg-indigo-500/20 bg-indigo-100 border-indigo-300' : ''}`}>
+            <button onClick={() => setFlipH(p => !p)} className={`btn-secondary text-xs px-4 py-2 ${flipH ? 'bg-primary/10 border-primary' : ''}`}>
               <FlipHorizontal2 className="w-3.5 h-3.5" /> Flip Horizontal
             </button>
-            <button onClick={() => setFlipV(p => !p)} className={`btn-secondary text-xs px-4 py-2 ${flipV ? 'dark:bg-indigo-500/20 bg-indigo-100 border-indigo-300' : ''}`}>
+            <button onClick={() => setFlipV(p => !p)} className={`btn-secondary text-xs px-4 py-2 ${flipV ? 'bg-primary/10 border-primary' : ''}`}>
               <FlipVertical2 className="w-3.5 h-3.5" /> Flip Vertical
             </button>
           </div>
-          <div className="flex flex-wrap items-end gap-4 rounded-xl border dark:bg-dark-card dark:border-dark-border bg-white border-slate-200 p-4">
+          <div className="flex flex-wrap items-end gap-4 rounded-xl border   bg-card border-border p-4">
             <label className="block text-xs">
               <span className="section-label mb-1 block">Output format</span>
               <Select
@@ -352,7 +352,7 @@ export const ImageFlipTool: React.FC = () => {
                 max={100}
                 value={quality}
                 onChange={(e) => setQuality(parseInt(e.target.value) || 85)}
-                className="w-full h-2 cursor-pointer accent-indigo-500"
+                className="w-full h-2 cursor-pointer accent-primary"
                 aria-label="Output quality"
               />
             </label>
@@ -438,9 +438,9 @@ export const ImageConverterTool: React.FC = () => {
     <div className="space-y-4">
       <DropZone onFiles={handleFiles} multiple label="Select images to convert" />
       {files.length > 0 && (
-        <div className="rounded-xl border dark:bg-dark-card dark:border-dark-border bg-white border-slate-200 p-4 space-y-3 text-xs">
+        <div className="rounded-xl border   bg-card border-border p-4 space-y-3 text-xs">
           <div className="flex flex-wrap items-center justify-between gap-3">
-            <span className="dark:text-zinc-400 text-slate-500 font-mono">{files.length} file(s) selected</span>
+            <span className=" text-muted-foreground font-mono">{files.length} file(s) selected</span>
             <label className="flex items-center gap-2">
               <span className="section-label">Convert to</span>
               <Select
@@ -458,11 +458,11 @@ export const ImageConverterTool: React.FC = () => {
               const result = results[i];
               const busy = busyId === String(i);
               return (
-                <div key={`${f.name}-${i}`} className="flex items-center justify-between gap-3 rounded-lg border dark:border-dark-border border-slate-200 px-3 py-2">
-                  <span className="truncate dark:text-zinc-400 text-slate-600">{f.name}</span>
-                  <span className="font-mono text-[10px] dark:text-zinc-600 text-slate-400 shrink-0">{formatBytes(f.size)}</span>
+                <div key={`${f.name}-${i}`} className="flex items-center justify-between gap-3 rounded-lg border  border-border px-3 py-2">
+                  <span className="truncate  text-muted-foreground">{f.name}</span>
+                  <span className="font-mono text-[10px]  text-muted-foreground shrink-0">{formatBytes(f.size)}</span>
                   {busy ? (
-                    <span className="shrink-0 text-[10px] text-indigo-500">Converting…</span>
+                    <span className="shrink-0 text-[10px] text-primary">Converting…</span>
                   ) : result ? (
                     <button onClick={() => downloadOne(result)} className="btn-emerald text-[10px] px-2.5 py-1 shrink-0">
                       <Download className="w-3 h-3" /> Download
@@ -480,16 +480,16 @@ export const ImageConverterTool: React.FC = () => {
       )}
       <ErrorNotice message={error} />
       {convertedCount > 0 && (
-        <div className="rounded-2xl border dark:bg-dark-card dark:border-dark-border bg-white border-slate-200 p-4 space-y-3">
+        <div className="rounded-2xl border   bg-card border-border p-4 space-y-3">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-semibold dark:text-zinc-300 text-slate-700">{convertedCount} converted</span>
+            <span className="text-xs font-semibold  text-muted-foreground">{convertedCount} converted</span>
             <button onClick={downloadAll} className="btn-emerald text-xs px-3 py-1.5">Download All</button>
           </div>
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
             {results.filter((r): r is ProcessedImage => Boolean(r)).map(r => (
-              <div key={r.fileName} className="rounded-xl border dark:border-dark-border border-slate-200 overflow-hidden bg-slate-50 dark:bg-dark-bg">
+              <div key={r.fileName} className="rounded-xl border  border-border overflow-hidden bg-muted ">
                 <img src={r.url} alt={r.fileName} className="h-24 w-full object-contain" />
-                <button onClick={() => downloadOne(r)} className="w-full py-1.5 text-[11px] font-semibold dark:text-indigo-400 text-indigo-600 hover:bg-indigo-500/10">
+                <button onClick={() => downloadOne(r)} className="w-full py-1.5 text-[11px] font-semibold text-primary hover:bg-primary/10">
                   {r.fileName}
                 </button>
               </div>
@@ -551,26 +551,26 @@ export const ImageCompressorTool: React.FC = () => {
       ) : (
         <>
           <div className="grid grid-cols-2 gap-3">
-            <div className="rounded-xl border dark:border-dark-border border-slate-200 bg-slate-50 dark:bg-dark-bg p-3 text-center">
-              <p className="text-[10px] uppercase tracking-wider dark:text-zinc-600 text-slate-400 font-semibold mb-1">Original</p>
-              <p className="font-mono text-[13px] dark:text-zinc-200 text-slate-700">{formatBytes(origSize)}</p>
-              <p className="font-mono text-[10px] dark:text-zinc-600 text-slate-400">{img.naturalWidth} × {img.naturalHeight}</p>
+            <div className="rounded-xl border  border-border bg-muted  p-3 text-center">
+              <p className="text-[10px] uppercase tracking-wider  text-muted-foreground font-semibold mb-1">Original</p>
+              <p className="font-mono text-[13px]  text-muted-foreground">{formatBytes(origSize)}</p>
+              <p className="font-mono text-[10px]  text-muted-foreground">{img.naturalWidth} × {img.naturalHeight}</p>
             </div>
-            <div className="rounded-xl border dark:border-dark-border border-slate-200 bg-slate-50 dark:bg-dark-bg p-3 text-center">
-              <p className="text-[10px] uppercase tracking-wider dark:text-zinc-600 text-slate-400 font-semibold mb-1">Compressed</p>
+            <div className="rounded-xl border  border-border bg-muted  p-3 text-center">
+              <p className="text-[10px] uppercase tracking-wider  text-muted-foreground font-semibold mb-1">Compressed</p>
               <p className="font-mono text-[13px] dark:text-emerald-500 text-emerald-600">{result ? formatBytes(result.blob.size) : '…'}</p>
-              <p className="font-mono text-[10px] dark:text-zinc-600 text-slate-400">{result ? `${savings}% saved` : 'waiting'}</p>
+              <p className="font-mono text-[10px]  text-muted-foreground">{result ? `${savings}% saved` : 'waiting'}</p>
             </div>
           </div>
-          <div className="rounded-xl border dark:bg-dark-card dark:border-dark-border bg-white border-slate-200 p-4 space-y-4">
+          <div className="rounded-xl border   bg-card border-border p-4 space-y-4">
             <div className="space-y-1.5">
               <div className="flex justify-between text-xs">
-                <span className="dark:text-zinc-400 text-slate-600 font-medium">Quality</span>
-                <span className="font-mono font-bold text-indigo-500">{quality}%</span>
+                <span className=" text-muted-foreground font-medium">Quality</span>
+                <span className="font-mono font-bold text-primary">{quality}%</span>
               </div>
-              <input type="range" min={5} max={100} value={quality} onChange={(e) => setQuality(parseInt(e.target.value))} className="w-full h-1.5 accent-indigo-500 cursor-pointer" />
+              <input type="range" min={5} max={100} value={quality} onChange={(e) => setQuality(parseInt(e.target.value))} className="w-full h-1.5 accent-primary cursor-pointer" />
             </div>
-            <label className="flex items-center gap-2 text-xs dark:text-zinc-400 text-slate-600">
+            <label className="flex items-center gap-2 text-xs  text-muted-foreground">
               <span>Format</span>
               <Select
                 value={format}
@@ -583,7 +583,7 @@ export const ImageCompressorTool: React.FC = () => {
               />
             </label>
           </div>
-          {busy && <p className="text-xs text-indigo-500">Compressing…</p>}
+          {busy && <p className="text-xs text-primary">Compressing…</p>}
         </>
       )}
       <ErrorNotice message={error} />
@@ -718,7 +718,7 @@ export const ImageCropTool: React.FC = () => {
         <>
           <div
             ref={wrapRef}
-            className="relative rounded-2xl border dark:bg-dark-card dark:border-dark-border bg-white border-slate-200 overflow-hidden select-none"
+            className="relative rounded-2xl border   bg-card border-border overflow-hidden select-none"
             style={{ height: 360 }}
             onPointerDown={onPointerDown}
             onPointerMove={onPointerMove}
@@ -734,10 +734,10 @@ export const ImageCropTool: React.FC = () => {
             {fit.w > 0 && (
               <>
                 <div
-                  className="absolute border-2 border-indigo-500 bg-indigo-500/10"
+                  className="absolute border-2 border-primary bg-primary/10"
                   style={{ left: box.x, top: box.y, width: box.w, height: box.h }}
                 >
-                  <div className="absolute -bottom-1.5 -right-1.5 w-4 h-4 rounded-full bg-indigo-500 border-2 border-white cursor-nwse-resize" />
+                  <div className="absolute -bottom-1.5 -right-1.5 w-4 h-4 rounded-full bg-primary border-2 border-white cursor-nwse-resize" />
                 </div>
                 <div className="absolute top-2 left-2 text-[10px] font-mono dark:bg-black/60 bg-black/50 text-white px-2 py-1 rounded">
                   {Math.round(box.w / fit.scale)} × {Math.round(box.h / fit.scale)} px

@@ -94,14 +94,14 @@ export const Base64Tool: React.FC = () => {
     >
       <div className="space-y-4">
       {/* Controls Bar */}
-      <div className="flex flex-wrap items-center justify-between gap-3 p-3 rounded-xl border dark:bg-dark-card dark:border-dark-border bg-white border-slate-200 shadow-xs">
+      <div className="flex flex-wrap items-center justify-between gap-3 p-3 rounded-xl border   bg-card border-border shadow-xs">
         <div className="flex items-center gap-2">
           <button
             onClick={() => setMode('encode')}
             className={`px-3 py-1.5 text-xs font-semibold rounded-md transition-colors ${
               mode === 'encode'
-                ? 'bg-indigo-600 text-white shadow-xs'
-                : 'dark:bg-dark-hover dark:text-zinc-300 bg-slate-100 text-slate-700 hover:bg-slate-200 border-slate-300 border'
+                ? 'bg-primary text-primary-foreground shadow-xs'
+                : '  bg-muted text-muted-foreground hover:bg-muted border-border border'
             }`}
           >
             Encode to Base64
@@ -110,8 +110,8 @@ export const Base64Tool: React.FC = () => {
             onClick={() => setMode('decode')}
             className={`px-3 py-1.5 text-xs font-semibold rounded-md transition-colors ${
               mode === 'decode'
-                ? 'bg-indigo-600 text-white shadow-xs'
-                : 'dark:bg-dark-hover dark:text-zinc-300 bg-slate-100 text-slate-700 hover:bg-slate-200 border-slate-300 border'
+                ? 'bg-primary text-primary-foreground shadow-xs'
+                : '  bg-muted text-muted-foreground hover:bg-muted border-border border'
             }`}
           >
             Decode from Base64
@@ -119,12 +119,12 @@ export const Base64Tool: React.FC = () => {
         </div>
 
         <div className="flex items-center gap-3">
-          <label className="cursor-pointer px-3 py-1.5 text-xs dark:bg-dark-hover dark:text-zinc-300 dark:border-dark-border bg-slate-100 hover:bg-slate-200 text-slate-700 border-slate-300 border rounded-md flex items-center gap-1.5 transition-colors">
+          <label className="cursor-pointer px-3 py-1.5 text-xs    bg-muted hover:bg-muted text-muted-foreground border-border border rounded-md flex items-center gap-1.5 transition-colors">
             <Upload className="w-3.5 h-3.5" />
             <span>Upload File</span>
             <input type="file" onChange={handleFileUpload} className="hidden" />
           </label>
-          <span className="hidden md:inline text-[11px] dark:text-zinc-600 text-slate-400">or drag &amp; drop a file anywhere</span>
+          <span className="hidden md:inline text-[11px]  text-muted-foreground">or drag &amp; drop a file anywhere</span>
           <CopyButton text={outputText} label="Copy Output" />
         </div>
       </div>
@@ -139,31 +139,31 @@ export const Base64Tool: React.FC = () => {
       {/* Dual Workspace */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         {/* Input */}
-        <div className="rounded-xl border dark:bg-dark-card dark:border-dark-border bg-white border-slate-200 overflow-hidden flex flex-col h-[450px] shadow-xs">
-          <div className="px-3.5 py-2 border-b dark:bg-dark-bg/60 dark:border-dark-border bg-slate-50 border-slate-200 text-xs font-semibold dark:text-zinc-200 text-slate-800 flex items-center justify-between">
+        <div className="rounded-xl border   bg-card border-border overflow-hidden flex flex-col h-[450px] shadow-xs">
+          <div className="px-3.5 py-2 border-b   bg-muted border-border text-xs font-semibold  text-foreground flex items-center justify-between">
             <span>{mode === 'encode' ? 'Plain Input Text' : 'Base64 Encoded Input'}</span>
-            <span className="text-slate-400 font-mono text-[11px]">{inputText.length} chars</span>
+            <span className="text-muted-foreground font-mono text-[11px]">{inputText.length} chars</span>
           </div>
           <textarea
             value={inputText}
             onChange={(e) => setInputText(e.target.value)}
             placeholder={mode === 'encode' ? 'Enter text to encode...' : 'Paste Base64 string here...'}
-            className="flex-1 w-full bg-transparent p-3.5 text-xs font-mono dark:text-zinc-200 text-slate-900 placeholder-slate-400 resize-none focus:outline-none leading-relaxed"
+            className="flex-1 w-full bg-transparent p-3.5 text-xs font-mono  text-foreground placeholder:text-muted-foreground resize-none focus:outline-none leading-relaxed"
           />
         </div>
 
         {/* Output */}
-        <div className="rounded-xl border dark:bg-dark-card dark:border-dark-border bg-white border-slate-200 overflow-hidden flex flex-col h-[450px] shadow-xs">
-          <div className="px-3.5 py-2 border-b dark:bg-dark-bg/60 dark:border-dark-border bg-slate-50 border-slate-200 text-xs font-semibold dark:text-zinc-200 text-slate-800 flex items-center justify-between">
+        <div className="rounded-xl border   bg-card border-border overflow-hidden flex flex-col h-[450px] shadow-xs">
+          <div className="px-3.5 py-2 border-b   bg-muted border-border text-xs font-semibold  text-foreground flex items-center justify-between">
             <span>{mode === 'encode' ? 'Base64 Output' : 'Decoded Plain Text'}</span>
             {outputText && (
-              <span className="text-emerald-600 dark:text-emerald-400 text-xs font-mono flex items-center gap-1 font-normal">
+              <span className="text-success text-xs font-mono flex items-center gap-1 font-normal">
                 <CheckCircle className="w-3.5 h-3.5" /> Ready
               </span>
             )}
           </div>
-          <div className="flex-1 p-3.5 overflow-auto font-mono text-xs text-indigo-600 dark:text-indigo-400 whitespace-pre-wrap leading-relaxed select-text">
-            {outputText || <span className="text-slate-400 font-sans">Output will update in real-time...</span>}
+          <div className="flex-1 p-3.5 overflow-auto font-mono text-xs text-primary whitespace-pre-wrap leading-relaxed select-text">
+            {outputText || <span className="text-muted-foreground font-sans">Output will update in real-time...</span>}
           </div>
         </div>
       </div>

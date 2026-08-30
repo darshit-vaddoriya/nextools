@@ -1,5 +1,6 @@
 import { TOOLS } from '../config/tools';
 import { ToolCategory } from '../types';
+import { TOOL_SEO_CONTENT } from '../config/seoContent';
 
 const SITE = 'https://nexttool.app';
 const DEFAULT_TITLE = 'NextTool - Free Online Tools';
@@ -55,7 +56,28 @@ function setJsonLd(id: string, data: object) {
   document.head.appendChild(script);
 }
 
+function breadcrumbList(items: { name: string; url: string }[]) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: items.map((item, i) => ({
+      '@type': 'ListItem',
+      position: i + 1,
+      name: item.name,
+      item: item.url,
+    })),
+  };
+}
+
+function clearBreadcrumb() {
+  const el = document.getElementById('breadcrumb-jsonld');
+  if (el) el.remove();
+  const faqEl = document.getElementById('faq-jsonld');
+  if (faqEl) faqEl.remove();
+}
+
 export function updateHomeMeta() {
+  clearBreadcrumb();
   document.title = DEFAULT_TITLE;
   setMeta('description', DEFAULT_DESC);
   setMeta('og:title', DEFAULT_TITLE, true);
@@ -107,6 +129,28 @@ export function updateToolMeta(toolId: string) {
     offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
     isAccessibleForFree: true,
   });
+
+  setJsonLd('breadcrumb-jsonld', breadcrumbList([
+    { name: 'Home', url: `${SITE}/` },
+    { name: CATEGORY_NAMES[tool.category] ?? tool.category, url: `${SITE}/category/${tool.category}` },
+    { name: tool.name, url },
+  ]));
+
+  const seo = TOOL_SEO_CONTENT[tool.id];
+  const faqEl = document.getElementById('faq-jsonld');
+  if (!tool.isComingSoon && seo?.faqs?.length) {
+    setJsonLd('faq-jsonld', {
+      '@context': 'https://schema.org',
+      '@type': 'FAQPage',
+      mainEntity: seo.faqs.map(f => ({
+        '@type': 'Question',
+        name: f.question,
+        acceptedAnswer: { '@type': 'Answer', text: f.answer },
+      })),
+    });
+  } else if (faqEl) {
+    faqEl.remove();
+  }
 }
 
 export function updateCategoryMeta(cat: ToolCategory) {
@@ -133,9 +177,18 @@ export function updateCategoryMeta(cat: ToolCategory) {
     description: desc,
     numberOfItems: count,
   });
+
+  setJsonLd('breadcrumb-jsonld', breadcrumbList([
+    { name: 'Home', url: `${SITE}/` },
+    { name, url },
+  ]));
+
+  const faqEl = document.getElementById('faq-jsonld');
+  if (faqEl) faqEl.remove();
 }
 
 export function updatePrivacyMeta() {
+  clearBreadcrumb();
   const title = 'Privacy Policy | NextTool';
   const desc = 'How NextTool protects your privacy. Tools run on your device and your files are never uploaded or tracked.';
   const url = `${SITE}/privacy`;
@@ -149,6 +202,7 @@ export function updatePrivacyMeta() {
 }
 
 export function updateAllToolsMeta() {
+  clearBreadcrumb();
   const title = 'All Tools | NextTool';
   const desc = 'Browse all free NextTool utilities, from PDF and image tools to developer and AI helpers. Everything runs on your device.';
   const url = `${SITE}/all-tools`;

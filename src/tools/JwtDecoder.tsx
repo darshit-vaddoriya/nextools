@@ -44,7 +44,7 @@ export const JwtDecoder: React.FC = () => {
   return (
     <div className="space-y-4">
       {/* Token Input */}
-      <div className="dark:bg-dark-card bg-white rounded-xl border dark:border-dark-border border-slate-200 p-4 space-y-2.5">
+      <div className=" bg-card rounded-xl border  border-border p-4 space-y-2.5">
         <p className="section-label">Encoded JWT Token</p>
         <textarea
           value={token}
@@ -68,7 +68,7 @@ export const JwtDecoder: React.FC = () => {
         <div className={`p-3 rounded-xl border text-xs flex items-center gap-2 font-medium ${
           expInfo.isExpired
             ? 'bg-rose-500/10 border-rose-500/30 text-rose-500 dark:text-rose-400'
-            : 'bg-emerald-500/10 border-emerald-500/30 text-emerald-600 dark:text-emerald-400'
+            : 'bg-emerald-500/10 border-emerald-500/30 text-success'
         }`}>
           {expInfo.isExpired
             ? <ShieldX className="w-4 h-4 shrink-0" />
@@ -88,35 +88,35 @@ export const JwtDecoder: React.FC = () => {
       {/* Dual Output */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         {/* Header */}
-        <div className="dark:bg-dark-card bg-white rounded-xl border dark:border-dark-border border-slate-200 overflow-hidden flex flex-col h-[360px]">
-          <div className="px-4 py-2.5 dark:bg-dark-bg/50 bg-slate-50 border-b dark:border-dark-border border-slate-200 flex items-center justify-between">
+        <div className=" bg-card rounded-xl border  border-border overflow-hidden flex flex-col h-[360px]">
+          <div className="px-4 py-2.5  bg-muted border-b  border-border flex items-center justify-between">
             <div>
-              <span className="text-xs font-bold dark:text-zinc-300 text-slate-700">Header</span>
-              <span className="text-[10px] dark:text-zinc-600 text-slate-400 ml-2">Algorithm & Type</span>
+              <span className="text-xs font-bold  text-muted-foreground">Header</span>
+              <span className="text-[10px]  text-muted-foreground ml-2">Algorithm & Type</span>
             </div>
             <CopyButton text={JSON.stringify(header, null, 2)} />
           </div>
           <div className="flex-1 p-4 overflow-auto font-mono text-xs text-rose-500 dark:text-rose-400 whitespace-pre-wrap leading-relaxed">
             {header
               ? JSON.stringify(header, null, 2)
-              : <span className="dark:text-zinc-600 text-slate-400 font-sans italic text-xs">Decoded header appears here…</span>
+              : <span className=" text-muted-foreground font-sans italic text-xs">Decoded header appears here…</span>
             }
           </div>
         </div>
 
         {/* Payload */}
-        <div className="dark:bg-dark-card bg-white rounded-xl border dark:border-dark-border border-slate-200 overflow-hidden flex flex-col h-[360px]">
-          <div className="px-4 py-2.5 dark:bg-dark-bg/50 bg-slate-50 border-b dark:border-dark-border border-slate-200 flex items-center justify-between">
+        <div className=" bg-card rounded-xl border  border-border overflow-hidden flex flex-col h-[360px]">
+          <div className="px-4 py-2.5  bg-muted border-b  border-border flex items-center justify-between">
             <div>
-              <span className="text-xs font-bold dark:text-zinc-300 text-slate-700">Payload</span>
-              <span className="text-[10px] dark:text-zinc-600 text-slate-400 ml-2">Claims & User Data</span>
+              <span className="text-xs font-bold  text-muted-foreground">Payload</span>
+              <span className="text-[10px]  text-muted-foreground ml-2">Claims & User Data</span>
             </div>
             <CopyButton text={JSON.stringify(payload, null, 2)} />
           </div>
           <div className="flex-1 p-4 overflow-auto font-mono text-xs text-cyan-500 dark:text-cyan-400 whitespace-pre-wrap leading-relaxed">
             {payload
               ? JSON.stringify(payload, null, 2)
-              : <span className="dark:text-zinc-600 text-slate-400 font-sans italic text-xs">Decoded payload appears here…</span>
+              : <span className=" text-muted-foreground font-sans italic text-xs">Decoded payload appears here…</span>
             }
           </div>
         </div>

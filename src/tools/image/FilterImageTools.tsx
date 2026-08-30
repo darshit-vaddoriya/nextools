@@ -13,14 +13,16 @@ function Slider({ label, value, min, max, step, onChange, display }: {
   label: string; value: number; min: number; max: number; step?: number;
   onChange: (v: number) => void; display?: string;
 }) {
+  const pct = max === min ? 0 : Math.min(100, Math.max(0, ((value - min) / (max - min)) * 100));
   return (
     <div className="space-y-1.5">
       <div className="flex justify-between text-xs">
-        <span className="dark:text-zinc-400 text-slate-600 font-medium">{label}</span>
-        <span className="font-mono font-bold text-indigo-500">{display ?? value}</span>
+        <span className=" text-muted-foreground font-medium">{label}</span>
+        <span className="font-mono font-bold text-primary">{display ?? value}</span>
       </div>
       <input type="range" min={min} max={max} step={step ?? 1} value={value} onChange={(e) => onChange(parseFloat(e.target.value))}
-        className="w-full h-1.5 accent-indigo-500 cursor-pointer" />
+        className="range-progress"
+        style={{ background: `linear-gradient(to right, var(--range-fill) 0%, var(--range-fill) ${pct}%, var(--range-track) ${pct}%, var(--range-track) 100%)` }} />
     </div>
   );
 }
@@ -101,10 +103,10 @@ export const ImageAdjustTool: React.FC = () => {
         <DropZone onFiles={handleFiles} />
       ) : (
         <>
-          <div className="rounded-2xl border dark:bg-dark-card dark:border-dark-border bg-white border-slate-200 overflow-hidden">
+          <div className="rounded-2xl border   bg-card border-border overflow-hidden">
             <img src={previewUrl} alt="Adjusted preview" className="max-h-[320px] mx-auto object-contain" />
           </div>
-          <div className="rounded-xl border dark:bg-dark-card dark:border-dark-border bg-white border-slate-200 p-4 space-y-4">
+          <div className="rounded-xl border   bg-card border-border p-4 space-y-4">
             <Slider label="Brightness" value={bright} min={-100} max={100} onChange={setBright} display={`${bright >= 0 ? '+' : ''}${bright}`} />
             <Slider label="Contrast" value={contrast} min={-100} max={100} onChange={setContrast} display={`${contrast >= 0 ? '+' : ''}${contrast}`} />
             <Slider label="Saturation" value={sat} min={-100} max={100} onChange={setSat} display={`${sat >= 0 ? '+' : ''}${sat}`} />
@@ -190,10 +192,10 @@ export const ImageSharpenTool: React.FC = () => {
         <DropZone onFiles={handleFiles} />
       ) : (
         <>
-          <div className="rounded-2xl border dark:bg-dark-card dark:border-dark-border bg-white border-slate-200 overflow-hidden">
+          <div className="rounded-2xl border   bg-card border-border overflow-hidden">
             <img src={previewUrl} alt="Sharpen preview" className="max-h-[320px] mx-auto object-contain" />
           </div>
-          <div className="rounded-xl border dark:bg-dark-card dark:border-dark-border bg-white border-slate-200 p-4 space-y-4">
+          <div className="rounded-xl border   bg-card border-border p-4 space-y-4">
             <Slider label="Strength" value={strength} min={0} max={300} onChange={setStrength} display={`${Math.round(strength)}%`} />
           </div>
           <button onClick={exportImage} className="btn-primary text-xs px-4 py-2">
@@ -271,10 +273,10 @@ export const NoiseReductionTool: React.FC = () => {
         <DropZone onFiles={handleFiles} />
       ) : (
         <>
-          <div className="rounded-2xl border dark:bg-dark-card dark:border-dark-border bg-white border-slate-200 overflow-hidden">
+          <div className="rounded-2xl border   bg-card border-border overflow-hidden">
             <img src={previewUrl} alt="Denoise preview" className="max-h-[320px] mx-auto object-contain" />
           </div>
-          <div className="rounded-xl border dark:bg-dark-card dark:border-dark-border bg-white border-slate-200 p-4 space-y-4">
+          <div className="rounded-xl border   bg-card border-border p-4 space-y-4">
             <Slider label="Denoise Strength" value={radius} min={1} max={2} onChange={setRadius} display={radius === 1 ? 'Mild' : 'Strong'} />
           </div>
           <button onClick={exportImage} className="btn-primary text-xs px-4 py-2">
@@ -381,10 +383,10 @@ export const BlurBackgroundTool: React.FC = () => {
         <DropZone onFiles={handleFiles} label="Select a photo to blur its background" />
       ) : (
         <>
-          <div className="rounded-2xl border dark:bg-dark-card dark:border-dark-border bg-white border-slate-200 overflow-hidden">
+          <div className="rounded-2xl border   bg-card border-border overflow-hidden">
             <img src={previewUrl} alt="Blur preview" className="max-h-[320px] mx-auto object-contain" />
           </div>
-          <div className="rounded-xl border dark:bg-dark-card dark:border-dark-border bg-white border-slate-200 p-4 space-y-4">
+          <div className="rounded-xl border   bg-card border-border p-4 space-y-4">
             <Slider label="Blur Amount" value={blurAmount} min={2} max={40} onChange={setBlurAmount} display={`${blurAmount}px`} />
             <Slider label="Keep Subject (size)" value={zoom} min={40} max={100} onChange={setZoom} display={`${zoom}%`} />
           </div>

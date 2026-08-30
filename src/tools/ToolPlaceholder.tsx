@@ -36,27 +36,27 @@ export const ToolPlaceholder: React.FC<ToolPlaceholderProps> = ({
       </div>
 
       {/* Under construction card */}
-      <div className="dark:bg-dark-card bg-white rounded-2xl border dark:border-dark-border border-slate-200 p-8 text-center">
-        <div className="w-16 h-16 rounded-2xl dark:bg-amber-500/10 bg-amber-50 border dark:border-amber-500/20 border-amber-200 flex items-center justify-center mx-auto mb-5">
-          <Construction className="w-8 h-8 text-amber-500" />
+      <div className="bg-card rounded-2xl border border-border shadow-card p-8 text-center">
+        <div className="w-16 h-16 rounded-2xl bg-warning/10 border border-warning/20 flex items-center justify-center mx-auto mb-5">
+          <Construction className="w-8 h-8 text-warning" />
         </div>
-        <h3 className="text-lg font-bold dark:text-white text-slate-900 mb-2">Coming Soon</h3>
-        <p className="text-sm dark:text-zinc-500 text-slate-500 max-w-md mx-auto leading-relaxed">
-          <strong className="dark:text-zinc-300 text-slate-700">{toolName}</strong> is currently under development.
+        <h3 className="text-lg font-bold text-foreground mb-2">Coming Soon</h3>
+        <p className="text-sm text-muted-foreground max-w-md mx-auto leading-relaxed">
+          <strong className="text-foreground">{toolName}</strong> is currently under development.
           Everything will be processed on your device, with no uploads and no servers.
         </p>
       </div>
 
       {/* Planned features */}
       {features.length > 0 && (
-        <div className="dark:bg-dark-card bg-white rounded-2xl border dark:border-dark-border border-slate-200 p-6">
-          <h4 className="text-xs font-bold uppercase tracking-widest dark:text-zinc-500 text-slate-400 mb-4">
+        <div className="bg-card rounded-2xl border border-border shadow-card p-6">
+          <h4 className="text-xs font-bold uppercase tracking-widest text-muted-foreground mb-4">
             Planned Features
           </h4>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
             {features.map((f) => (
-              <div key={f} className="flex items-start gap-2.5 text-sm dark:text-zinc-400 text-slate-600">
-                <CheckCircle className="w-4 h-4 text-indigo-500 shrink-0 mt-0.5" />
+              <div key={f} className="flex items-start gap-2.5 text-sm text-muted-foreground">
+                <CheckCircle className="w-4 h-4 text-primary shrink-0 mt-0.5" />
                 <span>{f}</span>
               </div>
             ))}
@@ -65,9 +65,9 @@ export const ToolPlaceholder: React.FC<ToolPlaceholderProps> = ({
       )}
 
       {/* Privacy note */}
-      <div className="flex items-start gap-3 px-4 py-3 rounded-xl dark:bg-emerald-500/5 bg-emerald-50 border dark:border-emerald-500/20 border-emerald-200">
-        <CheckCircle className="w-4 h-4 text-emerald-500 shrink-0 mt-0.5" />
-        <p className="text-xs dark:text-emerald-400 text-emerald-700 leading-relaxed">
+      <div className="flex items-start gap-3 px-4 py-3 rounded-xl bg-success/5 border border-success/20">
+        <CheckCircle className="w-4 h-4 text-success shrink-0 mt-0.5" />
+        <p className="text-xs text-success leading-relaxed">
           <strong>Private:</strong> Everything is processed on your device.
           Your files are never uploaded.
         </p>

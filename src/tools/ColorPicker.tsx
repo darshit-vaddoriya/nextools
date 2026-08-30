@@ -49,15 +49,15 @@ export const ColorPicker: React.FC = () => {
   });
 
   const formats = [
-    { label: 'HEX', value: hex.toUpperCase(), color: 'text-indigo-500 dark:text-indigo-400' },
-    { label: 'RGB', value: rgbString, color: 'text-emerald-500 dark:text-emerald-400' },
+    { label: 'HEX', value: hex.toUpperCase(), color: 'text-primary' },
+    { label: 'RGB', value: rgbString, color: 'text-emerald-500 ' },
     { label: 'HSL', value: hslString, color: 'text-purple-500 dark:text-purple-400' },
   ];
 
   return (
     <div className="space-y-5">
       {/* Big preview + picker */}
-      <div className="dark:bg-dark-card bg-white rounded-xl border dark:border-dark-border border-slate-200 p-5">
+      <div className=" bg-card rounded-xl border  border-border p-5">
         <div className="flex flex-col sm:flex-row items-stretch gap-5">
           {/* Color swatch */}
           <div
@@ -72,7 +72,7 @@ export const ColorPicker: React.FC = () => {
           {/* Controls */}
           <div className="flex-1 space-y-3">
             <div className="flex items-center gap-2">
-              <Palette className="w-4 h-4 text-indigo-500 shrink-0" />
+              <Palette className="w-4 h-4 text-primary shrink-0" />
               <p className="section-label">Pick a Color</p>
             </div>
 
@@ -81,7 +81,7 @@ export const ColorPicker: React.FC = () => {
                 type="color"
                 value={hex.length === 7 ? hex : '#6366F1'}
                 onChange={(e) => setHex(e.target.value.toUpperCase())}
-                className="w-12 h-10 rounded-lg dark:bg-dark-bg bg-slate-50 border dark:border-dark-border border-slate-200 cursor-pointer p-0.5 transition-colors"
+                className="w-12 h-10 rounded-lg  bg-muted border  border-border cursor-pointer p-0.5 transition-colors"
                 title="Pick color"
               />
               <input
@@ -95,7 +95,7 @@ export const ColorPicker: React.FC = () => {
 
             {/* Shade strip */}
             <div>
-              <p className="text-[10px] dark:text-zinc-600 text-slate-400 font-semibold uppercase tracking-wider mb-1.5">Shade Palette</p>
+              <p className="text-[10px]  text-muted-foreground font-semibold uppercase tracking-wider mb-1.5">Shade Palette</p>
               <div className="flex gap-1.5">
                 {shades.map((shade, i) => (
                   <button
@@ -127,12 +127,12 @@ export const ColorPicker: React.FC = () => {
       {/* Formats */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
         {formats.map(f => (
-          <div key={f.label} className="dark:bg-dark-card bg-white rounded-xl border dark:border-dark-border border-slate-200 p-4 space-y-2 dark:hover:border-zinc-700 hover:border-slate-300 transition-colors">
+          <div key={f.label} className=" bg-card rounded-xl border  border-border p-4 space-y-2 hover:border-border transition-colors">
             <div className="flex items-center justify-between">
-              <span className="text-[11px] font-bold dark:text-zinc-500 text-slate-500 uppercase tracking-wider">{f.label}</span>
+              <span className="text-[11px] font-bold  text-muted-foreground uppercase tracking-wider">{f.label}</span>
               <CopyButton text={f.value} />
             </div>
-            <div className={`dark:bg-dark-bg bg-slate-50 border dark:border-dark-border border-slate-200 rounded-lg px-3 py-2.5 text-[13px] font-mono font-bold select-all ${f.color}`}>
+            <div className={` bg-muted border  border-border rounded-lg px-3 py-2.5 text-[13px] font-mono font-bold select-all ${f.color}`}>
               {f.value}
             </div>
           </div>

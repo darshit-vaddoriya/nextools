@@ -114,10 +114,10 @@ export const GifConverterTool: React.FC = () => {
   return (
     <div className="space-y-4">
       <div className="flex gap-2">
-        <button onClick={() => setMode('images')} className={`btn-secondary text-xs px-4 py-2 ${mode === 'images' ? 'dark:bg-indigo-500/20 bg-indigo-100 border-indigo-300' : ''}`}>
+        <button onClick={() => setMode('images')} className={`btn-secondary text-xs px-4 py-2 ${mode === 'images' ? 'bg-primary/10 border-primary' : ''}`}>
           <Clapperboard className="w-3.5 h-3.5" /> Images → GIF
         </button>
-        <button onClick={() => setMode('video')} className={`btn-secondary text-xs px-4 py-2 ${mode === 'video' ? 'dark:bg-indigo-500/20 bg-indigo-100 border-indigo-300' : ''}`}>
+        <button onClick={() => setMode('video')} className={`btn-secondary text-xs px-4 py-2 ${mode === 'video' ? 'bg-primary/10 border-primary' : ''}`}>
           <Film className="w-3.5 h-3.5" /> Video → GIF
         </button>
       </div>
@@ -127,7 +127,7 @@ export const GifConverterTool: React.FC = () => {
         <DropZone onFiles={handleVideo} accept="video/*" label="Select a video clip" hint="Frames will be sampled across the whole clip" />
       )}
       {(items.length > 0 || videoFile) && (
-        <div className="rounded-xl border dark:bg-dark-card dark:border-dark-border bg-white border-slate-200 p-4 space-y-3 text-xs">
+        <div className="rounded-xl border   bg-card border-border p-4 space-y-3 text-xs">
           <div className="flex flex-wrap items-end gap-3">
             <label className="block">
               <span className="section-label mb-1 block">Frame delay (ms)</span>
@@ -140,14 +140,14 @@ export const GifConverterTool: React.FC = () => {
             <button onClick={build} disabled={busy} className="btn-primary px-4 py-2">
               {busy ? <><Loader2 className="w-3.5 h-3.5 animate-spin" /> Building…</> : <><Download className="w-3.5 h-3.5" /> Create GIF</>}
             </button>
-            <span className="font-mono text-[11px] dark:text-zinc-500 text-slate-400">
+            <span className="font-mono text-[11px]  text-muted-foreground">
               {mode === 'images' ? `${items.length} frame(s)` : videoFile?.name}
             </span>
           </div>
           {mode === 'images' && items.length > 0 && (
             <div className="flex gap-2 overflow-x-auto py-1">
               {items.map((it, i) => (
-                <img key={i} src={it.img.src} alt={`frame-${i}`} className="h-16 w-16 object-contain rounded-lg border dark:border-dark-border border-slate-200 dark:bg-dark-bg bg-slate-100" />
+                <img key={i} src={it.img.src} alt={`frame-${i}`} className="h-16 w-16 object-contain rounded-lg border  border-border  bg-muted" />
               ))}
             </div>
           )}
@@ -214,12 +214,12 @@ export const QrGeneratorTool: React.FC = () => {
     <div className="space-y-4">
       <div className="flex flex-wrap gap-2">
         {([['url', 'URL'], ['text', 'Plain Text'], ['wifi', 'Wi-Fi'], ['vcard', 'vCard']] as [QrKind, string][]).map(([k, label]) => (
-          <button key={k} onClick={() => setKind(k)} className={`btn-secondary text-xs px-4 py-2 ${kind === k ? 'dark:bg-indigo-500/20 bg-indigo-100 border-indigo-300' : ''}`}>
+          <button key={k} onClick={() => setKind(k)} className={`btn-secondary text-xs px-4 py-2 ${kind === k ? 'bg-primary/10 border-primary' : ''}`}>
             {label}
           </button>
         ))}
       </div>
-      <div className="rounded-xl border dark:bg-dark-card dark:border-dark-border bg-white border-slate-200 p-4 space-y-3">
+      <div className="rounded-xl border   bg-card border-border p-4 space-y-3">
         {kind === 'url' && (
           <label className="block text-xs">
             <span className="section-label mb-1 block">URL</span>
@@ -233,7 +233,7 @@ export const QrGeneratorTool: React.FC = () => {
           </label>
         )}
         {kind === 'wifi' && (
-          <div className="grid grid-cols-3 gap-3 text-xs">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
             <label className="block">
               <span className="section-label mb-1 block">Encryption</span>
               <Select
@@ -257,7 +257,7 @@ export const QrGeneratorTool: React.FC = () => {
           </div>
         )}
         {kind === 'vcard' && (
-          <div className="grid grid-cols-3 gap-3 text-xs">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
             <label className="block">
               <span className="section-label mb-1 block">Name</span>
               <input value={vName} onChange={(e) => setVName(e.target.value)} className="input-base w-full" />
@@ -272,7 +272,7 @@ export const QrGeneratorTool: React.FC = () => {
             </label>
           </div>
         )}
-        <div className="grid grid-cols-4 gap-3 text-xs">
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
           <label className="block">
             <span className="section-label mb-1 block">Size (px)</span>
             <input type="number" min={64} max={1024} value={size} onChange={(e) => setSize(parseInt(e.target.value) || 256)} className="input-base w-full font-mono" />
@@ -287,11 +287,11 @@ export const QrGeneratorTool: React.FC = () => {
           </label>
           <label className="block">
             <span className="section-label mb-1 block">Color</span>
-            <input type="color" value={fg} onChange={(e) => setFg(e.target.value)} className="h-8 w-full rounded border dark:border-dark-border border-slate-300 cursor-pointer bg-transparent" />
+            <input type="color" value={fg} onChange={(e) => setFg(e.target.value)} className="h-8 w-full rounded border  border-border cursor-pointer bg-transparent" />
           </label>
           <label className="block">
             <span className="section-label mb-1 block">Background</span>
-            <input type="color" value={bg} onChange={(e) => setBg(e.target.value)} className="h-8 w-full rounded border dark:border-dark-border border-slate-300 cursor-pointer bg-transparent" />
+            <input type="color" value={bg} onChange={(e) => setBg(e.target.value)} className="h-8 w-full rounded border  border-border cursor-pointer bg-transparent" />
           </label>
         </div>
         <button onClick={generate} disabled={busy} className="btn-primary text-xs px-4 py-2">
@@ -300,8 +300,8 @@ export const QrGeneratorTool: React.FC = () => {
       </div>
       <ErrorNotice message={error} />
       {dataUrl && (
-        <div className="rounded-2xl border dark:bg-dark-card dark:border-dark-border bg-white border-slate-200 p-4 space-y-3 text-center">
-          <div className="mx-auto w-fit rounded-xl border dark:border-dark-border border-slate-200 p-3 bg-white">
+        <div className="rounded-2xl border   bg-card border-border p-4 space-y-3 text-center">
+          <div className="mx-auto w-fit rounded-xl border  border-border p-3 bg-card">
             <img src={dataUrl} alt="QR code" className="mx-auto" style={{ width: Math.min(size, 280) }} />
           </div>
           <div className="flex justify-center gap-2">
@@ -424,12 +424,12 @@ export const OcrImageTool: React.FC = () => {
         <DropZone onFiles={handleFiles} label="Select an image with text" hint="Uses Tesseract.js on your device, so the image never gets uploaded" />
       ) : (
         <>
-          <div className="rounded-2xl border dark:bg-dark-card dark:border-dark-border bg-white border-slate-200 overflow-hidden">
+          <div className="rounded-2xl border   bg-card border-border overflow-hidden">
             <img src={previewUrl} alt="OCR source" className="max-h-[260px] mx-auto object-contain" />
           </div>
-          <div className="flex items-center gap-3 text-xs dark:text-zinc-400 text-slate-600">
+          <div className="flex items-center gap-3 text-xs  text-muted-foreground">
             <span className="font-mono">{file.name}</span>
-            <span className="font-mono dark:text-zinc-500 text-slate-400">{(file.size / 1024).toFixed(1)} KB</span>
+            <span className="font-mono  text-muted-foreground">{(file.size / 1024).toFixed(1)} KB</span>
           </div>
           <div className="grid grid-cols-2 gap-3">
             <label className="block text-xs">
@@ -452,15 +452,15 @@ export const OcrImageTool: React.FC = () => {
           <button onClick={recognize} disabled={status === 'loading' || status === 'recognizing'} className="btn-primary text-xs px-4 py-2">
             {status === 'loading' || status === 'recognizing' ? <><Loader2 className="w-3.5 h-3.5 animate-spin" /> {status === 'loading' ? 'Loading language model…' : 'Recognizing…'}</> : <><ScanText className="w-3.5 h-3.5" /> Extract Text</>}
           </button>
-          <p className="text-[11px] dark:text-zinc-500 text-slate-500 leading-relaxed">
-            Tips: sharp, high-contrast images give the best results. For app/website screenshots, pick <span className="font-semibold dark:text-zinc-300 text-slate-700">Sparse</span> layout. First run of a language downloads its model, then it works offline.
+          <p className="text-[11px]  text-muted-foreground leading-relaxed">
+            Tips: sharp, high-contrast images give the best results. For app/website screenshots, pick <span className="font-semibold  text-muted-foreground">Sparse</span> layout. First run of a language downloads its model, then it works offline.
           </p>
         </>
       )}
       {(status === 'done' || text) && (
-        <div className="rounded-2xl border dark:bg-dark-card dark:border-dark-border bg-white border-slate-200 p-4 space-y-3">
+        <div className="rounded-2xl border   bg-card border-border p-4 space-y-3">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-semibold dark:text-zinc-300 text-slate-700 flex items-center gap-1.5">
+            <span className="text-xs font-semibold  text-muted-foreground flex items-center gap-1.5">
               <ScanText className="w-4 h-4 text-emerald-500" /> Extracted text
             </span>
             <CopyButton text={text} label="Copy Text" />
@@ -530,24 +530,24 @@ export const AiUpscalerTool: React.FC = () => {
         <DropZone onFiles={handleFiles} label="Select a photo to upscale" />
       ) : (
         <>
-          <div className="rounded-2xl border dark:bg-dark-card dark:border-dark-border bg-white border-slate-200 p-4 flex items-center gap-4">
-            <img src={img.src} alt="Source" className="w-24 h-24 object-contain rounded-lg dark:bg-dark-bg bg-slate-100 border dark:border-dark-border border-slate-200" />
-            <div className="text-xs dark:text-zinc-400 text-slate-600 space-y-1">
-              <p className="font-mono dark:text-zinc-300 text-slate-700">{img.naturalWidth} × {img.naturalHeight} → {Math.min(clamp(Math.round(img.naturalWidth * scale), 1, 6000), 6000)} × {Math.min(clamp(Math.round(img.naturalHeight * scale), 1, 6000), 6000)}</p>
+          <div className="rounded-2xl border   bg-card border-border p-4 flex items-center gap-4">
+            <img src={img.src} alt="Source" className="w-24 h-24 object-contain rounded-lg  bg-muted border  border-border" />
+            <div className="text-xs  text-muted-foreground space-y-1">
+              <p className="font-mono  text-muted-foreground">{img.naturalWidth} × {img.naturalHeight} → {Math.min(clamp(Math.round(img.naturalWidth * scale), 1, 6000), 6000)} × {Math.min(clamp(Math.round(img.naturalHeight * scale), 1, 6000), 6000)}</p>
               <p>High-quality interpolation with detail enhancement.</p>
             </div>
           </div>
-          <div className="rounded-xl border dark:bg-dark-card dark:border-dark-border bg-white border-slate-200 p-4 space-y-4">
+          <div className="rounded-xl border   bg-card border-border p-4 space-y-4">
             <div className="flex gap-2">
               {[2, 4].map(s => (
-                <button key={s} onClick={() => setScale(s)} className={`btn-secondary text-xs px-4 py-2 ${scale === s ? 'dark:bg-indigo-500/20 bg-indigo-100 border-indigo-300' : ''}`}>
+                <button key={s} onClick={() => setScale(s)} className={`btn-secondary text-xs px-4 py-2 ${scale === s ? 'bg-primary/10 border-primary' : ''}`}>
                   {s}× Upscale
                 </button>
               ))}
             </div>
             <div className="space-y-1.5">
-              <div className="flex justify-between text-xs"><span className="dark:text-zinc-400 text-slate-600 font-medium">Detail enhancement</span><span className="font-mono font-bold text-indigo-500">{sharpen}%</span></div>
-              <input type="range" min={0} max={100} value={sharpen} onChange={(e) => setSharpen(parseInt(e.target.value))} className="w-full h-1.5 accent-indigo-500 cursor-pointer" />
+              <div className="flex justify-between text-xs"><span className=" text-muted-foreground font-medium">Detail enhancement</span><span className="font-mono font-bold text-primary">{sharpen}%</span></div>
+              <input type="range" min={0} max={100} value={sharpen} onChange={(e) => setSharpen(parseInt(e.target.value))} className="w-full h-1.5 accent-primary cursor-pointer" />
             </div>
           </div>
           <button onClick={upscale} className="btn-primary text-xs px-4 py-2">

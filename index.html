@@ -18,7 +18,9 @@
       (function () {
         try {
           var t = localStorage.getItem('nexttool-theme');
-          if (t === 'dark') document.documentElement.classList.add('dark');
+          var isDark = t === 'dark'
+            || (t !== 'light' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+          if (isDark) document.documentElement.classList.add('dark');
         } catch (e) {}
       })();
     </script>
@@ -33,7 +35,7 @@
     <title>NextTool - Free Online Tools</title>
     <meta name="description" content="Free browser tools for PDF, image, developer and AI tasks. Files are processed on your own device, so nothing is uploaded." />
     <meta name="keywords" content="free online tools, PDF merge, PDF compress, image compressor, background remover, video trimmer, JSON formatter, password generator, base64 encoder, UUID generator, free browser tools, client-side tools" />
-    <meta name="author" content="NextTool by DK" />
+    <meta name="author" content="NextTool" />
     <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
     <meta name="google-adsense-account" content="ca-pub-3383457039703768" />
     <link rel="canonical" href="https://nexttool.app/" />
@@ -65,8 +67,8 @@
       "url": "https://nexttool.app/",
       "description": "Free browser-based tools for PDF, image, video, developer and AI tasks that run on your device.",
       "author": {
-        "@type": "Person",
-        "name": "DK"
+        "@type": "Organization",
+        "name": "NextTool"
       },
       "potentialAction": {
         "@type": "SearchAction",
@@ -132,8 +134,8 @@
     <!-- Self-hosted via @fontsource (see src/main.tsx) — koi external CDN request nahi -->
 
     <!-- ── Theme color ────────────────────────────────────── -->
-    <meta name="theme-color" content="#0a0a0f" media="(prefers-color-scheme: dark)" />
-    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#131313" media="(prefers-color-scheme: dark)" />
+    <meta name="theme-color" content="#faf9ff" media="(prefers-color-scheme: light)" />
   </head>
   <body class="font-sans antialiased">
     <div id="root"></div>

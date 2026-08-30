@@ -145,33 +145,30 @@ export const PdfMergeTool: React.FC = () => {
         onDragOver={onDragOver}
         onDragLeave={onDragLeave}
         onDrop={onDrop}
-        className={`relative rounded-2xl border-2 border-dashed p-8 text-center space-y-3 transition-all duration-200
-          dark:bg-dark-card bg-white shadow-xs
-          ${isDragging
-            ? 'border-indigo-500 bg-indigo-500/[0.06] scale-[1.01]'
-            : 'dark:border-dark-border border-slate-300'}`}
+        className={`relative rounded-2xl border-2 border-dashed p-8 text-center space-y-3 transition-all duration-200 bg-card
+          ${isDragging ? 'border-primary bg-primary/[0.06] scale-[1.01]' : 'border-border'}`}
       >
-        <div className="w-14 h-14 rounded-2xl dark:bg-indigo-500/10 bg-indigo-50 border dark:border-indigo-500/20 border-indigo-200 mx-auto flex items-center justify-center">
-          <Upload className={`w-6 h-6 ${isDragging ? 'text-indigo-500' : 'text-indigo-500'}`} />
+        <div className="w-14 h-14 rounded-2xl bg-primary/10 border border-primary/20 mx-auto flex items-center justify-center">
+          <Upload className="w-6 h-6 text-primary" />
         </div>
         <div>
-          <h3 className="text-[15px] font-bold dark:text-white text-slate-900">
+          <h3 className="text-[15px] font-bold text-foreground">
             {isDragging ? 'Drop PDF files here' : 'Select or drag & drop PDF files'}
           </h3>
-          <p className="text-xs text-slate-400 mt-1">
-            Merged with real <span className="font-mono dark:text-zinc-300 text-slate-600">pdf-lib</span>, right in your browser
+          <p className="text-xs text-muted-foreground mt-1">
+            Merged with real <span className="font-mono text-muted-foreground">pdf-lib</span>, right in your browser
           </p>
         </div>
         <div className="flex items-center justify-center gap-2 flex-wrap">
           <button
             onClick={() => inputRef.current?.click()}
-            className="inline-flex items-center gap-2 px-5 py-2 bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold rounded-lg cursor-pointer transition-colors shadow-md shadow-indigo-500/20"
+            className="inline-flex items-center gap-2 px-5 py-2 bg-primary hover:brightness-110 text-primary-foreground text-xs font-semibold rounded-lg cursor-pointer transition-all"
           >
             <Upload className="w-3.5 h-3.5" />
             Choose PDF Files
           </button>
           {pdfFiles.length > 0 && (
-            <button onClick={clearAll} className="inline-flex items-center gap-1.5 px-4 py-2 text-xs font-medium rounded-lg border dark:bg-white/[0.04] dark:border-dark-border dark:text-zinc-400 dark:hover:text-white bg-white border-slate-200 text-slate-600 hover:bg-slate-50 transition-colors">
+            <button onClick={clearAll} className="inline-flex items-center gap-1.5 px-4 py-2 text-xs font-medium rounded-lg border bg-card border-border text-muted-foreground hover:bg-muted hover:text-foreground transition-colors">
               <Trash2 className="w-3.5 h-3.5" /> Clear all
             </button>
           )}
@@ -180,7 +177,7 @@ export const PdfMergeTool: React.FC = () => {
       </div>
 
       {error && (
-        <div className="p-3 bg-rose-500/10 border border-rose-500/30 rounded-xl text-rose-500 dark:text-rose-400 text-xs flex items-center gap-2">
+        <div className="p-3 bg-danger/10 border border-danger/30 rounded-xl text-danger text-xs flex items-center gap-2">
           <AlertTriangle className="w-4 h-4 shrink-0" />
           <span>{error}</span>
         </div>
@@ -188,46 +185,46 @@ export const PdfMergeTool: React.FC = () => {
 
       {/* PDF List Workspace */}
       {pdfFiles.length > 0 && (
-        <div className="rounded-2xl border dark:bg-dark-card dark:border-dark-border bg-white border-slate-200 p-4 space-y-3 shadow-xs">
-          <div className="flex items-center justify-between pb-2 border-b dark:border-dark-border border-slate-100 text-xs font-semibold dark:text-zinc-300 text-slate-700">
+        <div className="rounded-2xl border bg-card border-border p-4 space-y-3 shadow-card">
+          <div className="flex items-center justify-between pb-2 border-b border-border text-xs font-semibold text-foreground">
             <span className="flex items-center gap-2">
-              <FileText className="w-4 h-4 text-indigo-500" />
+              <FileText className="w-4 h-4 text-primary" />
               Files to Merge ({pdfFiles.length})
             </span>
-            <span className="text-emerald-600 dark:text-emerald-400 font-mono text-[11px]">{totalPages} pages · {formatSize(totalSize)}</span>
+            <span className="text-success font-mono text-[11px]">{totalPages} pages · {formatSize(totalSize)}</span>
           </div>
 
           <div className="space-y-2">
             {pdfFiles.map((pdf, idx) => (
               <div
                 key={pdf.id}
-                className="flex items-center justify-between gap-3 p-3 rounded-xl border dark:bg-dark-bg dark:border-dark-border bg-slate-50 border-slate-200 text-xs group"
+                className="flex items-center justify-between gap-3 p-3 rounded-xl border bg-muted border-border text-xs group"
               >
                 <div className="flex items-center gap-3 min-w-0">
-                  <div className="w-12 h-[68px] rounded-lg overflow-hidden border dark:bg-dark-bg dark:border-dark-border bg-slate-100 border-slate-200 flex items-center justify-center shrink-0">
+                  <div className="w-12 h-[68px] rounded-lg overflow-hidden border bg-card border-border flex items-center justify-center shrink-0">
                     {pdf.previewUrl ? (
                       <img src={pdf.previewUrl} alt={pdf.name} className="w-full h-full object-contain" />
                     ) : (
-                      <FileText className="w-5 h-5 text-red-500" />
+                      <FileText className="w-5 h-5 text-primary" />
                     )}
                   </div>
                   <div className="min-w-0">
-                    <span className="font-semibold dark:text-white text-slate-900 block truncate">{pdf.name}</span>
-                    <span className="text-[10px] text-slate-400 font-mono">{formatSize(pdf.size)} • {pdf.pages} pages</span>
+                    <span className="font-semibold text-foreground block truncate">{pdf.name}</span>
+                    <span className="text-[10px] text-muted-foreground font-mono">{formatSize(pdf.size)} • {pdf.pages} pages</span>
                   </div>
                 </div>
 
                 <div className="flex items-center gap-1 shrink-0">
                   <button onClick={() => movePdf(idx, 'up')} disabled={idx === 0}
-                    className="p-1.5 rounded-md text-slate-400 hover:text-slate-700 dark:hover:text-white disabled:opacity-30 disabled:cursor-not-allowed transition-colors" title="Move up">
+                    className="p-1.5 rounded-md text-muted-foreground hover:text-foreground disabled:opacity-30 disabled:cursor-not-allowed transition-colors" title="Move up">
                     <ArrowUp className="w-3.5 h-3.5" />
                   </button>
                   <button onClick={() => movePdf(idx, 'down')} disabled={idx === pdfFiles.length - 1}
-                    className="p-1.5 rounded-md text-slate-400 hover:text-slate-700 dark:hover:text-white disabled:opacity-30 disabled:cursor-not-allowed transition-colors" title="Move down">
+                    className="p-1.5 rounded-md text-muted-foreground hover:text-foreground disabled:opacity-30 disabled:cursor-not-allowed transition-colors" title="Move down">
                     <ArrowDown className="w-3.5 h-3.5" />
                   </button>
                   <button onClick={() => removePdf(pdf.id)}
-                    className="p-1.5 rounded-md text-rose-500 hover:bg-rose-500/10 transition-colors" title="Remove">
+                    className="p-1.5 rounded-md text-danger hover:bg-danger/10 transition-colors" title="Remove">
                     <Trash2 className="w-3.5 h-3.5" />
                   </button>
                 </div>
@@ -238,7 +235,7 @@ export const PdfMergeTool: React.FC = () => {
           <button
             onClick={handleMerge}
             disabled={pdfFiles.length === 0 || isProcessing}
-            className="w-full py-3 bg-indigo-600 hover:bg-indigo-500 active:bg-indigo-700 text-white text-[13px] font-bold rounded-xl flex items-center justify-center gap-2 transition-colors disabled:opacity-50 shadow-md shadow-indigo-500/20"
+            className="w-full py-3 bg-primary hover:brightness-110 text-primary-foreground text-[13px] font-bold rounded-xl flex items-center justify-center gap-2 transition-all disabled:opacity-50"
           >
             {isProcessing ? (
               <><Loader2 className="w-4 h-4 animate-spin" /> Merging PDFs in browser…</>
@@ -251,19 +248,19 @@ export const PdfMergeTool: React.FC = () => {
 
       {/* Post-merge result */}
       {mergedUrl && (
-        <div className="p-4 rounded-2xl border border-emerald-500/30 bg-emerald-500/10 text-xs space-y-3">
-          <div className="flex items-center gap-2 text-emerald-600 dark:text-emerald-400 font-bold">
+        <div className="p-4 rounded-2xl border border-success/30 bg-success/10 text-xs space-y-3">
+          <div className="flex items-center gap-2 text-success font-bold">
             <CheckCircle className="w-4 h-4" />
             <span>Merged {pdfFiles.length} PDFs ({totalPages} pages) on your device</span>
           </div>
-          <div className="flex items-center gap-2 text-emerald-700/80 dark:text-emerald-400/80 font-mono">
+          <div className="flex items-center gap-2 text-success/80 font-mono">
             <ShieldCheck className="w-3.5 h-3.5" />
             Nothing was uploaded. Your files never left this device.
           </div>
           <a
             href={mergedUrl}
             download={`merged_${pdfFiles.length}_files.pdf`}
-            className="w-full py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-xl flex items-center justify-center gap-2 transition-colors shadow-md shadow-emerald-500/20"
+            className="w-full py-2.5 bg-success hover:brightness-110 text-success-foreground font-bold text-xs rounded-xl flex items-center justify-center gap-2 transition-all"
           >
             <Download className="w-4 h-4" />
             <span>Download Merged PDF</span>

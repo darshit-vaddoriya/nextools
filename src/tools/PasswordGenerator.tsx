@@ -67,29 +67,29 @@ export const PasswordGenerator: React.FC = () => {
   return (
     <div className="space-y-4">
       {/* Result Display */}
-      <div className="dark:bg-dark-card bg-white rounded-xl border dark:border-dark-border border-slate-200 p-5 space-y-4">
+      <div className=" bg-card rounded-xl border  border-border p-5 space-y-4">
         {/* Strength bar */}
         <div className="space-y-2">
           <div className="flex items-center justify-between text-xs">
-            <span className="flex items-center gap-1.5 dark:text-zinc-400 text-slate-600 font-medium">
-              <ShieldCheck className="w-3.5 h-3.5 text-indigo-500" />
+            <span className="flex items-center gap-1.5  text-muted-foreground font-medium">
+              <ShieldCheck className="w-3.5 h-3.5 text-primary" />
               Strength:
               <strong className={`font-bold ${strengthColor}`}>{strengthLabel}</strong>
             </span>
-            <span className="dark:text-zinc-500 text-slate-500 font-mono">{entropy} bits</span>
+            <span className=" text-muted-foreground font-mono">{entropy} bits</span>
           </div>
-          <div className="h-1.5 dark:bg-dark-bg bg-slate-100 rounded-full overflow-hidden">
+          <div className="h-1.5  bg-muted rounded-full overflow-hidden">
             <div className={`h-full ${strengthBg} ${strengthWidth} rounded-full transition-all duration-500`} />
           </div>
         </div>
 
         {/* Password display */}
-        <div className="dark:bg-dark-bg bg-slate-50 border dark:border-dark-border border-slate-200 rounded-xl px-4 py-3.5 font-mono text-lg text-emerald-500 dark:text-emerald-400 font-bold tracking-widest break-all select-all flex items-center justify-between gap-4">
+        <div className=" bg-muted border  border-border rounded-xl px-4 py-3.5 font-mono text-lg text-emerald-500  font-bold tracking-widest break-all select-all flex items-center justify-between gap-4">
           <span className="truncate">{password || '-'}</span>
           <CopyButton text={password} label="Copy" className="shrink-0" />
         </div>
 
-        <div className="flex items-center justify-between text-[11px] dark:text-zinc-600 text-slate-400 font-mono">
+        <div className="flex items-center justify-between text-[11px]  text-muted-foreground font-mono">
           <span>{password.length} characters</span>
         </div>
 
@@ -100,21 +100,21 @@ export const PasswordGenerator: React.FC = () => {
       </div>
 
       {/* Controls */}
-      <div className="dark:bg-dark-card bg-white rounded-xl border dark:border-dark-border border-slate-200 p-5 space-y-5">
+      <div className=" bg-card rounded-xl border  border-border p-5 space-y-5">
         <p className="section-label">Configuration</p>
 
         {/* Length */}
         <div className="space-y-2.5">
           <div className="flex justify-between text-xs">
-            <span className="dark:text-zinc-400 text-slate-600 font-medium">Length</span>
-            <span className="font-mono font-bold text-indigo-500">{length} characters</span>
+            <span className=" text-muted-foreground font-medium">Length</span>
+            <span className="font-mono font-bold text-primary">{length} characters</span>
           </div>
           <input
             type="range" min={6} max={64} value={length}
             onChange={(e) => setLength(parseInt(e.target.value))}
-            className="w-full h-1.5 dark:bg-dark-bg bg-slate-100 rounded-full appearance-none cursor-pointer accent-indigo-500"
+            className="w-full h-1.5  bg-muted rounded-full appearance-none cursor-pointer accent-primary"
           />
-          <div className="flex justify-between text-[10px] dark:text-zinc-700 text-slate-400 font-mono">
+          <div className="flex justify-between text-[10px]  text-muted-foreground font-mono">
             <span>6</span><span>64</span>
           </div>
         </div>
@@ -126,15 +126,15 @@ export const PasswordGenerator: React.FC = () => {
               key={opt.label}
               className={`p-3 rounded-xl border cursor-pointer select-none transition-all duration-150 flex items-center gap-2 text-xs font-medium ${
                 opt.checked
-                  ? 'dark:bg-indigo-500/10 dark:border-indigo-500/30 dark:text-indigo-300 bg-indigo-50 border-indigo-300 text-indigo-700'
-                  : 'dark:bg-dark-bg dark:border-dark-border dark:text-zinc-500 dark:hover:border-zinc-600 bg-slate-50 border-slate-200 text-slate-600 hover:border-slate-300'
+                  ? 'bg-primary/10 border-primary text-primary'
+                  : '   bg-muted border-border text-muted-foreground hover:border-border'
               }`}
             >
               <input
                 type="checkbox"
                 checked={opt.checked}
                 onChange={(e) => opt.onChange(e.target.checked)}
-                className="rounded text-indigo-500 focus:ring-0 focus:ring-offset-0 dark:bg-dark-card border-current"
+                className="rounded text-primary focus:ring-0 focus:ring-offset-0  border-current"
               />
               {opt.label}
             </label>

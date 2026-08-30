@@ -45,6 +45,9 @@ ${urls.map(u => `  <url>
 
 export default defineConfig({
   plugins: [react(), sitemapPlugin()],
+  server: {
+    port: process.env.PORT ? Number(process.env.PORT) : 5173,
+  },
   worker: {
     format: 'es',
   },

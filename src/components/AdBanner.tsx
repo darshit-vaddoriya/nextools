@@ -36,11 +36,11 @@ export const AdBanner: React.FC<AdBannerProps> = ({ type, className = '' }) => {
 
   return (
     <div className={`w-full ${className}`}>
-      <p className="text-center text-[9px] font-mono uppercase tracking-[0.2em] dark:text-zinc-700 text-slate-300 mb-1 select-none">
+      <p className="text-center text-[9px] font-mono uppercase tracking-[0.2em] text-border mb-1 select-none">
         Advertisement
       </p>
       {enabled ? (
-        <div className="w-full flex flex-col items-center justify-center overflow-hidden rounded-xl dark:bg-dark-card/30 dark:border dark:border-dark-border/50 bg-slate-50/50 border border-slate-200">
+        <div className="w-full flex flex-col items-center justify-center overflow-hidden rounded-xl bg-muted/40 border border-border">
           <ins
             ref={insRef}
             className="adsbygoogle w-full"
@@ -53,11 +53,11 @@ export const AdBanner: React.FC<AdBannerProps> = ({ type, className = '' }) => {
         </div>
       ) : (
         <div
-          className={`w-full ${cfg.h} rounded-xl border border-dashed dark:bg-dark-card/30 dark:border-dark-border/50 bg-slate-50/50 border-slate-200 flex flex-col items-center justify-center relative overflow-hidden`}
+          className={`w-full ${cfg.h} rounded-xl border border-dashed bg-muted/40 border-border flex flex-col items-center justify-center relative overflow-hidden`}
         >
-          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-indigo-500/[0.03] to-transparent pointer-events-none" />
-          <span className="text-[11px] font-medium dark:text-zinc-600 text-slate-400">{cfg.label}</span>
-          <span className="text-[9px] font-mono dark:text-zinc-700 text-slate-300 mt-0.5">[{cfg.dim}]</span>
+          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/[0.04] to-transparent pointer-events-none" />
+          <span className="text-[11px] font-medium text-muted-foreground/70">{cfg.label}</span>
+          <span className="text-[9px] font-mono text-border mt-0.5">[{cfg.dim}]</span>
         </div>
       )}
     </div>

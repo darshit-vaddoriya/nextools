@@ -41,8 +41,8 @@ export const FileDropWrapper: React.FC<FileDropWrapperProps> = ({
     >
       {children}
       {isDragging && (
-        <div className="absolute inset-0 z-50 flex items-center justify-center rounded-2xl border-2 border-dashed border-indigo-500 bg-indigo-500/[0.08] backdrop-blur-[2px] pointer-events-none">
-          <div className="flex flex-col items-center gap-2 text-indigo-600 dark:text-indigo-400 font-semibold text-sm">
+        <div className="absolute inset-0 z-50 flex items-center justify-center rounded-2xl border-2 border-dashed border-primary/60 bg-primary/[0.06] backdrop-blur-[2px] pointer-events-none">
+          <div className="flex flex-col items-center gap-2 text-primary font-semibold text-sm">
             <Upload className="w-6 h-6" />
             {overlayText}
           </div>

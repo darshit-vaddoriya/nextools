@@ -111,69 +111,69 @@ export const HashGenerator: React.FC = () => {
   return (
     <div className="space-y-5">
       {/* Input Section */}
-      <div className="rounded-xl border dark:bg-dark-card dark:border-dark-border bg-white border-slate-200 p-4 space-y-2 shadow-xs">
-        <label className="text-xs font-bold uppercase tracking-wider dark:text-zinc-200 text-slate-800 flex items-center justify-between">
+      <div className="rounded-xl border   bg-card border-border p-4 space-y-2 shadow-xs">
+        <label className="text-xs font-bold uppercase tracking-wider  text-foreground flex items-center justify-between">
           <span>Input String / Data</span>
-          <span className="text-slate-400 font-mono text-[11px]">{input.length} chars</span>
+          <span className="text-muted-foreground font-mono text-[11px]">{input.length} chars</span>
         </label>
         <textarea
           value={input}
           onChange={(e) => setInput(e.target.value)}
           placeholder="Enter text to generate cryptographic hashes..."
-          className="w-full dark:bg-dark-bg dark:border-dark-border dark:text-zinc-200 bg-slate-50 border-slate-200 border rounded-lg p-3 text-xs font-mono placeholder-slate-400 focus:outline-none leading-relaxed h-24"
+          className="w-full    bg-muted border-border border rounded-lg p-3 text-xs font-mono placeholder:text-muted-foreground focus:outline-none leading-relaxed h-24"
         />
       </div>
 
       {/* Hashes List */}
       <div className="space-y-3">
         {/* SHA-256 */}
-        <div className="rounded-xl border dark:bg-dark-card dark:border-dark-border bg-white border-slate-200 p-4 space-y-1.5 shadow-xs">
+        <div className="rounded-xl border   bg-card border-border p-4 space-y-1.5 shadow-xs">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-bold dark:text-zinc-200 text-slate-800 uppercase tracking-wider flex items-center gap-1.5">
-              <Shield className="w-3.5 h-3.5 text-indigo-500" /> SHA-256 (Recommended)
+            <span className="text-xs font-bold  text-foreground uppercase tracking-wider flex items-center gap-1.5">
+              <Shield className="w-3.5 h-3.5 text-primary" /> SHA-256 (Recommended)
             </span>
             <CopyButton text={hashes.sha256} />
           </div>
-          <div className="p-2.5 dark:bg-dark-bg dark:border-dark-border bg-slate-50 border-slate-200 border rounded-lg text-xs font-mono text-emerald-600 dark:text-emerald-400 break-all select-all font-semibold">
+          <div className="p-2.5   bg-muted border-border border rounded-lg text-xs font-mono text-success break-all select-all font-semibold">
             {hashes.sha256 || 'Generating...'}
           </div>
         </div>
 
         {/* SHA-512 */}
-        <div className="rounded-xl border dark:bg-dark-card dark:border-dark-border bg-white border-slate-200 p-4 space-y-1.5 shadow-xs">
+        <div className="rounded-xl border   bg-card border-border p-4 space-y-1.5 shadow-xs">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-bold dark:text-zinc-200 text-slate-800 uppercase tracking-wider">
+            <span className="text-xs font-bold  text-foreground uppercase tracking-wider">
               SHA-512
             </span>
             <CopyButton text={hashes.sha512} />
           </div>
-          <div className="p-2.5 dark:bg-dark-bg dark:border-dark-border bg-slate-50 border-slate-200 border rounded-lg text-xs font-mono text-sky-600 dark:text-sky-400 break-all select-all font-semibold">
+          <div className="p-2.5   bg-muted border-border border rounded-lg text-xs font-mono text-sky-600 dark:text-sky-400 break-all select-all font-semibold">
             {hashes.sha512 || 'Generating...'}
           </div>
         </div>
 
         {/* SHA-1 */}
-        <div className="rounded-xl border dark:bg-dark-card dark:border-dark-border bg-white border-slate-200 p-4 space-y-1.5 shadow-xs">
+        <div className="rounded-xl border   bg-card border-border p-4 space-y-1.5 shadow-xs">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-bold dark:text-zinc-200 text-slate-800 uppercase tracking-wider">
+            <span className="text-xs font-bold  text-foreground uppercase tracking-wider">
               SHA-1
             </span>
             <CopyButton text={hashes.sha1} />
           </div>
-          <div className="p-2.5 dark:bg-dark-bg dark:border-dark-border bg-slate-50 border-slate-200 border rounded-lg text-xs font-mono text-amber-600 dark:text-amber-400 break-all select-all font-semibold">
+          <div className="p-2.5   bg-muted border-border border rounded-lg text-xs font-mono text-amber-600 dark:text-amber-400 break-all select-all font-semibold">
             {hashes.sha1 || 'Generating...'}
           </div>
         </div>
 
         {/* MD5 */}
-        <div className="rounded-xl border dark:bg-dark-card dark:border-dark-border bg-white border-slate-200 p-4 space-y-1.5 shadow-xs">
+        <div className="rounded-xl border   bg-card border-border p-4 space-y-1.5 shadow-xs">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-bold dark:text-zinc-200 text-slate-800 uppercase tracking-wider">
+            <span className="text-xs font-bold  text-foreground uppercase tracking-wider">
               MD5 Digest
             </span>
             <CopyButton text={hashes.md5} />
           </div>
-          <div className="p-2.5 dark:bg-dark-bg dark:border-dark-border bg-slate-50 border-slate-200 border rounded-lg text-xs font-mono text-purple-600 dark:text-purple-400 break-all select-all font-semibold">
+          <div className="p-2.5   bg-muted border-border border rounded-lg text-xs font-mono text-purple-600 dark:text-purple-400 break-all select-all font-semibold">
             {hashes.md5 || 'Generating...'}
           </div>
         </div>

@@ -41,17 +41,17 @@ export const ExportOverlay: React.FC<State> = ({ active, progress, label }) => {
   if (!active) return null;
   return (
     <div className="fixed inset-0 z-[70] flex items-center justify-center bg-black/50 backdrop-blur-sm p-4" role="status" aria-live="polite">
-      <div className="w-full max-w-xs rounded-2xl border dark:bg-dark-card dark:border-dark-border bg-white border-slate-200 p-6 text-center shadow-2xl">
-        <div className="mx-auto mb-4 w-12 h-12 rounded-full bg-indigo-500/15 flex items-center justify-center">
+      <div className="w-full max-w-xs rounded-2xl border border-border bg-card p-6 text-center shadow-float">
+        <div className="mx-auto mb-4 w-12 h-12 rounded-full bg-primary/15 flex items-center justify-center">
           {progress >= 100
-            ? <Download className="w-5 h-5 text-emerald-500" />
-            : <Loader2 className="w-5 h-5 text-indigo-500 animate-spin" />}
+            ? <Download className="w-5 h-5 text-success" />
+            : <Loader2 className="w-5 h-5 text-primary animate-spin" />}
         </div>
-        <p className="text-xs font-semibold dark:text-zinc-200 text-slate-800 mb-3">{label}</p>
-        <div className="h-2 rounded-full bg-slate-200 dark:bg-slate-800 overflow-hidden">
-          <div className="h-full bg-indigo-500 transition-[width] duration-200 ease-out" style={{ width: `${progress}%` }} />
+        <p className="text-xs font-semibold text-foreground mb-3">{label}</p>
+        <div className="h-2 rounded-full bg-muted overflow-hidden">
+          <div className="h-full bg-primary transition-[width] duration-200 ease-out" style={{ width: `${progress}%` }} />
         </div>
-        <p className="mt-2 text-[11px] font-mono dark:text-zinc-500 text-slate-500">{Math.round(progress)}%</p>
+        <p className="mt-2 text-[11px] font-mono text-muted-foreground">{Math.round(progress)}%</p>
       </div>
     </div>
   );

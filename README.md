@@ -23,6 +23,18 @@ Most "free" tool sites upload your files to a server. NextTool is different:
 | Tool | What it does |
 |------|-------------|
 | PDF Merge | Combine PDFs with drag-and-drop reordering |
+| PDF Split | Split into single pages or custom ranges |
+| Compress PDF | Shrink file size, strip metadata |
+| PDF ↔ JPG / PNG | Convert pages to images, or images to PDF |
+| PDF OCR | Recognize text in scanned PDFs, make them searchable |
+| Extract Text / Images | Pull text to TXT or export embedded images |
+| Rotate / Reorder / Delete Pages | Rearrange documents in-browser |
+| Watermark & Page Numbers | Stamp text, add numbered pages |
+| Sign PDF | Draw, type or upload a signature |
+| Redact PDF | Permanently black out sensitive words |
+| PDF Metadata Editor | View and edit title, author, keywords |
+| Page Extractor | Pull a page range into a new PDF |
+| Text → PDF | Turn plain text into a formatted PDF |
 | DOCX ↔ PDF / HTML / Markdown / TXT | Convert Word documents between formats |
 | HTML / Markdown → DOCX | Build Word documents from web content |
 | Word Viewer & Metadata | Preview DOCX and inspect author/dates |

@@ -1,150 +1,166 @@
-import React from 'react';
-import { Search, Sun, Moon, LayoutGrid, ShieldCheck } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Search, ShieldCheck, Command, Menu, ArrowRight, Blocks } from 'lucide-react';
+import { NavDrawer } from './NavDrawer';
+import { ThemeMenu } from './ThemeMenu';
+import { ToolCategory } from '../types';
+import { ThemePreference } from '../utils/theme';
 
 export type HeaderView = 'home' | 'tool' | 'category' | 'privacy' | 'all';
 
 interface HeaderProps {
   onOpenSearch: () => void;
-  isDarkMode: boolean;
-  onToggleTheme: () => void;
+  theme: ThemePreference;
+  resolvedDark: boolean;
+  onThemeChange: (t: ThemePreference) => void;
   onGoHome: () => void;
   onOpenPrivacy: () => void;
   onOpenCategories: () => void;
   onOpenAllTools: () => void;
+  onSelectCategory: (cat: ToolCategory | 'all') => void;
   currentView: HeaderView;
 }
 
 export const Header: React.FC<HeaderProps> = ({
-  onOpenSearch, isDarkMode, onToggleTheme,
-  onGoHome, onOpenPrivacy, onOpenCategories, onOpenAllTools, currentView
+  onOpenSearch, theme, resolvedDark, onThemeChange,
+  onGoHome, onOpenPrivacy, onOpenCategories, onOpenAllTools,
+  onSelectCategory, currentView
 }) => {
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 8);
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
+
   const navLink = (active: boolean) =>
     `relative px-3 py-2 rounded-lg text-[13px] font-medium transition-colors duration-150 ${
       active
-        ? 'text-indigo-600 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-500/10'
-        : 'text-slate-600 dark:text-zinc-400 hover:text-slate-900 hover:bg-slate-100 dark:hover:text-white dark:hover:bg-white/[0.06]'
-    }`;
+        ? 'text-primary bg-primary/[0.08]'
+        : 'text-on-surface-variant hover:text-on-surface hover:bg-surface-container'
+    } focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40`;
 
   return (
-    <header className="sticky top-0 z-50 border-b border-slate-200/70 dark:border-white/[0.06]
-      bg-white/90 dark:bg-[#09090e]/90 backdrop-blur-md supports-[backdrop-filter]:bg-white/80
-      dark:supports-[backdrop-filter]:bg-[#09090e]/80">
-      {/* Gradient accent line */}
-      <div className="h-[2px] bg-gradient-to-r from-indigo-600 via-violet-500 to-cyan-400" aria-hidden="true" />
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center gap-3 sm:gap-4">
+    <header className={`sticky top-0 z-50 transition-shadow duration-200 ${
+      scrolled ? 'shadow-card' : ''
+    }`}>
+      <div className={`border-b transition-colors duration-200 ${
+        scrolled ? 'border-outline-variant' : 'border-outline-variant/70'
+      } glass`}>
+        <div className="max-w-[1440px] mx-auto px-4 sm:px-8 h-16 flex items-center gap-2 sm:gap-4">
 
-        {/* ── LOGO + BRAND NAME ──────────────────────────────── */}
-        <button
-          onClick={onGoHome}
-          className="flex items-center gap-2.5 shrink-0 select-none group min-w-0"
-          aria-label="NextTool Home"
-        >
-          <div className="w-9 h-9 rounded-xl flex items-center justify-center shrink-0 bg-gradient-to-br from-indigo-500 to-violet-600
-            group-hover:scale-105 transition-transform shadow-[0_2px_12px_rgba(99,102,241,0.4)]">
-            <span className="text-white text-[12px] font-extrabold tracking-tight leading-none">
-              DK
-            </span>
-          </div>
-
-          <div className="leading-tight text-left min-w-0">
-            <div className="text-[16px] sm:text-[17px] font-bold tracking-[-0.03em] text-slate-900 dark:text-white whitespace-nowrap">
-              Next<span className="text-indigo-500">Tool</span>
-            </div>
-            <div className="hidden sm:block text-[9px] font-medium uppercase tracking-[0.1em] text-slate-400 dark:text-zinc-600 mt-0.5 whitespace-nowrap">
-              Free Online Tools
-            </div>
-          </div>
-        </button>
-
-        {/* ── DESKTOP NAV ────────────────────────────────────── */}
-        <nav className="hidden lg:flex items-center gap-0.5 mx-auto" aria-label="Main navigation">
-          <button onClick={onGoHome} className={navLink(currentView === 'home')}>
-            Home
-          </button>
-          <button onClick={onOpenAllTools} className={navLink(currentView === 'all')}>
-            <span className="flex items-center gap-1">
-              All Tools
-            </span>
-          </button>
-          <button onClick={onOpenCategories} className={navLink(currentView === 'category')}>
-            Categories
-          </button>
-          <button onClick={onOpenPrivacy} className={navLink(currentView === 'privacy')}>
-            Privacy
-          </button>
-        </nav>
-
-        {/* Spacer on mobile (nav hidden) */}
-        <div className="flex-1 lg:hidden" />
-
-        {/* ── RIGHT ACTIONS ──────────────────────────────────── */}
-        <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
-
-          {/* Search (desktop) */}
+          {/* ── LOGO + BRAND NAME ──────────────────────────────── */}
           <button
-            onClick={onOpenSearch}
-            aria-label="Search tools"
-            className="hidden md:flex flex-1 max-w-[220px] items-center justify-between
-              h-9 px-3.5 rounded-xl border text-[13px]
-              dark:bg-white/[0.04] dark:border-white/[0.08] dark:text-zinc-500
-              bg-slate-50 border-slate-200 text-slate-400
-              dark:hover:bg-white/[0.07] dark:hover:border-white/[0.13]
-              hover:bg-white hover:border-slate-300 transition-all duration-150"
+            onClick={onGoHome}
+            className="flex items-center gap-2.5 shrink-0 select-none group min-w-0"
+            aria-label="NextTool Home"
           >
-            <div className="flex items-center gap-2 min-w-0">
+            <div className="relative w-9 h-9 rounded-xl flex items-center justify-center shrink-0
+              bg-gradient-to-br from-primary to-tertiary text-white shadow-md ring-1 ring-black/5
+              transition-transform duration-200 group-hover:scale-105 group-active:scale-95">
+              <Blocks className="w-[18px] h-[18px]" strokeWidth={2.25} />
+              <div className="absolute inset-0 rounded-xl bg-gradient-to-t from-white/0 via-white/0 to-white/25 pointer-events-none" />
+            </div>
+
+            <div className="leading-tight text-left min-w-0">
+              <div className="text-[18px] sm:text-[19px] font-extrabold tracking-[-0.02em] whitespace-nowrap font-heading">
+                <span className="text-on-surface">Next</span><span className="text-primary">Tool</span>
+              </div>
+            </div>
+          </button>
+
+          {/* ── DESKTOP NAV ────────────────────────────────────── */}
+          <nav className="hidden lg:flex items-center gap-0.5 mx-auto" aria-label="Main navigation">
+            <button onClick={onGoHome} className={navLink(currentView === 'home')}>
+              Home
+            </button>
+            <button onClick={onOpenAllTools} className={navLink(currentView === 'all')}>
+              Tools
+            </button>
+            <button onClick={onOpenCategories} className={navLink(currentView === 'category')}>
+              Categories
+            </button>
+            <button onClick={onOpenPrivacy} className={navLink(currentView === 'privacy')}>
+              Privacy
+            </button>
+          </nav>
+
+          {/* Spacer on mobile (nav hidden) */}
+          <div className="flex-1 lg:hidden" />
+
+          {/* ── RIGHT ACTIONS ──────────────────────────────────── */}
+          <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
+
+            {/* Search pill (desktop) */}
+            <button
+              onClick={onOpenSearch}
+              aria-label="Search tools (Ctrl+K)"
+              className="hidden md:flex items-center gap-2 max-w-[240px] flex-1
+                h-9 px-3.5 rounded-full glass-panel hover:border-tertiary
+                text-[13px] text-on-surface-variant transition-colors duration-150"
+            >
               <Search className="w-3.5 h-3.5 shrink-0" />
-              <span className="truncate">Search tools…</span>
+              <span className="truncate">Search utilities...</span>
+              <span className="ml-auto hidden xl:flex items-center gap-0.5 px-1.5 py-0.5 rounded text-[10px] font-mono shrink-0
+                bg-surface-container border border-outline-variant text-on-surface-variant">
+                <Command className="w-2.5 h-2.5" />K
+              </span>
+            </button>
+
+            {/* Private badge */}
+            <div className="hidden xl:flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-medium
+              bg-success/10 border border-success/25 text-success">
+              <ShieldCheck className="w-3 h-3 shrink-0" />
+              Private &amp; local
             </div>
-            <kbd className="hidden xl:block px-1.5 py-0.5 rounded text-[10px] font-mono ml-2 shrink-0
-              dark:bg-white/[0.06] dark:border-white/[0.08] dark:text-zinc-600
-              bg-white border border-slate-200 text-slate-400">⌘K</kbd>
-          </button>
 
-          {/* Private badge */}
-          <div className="hidden lg:flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-medium
-            dark:bg-emerald-500/[0.1] dark:border dark:border-emerald-500/20 dark:text-emerald-400
-            bg-emerald-50 border border-emerald-200 text-emerald-700">
-            <ShieldCheck className="w-3 h-3 shrink-0" />
-            Private &amp; local
+            {/* Search — mobile icon */}
+            <button
+              onClick={onOpenSearch}
+              className="md:hidden w-11 h-11 flex items-center justify-center rounded-lg border border-outline-variant text-on-surface-variant hover:bg-surface-container transition-colors"
+              aria-label="Search tools"
+            >
+              <Search className="w-4 h-4" />
+            </button>
+
+            {/* Theme */}
+            <ThemeMenu theme={theme} resolvedDark={resolvedDark} onThemeChange={onThemeChange} />
+
+            {/* Primary CTA — desktop */}
+            <button
+              onClick={onOpenAllTools}
+              className="hidden lg:inline-flex items-center gap-1.5 h-9 px-4 rounded-lg text-[12.5px] font-semibold
+                bg-primary text-primary-foreground
+                hover:brightness-110 active:scale-[0.98] transition-all duration-150"
+            >
+              Get Started <ArrowRight className="w-3.5 h-3.5" />
+            </button>
+
+            {/* Menu — mobile */}
+            <button
+              onClick={() => setIsDrawerOpen(true)}
+              aria-label="Open menu"
+              className="lg:hidden w-11 h-11 flex items-center justify-center rounded-lg border border-outline-variant text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors"
+            >
+              <Menu className="w-4 h-4" />
+            </button>
           </div>
-
-          {/* Search — mobile icon */}
-          <button
-            onClick={onOpenSearch}
-            className="md:hidden w-9 h-9 flex items-center justify-center rounded-xl border
-              dark:bg-white/[0.04] dark:border-white/[0.08] dark:text-zinc-400 dark:hover:bg-white/[0.08]
-              bg-white border-slate-200 text-slate-500 hover:bg-slate-50 transition-colors"
-            aria-label="Search tools"
-          >
-            <Search className="w-4 h-4" />
-          </button>
-
-          {/* Theme toggle */}
-          <button
-            onClick={onToggleTheme}
-            title={isDarkMode ? 'Switch to light mode' : 'Switch to dark mode'}
-            aria-label={isDarkMode ? 'Switch to light mode' : 'Switch to dark mode'}
-            className="w-9 h-9 flex items-center justify-center rounded-xl border transition-colors duration-150
-              dark:bg-white/[0.04] dark:border-white/[0.08] dark:text-zinc-400
-              dark:hover:bg-white/[0.09] dark:hover:text-zinc-200 dark:hover:border-white/[0.14]
-              bg-white border-slate-200 text-slate-500 hover:bg-slate-50 hover:text-slate-700"
-          >
-            {isDarkMode ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
-          </button>
-
-          {/* All Tools — compact toggle (mobile + fallback) */}
-          <button
-            onClick={onOpenAllTools}
-            aria-label="All tools"
-            className="flex items-center gap-1.5 sm:gap-2 h-9 px-3 sm:px-4 rounded-xl border text-[13px] font-semibold transition-all duration-150 lg:hidden
-              dark:bg-indigo-600/[0.1] dark:border-indigo-500/25 dark:text-indigo-400 dark:hover:bg-indigo-600/[0.18]
-              bg-indigo-50 border-indigo-200 text-indigo-700 hover:bg-indigo-100"
-          >
-            <LayoutGrid className="w-3.5 h-3.5 shrink-0" />
-            <span className="hidden min-[400px]:inline">Tools</span>
-          </button>
         </div>
       </div>
+
+      <NavDrawer
+        isOpen={isDrawerOpen}
+        onClose={() => setIsDrawerOpen(false)}
+        onSelectCategory={onSelectCategory}
+        onOpenSearch={() => { setIsDrawerOpen(false); onOpenSearch(); }}
+        onGoHome={() => { setIsDrawerOpen(false); onGoHome(); }}
+        onOpenPrivacy={() => { setIsDrawerOpen(false); onOpenPrivacy(); }}
+        theme={theme}
+        resolvedDark={resolvedDark}
+        onThemeChange={onThemeChange}
+      />
     </header>
   );
 };

@@ -27,7 +27,7 @@ export const GlassmorphismGenerator: React.FC = () => {
   return (
     <div className="space-y-5">
       {/* Canvas Preview */}
-      <div className="relative overflow-hidden rounded-2xl border dark:border-dark-border border-slate-200 min-h-[280px] flex items-center justify-center p-10"
+      <div className="relative overflow-hidden rounded-2xl border border-border min-h-[280px] flex items-center justify-center p-10"
         style={{
           background: 'linear-gradient(135deg, #1e1b4b 0%, #0f172a 40%, #312e81 100%)'
         }}
@@ -67,14 +67,14 @@ export const GlassmorphismGenerator: React.FC = () => {
       </div>
 
       {/* Controls */}
-      <div className="dark:bg-dark-card bg-white rounded-xl border dark:border-dark-border border-slate-200 p-5">
+      <div className="bg-card rounded-xl border border-border p-5">
         <p className="section-label mb-4">Adjust Parameters</p>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
           {sliders.map((s) => (
             <div key={s.label} className="space-y-2.5">
               <div className="flex justify-between text-xs">
-                <span className="dark:text-zinc-400 text-slate-600 font-medium">{s.label}</span>
-                <span className="font-mono font-bold text-indigo-500">{s.value}{s.unit}</span>
+                <span className="text-muted-foreground font-medium">{s.label}</span>
+                <span className="font-mono font-bold text-primary">{s.value}{s.unit}</span>
               </div>
               <input
                 type="range"
@@ -82,7 +82,7 @@ export const GlassmorphismGenerator: React.FC = () => {
                 max={s.max}
                 value={s.value}
                 onChange={(e) => s.set(parseInt(e.target.value))}
-                className="w-full h-1.5 dark:bg-dark-bg bg-slate-100 rounded-full appearance-none cursor-pointer accent-indigo-500"
+                className="w-full h-1.5 bg-muted rounded-full appearance-none cursor-pointer accent-primary"
               />
             </div>
           ))}
@@ -90,12 +90,12 @@ export const GlassmorphismGenerator: React.FC = () => {
       </div>
 
       {/* Generated CSS */}
-      <div className="dark:bg-dark-card bg-white rounded-xl border dark:border-dark-border border-slate-200 p-4 space-y-2.5">
+      <div className="bg-card rounded-xl border border-border p-4 space-y-2.5">
         <div className="flex items-center justify-between">
           <p className="section-label">Generated CSS</p>
           <CopyButton text={cssCode} label="Copy CSS" />
         </div>
-        <pre className="dark:bg-dark-bg bg-slate-50 border dark:border-dark-border border-slate-200 rounded-xl p-4 text-[12px] font-mono text-emerald-500 dark:text-emerald-400 overflow-x-auto leading-relaxed">
+        <pre className="bg-muted border border-border rounded-xl p-4 text-[12px] font-mono text-success overflow-x-auto leading-relaxed">
           {cssCode}
         </pre>
       </div>

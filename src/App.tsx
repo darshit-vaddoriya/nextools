@@ -7,20 +7,24 @@ import { AllToolsView }    from './components/AllToolsView';
 import { PrivacyPolicy }   from './pages/PrivacyPolicy';
 import { ToolCategory }    from './types';
 import { TOOLS }           from './config/tools';
+import { workingToolCount } from './utils/toolStats';
 import { PLANNED_FEATURES } from './config/toolFeatures';
 import { TOOL_EXPLANATIONS } from './config/toolExplanations';
+import { TOOL_SEO_CONTENT } from './config/seoContent';
 import {
   updateHomeMeta, updateToolMeta, updateCategoryMeta, updatePrivacyMeta,
   updateAllToolsMeta, parseRoute, buildPath,
 } from './utils/seo';
 import { trackPageView } from './utils/analytics';
 import {
-  FileText, FileSpreadsheet, Image, Video, Music,
-  Code, Shield, Palette, Calculator, Globe, Cpu,
-  Archive, Type, Presentation, Search,
-  ChevronRight, ArrowLeft, Star, Clock,
-  CheckCircle2, ShieldCheck, ArrowRight, Zap, Info, Loader2
+  FileText, Globe, Command, X,
+  ChevronRight, ArrowLeft, Star,
+  CheckCircle2, ShieldCheck, ArrowRight, Zap, Info,
+  Lock, MonitorSmartphone, Infinity as InfinityIcon, ChevronDown,
+  Terminal, AlignLeft, Shrink,
+  Copy, Download, Send, Sparkles,
 } from 'lucide-react';
+import { ALL_CATEGORIES } from './config/categories';
 
 import { JsonFormatter }          from './tools/JsonFormatter';
 import { Base64Tool }             from './tools/Base64Tool';
@@ -32,6 +36,7 @@ import { CaseConverter }          from './tools/CaseConverter';
 import { JwtDecoder }             from './tools/JwtDecoder';
 import { TextCounter }            from './tools/TextCounter';
 import { ColorPicker }            from './tools/ColorPicker';
+import { GlassmorphismGenerator } from './tools/GlassmorphismGenerator';
 import { AiBgRemover }            from './tools/AiBgRemover';
 import {
   ImageResizeTool, ImageRotateTool, ImageFlipTool,
@@ -46,45 +51,19 @@ import {
 import {
   ImageWatermarkTool,
 } from './tools/image/AdvancedImageTools';
+import { ImageDrawTool } from './tools/image/ImageDrawTool';
+import { ImageEditorTool } from './tools/image/ImageEditorTool';
+import { DrawingTool } from './tools/DrawingTool';
 import { WordTools }              from './tools/WordTools';
 import { ToolPlaceholder }        from './tools/ToolPlaceholder';
-
-// ─── Category definitions — flat icon colors, no gradients ──
-const ALL_CATEGORIES: {
-  id: ToolCategory;
-  name: string;
-  icon: React.ElementType;
-  iconColor: string;
-  iconBg: string;
-  desc: string;
-  count?: number;
-}[] = [
-  { id: 'pdf',        name: 'PDF Tools',      icon: FileText,        iconColor: 'text-red-600 dark:text-red-400',       iconBg: 'bg-red-100 dark:bg-red-500/15',       desc: '1 tool - merge PDFs locally' },
-  { id: 'word',       name: 'Word & Office',  icon: FileText,        iconColor: 'text-blue-600 dark:text-blue-400',     iconBg: 'bg-blue-100 dark:bg-blue-500/15',     desc: '10 tools - DOCX to PDF, HTML, Markdown, view' },
-  { id: 'excel',      name: 'Excel & CSV',    icon: FileSpreadsheet, iconColor: 'text-green-600 dark:text-green-400',   iconBg: 'bg-green-100 dark:bg-green-500/15',   desc: '0 tools - coming soon' },
-  { id: 'powerpoint', name: 'PowerPoint',     icon: Presentation,    iconColor: 'text-orange-600 dark:text-orange-400', iconBg: 'bg-orange-100 dark:bg-orange-500/15', desc: '0 tools - coming soon' },
-  { id: 'image',      name: 'Image Tools',    icon: Image,           iconColor: 'text-pink-600 dark:text-pink-400',     iconBg: 'bg-pink-100 dark:bg-pink-500/15',     desc: '16 tools - compress, convert, crop, AI upscale' },
-  { id: 'video',      name: 'Video Tools',    icon: Video,           iconColor: 'text-violet-600 dark:text-violet-400', iconBg: 'bg-violet-100 dark:bg-violet-500/15', desc: '0 tools - coming soon' },
-  { id: 'audio',      name: 'Audio Tools',    icon: Music,           iconColor: 'text-cyan-600 dark:text-cyan-400',     iconBg: 'bg-cyan-100 dark:bg-cyan-500/15',     desc: '0 tools - coming soon' },
-  { id: 'dev',        name: 'Developer',      icon: Code,            iconColor: 'text-slate-700 dark:text-slate-300',   iconBg: 'bg-slate-100 dark:bg-slate-500/15',   desc: '5 tools - JSON, JWT, Base64, UUID, hashes' },
-  { id: 'ai',         name: 'AI Browser',     icon: Cpu,             iconColor: 'text-purple-600 dark:text-purple-400', iconBg: 'bg-purple-100 dark:bg-purple-500/15', desc: '0 tools - coming soon' },
-  { id: 'security',   name: 'Security',       icon: Shield,          iconColor: 'text-emerald-600 dark:text-emerald-400',iconBg: 'bg-emerald-100 dark:bg-emerald-500/15',desc:'1 tool - password generator' },
-  { id: 'text',       name: 'Text Utilities', icon: Type,            iconColor: 'text-teal-600 dark:text-teal-400',     iconBg: 'bg-teal-100 dark:bg-teal-500/15',     desc: '4 tools - count, case, regex, analytics' },
-  { id: 'color',      name: 'Color & CSS',    icon: Palette,         iconColor: 'text-fuchsia-600 dark:text-fuchsia-400',iconBg: 'bg-fuchsia-100 dark:bg-fuchsia-500/15',desc:'1 tool - color converter' },
-  { id: 'utility',    name: 'Calculators',    icon: Calculator,      iconColor: 'text-sky-600 dark:text-sky-400',       iconBg: 'bg-sky-100 dark:bg-sky-500/15',       desc: '0 tools - coming soon' },
-  { id: 'web',        name: 'Web Tools',      icon: Globe,           iconColor: 'text-indigo-600 dark:text-indigo-400', iconBg: 'bg-indigo-100 dark:bg-indigo-500/15', desc: '0 tools - coming soon' },
-  { id: 'archive',    name: 'Archive Tools',  icon: Archive,         iconColor: 'text-amber-600 dark:text-amber-400',   iconBg: 'bg-amber-100 dark:bg-amber-500/15',   desc: '0 tools - coming soon' },
-];
+import { ToolCard }               from './components/ToolCard';
+import { FavoriteButton }         from './components/FavoriteButton';
+import { ToolViewSkeleton }       from './components/Skeleton';
+import { useFavorites }           from './utils/favorites';
+import { useTheme }               from './utils/theme';
 
 // ─── Lazy-loaded heavy tools (tesseract.js / qrcode) ─────────
-const HeavyToolFallback = () => (
-  <div className="rounded-2xl border dark:bg-dark-card dark:border-dark-border bg-white border-slate-200 p-8 flex items-center justify-center">
-    <div className="flex items-center gap-2.5 text-[13px] dark:text-zinc-400 text-slate-500">
-      <Loader2 className="w-4 h-4 animate-spin text-indigo-500" />
-      Loading tool…
-    </div>
-  </div>
-);
+const HeavyToolFallback = () => <ToolViewSkeleton />;
 
 const lazyComponent = (
   loader: () => Promise<Record<string, unknown>>,
@@ -107,10 +86,100 @@ const lazyTool = <K extends 'PdfMergeTool'>(
 
 const PdfMergeToolLazy = lazyTool('PdfMergeTool');
 
+const lazyPdfPageTools = <K extends
+  'PdfSplitTool' | 'PdfRotateTool' | 'PdfDeletePagesTool' | 'PdfExtractPagesTool' | 'PdfReorderTool'>(
+  exportName: K,
+): React.FC =>
+  lazyComponent(() => import('./tools/pdf/PdfPageTools'), exportName);
+
+const lazyPdfEditTools = <K extends
+  'PdfCompressTool' | 'PdfWatermarkTool' | 'PdfPageNumbersTool' | 'PdfRedactTool' | 'PdfSignTool'>(
+  exportName: K,
+): React.FC =>
+  lazyComponent(() => import('./tools/pdf/PdfEditTools'), exportName);
+
+const lazyPdfExtractTools = <K extends
+  'PdfToImagesTool' | 'ImagesToPdfTool' | 'ExtractImagesTool' | 'ExtractTextTool'
+  | 'PdfOcrTool' | 'MetadataTool' | 'TextToPdfTool'>(
+  exportName: K,
+): React.FC =>
+  lazyComponent(() => import('./tools/pdf/PdfExtractTools'), exportName);
+
+const lazyPdfAdvancedTools = <K extends
+  'PdfCropTool' | 'PdfHeaderFooterTool' | 'PdfFillFormsTool' | 'PdfFlattenTool'
+  | 'PdfRepairTool' | 'PdfViewerTool' | 'PdfCompareTool' | 'PdfToWordTool' | 'HtmlToPdfTool'>(
+  exportName: K,
+): React.FC =>
+  lazyComponent(() => import('./tools/pdf/PdfAdvancedTools'), exportName);
+
 const lazyToolHeavy = <K extends 'QrGeneratorTool' | 'OcrImageTool' | 'AiUpscalerTool'>(
   exportName: K,
 ): React.FC =>
   lazyComponent(() => import('./tools/image/HeavyImageTools'), exportName);
+
+const lazyExtraTextTools = <K extends
+  'RemoveDuplicateLinesTool' | 'SortLinesTool' | 'ReverseTextTool' | 'LoremIpsumTool'
+  | 'SlugGeneratorTool' | 'TextCleanerTool' | 'FindReplaceTool' | 'RemoveEmptyLinesTool'
+  | 'ExtractEmailsTool' | 'ExtractUrlsTool' | 'ExtractPhonesTool' | 'ExtractHashtagsTool'
+  | 'TextDiffTool'>(
+  exportName: K,
+): React.FC =>
+  lazyComponent(() => import('./tools/text/ExtraTextTools'), exportName);
+
+const lazyWebTools = <K extends
+  'UrlParserTool' | 'UserAgentParserTool' | 'MimeCheckerTool' | 'HtmlEntityTool'
+  | 'UnicodeConverterTool' | 'AsciiConverterTool' | 'BinaryConverterTool'>(
+  exportName: K,
+): React.FC =>
+  lazyComponent(() => import('./tools/WebTools'), exportName);
+
+const lazyExtraDevTools = <K extends
+  'XmlFormatterTool' | 'YamlFormatterTool' | 'SqlFormatterTool' | 'HtmlFormatterTool'
+  | 'CssFormatterTool' | 'JsFormatterTool' | 'UrlEncoderTool' | 'DiffCheckerTool'
+  | 'MarkdownPreviewTool' | 'HtmlMarkdownTool'>(
+  exportName: K,
+): React.FC =>
+  lazyComponent(() => import('./tools/dev/ExtraDevTools'), exportName);
+
+const lazyUtilityTools = <K extends
+  'UnitConverterTool' | 'TimezoneConverterTool' | 'TimestampConverterTool' | 'AgeCalculatorTool'
+  | 'PercentageCalcTool' | 'BmiCalculatorTool' | 'EmiCalculatorTool' | 'ScientificCalculatorTool'
+  | 'GstCalculatorTool' | 'NumberToWordsTool' | 'RomanNumeralsTool'>(
+  exportName: K,
+): React.FC =>
+  lazyComponent(() => import('./tools/utility/UtilityTools'), exportName);
+
+const lazyExtraSecurityTools = <K extends
+  'PassphraseGeneratorTool' | 'PasswordStrengthTool' | 'FileChecksumTool'
+  | 'RandomStringTool' | 'SecureNotesTool'>(
+  exportName: K,
+): React.FC =>
+  lazyComponent(() => import('./tools/security/ExtraSecurityTools'), exportName);
+
+const lazyExtraColorTools = <K extends
+  'GradientGeneratorTool' | 'PaletteGeneratorTool' | 'ContrastCheckerTool'>(
+  exportName: K,
+): React.FC =>
+  lazyComponent(() => import('./tools/color/ExtraColorTools'), exportName);
+
+const lazyArchiveTools = <K extends 'ZipExtractorTool' | 'ZipCreatorTool' | 'BatchZipTool'>(
+  exportName: K,
+): React.FC =>
+  lazyComponent(() => import('./tools/archive/ArchiveTools'), exportName);
+
+const lazyCsvTools = <K extends
+  'CsvViewerTool' | 'CsvEditorTool' | 'CsvCleanerTool' | 'CsvToJsonTool' | 'JsonToCsvTool'
+  | 'TsvConverterTool' | 'DelimiterConverterTool' | 'RemoveDuplicateRowsTool' | 'MergeCsvTool'>(
+  exportName: K,
+): React.FC =>
+  lazyComponent(() => import('./tools/csv/CsvTools'), exportName);
+
+const lazyMiscImageTools = <K extends
+  'IcoGeneratorTool' | 'ImageToBase64Tool' | 'Base64ToImageTool' | 'ImageCollageTool'
+  | 'MemeGeneratorTool' | 'BatchResizeTool'>(
+  exportName: K,
+): React.FC =>
+  lazyComponent(() => import('./tools/image/MiscImageTools'), exportName);
 
 // ─── Fully implemented tools (routed to real components) ─────
 const IMPLEMENTED_TOOLS: Record<string, React.ComponentType> = {
@@ -123,10 +192,111 @@ const IMPLEMENTED_TOOLS: Record<string, React.ComponentType> = {
   'case-converter':       CaseConverter,
   'jwt-decoder':          JwtDecoder,
   'word-counter':         TextCounter,
-  'text-counter':         TextCounter,
-  'color-picker':         ColorPicker,
   'color-converter':      ColorPicker,
   'pdf-merge':            lazyTool('PdfMergeTool'),
+  'pdf-split':            lazyPdfPageTools('PdfSplitTool'),
+  'pdf-rotate':           lazyPdfPageTools('PdfRotateTool'),
+  'pdf-delete-pages':     lazyPdfPageTools('PdfDeletePagesTool'),
+  'pdf-page-extractor':   lazyPdfPageTools('PdfExtractPagesTool'),
+  'pdf-reorder':          lazyPdfPageTools('PdfReorderTool'),
+  'pdf-compress':         lazyPdfEditTools('PdfCompressTool'),
+  'pdf-watermark':        lazyPdfEditTools('PdfWatermarkTool'),
+  'pdf-page-numbers':     lazyPdfEditTools('PdfPageNumbersTool'),
+  'pdf-redact':           lazyPdfEditTools('PdfRedactTool'),
+  'pdf-sign':             lazyPdfEditTools('PdfSignTool'),
+  'pdf-to-jpg':           lazyPdfExtractTools('PdfToImagesTool'),
+  'jpg-to-pdf':           lazyPdfExtractTools('ImagesToPdfTool'),
+  'pdf-extract-images':   lazyPdfExtractTools('ExtractImagesTool'),
+  'pdf-extract-text':     lazyPdfExtractTools('ExtractTextTool'),
+  'pdf-ocr':              lazyPdfExtractTools('PdfOcrTool'),
+  'pdf-metadata':         lazyPdfExtractTools('MetadataTool'),
+  'text-to-pdf':          lazyPdfExtractTools('TextToPdfTool'),
+  'pdf-crop':             lazyPdfAdvancedTools('PdfCropTool'),
+  'pdf-header-footer':    lazyPdfAdvancedTools('PdfHeaderFooterTool'),
+  'pdf-fill-forms':       lazyPdfAdvancedTools('PdfFillFormsTool'),
+  'pdf-flatten':          lazyPdfAdvancedTools('PdfFlattenTool'),
+  'pdf-repair':           lazyPdfAdvancedTools('PdfRepairTool'),
+  'pdf-viewer':           lazyPdfAdvancedTools('PdfViewerTool'),
+  'pdf-compare':          lazyPdfAdvancedTools('PdfCompareTool'),
+  'pdf-to-word':          lazyPdfAdvancedTools('PdfToWordTool'),
+  'html-to-pdf':          lazyPdfAdvancedTools('HtmlToPdfTool'),
+  // Text tools
+  'remove-duplicates-text': lazyExtraTextTools('RemoveDuplicateLinesTool'),
+  'sort-lines':           lazyExtraTextTools('SortLinesTool'),
+  'reverse-text':         lazyExtraTextTools('ReverseTextTool'),
+  'lorem-ipsum':          lazyExtraTextTools('LoremIpsumTool'),
+  'slug-generator':       lazyExtraTextTools('SlugGeneratorTool'),
+  'text-cleaner':         lazyExtraTextTools('TextCleanerTool'),
+  'find-replace':         lazyExtraTextTools('FindReplaceTool'),
+  'remove-empty-lines':   lazyExtraTextTools('RemoveEmptyLinesTool'),
+  'extract-emails':       lazyExtraTextTools('ExtractEmailsTool'),
+  'extract-urls':         lazyExtraTextTools('ExtractUrlsTool'),
+  'extract-phones':       lazyExtraTextTools('ExtractPhonesTool'),
+  'extract-hashtags':     lazyExtraTextTools('ExtractHashtagsTool'),
+  'diff-text':            lazyExtraTextTools('TextDiffTool'),
+  // Web tools
+  'url-parser':           lazyWebTools('UrlParserTool'),
+  'user-agent-parser':    lazyWebTools('UserAgentParserTool'),
+  'mime-checker':         lazyWebTools('MimeCheckerTool'),
+  'html-entity':          lazyWebTools('HtmlEntityTool'),
+  'unicode-converter':    lazyWebTools('UnicodeConverterTool'),
+  'ascii-converter':      lazyWebTools('AsciiConverterTool'),
+  'binary-converter':     lazyWebTools('BinaryConverterTool'),
+  // Developer tools
+  'xml-formatter':        lazyExtraDevTools('XmlFormatterTool'),
+  'yaml-formatter':       lazyExtraDevTools('YamlFormatterTool'),
+  'sql-formatter':        lazyExtraDevTools('SqlFormatterTool'),
+  'html-formatter':       lazyExtraDevTools('HtmlFormatterTool'),
+  'css-formatter':        lazyExtraDevTools('CssFormatterTool'),
+  'js-formatter':         lazyExtraDevTools('JsFormatterTool'),
+  'url-encoder':          lazyExtraDevTools('UrlEncoderTool'),
+  'diff-checker':         lazyExtraDevTools('DiffCheckerTool'),
+  'markdown-preview':     lazyExtraDevTools('MarkdownPreviewTool'),
+  'html-markdown':        lazyExtraDevTools('HtmlMarkdownTool'),
+  // Utility / calculator tools
+  'unit-converter':       lazyUtilityTools('UnitConverterTool'),
+  'timezone-converter':   lazyUtilityTools('TimezoneConverterTool'),
+  'timestamp-converter':  lazyUtilityTools('TimestampConverterTool'),
+  'age-calculator':       lazyUtilityTools('AgeCalculatorTool'),
+  'percentage-calc':      lazyUtilityTools('PercentageCalcTool'),
+  'bmi-calculator':       lazyUtilityTools('BmiCalculatorTool'),
+  'emi-calculator':       lazyUtilityTools('EmiCalculatorTool'),
+  'scientific-calc':      lazyUtilityTools('ScientificCalculatorTool'),
+  'gst-calculator':       lazyUtilityTools('GstCalculatorTool'),
+  'number-to-words':      lazyUtilityTools('NumberToWordsTool'),
+  'roman-numerals':       lazyUtilityTools('RomanNumeralsTool'),
+  // Security tools
+  'passphrase-gen':       lazyExtraSecurityTools('PassphraseGeneratorTool'),
+  'password-strength':    lazyExtraSecurityTools('PasswordStrengthTool'),
+  'file-checksum':        lazyExtraSecurityTools('FileChecksumTool'),
+  'random-string':        lazyExtraSecurityTools('RandomStringTool'),
+  'secure-notes':         lazyExtraSecurityTools('SecureNotesTool'),
+  // Color tools
+  'gradient-generator':   lazyExtraColorTools('GradientGeneratorTool'),
+  'palette-color':        lazyExtraColorTools('PaletteGeneratorTool'),
+  'contrast-checker':     lazyExtraColorTools('ContrastCheckerTool'),
+  'glassmorphism':        GlassmorphismGenerator,
+  // Archive tools
+  'zip-extractor':        lazyArchiveTools('ZipExtractorTool'),
+  'zip-creator':          lazyArchiveTools('ZipCreatorTool'),
+  'batch-zip':            lazyArchiveTools('BatchZipTool'),
+  // CSV / Excel tools
+  'csv-viewer':           lazyCsvTools('CsvViewerTool'),
+  'csv-editor':           lazyCsvTools('CsvEditorTool'),
+  'csv-cleaner':          lazyCsvTools('CsvCleanerTool'),
+  'csv-to-json':          lazyCsvTools('CsvToJsonTool'),
+  'json-to-csv':          lazyCsvTools('JsonToCsvTool'),
+  'tsv-converter':        lazyCsvTools('TsvConverterTool'),
+  'delimiter-converter':  lazyCsvTools('DelimiterConverterTool'),
+  'remove-duplicates':    lazyCsvTools('RemoveDuplicateRowsTool'),
+  'merge-csv':            lazyCsvTools('MergeCsvTool'),
+  // Misc image tools
+  'ico-generator':        lazyMiscImageTools('IcoGeneratorTool'),
+  'image-to-base64':      lazyMiscImageTools('ImageToBase64Tool'),
+  'base64-to-image':      lazyMiscImageTools('Base64ToImageTool'),
+  'image-collage':        lazyMiscImageTools('ImageCollageTool'),
+  'meme-generator':       lazyMiscImageTools('MemeGeneratorTool'),
+  'batch-resize':         lazyMiscImageTools('BatchResizeTool'),
   'ai-bg-remover':        AiBgRemover,
   'image-resize':         ImageResizeTool,
   'image-resize-image':   ImageResizeTool,
@@ -144,6 +314,10 @@ const IMPLEMENTED_TOOLS: Record<string, React.ComponentType> = {
   'svg-to-png':           SvgConverterTool,
   'image-metadata':       ImageMetadataTool,
   'image-watermark':      ImageWatermarkTool,
+  'image-draw':           ImageDrawTool,
+  'image-editor':         ImageEditorTool,
+  'drawing':              DrawingTool,
+  'drawing-board':        DrawingTool,
   'qr-generator':         lazyToolHeavy('QrGeneratorTool'),
   'qr-code-generator':    lazyToolHeavy('QrGeneratorTool'),
   'ocr-image':            lazyToolHeavy('OcrImageTool'),
@@ -178,18 +352,18 @@ export const App: React.FC = () => {
 
   const [activeToolId,        setActiveToolId]        = useState(initRoute.toolId ?? '');
   const [isSearchOpen,        setIsSearchOpen]        = useState(false);
-  const [isDarkMode,          setIsDarkMode]          = useState(() => {
-    try { return localStorage.getItem('nexttool-theme') === 'dark'; } catch { return false; }
-  });
   const [currentView,         setCurrentView]         = useState<'home'|'tool'|'category'|'privacy'|'all'>(initRoute.view);
   const [activeCategoryView,  setActiveCategoryView]  = useState<ToolCategory|null>(initRoute.category ?? null);
+  const [showSearchTip,       setShowSearchTip]       = useState(() => {
+    try { return localStorage.getItem('nexttool-seen-search-tip') !== '1'; } catch { return true; }
+  });
 
-  useEffect(() => {
-    document.documentElement.classList.toggle('dark', isDarkMode);
-    try { localStorage.setItem('nexttool-theme', isDarkMode ? 'dark' : 'light'); } catch { /* ignore */ }
-    const meta = document.querySelector('meta[name="theme-color"]');
-    if (meta) meta.setAttribute('content', isDarkMode ? '#0a0a0f' : '#ffffff');
-  }, [isDarkMode]);
+  const dismissSearchTip = () => {
+    setShowSearchTip(false);
+    try { localStorage.setItem('nexttool-seen-search-tip', '1'); } catch { /* ignore */ }
+  };
+
+  const { preference: theme, resolvedDark, setTheme } = useTheme();
 
   const syncMeta = useCallback(() => {
     if (currentView === 'privacy') updatePrivacyMeta();
@@ -285,7 +459,23 @@ export const App: React.FC = () => {
     }
   };
 
+  const scrollToFaq = () => {
+    if (currentView !== 'home') {
+      setCurrentView('home');
+      setActiveToolId('');
+      setActiveCategoryView(null);
+      navigate('home');
+      setTimeout(() => {
+        document.getElementById('faq-heading')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 60);
+    } else {
+      document.getElementById('faq-heading')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  };
+
   const renderTool = () => {
+    if (activeToolId === 'image-editor') return <ImageEditorTool onExit={goHome} />;
+
     const Implemented = IMPLEMENTED_TOOLS[activeToolId];
     if (Implemented) return <Implemented />;
 
@@ -310,18 +500,17 @@ export const App: React.FC = () => {
   };
 
   return (
-    <div className="relative min-h-screen flex flex-col dark:text-zinc-100 text-slate-900">
-      {/* Ambient aurora background */}
-      <div className="fixed inset-0 -z-10 aurora-bg pointer-events-none" aria-hidden="true" />
-
+    <div className="relative min-h-screen flex flex-col text-foreground">
       <Header
         onOpenSearch={() => setIsSearchOpen(true)}
-        isDarkMode={isDarkMode}
-        onToggleTheme={() => setIsDarkMode(p => !p)}
+        theme={theme}
+        resolvedDark={resolvedDark}
+        onThemeChange={setTheme}
         onGoHome={goHome}
         onOpenPrivacy={openPrivacy}
         onOpenCategories={scrollToCategories}
         onOpenAllTools={openAllTools}
+        onSelectCategory={openCategory}
         currentView={currentView}
       />
       <CommandPalette
@@ -335,40 +524,122 @@ export const App: React.FC = () => {
           ? <div className="max-w-4xl mx-auto px-4 sm:px-6 py-8"><PrivacyPolicy onBack={goHome} /></div>
           : currentView === 'tool'
           ? <ToolView activeTool={activeTool} onBack={goHome} renderTool={renderTool} categories={ALL_CATEGORIES}
-              onOpenPrivacy={openPrivacy} onSelectTool={openTool} onSelectCategory={openCategory} />
+              onOpenPrivacy={openPrivacy} onSelectTool={openTool} onSelectCategory={openCategory} onGoHome={goHome} onOpenFaq={scrollToFaq} onOpenCategories={scrollToCategories} />
           : currentView === 'category' && activeCategoryView
           ? <CategoryView cat={activeCategoryView} onSelectTool={openTool} onBack={goHome} categories={ALL_CATEGORIES} />
           : currentView === 'all'
           ? <AllToolsView onSelectTool={openTool} onBack={goHome} categories={ALL_CATEGORIES} />
-          : <HomeView onSelectTool={openTool} onSelectCategory={openCategory} onOpenSearch={() => setIsSearchOpen(true)} />
+          : <HomeView onSelectTool={openTool} onSelectCategory={openCategory} onOpenSearch={() => setIsSearchOpen(true)} onOpenPrivacy={openPrivacy} />
         }
       </main>
 
       {currentView !== 'tool' && (
-        <Footer onOpenPrivacy={openPrivacy} onSelectTool={openTool} onSelectCategory={openCategory} />
+        <Footer onOpenPrivacy={openPrivacy} onSelectTool={openTool} onSelectCategory={openCategory} onGoHome={goHome} onOpenFaq={scrollToFaq} onOpenCategories={scrollToCategories} />
+      )}
+
+      {/* First-visit search tip */}
+      {showSearchTip && currentView === 'home' && (
+        <div className="fixed bottom-5 left-1/2 -translate-x-1/2 sm:left-5 sm:translate-x-0 z-50 flex items-center gap-3 px-4 py-3 rounded-2xl border border-primary/25 bg-card shadow-2xl fade-in max-w-[calc(100vw-32px)] sm:max-w-sm">
+          <div className="w-9 h-9 rounded-xl bg-primary/10 text-primary flex items-center justify-center shrink-0">
+            <Command className="w-4 h-4" />
+          </div>
+          <div className="min-w-0 text-left">
+            <div className="text-[13px] font-semibold text-foreground leading-tight">Search any tool instantly</div>
+            <div className="text-[11.5px] text-muted-foreground mt-0.5">
+              Press <kbd className="px-1 py-0.5 rounded bg-muted border border-border font-mono text-[10px]">Ctrl</kbd>
+              {' '}+ <kbd className="px-1 py-0.5 rounded bg-muted border border-border font-mono text-[10px]">K</kbd> to jump to any tool
+            </div>
+          </div>
+          <div className="flex items-center gap-1 shrink-0">
+            <button
+              onClick={() => { dismissSearchTip(); setIsSearchOpen(true); }}
+              className="h-8 px-3 rounded-lg bg-primary text-primary-foreground text-[12px] font-semibold hover:brightness-110 transition-all"
+            >
+              Try it
+            </button>
+            <button
+              onClick={dismissSearchTip}
+              aria-label="Dismiss tip"
+              className="w-8 h-8 flex items-center justify-center rounded-lg text-muted-foreground hover:bg-muted hover:text-foreground transition-colors"
+            >
+              <X className="w-4 h-4" />
+            </button>
+          </div>
+        </div>
       )}
     </div>
   );
 };
 
 // ─── HOME VIEW ───────────────────────────────────────────────
-const QUICK_TOOLS = [
-  { id: 'image-compressor',  label: 'Image Compressor',  desc: 'Shrink images up to 90%' },
-  { id: 'pdf-merge',         label: 'PDF Merge',         desc: 'Combine PDF files' },
-  { id: 'qr-generator',      label: 'QR Generator',      desc: 'Create QR codes' },
-  { id: 'ocr-image',         label: 'Image to Text',     desc: 'Extract text with OCR' },
-  { id: 'json-formatter',    label: 'JSON Formatter',    desc: 'Format & validate' },
-  { id: 'password-generator',label: 'Password Generator',desc: 'Strong passwords' },
+const TOOLCHAIN_CATEGORIES: { id: ToolCategory; tags: string[] }[] = [
+  { id: 'dev',      tags: ['JSON', 'JWT', 'Regex'] },
+  { id: 'security', tags: ['Password'] },
+  { id: 'image',    tags: ['Compress', 'Convert', 'Crop'] },
+  { id: 'text',     tags: ['Count', 'Case'] },
 ];
 
-const SEARCH_HINTS = ['Image Compress', 'PDF Merge', 'QR Generator', 'OCR'];
+const WHY_FEATURES = [
+  { icon: Zap,             title: 'Fast by design',       desc: 'Lightweight and code-split, every tool opens instantly without heavy downloads.' },
+  { icon: Lock,            title: 'Files stay on device', desc: 'Everything is processed in your browser. Your files are never uploaded anywhere.' },
+  { icon: ShieldCheck,     title: 'Private by default',   desc: 'No accounts, no file tracking and no sign-up walls.' },
+  { icon: InfinityIcon,    title: 'Free forever',         desc: 'No hidden tiers, watermarks or paywalls. Every tool is free to use.' },
+  { icon: MonitorSmartphone, title: 'Works everywhere',   desc: 'Optimized for desktop, tablet and phone with one consistent experience.' },
+  { icon: Globe,           title: 'Nothing to install',   desc: 'Just open a tool and start working on any modern browser.' },
+];
+
+const FAQ_ITEMS = [
+  { q: 'Are the tools really free?', a: 'Yes. Every tool on NextTool is free, with no hidden fees, premium tiers or usage limits.' },
+  { q: 'Do my files get uploaded to a server?', a: 'No. All processing happens on your device, so your files are never sent anywhere.' },
+  { q: 'Do I need to create an account?', a: 'No account, no email and no sign-up required. Just open a tool and start using it immediately.' },
+  { q: 'What happens to my files after I finish?', a: 'Your files are only read by the tool you opened and are cleared when you leave the page. Nothing is stored or tracked.' },
+  { q: 'How is NextTool different from iLovePDF or SmallPDF?', a: 'Unlike cloud-based alternatives, NextTool processes everything locally for faster results, complete privacy and no upload limits.' },
+];
+
+const SectionHeading: React.FC<{
+  kicker: string;
+  title: string;
+  desc?: string;
+  action?: React.ReactNode;
+  id?: string;
+}> = ({ kicker, title, desc, action, id }) => (
+  <div className="flex items-end justify-between gap-4 mb-5">
+    <div>
+      <span className="section-kicker mb-2">{kicker}</span>
+      <h2 id={id} className="text-[20px] sm:text-[22px] font-bold text-foreground tracking-[-0.02em]">{title}</h2>
+      {desc && <p className="text-[13px] text-muted-foreground mt-1">{desc}</p>}
+    </div>
+    {action}
+  </div>
+);
+
+const FaqItem: React.FC<{ q: string; a: string }> = ({ q, a }) => {
+  const [open, setOpen] = useState(false);
+  return (
+    <div className="rounded-xl border border-border bg-card overflow-hidden">
+      <button
+        onClick={() => setOpen(o => !o)}
+        aria-expanded={open}
+        className="w-full flex items-center justify-between gap-3 px-4 py-3.5 text-left text-[13.5px] font-semibold text-foreground hover:bg-muted/50 transition-colors"
+      >
+        <span>{q}</span>
+        <ChevronDown className={`w-4 h-4 shrink-0 text-muted-foreground transition-transform duration-150 ${open ? 'rotate-180' : ''}`} />
+      </button>
+      {open && (
+        <p className="px-4 pb-4 text-[13px] text-muted-foreground leading-relaxed">{a}</p>
+      )}
+    </div>
+  );
+};
 
 const HomeView: React.FC<{
   onSelectTool: (id: string) => void;
   onSelectCategory: (cat: ToolCategory | 'all') => void;
   onOpenSearch: () => void;
-}> = ({ onSelectTool, onSelectCategory, onOpenSearch }) => {
+  onOpenPrivacy: () => void;
+}> = ({ onSelectTool, onSelectCategory, onOpenSearch, onOpenPrivacy }) => {
   const popular = TOOLS.filter(t => t.isPopular).slice(0, 8);
+  const newTools = TOOLS.filter(t => t.isNew).slice(0, 4);
 
   const [recentIds, setRecentIds] = useState<string[]>([]);
   useEffect(() => {
@@ -382,180 +653,264 @@ const HomeView: React.FC<{
     .filter((t): t is typeof TOOLS[number] => Boolean(t))
     .slice(0, 4);
 
-  const toolCat = (id: string) => TOOLS.find(t => t.id === id)?.category;
+  const { favorites } = useFavorites();
+  const favoriteTools = favorites
+    .map(id => TOOLS.find(t => t.id === id))
+    .filter((t): t is typeof TOOLS[number] => Boolean(t))
+    .slice(0, 4);
+
+  const catConf = (cat: ToolCategory) => ALL_CATEGORIES.find(c => c.id === cat);
 
   return (
     <div className="relative">
 
       {/* ── HERO ─────────────────────────────────────────── */}
-      <section className="relative dark:bg-[#0d0d14] bg-white border-b dark:border-white/[0.06] border-slate-200 overflow-hidden">
-        <div className="hero-accent" />
+      <section className="relative overflow-hidden">
+        <div className="hero-glow" />
         <div className="hero-grid" />
-        <div className="max-w-6xl mx-auto px-5 sm:px-8 pt-14 pb-16 relative z-10">
+        <div className="max-w-6xl mx-auto px-5 sm:px-8 pt-16 pb-14 relative z-10 flex flex-col items-center justify-center text-center">
 
-          <div className="grid lg:grid-cols-[1.15fr_0.85fr] gap-10 lg:gap-14 items-center">
-
-            {/* Left — copy */}
-            <div className="text-center lg:text-left">
-              <div className="inline-flex items-center gap-2 mb-5 px-3 py-1.5 rounded-full
-                dark:bg-indigo-500/[0.1] dark:border dark:border-indigo-500/20 dark:text-indigo-400
-                bg-indigo-50 border border-indigo-200 text-indigo-700 text-[12px] font-medium">
-                <span className="w-1.5 h-1.5 rounded-full bg-indigo-500 pulse-dot inline-block" />
-                {TOOLS.length} free tools
-              </div>
-
-              <h1 className="text-[34px] sm:text-[46px] font-bold dark:text-white text-slate-900 leading-[1.12] tracking-[-0.03em]">
-                Free tools for PDF, image and{' '}
-                <span className="gradient-text">developer tasks.</span>
-              </h1>
-
-              <p className="mt-4 text-[15px] dark:text-zinc-400 text-slate-600 leading-[1.75] max-w-xl mx-auto lg:mx-0">
-                Merge PDFs, compress images, format JSON and more. Files are handled
-                right in your browser, so nothing gets uploaded to any server.
-              </p>
-
-              {/* Search bar */}
-              <button
-                onClick={onOpenSearch}
-                aria-label="Search all tools"
-                className="mt-7 w-full max-w-lg mx-auto lg:mx-0 flex items-center gap-3 h-12 sm:h-14 px-4 rounded-2xl border text-[14px]
-                  dark:bg-white/[0.05] dark:border-white/[0.1] dark:text-zinc-400
-                  bg-slate-50 border-slate-200 text-slate-500
-                  hover:border-indigo-400 dark:hover:border-indigo-500/40
-                  transition-all duration-150 shadow-sm hover:shadow-lg hover:shadow-indigo-500/[0.08]"
-              >
-                <Search className="w-4 h-4 shrink-0 text-indigo-500" />
-                <span className="flex-1 text-left">Search {TOOLS.length} tools - PDF, Image, JSON…</span>
-                <kbd className="hidden sm:block px-2 py-0.5 rounded text-[10px] font-mono
-                  dark:bg-white/[0.06] dark:border-white/[0.08] dark:text-zinc-600
-                  bg-white border border-slate-200 text-slate-400">⌘K</kbd>
-              </button>
-
-              {/* Quick hint chips */}
-              <div className="mt-4 flex items-center justify-center lg:justify-start flex-wrap gap-2">
-                <span className="text-[11px] font-medium dark:text-zinc-600 text-slate-400">Popular:</span>
-                {SEARCH_HINTS.map(hint => (
-                  <button
-                    key={hint}
-                    onClick={onOpenSearch}
-                    className="px-2.5 py-1 rounded-full text-[11.5px] font-medium
-                      dark:bg-white/[0.05] dark:border dark:border-white/[0.08] dark:text-zinc-400 dark:hover:text-indigo-400 dark:hover:border-indigo-500/25
-                      bg-white border border-slate-200 text-slate-500 hover:text-indigo-600 hover:border-indigo-300
-                      transition-colors"
-                  >
-                    {hint}
-                  </button>
-                ))}
-              </div>
-
-              {/* CTAs */}
-              <div className="mt-6 flex items-center justify-center lg:justify-start gap-3 flex-wrap">
-                <button onClick={() => onSelectCategory('all')} className="btn-primary px-5 py-2.5 text-[14px] rounded-lg">
-                  Browse all tools <ArrowRight className="w-4 h-4" />
-                </button>
-                <button onClick={() => onSelectCategory('dev')} className="btn-secondary px-5 py-2.5 text-[14px] rounded-lg">
-                  Developer Tools
-                </button>
-              </div>
-            </div>
-
-            {/* Right — Quick Access panel (desktop) */}
-            <div className="hidden lg:block">
-              <div className="relative">
-                <div className="absolute -top-10 left-1/2 -translate-x-1/2 w-72 h-72 rounded-full
-                  bg-indigo-500/[0.15] blur-3xl pointer-events-none" />
-
-                <div className="relative rounded-2xl border p-5
-                  dark:bg-white/[0.04] dark:border-white/[0.1]
-                  bg-white/80 border-slate-200 backdrop-blur-xl
-                  shadow-2xl dark:shadow-black/40 dark:shadow-indigo-500/5"
-                >
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2.5">
-                      <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-indigo-500 to-violet-600 flex items-center justify-center shadow-lg shadow-indigo-500/30">
-                        <Zap className="w-3.5 h-3.5 text-white" />
-                      </div>
-                      <span className="text-[13px] font-semibold dark:text-white text-slate-900">Quick Access</span>
-                    </div>
-                    <span className="text-[10.5px] font-medium uppercase tracking-wide dark:text-zinc-600 text-slate-400">
-                      {TOOLS.length} tools
-                    </span>
-                  </div>
-
-                  <div className="mt-4 space-y-1.5">
-                    {QUICK_TOOLS.map(t => {
-                      const cat = toolCat(t.id);
-                      const conf = ALL_CATEGORIES.find(c => c.id === cat);
-                      const Icon = conf?.icon ?? FileText;
-                      return (
-                        <button
-                          key={t.id}
-                          onClick={() => onSelectTool(t.id)}
-                          className="group w-full flex items-center gap-3 p-2.5 rounded-xl border border-transparent
-                            dark:hover:bg-white/[0.05] dark:hover:border-white/[0.1]
-                            hover:bg-white hover:border-slate-200 hover:shadow-sm
-                            transition-all duration-150"
-                        >
-                          <div className={`cat-icon w-9 h-9 ${conf?.iconBg}`}>
-                            <Icon style={{ width: 16, height: 16 }} className={conf?.iconColor} />
-                          </div>
-                          <div className="flex-1 min-w-0 text-left">
-                            <div className="text-[12.5px] font-semibold dark:text-zinc-200 text-slate-800 leading-tight group-hover:text-indigo-500 dark:group-hover:text-indigo-400 transition-colors">
-                              {t.label}
-                            </div>
-                            <div className="text-[11px] dark:text-zinc-600 text-slate-400 mt-0.5 truncate">{t.desc}</div>
-                          </div>
-                          <ChevronRight className="w-3.5 h-3.5 text-indigo-500 opacity-0 -translate-x-1 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-150" />
-                        </button>
-                      );
-                    })}
-                  </div>
-
-                  <button
-                    onClick={() => onSelectCategory('all')}
-                    className="mt-4 w-full flex items-center justify-center gap-1.5 h-10 rounded-xl border text-[12.5px] font-semibold
-                      dark:bg-indigo-500/[0.1] dark:border-indigo-500/20 dark:text-indigo-400 dark:hover:bg-indigo-500/[0.16]
-                      bg-indigo-50 border-indigo-200 text-indigo-700 hover:bg-indigo-100 transition-colors"
-                  >
-                    Browse all {TOOLS.length} tools <ArrowRight className="w-3.5 h-3.5" />
-                  </button>
-                </div>
-              </div>
-            </div>
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full glass-panel mb-6 fade-up">
+            <span className="w-2 h-2 rounded-full bg-success-green" />
+            <span className="text-[11px] font-semibold tracking-wide text-tertiary">
+              {workingToolCount()} free tools · 100% in-browser · No uploads
+            </span>
           </div>
 
-          {/* Stat strip */}
-          <div className="mt-14 grid grid-cols-2 sm:grid-cols-4 gap-3">
-            {[
-              { n: String(TOOLS.length), t: 'Tools' },
-              { n: String(ALL_CATEGORIES.filter(c => TOOLS.some(t => t.category === c.id)).length), t: 'Categories' },
-              { n: '100%', t: 'In-browser' },
-              { n: '0',    t: 'Uploads' },
-            ].map(s => (
-              <div key={s.t} className="stat-pill">
-                <span className="text-[22px] sm:text-[24px] font-bold dark:text-white text-slate-900 tabular-nums leading-none">{s.n}</span>
-                <span className="text-[10.5px] dark:text-zinc-500 text-slate-400 mt-1.5 uppercase tracking-wide font-medium">{s.t}</span>
-              </div>
-            ))}
+          <h1 className="font-heading text-[38px] sm:text-[56px] font-extrabold text-on-surface mb-4 max-w-4xl tracking-tight leading-[1.1] fade-up" style={{ animationDelay: '60ms' }}>
+            Technical Precision. <br />
+            <span className="gradient-text">Zero Compromise.</span>
+          </h1>
+
+          <p className="text-[15px] sm:text-lg text-on-surface-variant max-w-2xl mb-8 leading-relaxed fade-up" style={{ animationDelay: '120ms' }}>
+            A high-performance, local-first utility suite engineered for developers. Process JSON, transform data, and format images without your data ever leaving your machine.
+          </p>
+
+          {/* Command Center Search */}
+          <button
+            onClick={onOpenSearch}
+            aria-label="Search all tools"
+            className="w-full max-w-2xl glass-panel rounded-xl p-2 flex items-center shadow-card relative group mb-8 fade-up text-left"
+            style={{ animationDelay: '180ms' }}
+          >
+            <span className="text-primary ml-4 mr-3 flex-shrink-0"><Terminal className="w-7 h-7" /></span>
+            <span className="flex-1 text-on-surface-variant text-[15px] sm:text-lg truncate">What do you need to process?</span>
+            <span className="bg-primary text-primary-foreground text-[12px] font-semibold px-5 py-2.5 rounded-lg ml-2 flex items-center gap-2 shrink-0">
+              Execute <Send className="w-3.5 h-3.5" />
+            </span>
+            <div className="absolute inset-0 rounded-xl border border-primary opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
+          </button>
+
+          {/* Key Metrics */}
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 w-full max-w-3xl border-t border-outline-variant/40 pt-6 fade-up" style={{ animationDelay: '240ms' }}>
+            <div className="flex flex-col items-center">
+              <span className="text-[32px] font-bold text-primary leading-none tabular-nums">{workingToolCount()}+</span>
+              <span className="text-[10.5px] font-semibold tracking-[0.14em] text-on-surface-variant mt-1.5">NATIVE UTILITIES</span>
+            </div>
+            <div className="flex flex-col items-center sm:border-l sm:border-r border-outline-variant/40">
+              <span className="text-[32px] font-bold text-tertiary leading-none">100%</span>
+              <span className="text-[10.5px] font-semibold tracking-[0.14em] text-on-surface-variant mt-1.5">LOCAL EXECUTION</span>
+            </div>
+            <div className="flex flex-col items-center">
+              <span className="text-[32px] font-bold text-success-green leading-none">0</span>
+              <span className="text-[10.5px] font-semibold tracking-[0.14em] text-on-surface-variant mt-1.5">UPLOADS</span>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* ── CONTENT ──────────────────────────────────────── */}
+      {/* ── CORE TOOLCHAIN ───────────────────────────────── */}
+      <section className="max-w-6xl mx-auto px-5 sm:px-8 pt-14 pb-4">
+        <div className="flex items-end justify-between gap-4 mb-6">
+          <div>
+            <span className="section-kicker mb-2">Toolchain</span>
+            <h2 className="text-[20px] sm:text-[22px] font-bold text-on-surface tracking-[-0.02em]">Core Toolchain</h2>
+          </div>
+          <button onClick={() => onSelectCategory('all')} className="btn-ghost text-[13px] hidden sm:flex">
+            View all <ChevronRight className="w-4 h-4" />
+          </button>
+        </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          {TOOLCHAIN_CATEGORIES.map((cat, idx) => {
+            const conf = catConf(cat.id);
+            const Icon = conf?.icon ?? FileText;
+            const count = TOOLS.filter(t => t.category === cat.id).length;
+            return (
+              <button
+                key={cat.id}
+                onClick={() => onSelectCategory(cat.id)}
+                className="glass-panel rounded-xl p-5 flex flex-col text-left transition-all duration-300 hover:-translate-y-1 hover:shadow-pop group fade-up"
+                style={{ animationDelay: `${idx * 40}ms` }}
+              >
+                <div className={`w-11 h-11 rounded-xl ${conf?.iconBg ?? 'bg-primary-container/25'} flex items-center justify-center mb-3 transition-transform duration-200 group-hover:scale-105`}>
+                  <Icon className={conf?.iconColor ?? 'text-primary'} style={{ width: 22, height: 22 }} />
+                </div>
+                <h3 className="text-[15px] font-semibold text-on-surface mb-1.5">{conf?.name ?? cat.id}</h3>
+                <p className="text-[12.5px] text-on-surface-variant mb-4 flex-grow leading-relaxed">{conf?.desc}</p>
+                <div className="flex flex-wrap gap-1.5">
+                  {cat.tags.map(tag => (
+                    <span key={tag} className="text-[10.5px] font-mono text-on-surface-variant bg-surface-container px-2 py-0.5 rounded">{tag}</span>
+                  ))}
+                  {count > cat.tags.length && (
+                    <span className="text-[10.5px] font-mono text-tertiary bg-surface-container px-2 py-0.5 rounded">+{count - cat.tags.length}</span>
+                  )}
+                </div>
+              </button>
+            );
+          })}
+        </div>
+      </section>
+
+      {/* ── EDITOR PREVIEW ───────────────────────────────── */}
+      <section className="max-w-6xl mx-auto px-5 sm:px-8 py-14">
+        <div className="flex flex-col md:flex-row gap-4 items-center mb-6">
+          <div className="flex-1">
+            <span className="section-kicker mb-2">Workspace</span>
+            <h2 className="text-[20px] sm:text-[22px] font-bold text-on-surface tracking-[-0.02em]">High-Fidelity Editor</h2>
+            <p className="text-[13px] text-on-surface-variant mt-1">IDE-grade capabilities directly in your browser. Process large payloads with near-native performance.</p>
+          </div>
+          <button onClick={() => onSelectTool('json-formatter')} className="btn-secondary px-4 py-2 text-[13px] rounded-lg flex items-center gap-2 shrink-0">
+            <Sparkles className="w-3.5 h-3.5" /> Try Live
+          </button>
+        </div>
+
+        <div className="glass-panel rounded-xl overflow-hidden flex flex-col md:flex-row h-auto md:h-[440px]">
+          {/* Input Pane */}
+          <div className="flex-1 flex flex-col border-b md:border-b-0 md:border-r border-outline-variant inset-bg m-2 rounded-lg min-h-[220px] md:min-h-0">
+            <div className="h-9 border-b border-outline-variant flex items-center px-4 justify-between bg-surface-container/50 shrink-0">
+              <span className="text-[10px] font-semibold tracking-[0.12em] text-on-surface-variant">RAW INPUT</span>
+              <span className="text-[10px] font-semibold text-on-surface-variant bg-surface px-2 py-0.5 rounded">JSON</span>
+            </div>
+            <div className="p-4 font-mono text-[12.5px] text-on-surface-variant overflow-auto flex-1">
+              <pre className="leading-[1.7]"><code><span className="line-num">1</span>{'{'}<span className="key-hl">"user"</span>{': {'}<span className="key-hl">"id"</span>{':'}<span className="number-hl">8472</span>{','}<span className="key-hl">"name"</span>{':'}<span className="string-hl">"Developer"</span>{','}<span className="key-hl">"active"</span>{':'}<span className="number-hl">true</span>{','}<span className="key-hl">"roles"</span>{':['}<span className="string-hl">"admin"</span>{','}<span className="string-hl">"dev"</span>{']}}'}</code></pre>
+            </div>
+          </div>
+
+          {/* Action strip */}
+          <div className="flex md:flex-col items-center justify-center p-2 gap-2 bg-surface-container/20 shrink-0">
+            <button className="w-8 h-8 rounded-full bg-primary-container/20 border border-primary/30 flex items-center justify-center text-primary hover:bg-primary-container hover:text-on-primary-container transition-all" title="Beautify" type="button">
+              <AlignLeft className="w-4 h-4" />
+            </button>
+            <button className="w-8 h-8 rounded-full bg-surface-container-high border border-outline-variant flex items-center justify-center text-on-surface-variant hover:text-on-surface transition-all" title="Minify" type="button">
+              <Shrink className="w-4 h-4" />
+            </button>
+          </div>
+
+          {/* Output Pane */}
+          <div className="flex-1 flex flex-col inset-bg m-2 rounded-lg min-h-[260px] md:min-h-0">
+            <div className="h-9 border-b border-outline-variant flex items-center px-4 justify-between bg-surface-container/50 shrink-0">
+              <span className="text-[10px] font-semibold tracking-[0.12em] text-tertiary flex items-center gap-2">
+                <span className="w-1.5 h-1.5 rounded-full bg-success-green" />
+                FORMATTED OUTPUT
+              </span>
+              <div className="flex gap-2">
+                <button className="text-on-surface-variant hover:text-primary transition-colors" title="Copy" type="button"><Copy className="w-3.5 h-3.5" /></button>
+                <button className="text-on-surface-variant hover:text-primary transition-colors" title="Download" type="button"><Download className="w-3.5 h-3.5" /></button>
+              </div>
+            </div>
+            <div className="p-4 font-mono text-[12.5px] text-on-surface overflow-auto flex-1">
+              <pre className="leading-[1.7]"><code>
+                <span className="line-num">1</span>{'{'}
+                {'\n'}<span className="line-num">2</span>{'  '}<span className="key-hl">"user"</span>{': {'}
+                {'\n'}<span className="line-num">3</span>{'    '}<span className="key-hl">"id"</span>{': '}<span className="number-hl">8472</span>{','}
+                {'\n'}<span className="line-num">4</span>{'    '}<span className="key-hl">"name"</span>{': '}<span className="string-hl">"Developer"</span>{','}
+                {'\n'}<span className="line-num">5</span>{'    '}<span className="key-hl">"active"</span>{': '}<span className="number-hl">true</span>{','}
+                {'\n'}<span className="line-num">6</span>{'    '}<span className="key-hl">"roles"</span>{': ['}
+                {'\n'}<span className="line-num">7</span>{'      '}<span className="string-hl">"admin"</span>{','}
+                {'\n'}<span className="line-num">8</span>{'      '}<span className="string-hl">"dev"</span>
+                {'\n'}<span className="line-num">9</span>{'    ]'}
+                {'\n'}<span className="line-num">10</span>{'  }'}
+                {'\n'}<span className="line-num">11</span>{'}'}
+              </code></pre>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── PRIVACY ──────────────────────────────────────── */}
+      <section className="max-w-6xl mx-auto px-5 sm:px-8 pb-14 border-t border-outline-variant/30 pt-14">
+        <div className="max-w-2xl">
+          <div>
+            <span className="section-kicker mb-2">Privacy</span>
+            <h2 className="text-[20px] sm:text-[22px] font-bold text-on-surface tracking-[-0.02em] mb-4">Architected for Privacy</h2>
+            <p className="text-[14px] text-on-surface-variant leading-relaxed mb-6">
+              Your data is your business. NextTool operates entirely within your browser. No cloud telemetry, no external API calls for processing.
+            </p>
+            <ul className="space-y-4">
+              {[
+                { title: 'Zero Server Processing', desc: 'Inputs never hit our servers. Everything is parsed locally.' },
+                { title: 'Files Stay on Your Device', desc: 'Nothing you process is uploaded or stored. Data is cleared when you leave the page.' },
+                { title: 'No Accounts, No Paywalls', desc: 'No sign-up, no email, no premium tiers. Every tool is free to use.' },
+              ].map(f => (
+                <li key={f.title} className="flex items-start gap-3">
+                  <div className="mt-0.5 w-6 h-6 rounded-full bg-success-green/20 flex items-center justify-center flex-shrink-0">
+                    <CheckCircle2 className="text-success-green" style={{ width: 14, height: 14 }} />
+                  </div>
+                  <div>
+                    <strong className="text-[14px] font-semibold text-on-surface block mb-0.5">{f.title}</strong>
+                    <span className="text-[13px] text-on-surface-variant leading-relaxed">{f.desc}</span>
+                  </div>
+                </li>
+              ))}
+            </ul>
+            <button onClick={onOpenPrivacy} className="btn-secondary mt-6 px-4 py-2 text-[13px] rounded-lg">
+              Read our privacy policy <ArrowRight className="w-4 h-4" />
+            </button>
+          </div>
+        </div>
+      </section>
+
+      {/* ── BROWSE ───────────────────────────────────────── */}
       <div className="max-w-6xl mx-auto px-5 sm:px-8 py-12 space-y-16">
+
+        {/* ── Popular tools ──────────────────────────────── */}
+        <section aria-labelledby="popular-heading">
+          <SectionHeading
+            kicker="Popular"
+            title="Popular Tools"
+            desc="The most-used tools"
+            id="popular-heading"
+            action={
+              <button onClick={onOpenSearch} className="btn-ghost text-[13px] hidden sm:flex">
+                Search tools <ChevronRight className="w-4 h-4" />
+              </button>
+            }
+          />
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+            {popular.map((tool, idx) => {
+              const conf = catConf(tool.category);
+              return (
+                <ToolCard
+                  key={tool.id}
+                  tool={tool}
+                  icon={conf?.icon ?? FileText}
+                  iconColor={conf?.iconColor}
+                  iconBg={conf?.iconBg}
+                  categoryLabel={conf?.name}
+                  onSelect={onSelectTool}
+                  showPopularBadge
+                  showLocalBadge
+                  className="fade-up"
+                  style={{ animationDelay: `${Math.min(idx, 12) * 30}ms` }}
+                />
+              );
+            })}
+          </div>
+        </section>
 
         {/* ── Categories ─────────────────────────────────── */}
         <section id="categories-section" aria-labelledby="categories-heading" className="scroll-mt-20">
-          <div className="flex items-center justify-between mb-5">
-            <div>
-              <span className="section-kicker mb-2">Explore</span>
-              <h2 id="categories-heading" className="text-[20px] font-bold dark:text-white text-slate-900 tracking-[-0.02em]">Browse by Category</h2>
-              <p className="text-[13px] dark:text-zinc-500 text-slate-400 mt-1">{TOOLS.length} tools across {ALL_CATEGORIES.filter(c => TOOLS.some(t => t.category === c.id)).length} categories</p>
-            </div>
-            <button onClick={onOpenSearch} className="btn-ghost text-[13px] hidden sm:flex">
-              Search tools <ChevronRight className="w-4 h-4" />
-            </button>
-          </div>
+          <SectionHeading
+            kicker="Explore"
+            title="Browse by Category"
+            desc={`${workingToolCount()} tools across ${ALL_CATEGORIES.filter(c => TOOLS.some(t => t.category === c.id)).length} categories`}
+            id="categories-heading"
+            action={
+              <button onClick={onOpenSearch} className="btn-ghost text-[13px] hidden sm:flex">
+                Search tools <ChevronRight className="w-4 h-4" />
+              </button>
+            }
+          />
 
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
             {ALL_CATEGORIES.filter(cat => TOOLS.some(t => t.category === cat.id)).map((cat, idx) => {
@@ -565,23 +920,18 @@ const HomeView: React.FC<{
                 <button
                   key={cat.id}
                   onClick={() => onSelectCategory(cat.id)}
-                  className="cat-card group flex flex-col p-4 rounded-xl border text-left
-                    dark:bg-white/[0.03] dark:border-white/[0.07]
-                    dark:hover:bg-white/[0.06] dark:hover:border-indigo-500/20
-                    bg-white border-slate-200 hover:border-indigo-200
-                    transition-all duration-150 fade-up"
+                  className="cat-card group flex flex-col p-4 rounded-xl border border-border bg-card text-left transition-all duration-150 fade-up"
                   style={{ animationDelay: `${idx * 25}ms` }}
                 >
-                  <span className="absolute inset-x-0 top-0 h-0.5 bg-gradient-to-r from-indigo-500 to-violet-500 opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
                   <div className={`cat-icon w-10 h-10 rounded-xl ${cat.iconBg} mb-3`}>
                     <Icon style={{ width: 19, height: 19 }} className={cat.iconColor} />
                   </div>
-                  <div className="text-[13px] font-semibold dark:text-zinc-200 text-slate-800 mb-0.5 leading-tight group-hover:text-indigo-500 dark:group-hover:text-indigo-400 transition-colors">
+                  <div className="text-[13px] font-semibold text-foreground mb-0.5 leading-tight group-hover:text-primary transition-colors">
                     {cat.name}
                   </div>
                   <div className="mt-auto pt-2 flex items-center gap-1">
-                    <span className="text-[11px] dark:text-zinc-600 text-slate-400 font-medium">{count} tools</span>
-                    <ChevronRight className="w-3 h-3 text-indigo-500 opacity-0 -translate-x-1 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-150 ml-auto" />
+                    <span className="text-[11px] text-muted-foreground font-medium">{count} tools</span>
+                    <ChevronRight className="w-3 h-3 text-primary opacity-0 -translate-x-1 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-150 ml-auto" />
                   </div>
                 </button>
               );
@@ -592,116 +942,134 @@ const HomeView: React.FC<{
         {/* ── Recently used ──────────────────────────────── */}
         {recentTools.length > 0 && (
           <section aria-labelledby="recent-heading" className="fade-up">
-            <div className="flex items-center justify-between mb-5">
-              <div className="flex items-center gap-2.5">
-                <span className="cat-icon dark:bg-white/[0.06] bg-slate-100">
-                  <Clock className="w-4 h-4 text-indigo-500" />
-                </span>
-                <div>
-                  <h2 id="recent-heading" className="text-[20px] font-bold dark:text-white text-slate-900 tracking-[-0.02em]">Recently used</h2>
-                  <p className="text-[13px] dark:text-zinc-500 text-slate-400 mt-0.5">Stored locally on this device</p>
-                </div>
-              </div>
-              <button onClick={() => {
-                try { localStorage.removeItem('nexttool-recent'); setRecentIds([]); } catch { /* ignore */ }
-              }} className="btn-ghost text-[12px] hidden sm:flex">
-                Clear <ChevronRight className="w-4 h-4" />
-              </button>
-            </div>
-
+            <SectionHeading
+              kicker="Recents"
+              title="Recently used"
+              desc="Stored locally on this device"
+              id="recent-heading"
+              action={
+                <button onClick={() => {
+                  try { localStorage.removeItem('nexttool-recent'); setRecentIds([]); } catch { /* ignore */ }
+                }} className="btn-ghost text-[12px] hidden sm:flex">
+                  Clear <ChevronRight className="w-4 h-4" />
+                </button>
+              }
+            />
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
               {recentTools.map((tool, idx) => {
-                const catConf = ALL_CATEGORIES.find(c => c.id === tool.category);
-                const Icon = catConf?.icon ?? FileText;
+                const conf = catConf(tool.category);
                 return (
-                  <button
+                  <ToolCard
                     key={tool.id}
-                    onClick={() => onSelectTool(tool.id)}
-                    className="tool-card group flex flex-col p-4 rounded-xl border text-left
-                      dark:bg-white/[0.03] dark:border-white/[0.07]
-                      dark:hover:bg-white/[0.06] dark:hover:border-indigo-500/25
-                      bg-white border-slate-200 hover:border-indigo-200
-                      transition-all duration-150 fade-up"
+                    tool={tool}
+                    icon={conf?.icon ?? FileText}
+                    iconColor={conf?.iconColor}
+                    iconBg={conf?.iconBg}
+                    categoryLabel={conf?.name}
+                    onSelect={onSelectTool}
+                    className="fade-up"
                     style={{ animationDelay: `${idx * 30}ms` }}
-                  >
-                    <div className="flex items-start justify-between mb-3">
-                      <div className={`cat-icon w-10 h-10 rounded-xl ${catConf?.iconBg}`}>
-                        <Icon style={{ width: 17, height: 17 }} className={catConf?.iconColor} />
-                      </div>
-                      <Clock className="w-3.5 h-3.5 text-slate-400 dark:text-zinc-600 mt-0.5" />
-                    </div>
-                    <div className="text-[13px] font-semibold dark:text-zinc-200 text-slate-800 leading-snug mb-1.5 group-hover:text-indigo-500 dark:group-hover:text-indigo-400 transition-colors">
-                      {tool.name}
-                    </div>
-                    <div className="text-[11.5px] dark:text-zinc-600 text-slate-400 leading-relaxed line-clamp-2 flex-1">
-                      {tool.description}
-                    </div>
-                    <div className="mt-3 flex items-center gap-1 text-[11px]">
-                      <span className={`text-[10px] font-medium px-1.5 py-0.5 rounded ${catConf?.iconBg} ${catConf?.iconColor}`}>
-                        {tool.category}
-                      </span>
-                      <span className="inline-flex items-center gap-1 text-[11px] font-medium text-indigo-500 dark:text-indigo-400 ml-auto">
-                        Open <ChevronRight className="w-3 h-3" />
-                      </span>
-                    </div>
-                  </button>
+                  />
                 );
               })}
             </div>
           </section>
         )}
 
-        {/* ── Popular tools ──────────────────────────────── */}
-        <section aria-labelledby="popular-heading">
-          <div className="flex items-center justify-between mb-5">
-            <div>
-              <span className="section-kicker mb-2">Popular</span>
-              <h2 id="popular-heading" className="text-[20px] font-bold dark:text-white text-slate-900 tracking-[-0.02em]">Popular Tools</h2>
-              <p className="text-[13px] dark:text-zinc-500 text-slate-400 mt-1">The most-used tools</p>
+        {/* ── Favorites ──────────────────────────────────── */}
+        {favoriteTools.length > 0 && (
+          <section aria-labelledby="favorites-heading" className="fade-up">
+            <SectionHeading
+              kicker="Saved"
+              title="Favorites"
+              desc="Tools you starred for quick access"
+              id="favorites-heading"
+            />
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+              {favoriteTools.map((tool, idx) => {
+                const conf = catConf(tool.category);
+                return (
+                  <ToolCard
+                    key={tool.id}
+                    tool={tool}
+                    icon={conf?.icon ?? FileText}
+                    iconColor={conf?.iconColor}
+                    iconBg={conf?.iconBg}
+                    categoryLabel={conf?.name}
+                    onSelect={onSelectTool}
+                    className="fade-up"
+                    style={{ animationDelay: `${idx * 30}ms` }}
+                  />
+                );
+              })}
             </div>
-            <button onClick={onOpenSearch} className="btn-ghost text-[13px] hidden sm:flex">
-              View all <ChevronRight className="w-4 h-4" />
-            </button>
-          </div>
+          </section>
+        )}
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-            {popular.map((tool, idx) => {
-              const catConf = ALL_CATEGORIES.find(c => c.id === tool.category);
-              const Icon = catConf?.icon ?? FileText;
-              return (
-                <button
-                  key={tool.id}
-                  onClick={() => onSelectTool(tool.id)}
-                  className="tool-card group flex flex-col p-4 rounded-xl border text-left
-                    dark:bg-white/[0.03] dark:border-white/[0.07]
-                    dark:hover:bg-white/[0.06] dark:hover:border-indigo-500/25
-                    bg-white border-slate-200 hover:border-indigo-200
-                    transition-all duration-150 fade-up"
-                  style={{ animationDelay: `${idx * 30}ms` }}
-                >
-                  <div className="flex items-start justify-between mb-3">
-                    <div className={`cat-icon w-10 h-10 rounded-xl ${catConf?.iconBg}`}>
-                      <Icon style={{ width: 17, height: 17 }} className={catConf?.iconColor} />
-                    </div>
-                    <Star className="w-3.5 h-3.5 text-amber-400 fill-amber-400 mt-0.5" />
-                  </div>
-                  <div className="text-[13px] font-semibold dark:text-zinc-200 text-slate-800 leading-snug mb-1.5 group-hover:text-indigo-500 dark:group-hover:text-indigo-400 transition-colors">
-                    {tool.name}
-                  </div>
-                  <div className="text-[11.5px] dark:text-zinc-600 text-slate-400 leading-relaxed line-clamp-2 flex-1">
-                    {tool.description}
-                  </div>
-                  <div className="mt-3 flex items-center gap-1 text-[11px]">
-                    <span className={`text-[10px] font-medium px-1.5 py-0.5 rounded ${catConf?.iconBg} ${catConf?.iconColor}`}>
-                      {tool.category}
-                    </span>
-                    <span className="ml-auto flex items-center gap-1 dark:text-emerald-500/70 text-emerald-600 text-[10px] font-medium">
-                      <CheckCircle2 className="w-3 h-3" /> local
-                    </span>
-                  </div>
-                </button>
-              );
-            })}
+        {/* ── New tools ──────────────────────────────────── */}
+        {newTools.length > 0 && (
+          <section aria-labelledby="new-heading">
+            <SectionHeading
+              kicker="New"
+              title="New Tools"
+              desc="Recently added"
+              id="new-heading"
+            />
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+              {newTools.map((tool, idx) => {
+                const conf = catConf(tool.category);
+                return (
+                  <ToolCard
+                    key={tool.id}
+                    tool={tool}
+                    icon={conf?.icon ?? FileText}
+                    iconColor={conf?.iconColor}
+                    iconBg={conf?.iconBg}
+                    categoryLabel={conf?.name}
+                    onSelect={onSelectTool}
+                    className="fade-up"
+                    style={{ animationDelay: `${idx * 30}ms` }}
+                  />
+                );
+              })}
+            </div>
+          </section>
+        )}
+
+        {/* ── Why NextTool ───────────────────────────────── */}
+        <section aria-labelledby="why-heading">
+          <div className="text-center max-w-2xl mx-auto mb-10">
+            <span className="section-kicker mb-3">Why NextTool</span>
+            <h2 id="why-heading" className="text-[24px] sm:text-[28px] font-bold text-foreground tracking-[-0.02em]">
+              Everything you need, nothing you don't
+            </h2>
+            <p className="text-[14px] text-muted-foreground mt-3 leading-relaxed">
+              No sign-ups, no uploads, no clutter. Just fast tools that respect your privacy.
+            </p>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+            {WHY_FEATURES.map(f => (
+              <div key={f.title} className="rounded-xl border border-border bg-card p-5 flex flex-col gap-3">
+                <div className="w-10 h-10 rounded-xl bg-primary/10 text-primary flex items-center justify-center">
+                  <f.icon className="w-5 h-5" />
+                </div>
+                <h3 className="text-[15px] font-semibold text-foreground">{f.title}</h3>
+                <p className="text-[13px] text-muted-foreground leading-relaxed">{f.desc}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* ── FAQ ────────────────────────────────────────── */}
+        <section aria-labelledby="faq-heading" className="max-w-3xl mx-auto w-full">
+          <div className="text-center mb-8">
+            <span className="section-kicker mb-3">FAQ</span>
+            <h2 id="faq-heading" className="text-[24px] sm:text-[28px] font-bold text-foreground tracking-[-0.02em]">
+              Frequently asked questions
+            </h2>
+          </div>
+          <div className="space-y-2.5">
+            {FAQ_ITEMS.map(f => <FaqItem key={f.q} q={f.q} a={f.a} />)}
           </div>
         </section>
       </div>
@@ -731,38 +1099,38 @@ const CategoryView: React.FC<{
           <Icon className={conf?.iconColor} style={{ width: 20, height: 20 }} />
         </div>
         <div>
-          <h1 className="text-xl font-semibold dark:text-white text-slate-900">{conf?.name}</h1>
-          <p className="text-[13px] dark:text-zinc-500 text-slate-500 mt-0.5">{tools.length} tools available</p>
+          <h1 className="text-xl font-semibold text-foreground">{conf?.name}</h1>
+          <p className="text-[13px] text-muted-foreground mt-0.5">{tools.length} tools available</p>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
-        {tools.map(tool => (
-          <button
-            key={tool.id}
-            onClick={() => onSelectTool(tool.id)}
-            className="group flex flex-col p-4 rounded-xl border text-left
-              dark:bg-dark-card dark:border-dark-border dark:hover:border-zinc-600
-              bg-white border-slate-200 hover:border-slate-300
-              transition-colors duration-150"
-          >
-            <div className="flex items-start justify-between mb-2.5">
-              <div className={`cat-icon ${conf?.iconBg} w-8 h-8 rounded-lg`}>
-                <Icon className={conf?.iconColor} style={{ width: 16, height: 16 }} />
-              </div>
-              {tool.isPopular && (
-                <Star className="w-3.5 h-3.5 text-amber-400 fill-amber-400 shrink-0" />
-              )}
-            </div>
-            <div className="text-[13px] font-medium dark:text-zinc-200 text-slate-800 leading-snug mb-1.5 group-hover:text-indigo-500 dark:group-hover:text-indigo-400 transition-colors">
-              {tool.name}
-            </div>
-            <div className="text-[11.5px] dark:text-zinc-600 text-slate-400 line-clamp-2 leading-relaxed">
-              {tool.description}
-            </div>
-          </button>
-        ))}
-      </div>
+      {tools.length === 0 ? (
+        <div className="text-center py-16">
+          <div className="w-14 h-14 mx-auto rounded-2xl bg-muted flex items-center justify-center mb-4">
+            <Icon className="w-6 h-6 text-muted-foreground/50" />
+          </div>
+          <h3 className="text-[16px] font-semibold text-foreground mb-1">No tools in this category yet</h3>
+          <p className="text-[13px] text-muted-foreground max-w-xs mx-auto">Check back soon — new tools are added regularly.</p>
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
+          {tools.map(tool => {
+            const catConf = categories.find(c => c.id === tool.category);
+            return (
+              <ToolCard
+                key={tool.id}
+                tool={tool}
+                icon={catConf?.icon ?? FileText}
+                iconColor={catConf?.iconColor}
+                iconBg={catConf?.iconBg}
+                categoryLabel={catConf?.name}
+                onSelect={onSelectTool}
+                showPopularBadge={tool.isPopular}
+              />
+            );
+          })}
+        </div>
+      )}
     </div>
   );
 };
@@ -776,86 +1144,158 @@ const ToolView: React.FC<{
   onOpenPrivacy: () => void;
   onSelectTool: (id: string) => void;
   onSelectCategory: (cat: ToolCategory | 'all') => void;
-}> = ({ activeTool, onBack, renderTool, categories, onOpenPrivacy, onSelectTool, onSelectCategory }) => {
+  onGoHome: () => void;
+  onOpenFaq: () => void;
+  onOpenCategories: () => void;
+}> = ({ activeTool, onBack, renderTool, categories, onOpenPrivacy, onSelectTool, onSelectCategory, onGoHome, onOpenFaq, onOpenCategories }) => {
   const conf = categories.find(c => c.id === activeTool?.category);
   const Icon = conf?.icon ?? FileText;
   const related = activeTool
     ? TOOLS.filter(t => t.category === activeTool.category && t.id !== activeTool.id).slice(0, 4)
     : [];
 
+  if (activeTool?.id === 'image-editor') return <>{renderTool()}</>;
+
   return (
-    <div className="max-w-5xl mx-auto px-4 sm:px-6 py-6 space-y-5 fade-in">
+    <div className="max-w-[1920px] w-full mx-auto px-3 sm:px-6 md:px-8 py-4 sm:py-6 space-y-4 sm:space-y-5 fade-in">
       <AdBanner type="leaderboard" />
 
       {activeTool && (
         <>
           {/* Breadcrumb */}
           <nav className="flex items-center gap-1.5 text-[12px] flex-wrap" aria-label="Breadcrumb">
-            <button onClick={onBack} className="dark:text-zinc-500 dark:hover:text-zinc-300 text-slate-400 hover:text-slate-700 transition-colors">
+            <button onClick={onBack} className="text-muted-foreground hover:text-foreground transition-colors">
               Home
             </button>
-            <ChevronRight className="w-3 h-3 dark:text-zinc-700 text-slate-300" />
+            <ChevronRight className="w-3 h-3 text-border" />
             <button onClick={() => onSelectCategory(activeTool.category)}
-              className="dark:text-zinc-500 dark:hover:text-indigo-400 text-slate-400 hover:text-indigo-600 transition-colors capitalize">
+              className="text-muted-foreground hover:text-primary transition-colors capitalize">
               {conf?.name}
             </button>
-            <ChevronRight className="w-3 h-3 dark:text-zinc-700 text-slate-300" />
-            <span className="dark:text-zinc-300 text-slate-700 font-medium truncate max-w-[240px]">{activeTool.name}</span>
+            <ChevronRight className="w-3 h-3 text-border" />
+            <span className="text-foreground font-medium truncate max-w-[240px]">{activeTool.name}</span>
           </nav>
 
-          {/* Professional tool header */}
-          <div className="relative overflow-hidden rounded-2xl border dark:bg-dark-card dark:border-dark-border bg-white border-slate-200 p-5 sm:p-6 shadow-sm">
-            <div className="absolute -top-12 -right-12 w-48 h-48 rounded-full bg-indigo-500/10 blur-3xl pointer-events-none" />
-            <div className="absolute -bottom-16 -left-10 w-40 h-40 rounded-full bg-violet-500/10 blur-3xl pointer-events-none" />
-            <div className="relative flex flex-col sm:flex-row sm:items-center gap-4">
+          {/* Tool header */}
+          <div className="rounded-2xl border bg-card border-border p-5 sm:p-6 shadow-card">
+            <div className="flex flex-col sm:flex-row sm:items-center gap-4">
               <div className={`cat-icon ${conf?.iconBg} w-12 h-12 rounded-xl`}>
                 <Icon className={conf?.iconColor} style={{ width: 24, height: 24 }} />
               </div>
               <div className="flex-1 min-w-0">
                 <div className="flex flex-wrap items-center gap-2">
-                  <h1 className="text-xl sm:text-2xl font-bold dark:text-white text-slate-900 tracking-[-0.02em]">
+                  <h1 className="text-xl sm:text-2xl font-bold text-foreground tracking-[-0.02em]">
                     {activeTool.name}
                   </h1>
-                  <button onClick={() => onSelectCategory(activeTool.category)} className="badge badge-indigo capitalize">
+                  {!activeTool.isComingSoon && TOOL_EXPLANATIONS[activeTool.id] && (
+                    <span className="relative inline-flex group/info">
+                      <button
+                        type="button"
+                        tabIndex={0}
+                        aria-label="How to use this tool"
+                        className="w-5 h-5 rounded-full flex items-center justify-center text-muted-foreground hover:text-primary hover:bg-primary/10 transition-colors"
+                      >
+                        <Info className="w-3.5 h-3.5" />
+                      </button>
+                      <div className="pointer-events-none absolute z-20 top-full left-0 mt-2 w-72 max-w-[80vw] opacity-0 scale-95 origin-top-left transition-all duration-150 group-hover/info:opacity-100 group-hover/info:scale-100 group-focus-within/info:opacity-100 group-focus-within/info:scale-100">
+                        <div className="rounded-xl border border-border bg-card shadow-float p-3.5">
+                          <p className="text-[11px] font-bold text-foreground mb-1.5">How to use</p>
+                          <p className="text-[12px] text-muted-foreground leading-relaxed">
+                            {TOOL_EXPLANATIONS[activeTool.id]}
+                          </p>
+                        </div>
+                      </div>
+                    </span>
+                  )}
+                  <button onClick={() => onSelectCategory(activeTool.category)} className="badge badge-primary capitalize">
                     {conf?.name}
                   </button>
                   {activeTool.isPopular && (
-                    <span className="badge badge-amber">
-                      <Star className="w-3 h-3 fill-amber-400" /> Popular
+                    <span className="badge badge-warning">
+                      <Star className="w-3 h-3 fill-current" /> Popular
                     </span>
                   )}
                 </div>
-                <p className="text-[13px] dark:text-zinc-400 text-slate-500 mt-1.5 leading-relaxed max-w-2xl">
+                <p className="text-[13px] text-muted-foreground mt-1.5 leading-relaxed max-w-2xl">
                   {activeTool.description}
                 </p>
               </div>
-              <div className="shrink-0">
-                <span className="badge badge-green">
-                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 pulse-dot" />
+              <div className="shrink-0 flex items-center gap-2">
+                <span className="badge badge-success">
+                  <span className="w-1.5 h-1.5 rounded-full bg-success pulse-dot" />
                   Local only
                 </span>
+                <FavoriteButton toolId={activeTool.id} toolName={activeTool.name} size="md" />
               </div>
             </div>
           </div>
 
-          {TOOL_EXPLANATIONS[activeTool.id] && (
-            <div className="rounded-2xl border dark:bg-dark-card dark:border-dark-border bg-white border-slate-200 p-5 sm:p-6 shadow-sm">
-              <h2 className="flex items-center gap-2 text-[15px] font-bold dark:text-white text-slate-900 tracking-[-0.02em] mb-2">
-                <Info className="w-4 h-4 text-indigo-500 shrink-0" />
-                What does this tool do?
+          {renderTool()}
+
+          {!activeTool.isComingSoon && TOOL_EXPLANATIONS[activeTool.id] && (
+            <div className="rounded-2xl border bg-card border-border p-5 sm:p-6 shadow-card">
+              <h2 className="flex items-center gap-2 text-[15px] font-bold text-foreground tracking-[-0.02em] mb-2">
+                <Info className="w-4 h-4 text-primary shrink-0" />
+                How to use
               </h2>
-              <p className="text-[13px] dark:text-zinc-400 text-slate-600 leading-relaxed">
+              <p className="text-[13px] text-muted-foreground leading-relaxed">
                 {TOOL_EXPLANATIONS[activeTool.id]}
               </p>
             </div>
           )}
 
-          {renderTool()}
+          {!activeTool.isComingSoon && TOOL_SEO_CONTENT[activeTool.id] && (
+            <div className="rounded-2xl border bg-card border-border p-5 sm:p-6 shadow-card space-y-6">
+              <p className="text-[13px] text-muted-foreground leading-relaxed">
+                {TOOL_SEO_CONTENT[activeTool.id].intro}
+              </p>
+
+              {TOOL_SEO_CONTENT[activeTool.id].steps.length > 0 && (
+                <div>
+                  <h2 className="text-[15px] font-bold text-foreground tracking-[-0.02em] mb-3">
+                    How to use {activeTool.name}
+                  </h2>
+                  <ol className="space-y-3">
+                    {TOOL_SEO_CONTENT[activeTool.id].steps.map((step, i) => (
+                      <li key={i} className="flex gap-3">
+                        <span className="shrink-0 w-6 h-6 rounded-full bg-primary/10 text-primary text-[11px] font-bold flex items-center justify-center mt-0.5">
+                          {i + 1}
+                        </span>
+                        <div>
+                          <p className="text-[13px] font-semibold text-foreground">{step.title}</p>
+                          <p className="text-[12.5px] text-muted-foreground leading-relaxed mt-0.5">{step.description}</p>
+                        </div>
+                      </li>
+                    ))}
+                  </ol>
+                </div>
+              )}
+
+              {TOOL_SEO_CONTENT[activeTool.id].faqs.length > 0 && (
+                <div>
+                  <h2 className="text-[15px] font-bold text-foreground tracking-[-0.02em] mb-3">
+                    Frequently asked questions
+                  </h2>
+                  <div className="space-y-2">
+                    {TOOL_SEO_CONTENT[activeTool.id].faqs.map((faq, i) => (
+                      <details key={i} className="group rounded-xl border border-border bg-muted/40 px-4 py-3">
+                        <summary className="text-[13px] font-semibold text-foreground cursor-pointer list-none flex items-center justify-between gap-3">
+                          {faq.question}
+                          <ChevronRight className="w-3.5 h-3.5 text-muted-foreground shrink-0 transition-transform group-open:rotate-90" />
+                        </summary>
+                        <p className="text-[12.5px] text-muted-foreground leading-relaxed mt-2">{faq.answer}</p>
+                      </details>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
 
           {/* Privacy note */}
-          <div className="flex items-center gap-2.5 px-4 py-3 rounded-xl dark:bg-emerald-500/[0.06] bg-emerald-50 border dark:border-emerald-500/20 border-emerald-200">
-            <ShieldCheck className="w-4 h-4 text-emerald-500 shrink-0" />
-            <p className="text-xs dark:text-emerald-400 text-emerald-700 leading-relaxed">
+          <div className="flex items-center gap-2.5 px-4 py-3 rounded-xl bg-success/5 border border-success/20">
+            <ShieldCheck className="w-4 h-4 text-success shrink-0" />
+            <p className="text-xs text-success leading-relaxed">
               <strong>Free and private.</strong> Everything runs on your own device, with no account and no uploads.
             </p>
           </div>
@@ -863,22 +1303,20 @@ const ToolView: React.FC<{
           {/* Related tools */}
           {related.length > 0 && (
             <section aria-label="Related tools">
-              <h2 className="text-[15px] font-bold dark:text-white text-slate-900 tracking-[-0.02em] mb-3">
+              <h2 className="text-[15px] font-bold text-foreground tracking-[-0.02em] mb-3">
                 More in {conf?.name}
               </h2>
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+              <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-2.5">
                 {related.map(tool => (
                   <button
                     key={tool.id}
                     onClick={() => onSelectTool(tool.id)}
-                    className="group p-3 rounded-xl border text-left
-                      dark:bg-white/[0.02] dark:border-white/[0.07] dark:hover:bg-white/[0.06] dark:hover:border-indigo-500/25
-                      bg-white border-slate-200 hover:border-indigo-200 hover:shadow-sm transition-all duration-150"
+                    className="group p-3 rounded-xl border border-border bg-card text-left hover:border-primary/30 hover:shadow-card transition-all duration-150"
                   >
-                    <div className="text-[12px] font-semibold dark:text-zinc-200 text-slate-800 leading-snug line-clamp-1 group-hover:text-indigo-500 dark:group-hover:text-indigo-400 transition-colors">
+                    <div className="text-[12px] font-semibold text-foreground leading-snug line-clamp-1 group-hover:text-primary transition-colors">
                       {tool.name}
                     </div>
-                    <div className="text-[10.5px] dark:text-zinc-600 text-slate-400 mt-1 line-clamp-2 leading-relaxed">
+                    <div className="text-[10.5px] text-muted-foreground mt-1 line-clamp-2 leading-relaxed">
                       {tool.description}
                     </div>
                   </button>
@@ -890,7 +1328,7 @@ const ToolView: React.FC<{
       )}
 
       <AdBanner type="footer" />
-      <Footer onOpenPrivacy={onOpenPrivacy} onSelectTool={onSelectTool} onSelectCategory={onSelectCategory} />
+      <Footer onOpenPrivacy={onOpenPrivacy} onSelectTool={onSelectTool} onSelectCategory={onSelectCategory} onGoHome={onGoHome} onOpenFaq={onOpenFaq} onOpenCategories={onOpenCategories} />
     </div>
   );
 };

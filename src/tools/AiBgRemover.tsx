@@ -265,10 +265,10 @@ export const AiBgRemover: React.FC = () => {
 
   return (
     <div className="space-y-4">
-      <div className="p-3 rounded-xl border dark:bg-dark-card dark:border-dark-border bg-white border-slate-200 flex flex-wrap items-center justify-between gap-3 text-xs">
+      <div className="p-3 rounded-xl border   bg-card border-border flex flex-wrap items-center justify-between gap-3 text-xs">
         <div className="flex items-center gap-2">
-          <Cpu className="w-4 h-4 text-indigo-500" />
-          <span className="font-semibold dark:text-zinc-200 text-slate-800">
+          <Cpu className="w-4 h-4 text-primary" />
+          <span className="font-semibold  text-foreground">
             Processed on your device, nothing is uploaded
           </span>
         </div>
@@ -283,11 +283,11 @@ export const AiBgRemover: React.FC = () => {
       />
 
       {originalUrl && (
-        <div className="rounded-2xl border dark:bg-dark-card dark:border-dark-border bg-white border-slate-200 overflow-hidden relative min-h-[320px] flex items-center justify-center p-4">
+        <div className="rounded-2xl border   bg-card border-border overflow-hidden relative min-h-[320px] flex items-center justify-center p-4">
           {phase === 'done' ? (
-            <div className="relative w-full max-w-lg h-[340px] rounded-xl overflow-hidden shadow-inner border border-slate-300 dark:border-slate-700">
+            <div className="relative w-full max-w-lg h-[340px] rounded-xl overflow-hidden shadow-inner border border-border">
               <div
-                className="absolute inset-0 flex items-center justify-center overflow-hidden bg-slate-200 dark:bg-slate-900"
+                className="absolute inset-0 flex items-center justify-center overflow-hidden bg-muted"
                 style={{ clipPath: `polygon(0 0, ${sliderPos}% 0, ${sliderPos}% 100%, 0 100%)` }}
               >
                 <img src={originalUrl} alt="Original" className="max-w-full max-h-full object-contain" />
@@ -317,16 +317,16 @@ export const AiBgRemover: React.FC = () => {
               />
 
               <div
-                className="absolute top-0 bottom-0 w-0.5 bg-white shadow-2xl z-10 pointer-events-none"
+                className="absolute top-0 bottom-0 w-0.5 bg-card shadow-2xl z-10 pointer-events-none"
                 style={{ left: `${sliderPos}%` }}
               >
-                <div className="absolute top-1/2 -translate-y-1/2 -translate-x-1/2 w-6 h-6 rounded-full bg-white text-slate-900 shadow-lg flex items-center justify-center text-[10px] font-bold">
+                <div className="absolute top-1/2 -translate-y-1/2 -translate-x-1/2 w-6 h-6 rounded-full bg-card text-foreground shadow-lg flex items-center justify-center text-[10px] font-bold">
                   ↔
                 </div>
               </div>
             </div>
           ) : (
-            <div className="relative w-full max-w-lg h-[300px] rounded-xl overflow-hidden shadow-inner border border-slate-300 dark:border-slate-700 flex items-center justify-center bg-slate-100 dark:bg-dark-bg">
+            <div className="relative w-full max-w-lg h-[300px] rounded-xl overflow-hidden shadow-inner border border-border flex items-center justify-center bg-muted ">
               <img src={originalUrl} alt="Original" className="max-w-full max-h-full object-contain" />
               <span className="absolute top-2 left-2 px-2 py-1 bg-black/60 rounded text-[10px] uppercase tracking-wider text-white">
                 Original
@@ -337,22 +337,22 @@ export const AiBgRemover: React.FC = () => {
       )}
 
       {phase === 'running' && (
-        <div className="rounded-2xl border dark:bg-dark-card dark:border-dark-border bg-white border-slate-200 p-4 space-y-3">
+        <div className="rounded-2xl border   bg-card border-border p-4 space-y-3">
           <div className="flex items-center justify-between text-xs">
-            <span className="font-semibold dark:text-zinc-200 text-slate-800 flex items-center gap-2">
-              <Loader2 className="w-4 h-4 text-indigo-500 animate-spin" />
+            <span className="font-semibold  text-foreground flex items-center gap-2">
+              <Loader2 className="w-4 h-4 text-primary animate-spin" />
               {stageLabel || 'Processing…'}
             </span>
-            <span className="dark:text-zinc-400 text-slate-500 tabular-nums">{timeText}</span>
+            <span className=" text-muted-foreground tabular-nums">{timeText}</span>
           </div>
           <div className="flex items-center justify-between">
-            <span className="text-sm font-bold dark:text-zinc-200 text-slate-800">{Math.round(progress)}%</span>
-            <span className="text-[10px] dark:text-zinc-500 text-slate-500">processed on your device</span>
+            <span className="text-sm font-bold  text-foreground">{Math.round(progress)}%</span>
+            <span className="text-[10px]  text-muted-foreground">processed on your device</span>
           </div>
-          <div className="h-2 rounded-full bg-slate-200 dark:bg-slate-800 overflow-hidden">
-            <div className="h-full bg-indigo-500 transition-[width] duration-300" style={{ width: `${progress}%` }} />
+          <div className="h-2 rounded-full bg-muted  overflow-hidden">
+            <div className="h-full bg-primary transition-[width] duration-300" style={{ width: `${progress}%` }} />
           </div>
-          <p className="text-[11px] dark:text-zinc-500 text-slate-500">
+          <p className="text-[11px]  text-muted-foreground">
             First run downloads the AI model (~85 MB) and caches it, then processing is instant. Your image stays on your device.
           </p>
         </div>
@@ -367,7 +367,7 @@ export const AiBgRemover: React.FC = () => {
           onClick={() => {
             if (currentFileRef.current) handleFiles([currentFileRef.current]);
           }}
-          className="w-full py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs rounded-lg flex items-center justify-center gap-2 transition-colors"
+          className="w-full py-2.5 bg-primary hover:brightness-110 text-primary-foreground font-bold text-xs rounded-lg flex items-center justify-center gap-2 transition-colors"
         >
           <RotateCcw className="w-4 h-4" />
           Retry
@@ -378,12 +378,12 @@ export const AiBgRemover: React.FC = () => {
         <div className="space-y-3 pt-2">
           <AdBanner type="native" />
 
-          <div className="rounded-2xl border dark:bg-dark-card dark:border-dark-border bg-white border-slate-200 p-3 space-y-2">
-            <div className="flex items-center justify-between text-xs font-semibold dark:text-zinc-200 text-slate-800">
+          <div className="rounded-2xl border   bg-card border-border p-3 space-y-2">
+            <div className="flex items-center justify-between text-xs font-semibold  text-foreground">
               <span>Output size</span>
               {compressing && (
-                <span className="flex items-center gap-1.5 text-[11px] font-medium dark:text-zinc-400 text-slate-500">
-                  <Loader2 className="w-3.5 h-3.5 text-indigo-500 animate-spin" />
+                <span className="flex items-center gap-1.5 text-[11px] font-medium  text-muted-foreground">
+                  <Loader2 className="w-3.5 h-3.5 text-primary animate-spin" />
                   Compressing…
                 </span>
               )}
@@ -397,8 +397,8 @@ export const AiBgRemover: React.FC = () => {
                     onClick={() => handleSizeChange(opt.id)}
                     className={`px-2 py-1.5 rounded-lg border text-[11px] leading-tight transition-colors ${
                       active
-                        ? 'border-indigo-500 bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 font-semibold'
-                        : 'border-slate-200 dark:border-dark-border dark:text-zinc-300 text-slate-600 hover:border-indigo-400'
+                        ? 'border-primary bg-primary/10 text-primary font-semibold'
+                        : 'border-border   text-muted-foreground hover:border-primary'
                     }`}
                   >
                     <span className="block font-bold">{opt.label}</span>
@@ -453,7 +453,7 @@ export const AiBgRemover: React.FC = () => {
 
           <button
             onClick={reset}
-            className="w-full py-2.5 bg-slate-200 hover:bg-slate-300 dark:bg-dark-border dark:hover:bg-slate-700 dark:text-zinc-200 text-slate-700 font-semibold text-xs rounded-lg flex items-center justify-center gap-2 transition-colors"
+            className="w-full py-2.5 bg-muted hover:brightness-95  text-muted-foreground font-semibold text-xs rounded-lg flex items-center justify-center gap-2 transition-colors"
           >
             <RotateCcw className="w-4 h-4" />
             New image

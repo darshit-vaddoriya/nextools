@@ -1,0 +1,96 @@
+import React from 'react';
+import { ChevronRight, Star, CheckCircle2, Sparkles, Construction } from 'lucide-react';
+import { Tool } from '../types';
+import { FavoriteButton } from './FavoriteButton';
+import { resolveToolIcon } from '../utils/toolIcons';
+
+interface ToolCardProps {
+  tool: Tool;
+  icon: React.ElementType;
+  iconColor?: string;
+  iconBg?: string;
+  categoryLabel?: string;
+  onSelect: (id: string) => void;
+  showPopularBadge?: boolean;
+  showLocalBadge?: boolean;
+  style?: React.CSSProperties;
+  className?: string;
+}
+
+export const ToolCard: React.FC<ToolCardProps> = ({
+  tool, icon: fallbackIcon, iconColor = 'text-muted-foreground', iconBg = 'bg-muted',
+  categoryLabel, onSelect, showPopularBadge = false, showLocalBadge = false,
+  style, className = '',
+}) => {
+  const Icon = resolveToolIcon(tool.icon, fallbackIcon);
+
+  const handleKey = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      onSelect(tool.id);
+    }
+  };
+
+  return (
+    <article
+      role="button"
+      tabIndex={0}
+      aria-label={`Open ${tool.name}`}
+      onClick={() => onSelect(tool.id)}
+      onKeyDown={handleKey}
+      style={style}
+      className={`group relative flex flex-col p-4 rounded-2xl border text-left cursor-pointer
+        transition-all duration-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary/60
+        hover:-translate-y-1 hover:shadow-card
+        ${tool.isComingSoon
+          ? 'border-warning/25 bg-warning/[0.03] hover:border-warning/50'
+          : 'border-border bg-card hover:border-primary/40'}
+        ${className}`}
+    >
+      <div className="flex items-start justify-between mb-3">
+        <div className={`w-11 h-11 rounded-xl flex items-center justify-center shrink-0 ${iconBg} transition-transform duration-200 group-hover:scale-105`}>
+          <Icon style={{ width: 19, height: 19 }} className={`${iconColor} transition-colors duration-150`} />
+        </div>
+        <div className="flex items-center gap-1">
+          {tool.isComingSoon && (
+            <span className="inline-flex items-center gap-0.5 px-1.5 h-6 rounded-md text-[9.5px] font-bold uppercase tracking-wide bg-warning/15 text-warning border border-warning/30" title="Coming soon">
+              <Construction className="w-2.5 h-2.5" /> Soon
+            </span>
+          )}
+          {!tool.isComingSoon && tool.isNew && (
+            <span className="inline-flex items-center gap-0.5 px-1.5 h-6 rounded-md text-[9.5px] font-semibold uppercase tracking-wide bg-tertiary/10 text-tertiary" title="New">
+              <Sparkles className="w-2.5 h-2.5" /> New
+            </span>
+          )}
+          {showPopularBadge && (
+            <span className="w-7 h-7 inline-flex items-center justify-center rounded-lg" title="Popular">
+              <Star className="w-3.5 h-3.5 text-warning fill-current" />
+            </span>
+          )}
+          <FavoriteButton toolId={tool.id} toolName={tool.name} />
+        </div>
+      </div>
+      <h3 className="text-[13.5px] font-semibold text-foreground leading-snug mb-1.5 group-hover:text-primary transition-colors">
+        {tool.name}
+      </h3>
+      <p className="text-[11.5px] text-muted-foreground leading-relaxed line-clamp-2 flex-1">
+        {tool.description}
+      </p>
+      <div className="mt-3 pt-3 border-t border-border/60 flex items-center gap-1.5 text-[11px]">
+        {categoryLabel && (
+          <span className={`text-[10px] font-medium px-1.5 py-0.5 rounded-md ${iconBg} ${iconColor}`}>
+            {categoryLabel}
+          </span>
+        )}
+        {showLocalBadge && (
+          <span className="flex items-center gap-1 text-success text-[10px] font-medium">
+            <CheckCircle2 className="w-3 h-3" /> local
+          </span>
+        )}
+        <span className={`inline-flex items-center gap-0.5 text-[11px] font-semibold ml-auto group-hover:gap-1.5 transition-all ${tool.isComingSoon ? 'text-warning' : 'text-primary'}`}>
+          {tool.isComingSoon ? 'Preview' : 'Open'} <ChevronRight className="w-3 h-3 group-hover:translate-x-0.5 transition-transform duration-150" />
+        </span>
+      </div>
+    </article>
+  );
+};

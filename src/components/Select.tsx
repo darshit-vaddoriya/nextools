@@ -42,15 +42,15 @@ export const Select: React.FC<SelectProps> = ({ value, options, onChange, classN
         onClick={() => setOpen((v) => !v)}
         aria-haspopup="listbox"
         aria-expanded={open}
-        className="w-full flex items-center justify-between gap-2 rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/25 focus:border-indigo-400 dark:bg-white/[0.07] dark:border-white/[0.14] dark:text-zinc-100 dark:hover:bg-white/[0.1] bg-white border-slate-300 text-slate-900 hover:border-slate-400 transition-colors duration-150"
+        className="input-base w-full flex items-center justify-between gap-2 rounded-lg border px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/25 focus-visible:border-primary/60"
       >
         <span className="truncate text-left">{current?.label ?? value}</span>
-        <ChevronDown className={`w-4 h-4 flex-shrink-0 dark:text-zinc-400 text-slate-500 transition-transform duration-150 ${open ? 'rotate-180' : ''}`} />
+        <ChevronDown className={`w-4 h-4 flex-shrink-0 text-muted-foreground transition-transform duration-150 ${open ? 'rotate-180' : ''}`} />
       </button>
       {open && (
         <div
           role="listbox"
-          className="absolute z-40 mt-1.5 w-full min-w-[8rem] rounded-lg border dark:bg-dark-card dark:border-white/[0.14] bg-white border-slate-200 shadow-xl py-1 max-h-64 overflow-auto"
+          className="absolute z-40 mt-1.5 w-full min-w-[8rem] rounded-lg border border-border bg-card shadow-pop py-1 max-h-64 overflow-auto toast-in"
         >
           {options.map((o) => (
             <button
@@ -64,8 +64,8 @@ export const Select: React.FC<SelectProps> = ({ value, options, onChange, classN
               }}
               className={`w-full flex items-center justify-between gap-2 px-3 py-2 text-left text-sm transition-colors ${
                 o.value === value
-                  ? 'dark:bg-indigo-500/15 dark:text-indigo-300 text-indigo-700 bg-indigo-50'
-                  : 'dark:text-zinc-200 dark:hover:bg-white/[0.07] text-slate-700 hover:bg-slate-100'
+                  ? 'bg-primary/10 text-primary'
+                  : 'text-muted-foreground hover:bg-muted hover:text-foreground'
               }`}
             >
               <span className="truncate">{o.label}</span>

@@ -12,8 +12,8 @@ export const CaseConverter: React.FC = () => {
   const toTitleCase  = (s: string) => s.toLowerCase().replace(/\b\w/g, c => c.toUpperCase());
 
   const cases = [
-    { name: 'camelCase',  value: toCamelCase(text),      color: 'text-indigo-500 dark:text-indigo-400' },
-    { name: 'snake_case', value: toSnakeCase(text),       color: 'text-emerald-500 dark:text-emerald-400' },
+    { name: 'camelCase',  value: toCamelCase(text),      color: 'text-primary' },
+    { name: 'snake_case', value: toSnakeCase(text),       color: 'text-emerald-500 ' },
     { name: 'kebab-case', value: toKebabCase(text),       color: 'text-cyan-500 dark:text-cyan-400' },
     { name: 'PascalCase', value: toPascalCase(text),      color: 'text-purple-500 dark:text-purple-400' },
     { name: 'Title Case', value: toTitleCase(text),       color: 'text-pink-500 dark:text-pink-400' },
@@ -24,9 +24,9 @@ export const CaseConverter: React.FC = () => {
   return (
     <div className="space-y-4">
       {/* Input */}
-      <div className="dark:bg-dark-card bg-white rounded-xl border dark:border-dark-border border-slate-200 p-4 space-y-2.5">
+      <div className=" bg-card rounded-xl border  border-border p-4 space-y-2.5">
         <div className="flex items-center gap-2">
-          <Type className="w-4 h-4 text-indigo-500 shrink-0" />
+          <Type className="w-4 h-4 text-primary shrink-0" />
           <p className="section-label">Source Text</p>
         </div>
         <textarea
@@ -43,16 +43,16 @@ export const CaseConverter: React.FC = () => {
         {cases.map((c) => (
           <div
             key={c.name}
-            className="dark:bg-dark-card bg-white rounded-xl border dark:border-dark-border border-slate-200 p-3.5 space-y-2 dark:hover:border-zinc-700 hover:border-slate-300 transition-colors"
+            className=" bg-card rounded-xl border  border-border p-3.5 space-y-2 hover:border-border transition-colors"
           >
             <div className="flex items-center justify-between">
-              <span className="text-[11px] font-bold dark:text-zinc-500 text-slate-500 uppercase tracking-wider">
+              <span className="text-[11px] font-bold  text-muted-foreground uppercase tracking-wider">
                 {c.name}
               </span>
               <CopyButton text={c.value} />
             </div>
-            <div className={`dark:bg-dark-bg bg-slate-50 border dark:border-dark-border border-slate-200 rounded-lg px-3 py-2.5 text-xs font-mono font-semibold break-all select-all ${c.color}`}>
-              {c.value || <span className="dark:text-zinc-700 text-slate-400 font-normal italic">Converted text will appear here…</span>}
+            <div className={` bg-muted border  border-border rounded-lg px-3 py-2.5 text-xs font-mono font-semibold break-all select-all ${c.color}`}>
+              {c.value || <span className=" text-muted-foreground font-normal italic">Converted text will appear here…</span>}
             </div>
           </div>
         ))}

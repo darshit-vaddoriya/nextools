@@ -1,0 +1,564 @@
+import { ToolSeoMap } from './types';
+
+export const TEXT_DEV_SEO_CONTENT: ToolSeoMap = {
+  'word-counter': {
+    intro:
+      'Writers polishing an essay, students hitting a word count target, and marketers trimming a meta description all need a fast way to see how long a piece of text really is. This tool tallies words, characters (with and without spaces), sentences and paragraphs as you type, and adds estimated reading time plus basic readability stats so you know if your writing is easy to follow. Everything is calculated locally in your browser, so drafts never leave your device.',
+    steps: [
+      { title: 'Paste or type your text', description: 'Drop your draft, essay or article into the text area.' },
+      { title: 'Watch the stats update', description: 'Word, character, sentence and paragraph counts refresh live as you edit.' },
+      { title: 'Check reading time and readability', description: 'Use the estimated reading time and readability score to gauge how accessible the text is.' },
+      { title: 'Copy or clear', description: 'Copy the text back out or clear the box to start a new count.' },
+    ],
+    faqs: [
+      { question: 'Does this tool count words the same way Microsoft Word does?', answer: 'It uses a whitespace-based word split similar to most word processors, so counts should closely match Word or Google Docs, though edge cases like hyphenated words or numbers can vary slightly between tools.' },
+      { question: 'Is my text uploaded anywhere?', answer: 'No. All counting happens locally in your browser using JavaScript — nothing is sent to a server.' },
+      { question: 'What does the readability score mean?', answer: 'It gives a rough estimate of how easy the text is to read based on sentence length and word complexity, useful as a general guide rather than an exact grade level.' },
+      { question: 'Can I count text from a PDF or Word document?', answer: 'Yes, just copy the text out of the document and paste it into the box — formatting like bold or italics is ignored, only the plain text is counted.' },
+      { question: 'Does it work on mobile browsers?', answer: 'Yes, the counter works on any modern mobile or desktop browser without needing an app.' },
+    ],
+  },
+
+  'case-converter': {
+    intro:
+      'Developers renaming variables to match a language convention, and writers cleaning up text pasted from a spreadsheet, both run into the same problem: text in the wrong case. This tool converts between camelCase, snake_case, kebab-case, PascalCase, Title Case, UPPERCASE and lowercase with a single click, so you can match your codebase style guide or tidy up copy without retyping anything by hand. Conversion happens instantly in your browser.',
+    steps: [
+      { title: 'Paste your text', description: 'Enter a variable name, sentence or block of text into the input field.' },
+      { title: 'Pick a case style', description: 'Click the button for the case you need, such as camelCase or kebab-case.' },
+      { title: 'Review the converted output', description: 'The result appears immediately below the input.' },
+      { title: 'Copy the result', description: 'Use the copy button to grab the converted text for your code or document.' },
+    ],
+    faqs: [
+      { question: 'How does the tool decide where word boundaries are?', answer: 'It splits on spaces, underscores, hyphens and camelCase capital letters, so mixed-format input like "user_firstName-value" is broken into individual words before converting to the target case.' },
+      { question: 'Will it handle multi-line text?', answer: 'Yes, each line is processed independently, which is useful for converting a whole list of variable names at once.' },
+      { question: 'Does it support Title Case and Sentence case too?', answer: 'Yes, alongside the common programming cases it also offers Title Case and Sentence case for regular writing.' },
+      { question: 'Is anything sent to a server when I convert text?', answer: 'No, all case conversion logic runs client-side in your browser.' },
+      { question: 'Can I convert numbers or symbols mixed with words?', answer: 'Numbers and symbols are preserved as-is; only alphabetic word boundaries are used to determine casing.' },
+    ],
+  },
+
+  'remove-duplicates-text': {
+    intro:
+      'Anyone cleaning up a mailing list, a keyword list, or notes copied from multiple sources ends up with repeated lines cluttering the file. This tool scans a block of text line by line and removes exact duplicates, with an option to sort the remaining lines alphabetically afterward, so you end up with a clean, unique list in seconds instead of manually scrolling through hundreds of rows.',
+    steps: [
+      { title: 'Paste your list', description: 'Add the text with one item per line into the input box.' },
+      { title: 'Choose sorting behavior', description: 'Optionally enable sorting of the deduplicated lines.' },
+      { title: 'Remove duplicates', description: 'Click the button to strip out repeated lines, keeping the first occurrence of each.' },
+      { title: 'Copy the cleaned list', description: 'Copy the deduplicated output for use elsewhere.' },
+    ],
+    faqs: [
+      { question: 'Is duplicate detection case-sensitive?', answer: 'By default lines are compared exactly, so "Apple" and "apple" are treated as different lines unless you lowercase the text first.' },
+      { question: 'Does it trim whitespace before comparing lines?', answer: 'Leading and trailing whitespace differences can cause two visually identical lines to be treated as different; trim your text first if you want strict matching.' },
+      { question: 'Which duplicate does it keep?', answer: 'The first occurrence of each line is kept and later duplicates are discarded.' },
+      { question: 'Can I sort without removing duplicates?', answer: 'The sort option is applied alongside deduplication in this tool; use the dedicated Sort Lines tool if you only want sorting.' },
+      { question: 'Is there a limit on how much text I can paste?', answer: 'The tool runs entirely in your browser, so practical limits depend on your device memory rather than any server-imposed cap.' },
+    ],
+  },
+
+  'sort-lines': {
+    intro:
+      'Whether you are alphabetizing a reference list, ranking log lines by length, or reversing an ordered export, sorting text by hand is tedious and error-prone. This tool sorts pasted lines alphabetically (A-Z or Z-A), numerically, by line length, or simply reverses their order, giving developers and writers a quick way to reorganize lists without opening a spreadsheet.',
+    steps: [
+      { title: 'Paste your lines', description: 'Enter text with one item per line.' },
+      { title: 'Select a sort mode', description: 'Choose alphabetical, numeric, by length, or reverse order.' },
+      { title: 'Apply the sort', description: 'The reordered lines appear in the output area.' },
+      { title: 'Copy the result', description: 'Copy the sorted list to paste elsewhere.' },
+    ],
+    faqs: [
+      { question: 'How does numeric sort handle lines that are not numbers?', answer: 'Non-numeric lines are generally treated as having a low or undefined value and pushed to one end; use numeric sort only on lists that are mostly numbers for predictable results.' },
+      { question: 'Is alphabetical sort case-sensitive?', answer: 'Sorting uses standard string comparison, so uppercase and lowercase letters can sort differently depending on your browser locale settings.' },
+      { question: 'Can I sort by line length shortest to longest?', answer: 'Yes, the by-length option orders lines from shortest to longest, and you can reverse the result if you need the opposite order.' },
+      { question: 'Does sorting remove duplicate lines?', answer: 'No, sorting only reorders lines; use the Remove Duplicate Lines tool separately if you also need to deduplicate.' },
+      { question: 'Does this tool store my list anywhere?', answer: 'No, sorting happens locally in your browser and nothing is saved or uploaded.' },
+    ],
+  },
+
+  'reverse-text': {
+    intro:
+      'From creating novelty mirrored text for social media to reversing word order in a sentence for a puzzle or linguistics exercise, reversing text has plenty of small but real uses. This tool flips an entire string character by character, or reverses the order of words while keeping each word intact, all processed instantly on your own device.',
+    steps: [
+      { title: 'Enter your text', description: 'Type or paste the text you want to reverse.' },
+      { title: 'Choose a reverse mode', description: 'Pick character reversal or word-order reversal.' },
+      { title: 'View the reversed output', description: 'The result updates immediately in the output box.' },
+      { title: 'Copy the reversed text', description: 'Copy it out for use in a message, puzzle or document.' },
+    ],
+    faqs: [
+      { question: 'What is the difference between character and word reversal?', answer: 'Character reversal flips the entire string letter by letter (so "hello world" becomes "dlrow olleh"), while word reversal keeps each word spelled normally but reverses their order (so it becomes "world hello").' },
+      { question: 'Does reversing text handle emoji and special characters correctly?', answer: 'Most emoji and multi-byte characters are handled correctly, but some complex emoji sequences built from multiple code points can occasionally split apart when reversed character by character.' },
+      { question: 'Can I reverse multiple lines at once?', answer: 'Yes, you can paste multi-line text and each line is reversed independently.' },
+      { question: 'Is this tool useful for anything besides novelty text?', answer: 'It is also handy for quick puzzle creation, testing string-handling code, or checking palindrome-like patterns.' },
+      { question: 'Does it process text on a server?', answer: 'No, reversal is a simple client-side JavaScript operation with no network requests involved.' },
+    ],
+  },
+
+  'lorem-ipsum': {
+    intro:
+      'Designers mocking up a landing page and developers filling a template before real copy is ready both reach for placeholder text. This generator produces classic Lorem Ipsum in the amount you need — by paragraphs, sentences or words — so you can drop realistic-looking filler text into a design or prototype without waiting on final content.',
+    steps: [
+      { title: 'Choose a unit', description: 'Select whether you want paragraphs, sentences, or words.' },
+      { title: 'Set the amount', description: 'Enter how many paragraphs, sentences or words to generate.' },
+      { title: 'Generate the text', description: 'Click generate to produce the placeholder copy.' },
+      { title: 'Copy it into your project', description: 'Copy the output into your design tool, CMS or codebase.' },
+    ],
+    faqs: [
+      { question: 'Is the generated text always the same classic Latin-like Lorem Ipsum?', answer: 'Yes, it draws from the traditional Lorem Ipsum word pool so the output looks like standard placeholder text used across the design industry.' },
+      { question: 'Can I generate a huge amount of text for stress-testing a layout?', answer: 'Yes, you can request a large number of paragraphs or words to test how a layout behaves with long content, limited only by your browser performance.' },
+      { question: 'Does the output include HTML tags like paragraph tags?', answer: 'The generator outputs plain text; wrap it in your own HTML tags if you need it embedded in markup.' },
+      { question: 'Is Lorem Ipsum generated locally?', answer: 'Yes, text is assembled entirely in the browser with no server calls.' },
+      { question: 'Can I use this text in a live production site?', answer: 'It is meant for mockups and testing only — replace it with real content before launching to users and search engines.' },
+    ],
+  },
+
+  'slug-generator': {
+    intro:
+      'Publishing a blog post, naming a product page, or building clean file names for a CMS all require a URL-friendly slug — lowercase, hyphen-separated, with no special characters. This tool converts any title or phrase into a proper slug automatically, with customizable separators like hyphens or underscores, so your URLs stay consistent and SEO-friendly without manual cleanup.',
+    steps: [
+      { title: 'Type or paste your title', description: 'Enter the heading or phrase you want turned into a slug.' },
+      { title: 'Pick a separator', description: 'Choose a hyphen, underscore or other separator between words.' },
+      { title: 'Generate the slug', description: 'The tool strips accents, punctuation and casing, replacing spaces with your chosen separator.' },
+      { title: 'Copy the slug', description: 'Copy it into your CMS URL field or routing config.' },
+    ],
+    faqs: [
+      { question: 'Does the slug generator handle accented characters like é or ñ?', answer: 'Yes, accented letters are normalized to their closest plain ASCII equivalent so the resulting slug stays URL-safe.' },
+      { question: 'What happens to punctuation and symbols?', answer: 'Punctuation and symbols are stripped out, leaving only letters, numbers and the chosen separator between words.' },
+      { question: 'Can I use underscores instead of hyphens?', answer: 'Yes, you can pick your preferred separator character before generating the slug.' },
+      { question: 'Will it lowercase everything automatically?', answer: 'Yes, slugs are converted to lowercase since that is the standard convention for URLs.' },
+      { question: 'Is this safe to use for non-English titles?', answer: 'It works reasonably well for Latin-script languages with accents, but non-Latin scripts like Chinese or Arabic may need transliteration handled separately.' },
+    ],
+  },
+
+  'text-cleaner': {
+    intro:
+      'Text copied from a PDF, an email, or a web page often arrives full of extra spaces, stray HTML tags, smart quotes and other encoding artifacts. This cleaner strips extra whitespace, removes HTML tags, normalizes special characters and fixes common encoding glitches in one pass, giving writers and developers plain, usable text without manual find-and-replace work.',
+    steps: [
+      { title: 'Paste the messy text', description: 'Add the text that has extra spaces, tags or odd characters.' },
+      { title: 'Select cleanup options', description: 'Toggle which fixes to apply, such as removing HTML tags or collapsing whitespace.' },
+      { title: 'Clean the text', description: 'Run the cleanup to produce a tidied version.' },
+      { title: 'Copy the result', description: 'Copy the cleaned text for use in your document or CMS.' },
+    ],
+    faqs: [
+      { question: 'Will this strip all HTML tags from pasted web content?', answer: 'Yes, when HTML tag removal is enabled it strips tags like <div> or <span> while keeping the visible text content.' },
+      { question: 'Does it fix curly quotes and em dashes?', answer: 'It can normalize common typographic characters like smart quotes and em dashes to their plain ASCII equivalents.' },
+      { question: 'Can it remove extra blank lines as well as extra spaces?', answer: 'Yes, whitespace cleanup collapses repeated spaces and can also reduce multiple consecutive blank lines.' },
+      { question: 'Is this a substitute for a full HTML sanitizer?', answer: 'No, it is meant for cleaning readable text, not for sanitizing HTML for security purposes — do not rely on it to prevent XSS.' },
+      { question: 'Does the tool send my text anywhere to process it?', answer: 'No, all cleaning rules run locally in JavaScript in your browser.' },
+    ],
+  },
+
+  'find-replace': {
+    intro:
+      'Editing a large document or refactoring repeated strings across a config file often means the same replacement needs to happen dozens of times. This tool lets you find and replace text using either a plain string match or a full regular expression pattern, so developers can do pattern-based bulk edits and writers can quickly swap terminology throughout a document.',
+    steps: [
+      { title: 'Paste your source text', description: 'Add the document or code block you want to edit.' },
+      { title: 'Enter find and replace values', description: 'Type the text or regex pattern to find, and what to replace it with.' },
+      { title: 'Toggle regex mode if needed', description: 'Enable regex matching for pattern-based replacements with capture groups.' },
+      { title: 'Run replace', description: 'Apply the replacement and review the updated text.' },
+      { title: 'Copy the updated text', description: 'Copy the final result back into your file.' },
+    ],
+    faqs: [
+      { question: 'Can I use capture groups in the replacement text?', answer: 'Yes, when regex mode is enabled you can reference capture groups (like $1) in the replacement field, similar to most code editors.' },
+      { question: 'Is the plain-text search case-sensitive?', answer: 'Plain string matching is case-sensitive by default; use a regex with the case-insensitive flag if you need to ignore case.' },
+      { question: 'What happens if my regex pattern is invalid?', answer: 'The tool shows an error message rather than crashing, so you can fix the pattern before applying it.' },
+      { question: 'Does it replace all occurrences or just the first?', answer: 'By default it replaces every match in the text; regex global behavior is applied automatically.' },
+      { question: 'Is my text sent anywhere during find and replace?', answer: 'No, matching and replacing run entirely in your browser using JavaScript regex.' },
+    ],
+  },
+
+  'remove-empty-lines': {
+    intro:
+      'Log files, exported CSV-like data, and text copied from PDFs frequently end up riddled with blank lines that make the content harder to read or process. This tool strips every blank or whitespace-only line from a block of text instantly, leaving a compact version ready to paste into code, a spreadsheet, or a document.',
+    steps: [
+      { title: 'Paste your text', description: 'Add the text containing unwanted blank lines.' },
+      { title: 'Remove empty lines', description: 'Click the action to strip out every blank or whitespace-only line.' },
+      { title: 'Review the compacted text', description: 'Check the output to confirm the content is intact.' },
+      { title: 'Copy the cleaned text', description: 'Copy the result for use elsewhere.' },
+    ],
+    faqs: [
+      { question: 'Does this remove lines that only contain spaces or tabs?', answer: 'Yes, lines that are visually blank because they contain only whitespace are also removed, not just completely empty lines.' },
+      { question: 'Will it change the order of the remaining lines?', answer: 'No, the remaining non-empty lines keep their original order; only blank lines are removed.' },
+      { question: 'Can I use this to compact a large log file?', answer: 'Yes, it works well for tidying up logs, CSV exports or copied text that has scattered blank lines.' },
+      { question: 'Does it merge paragraphs together?', answer: 'It only removes empty lines; it does not merge or reflow the remaining text.' },
+      { question: 'Is there a size limit for pasted text?', answer: 'Processing is done in-browser, so very large files are limited by your device memory rather than a server limit.' },
+    ],
+  },
+
+  'extract-emails': {
+    intro:
+      'Sales teams scraping contact info from a webpage, and support staff scanning a mailbox export, often need to pull just the email addresses out of a wall of text. This tool scans any pasted block of text with a regex pattern and lists every valid-looking email address it finds, deduplicated and ready to copy into a spreadsheet or mailing list.',
+    steps: [
+      { title: 'Paste the source text', description: 'Add the text, HTML or document content you want to scan.' },
+      { title: 'Extract emails', description: 'Run the extraction to find all email-like patterns in the text.' },
+      { title: 'Review the list', description: 'Check the extracted email addresses shown in the results.' },
+      { title: 'Copy or export', description: 'Copy the list or download it for use in your CRM or email client.' },
+    ],
+    faqs: [
+      { question: 'Will it catch every valid email format?', answer: 'It uses a broad regex pattern that catches the vast majority of common email formats, though highly unusual valid addresses per the full email spec could occasionally be missed.' },
+      { question: 'Does it remove duplicate emails automatically?', answer: 'Yes, duplicate matches are typically deduplicated so each address appears once in the results.' },
+      { question: 'Can I paste raw HTML source and extract emails from it?', answer: 'Yes, the regex looks for the email pattern regardless of surrounding HTML tags, so it works on raw page source too.' },
+      { question: 'Is this tool useful for validating a single email address?', answer: 'It is designed for bulk extraction from text rather than strict single-address validation, though a correctly matched result is a good sign the format is valid.' },
+      { question: 'Is any of the extracted data sent to a server?', answer: 'No, extraction happens entirely client-side using JavaScript regex matching.' },
+    ],
+  },
+
+  'extract-urls': {
+    intro:
+      'Researchers compiling a list of sources, and developers auditing links inside an HTML export, both need a fast way to pull every link out of a large block of content. This tool scans pasted text or HTML source for URLs and hyperlinks and lists them all, saving you from manually scrolling through the content looking for http and https references.',
+    steps: [
+      { title: 'Paste text or HTML', description: 'Add the content that contains links you want to collect.' },
+      { title: 'Extract URLs', description: 'Run the extraction to find every URL pattern in the text.' },
+      { title: 'Review the results', description: 'Check the list of found links.' },
+      { title: 'Copy the list', description: 'Copy the URLs for use in a spreadsheet, report or crawler.' },
+    ],
+    faqs: [
+      { question: 'Does it extract URLs from href attributes in raw HTML?', answer: 'Yes, since the extraction is regex-based on the URL pattern itself, it finds links whether they appear in href attributes or as plain text.' },
+      { question: 'Will it include duplicate links if they appear multiple times?', answer: 'The tool generally deduplicates the results so each unique URL appears once.' },
+      { question: 'Does it capture URLs without the http:// prefix?', answer: 'It primarily matches URLs that include a recognizable scheme like http:// or https://; bare domains without a protocol may not be matched.' },
+      { question: 'Can I extract URLs from a very long article?', answer: 'Yes, there is no artificial limit — performance depends on your browser and device.' },
+      { question: 'Is my pasted content stored anywhere?', answer: 'No, everything is processed locally in your browser and discarded when you leave the page.' },
+    ],
+  },
+
+  'extract-phones': {
+    intro:
+      'Customer service teams cleaning up support tickets and businesses parsing scanned contact lists often need to pull phone numbers out of unstructured text. This tool searches pasted content for common phone number formats — with area codes, country codes, dashes or parentheses — and extracts them into a clean list you can copy straight into a CRM.',
+    steps: [
+      { title: 'Paste the text', description: 'Add the text or document content containing phone numbers.' },
+      { title: 'Extract phone numbers', description: 'Run extraction to find number patterns in various common formats.' },
+      { title: 'Review matches', description: 'Check the extracted list against the source text for accuracy.' },
+      { title: 'Copy the results', description: 'Copy the list for use in a spreadsheet or contact database.' },
+    ],
+    faqs: [
+      { question: 'Does it support international phone number formats?', answer: 'It matches a range of common formats including country codes, parentheses and dashes, but extremely unusual regional formats may not always be captured perfectly.' },
+      { question: 'Can it distinguish a phone number from a random string of digits?', answer: 'It relies on common phone number patterns like grouped digits and separators, so a coincidental sequence of digits formatted similarly could occasionally be picked up as a false positive.' },
+      { question: 'Does it validate that a number is actually reachable?', answer: 'No, it only extracts text matching phone number patterns — it does not verify that the number is real or currently in service.' },
+      { question: 'Is this suitable for scanning large customer data exports?', answer: 'Yes, it works well on pasted exports, though very large files are limited by your browser memory rather than a server cap.' },
+      { question: 'Where does the extraction happen?', answer: 'Entirely in your browser using JavaScript regex — no data is uploaded.' },
+    ],
+  },
+
+  'extract-hashtags': {
+    intro:
+      'Social media managers analyzing a batch of posts and researchers studying campaign reach both need to quickly pull every hashtag and mention out of raw text. This tool scans pasted social media content and extracts all #hashtags and @mentions into a clean list, useful for tracking trending tags or compiling a mention report without manual copy-pasting.',
+    steps: [
+      { title: 'Paste your social text', description: 'Add posts, captions or comments containing hashtags and mentions.' },
+      { title: 'Extract tags', description: 'Run extraction to pull out every #hashtag and @mention.' },
+      { title: 'Review the results', description: 'Check the separated lists of hashtags and mentions.' },
+      { title: 'Copy the list', description: 'Copy the results for reporting or reuse in future posts.' },
+    ],
+    faqs: [
+      { question: 'Does it separate hashtags from @mentions?', answer: 'Yes, the results are typically grouped so you can see hashtags and mentions as distinct lists.' },
+      { question: 'Will it remove duplicate hashtags if the same tag is used repeatedly?', answer: 'Duplicates are generally consolidated so each unique tag appears once, which is useful for a frequency-style overview.' },
+      { question: 'Does it work on text copied from Twitter/X, Instagram, or LinkedIn?', answer: 'Yes, it works on any plain text you paste, regardless of which platform it originally came from.' },
+      { question: 'Can it count how many times each hashtag appears?', answer: 'The tool focuses on extracting the unique tags present; for detailed frequency counts you may want to cross-check with a word frequency tool.' },
+      { question: 'Is this data processed locally?', answer: 'Yes, extraction runs entirely in your browser with no upload to any server.' },
+    ],
+  },
+
+  'regex-tester': {
+    intro:
+      'Debugging a validation pattern for a signup form, or figuring out why a log-parsing regex is not matching, is much faster with instant visual feedback than trial-and-error in code. This live regex tester lets you type a pattern and flags on one side and sample text on the other, highlighting every match, capture group and index in real time so developers can iterate quickly before shipping the pattern into their application.',
+    steps: [
+      { title: 'Enter your regex pattern', description: 'Type the pattern into the pattern field, without the surrounding slashes.' },
+      { title: 'Set flags', description: 'Toggle flags like g, i, m or s depending on the matching behavior you need.' },
+      { title: 'Paste sample text', description: 'Add the text you want to test the pattern against.' },
+      { title: 'Review highlighted matches', description: 'Matches are highlighted live, with capture groups shown separately.' },
+      { title: 'Refine the pattern', description: 'Adjust the regex until it matches exactly what you expect, with no false positives.' },
+    ],
+    faqs: [
+      { question: 'Which regex flavor does this tool use?', answer: 'It uses your browser\'s native JavaScript RegExp engine, so behavior matches exactly what you would get running the same pattern in JavaScript code.' },
+      { question: 'Can I see capture groups for each match?', answer: 'Yes, matched capture groups are displayed alongside the full match so you can verify a pattern before using it in code.' },
+      { question: 'Does it support named capture groups?', answer: 'Yes, JavaScript-supported named groups using the (?<name>...) syntax work and their names are shown with the match.' },
+      { question: 'Will patterns written for Python or PCRE behave identically here?', answer: 'Not always — some syntax differs between regex flavors, so a pattern written for Python\'s re module or PCRE may need small adjustments to work identically in JavaScript.' },
+      { question: 'Is my test data sent anywhere?', answer: 'No, matching runs entirely client-side using the browser\'s built-in regex engine.' },
+    ],
+  },
+
+  'diff-text': {
+    intro:
+      'Comparing two drafts of an email, two versions of a legal clause, or a translated paragraph against the original is much easier when the differences are highlighted instead of read line by line. This text diff checker compares two blocks of text and visually marks every addition, deletion and change between them, helping writers, editors and reviewers spot exactly what moved without re-reading the whole document.',
+    steps: [
+      { title: 'Paste the original text', description: 'Add the first version into the left-hand box.' },
+      { title: 'Paste the updated text', description: 'Add the revised version into the second box.' },
+      { title: 'Run the comparison', description: 'The tool computes the differences between the two versions.' },
+      { title: 'Review highlighted changes', description: 'Additions, deletions and modified sections are marked with distinct colors.' },
+    ],
+    faqs: [
+      { question: 'Does the diff compare word by word or character by character?', answer: 'It generally compares at the word or line level to produce a readable diff, rather than a noisy character-by-character comparison.' },
+      { question: 'Can I use this for comparing code snippets too?', answer: 'It works for code text, though for structured source files the dedicated Diff Checker tool may give clearer line-based results.' },
+      { question: 'Is whitespace ignored when comparing?', answer: 'Minor whitespace differences can affect the diff result, so it is best to compare text with consistent formatting for the cleanest output.' },
+      { question: 'Does it show which parts were only reordered rather than changed?', answer: 'Reordered text is generally shown as a deletion in one place and an addition in another, since the comparison does not track block movement separately.' },
+      { question: 'Is either version of my text uploaded anywhere?', answer: 'No, the comparison is computed entirely in your browser.' },
+    ],
+  },
+
+  'json-formatter': {
+    intro:
+      'API developers debugging a malformed response payload, and backend engineers reviewing a config file, both need to quickly turn a wall of unformatted JSON into something readable. This formatter beautifies JSON with proper indentation, minifies it to save space, validates syntax and attempts basic repair of common mistakes, and offers a tree view so you can explore nested objects and arrays visually instead of scrolling through raw text.',
+    steps: [
+      { title: 'Paste your JSON', description: 'Add raw or minified JSON into the input panel.' },
+      { title: 'Choose an action', description: 'Select Format to beautify, Minify to compact, or Validate to check syntax.' },
+      { title: 'Switch to tree view', description: 'Explore nested objects and arrays interactively in the tree inspector.' },
+      { title: 'Fix errors if flagged', description: 'Use the repair option or the reported error location to correct invalid JSON.' },
+      { title: 'Copy the formatted result', description: 'Copy the cleaned-up JSON for use in your code or API tool.' },
+    ],
+    faqs: [
+      { question: 'Can this tool fix broken or invalid JSON?', answer: 'It includes a basic repair feature that can fix common issues like trailing commas or missing quotes, but severely malformed JSON may still need manual correction.' },
+      { question: 'Does the tree view let me collapse and expand nested objects?', answer: 'Yes, the tree inspector lets you expand and collapse objects and arrays so you can navigate deeply nested structures without scrolling through raw text.' },
+      { question: 'Is there a size limit on the JSON I can format?', answer: 'Since formatting happens in your browser, very large JSON files are limited by your device memory rather than a fixed server-side limit.' },
+      { question: 'Does minify remove comments from JSON?', answer: 'Standard JSON does not support comments, so if your input contains comment-like text it may cause a validation error rather than being stripped automatically.' },
+      { question: 'Is my JSON data uploaded to a server?', answer: 'No, all parsing, formatting and validation run locally in your browser using JavaScript.' },
+    ],
+  },
+
+  'xml-formatter': {
+    intro:
+      'Integration developers working with SOAP APIs or configuration files often receive XML crammed onto a single line, making it nearly impossible to read. This formatter adds proper indentation to messy XML, or minifies it down to one line to save space, while also checking that the document is well-formed and pointing out where parsing errors occur, all without installing an IDE plugin.',
+    steps: [
+      { title: 'Paste your XML', description: 'Add the XML document or fragment into the input area.' },
+      { title: 'Choose Format or Minify', description: 'Pick whether you want readable indentation or a compact single line.' },
+      { title: 'Check validation results', description: 'Review any well-formedness errors and their reported location.' },
+      { title: 'Copy the output', description: 'Copy the formatted or minified XML for your project.' },
+    ],
+    faqs: [
+      { question: 'Does this validate XML against a schema (XSD)?', answer: 'No, it only checks that the XML is well-formed (properly nested and closed tags), it does not validate against an XSD or DTD schema.' },
+      { question: 'Will it preserve CDATA sections and comments?', answer: 'Yes, standard CDATA sections and comments are preserved through formatting and minification.' },
+      { question: 'Can it handle XML namespaces?', answer: 'Yes, namespace prefixes and declarations are treated as normal attributes and elements and are preserved as-is.' },
+      { question: 'What happens if my XML has an unclosed tag?', answer: 'The validator reports a well-formedness error indicating the document could not be parsed, generally near the problematic tag.' },
+      { question: 'Is my XML sent to a server for processing?', answer: 'No, formatting and validation both happen locally in your browser.' },
+    ],
+  },
+
+  'yaml-formatter': {
+    intro:
+      'DevOps engineers editing a docker-compose file or a CI/CD pipeline definition need consistent YAML indentation, and sometimes need to quickly check the equivalent JSON structure. This tool reformats YAML with clean, consistent indentation and converts between YAML and JSON in either direction, making it easier to review config files or feed data into tools that expect one format or the other.',
+    steps: [
+      { title: 'Paste YAML or JSON', description: 'Add your source content into the input box.' },
+      { title: 'Pick a conversion direction', description: 'Choose to format YAML, or convert YAML to JSON or JSON to YAML.' },
+      { title: 'Review the output', description: 'Check the formatted or converted result for correctness.' },
+      { title: 'Copy the result', description: 'Copy the output into your config file or codebase.' },
+    ],
+    faqs: [
+      { question: 'Does this tool support YAML anchors and aliases?', answer: 'No, anchors, aliases and custom tags are not supported — stick to plain key-value and list structures for reliable results.' },
+      { question: 'Can it handle multi-document YAML files separated by ---?', answer: 'Multi-document YAML files are not supported; format or convert one document at a time.' },
+      { question: 'What happens if my YAML has inconsistent indentation?', answer: 'Since YAML structure depends on indentation, inconsistently indented input can be parsed incorrectly or reported as invalid — fix indentation before formatting.' },
+      { question: 'Will converting YAML to JSON preserve comments?', answer: 'No, JSON has no concept of comments, so any comments in the YAML are dropped during conversion.' },
+      { question: 'Is my configuration file uploaded anywhere?', answer: 'No, parsing and conversion happen entirely client-side in your browser.' },
+    ],
+  },
+
+  'sql-formatter': {
+    intro:
+      'DBAs reviewing a slow query and backend developers pasting a long SQL statement into a code review both benefit from having keywords capitalized and clauses broken onto their own lines. This formatter beautifies SQL queries by placing major clauses like SELECT, FROM, WHERE, JOIN and GROUP BY on separate indented lines with configurable indent size, turning a dense one-line query into something that is actually easy to read and review.',
+    steps: [
+      { title: 'Paste your SQL query', description: 'Add the raw or minified SQL statement into the input area.' },
+      { title: 'Choose indentation settings', description: 'Set the indent size and dialect options if available.' },
+      { title: 'Format the query', description: 'The tool restructures clauses onto separate, indented lines.' },
+      { title: 'Copy the formatted SQL', description: 'Copy the readable query for your codebase or query tool.' },
+    ],
+    faqs: [
+      { question: 'Does this formatter validate that my SQL syntax is correct?', answer: 'It focuses on formatting and indentation rather than full syntax validation, so it may still format a query that contains a logical or syntax error.' },
+      { question: 'Does it support dialect-specific syntax like T-SQL or PL/pgSQL?', answer: 'It handles common standard SQL syntax well, but highly dialect-specific extensions may not be formatted with the same precision as a dedicated dialect-aware formatter.' },
+      { question: 'Will it change my column or table names?', answer: 'No, it only affects whitespace, line breaks and keyword casing — identifiers like table and column names are left untouched.' },
+      { question: 'Can it format very long queries with many joins and subqueries?', answer: 'Yes, nested subqueries and multiple joins are indented to reflect their structure, though extremely complex queries may need manual review afterward.' },
+      { question: 'Is my SQL query sent to a server for formatting?', answer: 'No, formatting runs entirely in your browser using JavaScript.' },
+    ],
+  },
+
+  'html-formatter': {
+    intro:
+      'Cleaning up markup scraped from another website, or shrinking a page\'s HTML before deployment, are two very different needs served by the same tool. This formatter prettifies HTML with consistent, configurable indentation for readability, or minifies it into a single compact block to reduce file size, giving developers a quick way to tidy or compress markup without a full build pipeline.',
+    steps: [
+      { title: 'Paste your HTML', description: 'Add the markup you want to format or minify.' },
+      { title: 'Set the indent size', description: 'Choose your preferred indentation width for Format mode.' },
+      { title: 'Choose Format or Minify', description: 'Pick whether you want readable output or a compact single-line result.' },
+      { title: 'Copy the result', description: 'Copy the processed HTML into your project.' },
+    ],
+    faqs: [
+      { question: 'Will formatting change how the page renders in the browser?', answer: 'No, formatting only adjusts whitespace and indentation in the source code — it does not alter the DOM structure or how the page looks when rendered.' },
+      { question: 'Does minify remove HTML comments?', answer: 'Minification typically strips unnecessary whitespace and can remove comments, which shrinks file size but also removes any inline notes for other developers.' },
+      { question: 'Can it format embedded inline JavaScript and CSS inside <script> and <style> tags?', answer: 'Basic indentation is applied around these blocks, but the JavaScript or CSS content itself is not deeply reformatted — use the dedicated JS or CSS formatter for that.' },
+      { question: 'Is this tool a substitute for an HTML validator?', answer: 'No, it focuses on formatting rather than checking for invalid or deprecated HTML — use a dedicated validator if you need standards compliance checking.' },
+      { question: 'Is my HTML processed locally?', answer: 'Yes, everything runs in your browser with no data sent to a server.' },
+    ],
+  },
+
+  'css-formatter': {
+    intro:
+      'A stylesheet minified for production is unreadable when you need to debug it, and a hand-written SCSS snippet copied from a tutorial often has inconsistent spacing. This tool formats CSS, plus basic SCSS and LESS syntax, into a clean, consistently indented layout, or minifies it into a compact single line to reduce file size before shipping to production.',
+    steps: [
+      { title: 'Paste your stylesheet', description: 'Add CSS, SCSS or LESS code into the input area.' },
+      { title: 'Choose Format or Minify', description: 'Pick readable formatting or compact minification.' },
+      { title: 'Review the output', description: 'Check that rules, selectors and properties are laid out correctly.' },
+      { title: 'Copy the styles', description: 'Copy the result straight into your stylesheet or build process.' },
+    ],
+    faqs: [
+      { question: 'Does this fully support SCSS features like nesting and mixins?', answer: 'Basic SCSS and LESS syntax is handled for formatting purposes, but this is a lightweight formatter, not a full preprocessor — it will not compile nested SCSS into plain CSS.' },
+      { question: 'Will minifying my CSS break any functionality?', answer: 'Minification only removes whitespace and comments, so valid CSS should continue to work identically, but always test after minifying production stylesheets.' },
+      { question: 'Does it reorder CSS properties alphabetically?', answer: 'No, it preserves your original property order and only adjusts indentation and line breaks.' },
+      { question: 'Can it detect invalid CSS syntax?', answer: 'It is focused on formatting rather than strict validation, so some malformed CSS may still be reformatted without an explicit error.' },
+      { question: 'Is my stylesheet uploaded anywhere during formatting?', answer: 'No, all formatting happens locally in your browser.' },
+    ],
+  },
+
+  'js-formatter': {
+    intro:
+      'Sometimes you just need to quickly re-indent a tangled snippet of JavaScript or shrink a script before pasting it somewhere space-constrained, without pulling in a full build tool. This is a lightweight formatter that strips comments and extra whitespace to minify code, or re-indents based on bracket depth to make it readable again — a fast pocket tool rather than a full parser-based formatter like Prettier.',
+    steps: [
+      { title: 'Paste your JS or TS code', description: 'Add the script or snippet you want to clean up.' },
+      { title: 'Choose Format or Minify', description: 'Pick re-indentation for readability or minification for size.' },
+      { title: 'Review the result', description: 'Check that the output still looks correct for your snippet.' },
+      { title: 'Copy the code', description: 'Copy the formatted or minified code back into your project.' },
+    ],
+    faqs: [
+      { question: 'Is this the same as running Prettier?', answer: 'No — this is a lightweight, bracket-depth-based re-indenter and whitespace/comment stripper, not a full AST-based parser like Prettier, so it will not catch or fix syntax errors and may not perfectly format every edge case (template literals, complex JSX, etc).' },
+      { question: 'Will minifying rename variables to shorten the code further?', answer: 'No, it only strips comments and unnecessary whitespace — it does not perform variable renaming or dead-code elimination like a dedicated bundler minifier (e.g. Terser) would.' },
+      { question: 'Can I format TypeScript code, including types and interfaces?', answer: 'Basic TypeScript syntax is handled reasonably well since formatting is based on brackets and structure rather than full type parsing, but very complex generics or type-level code may not indent perfectly.' },
+      { question: 'Is it safe to use this in a CI pipeline instead of Prettier or ESLint?', answer: 'It is best used for quick manual cleanup, not as a replacement for Prettier or ESLint in an automated pipeline, since it does not enforce a strict, verified style guide.' },
+      { question: 'Does it upload my source code anywhere?', answer: 'No, all processing happens locally in your browser.' },
+    ],
+  },
+
+  'url-encoder': {
+    intro:
+      'Building a query string with special characters, or debugging why a link with spaces and symbols is breaking, requires proper URL encoding. This tool encodes special characters in text so they are safe to embed inside a URL, or decodes an already-encoded string back to plain text, with a toggle between encoding a single URI component and encoding a full URL.',
+    steps: [
+      { title: 'Paste your text or URL', description: 'Enter the value you want to encode or decode.' },
+      { title: 'Choose component or full URL mode', description: 'Select whether to encode just a query value or an entire URL.' },
+      { title: 'Pick Encode or Decode', description: 'Choose the direction of the conversion.' },
+      { title: 'Copy the result', description: 'Copy the encoded or decoded value for your link or code.' },
+    ],
+    faqs: [
+      { question: 'What is the difference between encoding a component versus a full URL?', answer: 'Component encoding (encodeURIComponent) escapes nearly every special character including "/" and "&", suitable for a single query value, while full URL encoding (encodeURI) leaves characters like "/" and ":" untouched since they are structurally part of a valid URL.' },
+      { question: 'Will decoding fail on malformed percent-encoded input?', answer: 'Yes, if the input contains an invalid percent-encoding sequence, decoding will report an error rather than silently guessing at the intended value.' },
+      { question: 'Does it handle Unicode characters like emoji or non-Latin text?', answer: 'Yes, Unicode characters are encoded into their correct percent-encoded UTF-8 byte sequences and can be decoded back correctly.' },
+      { question: 'Is URL encoding the same as Base64 encoding?', answer: 'No, they are different schemes for different purposes — URL encoding escapes characters for safe use in a URL, while Base64 encodes binary data as ASCII text; use the dedicated Base64 tool for that.' },
+      { question: 'Is any of this data sent to a server?', answer: 'No, encoding and decoding use built-in browser JavaScript functions and never leave your device.' },
+    ],
+  },
+
+  'base64': {
+    intro:
+      'Embedding a small image inline in CSS, sending binary data safely inside a JSON payload, or decoding a Base64 string found in an API response are all common developer tasks. This tool encodes text or uploaded files into Base64, and decodes Base64 strings back into their original text or downloadable file, all processed locally without uploading your data anywhere.',
+    steps: [
+      { title: 'Enter text or choose a file', description: 'Type text directly, or upload a file you want to encode.' },
+      { title: 'Select Encode or Decode', description: 'Pick the direction based on what you are starting with.' },
+      { title: 'Run the conversion', description: 'The tool processes the input instantly in your browser.' },
+      { title: 'Copy or download the result', description: 'Copy the text result, or download the decoded file.' },
+    ],
+    faqs: [
+      { question: 'Can I encode binary files like images, not just text?', answer: 'Yes, you can upload a file and the tool will produce its Base64 representation, which is useful for embedding small assets directly in code or data URIs.' },
+      { question: 'Why does decoding sometimes fail with an error?', answer: 'Decoding fails if the input is not valid Base64 — for example if it contains characters outside the Base64 alphabet or has incorrect padding.' },
+      { question: 'Is Base64 encoding a form of encryption?', answer: 'No, Base64 is only an encoding scheme for representing binary data as text — it provides no security or confidentiality, and anyone can decode it instantly.' },
+      { question: 'Does it support URL-safe Base64 variants?', answer: 'Standard Base64 with "+" and "/" characters is supported; if you need the URL-safe variant using "-" and "_" you may need to substitute characters manually.' },
+      { question: 'Is my file or text uploaded to a server during encoding?', answer: 'No, all encoding and decoding happens locally using the Web APIs available in your browser.' },
+    ],
+  },
+
+  'jwt-decoder': {
+    intro:
+      'When an API call fails with an authorization error, developers often need to inspect the claims inside a JWT to see the expiry time, issuer or user data without writing a script. This tool splits a JSON Web Token into its header, payload and signature, decodes the header and payload from Base64URL, and flags whether the token has expired, making it easy to debug login and API auth issues.',
+    steps: [
+      { title: 'Paste the JWT', description: 'Add the full token string, including all three dot-separated parts.' },
+      { title: 'View the decoded header and payload', description: 'The tool decodes and displays the header and payload as readable JSON.' },
+      { title: 'Check the expiry status', description: 'Look at the highlighted exp claim to see if the token is expired.' },
+      { title: 'Inspect specific claims', description: 'Review individual claims like sub, iat and custom fields.' },
+    ],
+    faqs: [
+      { question: 'Does this tool verify the JWT signature?', answer: 'No — it only decodes the header and payload from Base64URL to show their contents; it does not verify the signature against a secret or public key, so a decoded token could still be forged or tampered with.' },
+      { question: 'Can I trust the claims shown without also verifying the token server-side?', answer: 'No, decoding alone tells you what a token claims, not whether those claims are authentic — always verify the signature server-side before trusting the token in a real authentication flow.' },
+      { question: 'Why does the tool say my token is expired?', answer: 'It compares the "exp" claim, a Unix timestamp, against the current time on your device, and flags the token as expired if that time has passed.' },
+      { question: 'Does it work with JWTs signed using RS256 as well as HS256?', answer: 'Yes, since decoding does not require the signing key, it works the same way regardless of which signing algorithm was used.' },
+      { question: 'Is my token sent to a server when I paste it here?', answer: 'No, decoding happens entirely in your browser — the token, which may contain sensitive claims, never leaves your device.' },
+    ],
+  },
+
+  'uuid-generator': {
+    intro:
+      'Database engineers seeding test records, and developers needing unique identifiers for new objects, both need a fast, reliable way to generate UUIDs without relying on a backend call. This generator produces RFC4122-compliant version 4 UUIDs in bulk, with options for uppercase or lowercase casing and different separator styles, so you can paste a batch straight into SQL inserts, config files, or test fixtures.',
+    steps: [
+      { title: 'Set the quantity', description: 'Choose how many UUIDs you want to generate at once.' },
+      { title: 'Choose casing and format', description: 'Pick uppercase or lowercase, and any separator or hyphen style you need.' },
+      { title: 'Generate the UUIDs', description: 'Click generate to produce the list instantly.' },
+      { title: 'Copy or download the list', description: 'Copy all generated IDs, or download them as a text file.' },
+    ],
+    faqs: [
+      { question: 'Are these UUIDs guaranteed to be globally unique?', answer: 'Version 4 UUIDs are generated using random or pseudo-random numbers with such a large possible value space that collisions are astronomically unlikely, though not mathematically impossible.' },
+      { question: 'What randomness source does the generator use?', answer: 'It uses your browser\'s cryptographically secure random number generator (crypto.getRandomValues) where available, which produces stronger randomness than a simple Math.random-based approach.' },
+      { question: 'Can I generate UUIDs without hyphens?', answer: 'Yes, you can choose a formatting option that removes the standard hyphens if your use case needs a plain 32-character hex string.' },
+      { question: 'Does this generate UUID versions other than v4, like v1 or v7?', answer: 'This tool focuses on random version 4 UUIDs, the most common general-purpose type; time-based versions like v1 or v7 are not generated here.' },
+      { question: 'Are the generated IDs sent to or logged on a server?', answer: 'No, generation happens entirely client-side, so the IDs never leave your browser unless you copy them yourself.' },
+    ],
+  },
+
+  'hash-generator': {
+    intro:
+      'Verifying that a downloaded file has not been corrupted, or generating a checksum to compare two versions of a document, both rely on cryptographic hashing. This tool generates MD5, SHA-1, SHA-256 and SHA-512 hashes of any text you enter, using the browser\'s built-in Web Crypto API for the SHA algorithms, so you can quickly produce and compare fingerprints without installing command-line tools.',
+    steps: [
+      { title: 'Enter your text', description: 'Type or paste the text you want to hash.' },
+      { title: 'Choose a hash algorithm', description: 'Select MD5, SHA-1, SHA-256 or SHA-512.' },
+      { title: 'View the generated hash', description: 'The hash is computed and displayed instantly.' },
+      { title: 'Copy the hash', description: 'Copy the resulting hash for comparison or storage.' },
+    ],
+    faqs: [
+      { question: 'Can I convert a hash back into the original text?', answer: 'No, hashing is a one-way function by design — there is no way to reverse a hash back into its original input, which is exactly what makes hashes useful for integrity checks and password storage.' },
+      { question: 'Is MD5 or SHA-1 safe to use for security purposes?', answer: 'No, both MD5 and SHA-1 are considered cryptographically broken for security-sensitive purposes like password hashing or digital signatures due to known collision vulnerabilities — use SHA-256 or SHA-512 for anything security-related.' },
+      { question: 'Why would two different pieces of text produce the same hash?', answer: 'This is called a hash collision, and while theoretically possible for any hash function, it is computationally impractical to find for SHA-256 and SHA-512, and only practically demonstrated for weaker algorithms like MD5.' },
+      { question: 'Can I hash a file instead of just text?', answer: 'This tool is designed for hashing text input directly; for hashing files you would need to first extract or paste their text content.' },
+      { question: 'Is my text sent to a server to compute the hash?', answer: 'No, hashing is computed locally using the Web Crypto API built into your browser.' },
+    ],
+  },
+
+  'diff-checker': {
+    intro:
+      'Reviewing a pull request without a Git client handy, or comparing two versions of a config file before deploying, is much faster with a visual diff. This tool compares two blocks of code or text line by line and produces a color-coded diff showing exactly what was added, removed, or left unchanged, giving developers a quick way to sanity-check edits before committing them.',
+    steps: [
+      { title: 'Paste the original version', description: 'Add the first file or code block into the left panel.' },
+      { title: 'Paste the changed version', description: 'Add the updated file or code block into the right panel.' },
+      { title: 'Compare', description: 'Run the comparison to generate the line-by-line diff.' },
+      { title: 'Review the color-coded changes', description: 'Added, removed and unchanged lines are marked in distinct colors.' },
+    ],
+    faqs: [
+      { question: 'Does this diff work line by line or character by character?', answer: 'It primarily compares line by line, similar to a standard git diff, which makes it easy to spot which lines were added, removed or modified in code and config files.' },
+      { question: 'Can I use it to compare two versions of a whole file?', answer: 'Yes, paste the full contents of each file version into the two panels and the tool will compute the differences across the entire content.' },
+      { question: 'Does it ignore whitespace-only differences?', answer: 'By default, whitespace differences like extra spaces or indentation changes are treated as real changes; check for a whitespace-ignore option if you only care about content changes.' },
+      { question: 'Is this a replacement for git diff in a real repository?', answer: 'It is meant for quick ad hoc comparisons of pasted text rather than replacing git\'s full diff and merge tooling for an actual repository workflow.' },
+      { question: 'Are the two texts I paste uploaded anywhere?', answer: 'No, the comparison is computed entirely in your browser.' },
+    ],
+  },
+
+  'markdown-preview': {
+    intro:
+      'Writing documentation, a GitHub README, or a blog post in Markdown is much easier when you can see the rendered result as you type instead of guessing how headings and code blocks will look. This live Markdown editor shows your rendered HTML side by side with the source, updating instantly as you write headings, lists, links, tables and code blocks.',
+    steps: [
+      { title: 'Type or paste Markdown', description: 'Write your content in the editor panel using standard Markdown syntax.' },
+      { title: 'Watch the live preview', description: 'The rendered HTML updates automatically on the other side as you type.' },
+      { title: 'Adjust formatting as needed', description: 'Tweak headings, lists, links or code blocks and see the effect immediately.' },
+      { title: 'Copy the Markdown or rendered HTML', description: 'Copy either the source Markdown or the generated HTML for your project.' },
+    ],
+    faqs: [
+      { question: 'Does it support GitHub-flavored Markdown features like tables and task lists?', answer: 'Yes, common GitHub-flavored Markdown elements such as tables, task list checkboxes, and fenced code blocks with syntax highlighting are generally supported.' },
+      { question: 'Can I export the rendered output as HTML?', answer: 'Yes, you can copy the rendered HTML output to embed elsewhere, separate from the raw Markdown source.' },
+      { question: 'Does it support embedded raw HTML inside the Markdown?', answer: 'Basic inline HTML is typically rendered as part of the preview, consistent with how most Markdown parsers treat embedded HTML tags.' },
+      { question: 'Will my Markdown be saved anywhere if I close the tab?', answer: 'No, the editor works entirely in memory in your browser session, so unsaved content is lost if you close or refresh the tab without copying it out.' },
+      { question: 'Is any of my writing sent to a server?', answer: 'No, Markdown parsing and rendering happen locally using client-side JavaScript.' },
+    ],
+  },
+
+  'html-markdown': {
+    intro:
+      'Pulling an article out of a webpage to paste into a README, or turning Markdown release notes into HTML for an email newsletter, both require format conversion that is tedious to do by hand. This tool converts HTML into clean Markdown, or Markdown into HTML, in either direction, letting developers and writers move content between formats without manually rewriting headings, links and lists.',
+    steps: [
+      { title: 'Paste your source content', description: 'Add HTML markup or Markdown text into the input box.' },
+      { title: 'Choose the conversion direction', description: 'Select HTML to Markdown, or Markdown to HTML.' },
+      { title: 'Convert', description: 'The tool transforms the content into the target format.' },
+      { title: 'Copy the converted result', description: 'Copy the output into your README, CMS, or email tool.' },
+    ],
+    faqs: [
+      { question: 'Will HTML-to-Markdown conversion preserve complex layouts like nested tables?', answer: 'Simple structures like headings, links, lists and basic tables convert cleanly, but deeply nested or heavily styled HTML layouts may lose some visual fidelity since Markdown has a simpler feature set than HTML.' },
+      { question: 'Does Markdown-to-HTML conversion include a full stylesheet?', answer: 'No, it generates semantic HTML elements without any styling — you will need to apply your own CSS if you want the output to match a specific visual design.' },
+      { question: 'What happens to inline styles or custom HTML attributes when converting to Markdown?', answer: 'Inline styles and custom attributes are generally dropped during conversion, since Markdown does not have an equivalent syntax for arbitrary HTML attributes.' },
+      { question: 'Can I round-trip content, converting HTML to Markdown and back, without losing anything?', answer: 'For simple content the round trip is usually close to lossless, but complex formatting like custom classes, multi-column layouts or embedded scripts will not survive the conversion in either direction.' },
+      { question: 'Is my content processed on a server during conversion?', answer: 'No, the conversion logic runs entirely in your browser using JavaScript.' },
+    ],
+  },
+};
