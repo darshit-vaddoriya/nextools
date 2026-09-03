@@ -39,7 +39,7 @@ export const ToolCard: React.FC<ToolCardProps> = ({
       onClick={() => onSelect(tool.id)}
       onKeyDown={handleKey}
       style={style}
-      className={`group relative flex flex-col p-4 rounded-2xl border text-left cursor-pointer
+      className={`group relative flex flex-col p-5 rounded-2xl border text-left cursor-pointer
         transition-all duration-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary/60
         hover:-translate-y-1 hover:shadow-card
         ${tool.isComingSoon
@@ -47,11 +47,16 @@ export const ToolCard: React.FC<ToolCardProps> = ({
           : 'border-border bg-card hover:border-primary/40'}
         ${className}`}
     >
-      <div className="flex items-start justify-between mb-3">
-        <div className={`w-11 h-11 rounded-xl flex items-center justify-center shrink-0 ${iconBg} transition-transform duration-200 group-hover:scale-105`}>
-          <Icon style={{ width: 19, height: 19 }} className={`${iconColor} transition-colors duration-150`} />
+      <div className="flex items-start justify-between mb-4">
+        <div className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${iconBg} transition-transform duration-200 group-hover:scale-105`}>
+          <Icon style={{ width: 18, height: 18 }} className={`${iconColor} transition-colors duration-150`} />
         </div>
         <div className="flex items-center gap-1">
+          {categoryLabel && (
+            <span className="code-font text-[10px] font-medium uppercase tracking-[0.06em] text-muted-foreground/80 mr-0.5">
+              {categoryLabel}
+            </span>
+          )}
           {tool.isComingSoon && (
             <span className="inline-flex items-center gap-0.5 px-1.5 h-6 rounded-md text-[9.5px] font-bold uppercase tracking-wide bg-warning/15 text-warning border border-warning/30" title="Coming soon">
               <Construction className="w-2.5 h-2.5" /> Soon
@@ -70,18 +75,13 @@ export const ToolCard: React.FC<ToolCardProps> = ({
           <FavoriteButton toolId={tool.id} toolName={tool.name} />
         </div>
       </div>
-      <h3 className="text-[13.5px] font-semibold text-foreground leading-snug mb-1.5 group-hover:text-primary transition-colors">
+      <h3 className="text-[15px] font-bold text-foreground leading-snug mb-1.5 tracking-[-0.01em] group-hover:text-primary transition-colors">
         {tool.name}
       </h3>
-      <p className="text-[11.5px] text-muted-foreground leading-relaxed line-clamp-2 flex-1">
+      <p className="text-[12.5px] text-muted-foreground leading-relaxed line-clamp-2 flex-1">
         {tool.description}
       </p>
       <div className="mt-3 pt-3 border-t border-border/60 flex items-center gap-1.5 text-[11px]">
-        {categoryLabel && (
-          <span className={`text-[10px] font-medium px-1.5 py-0.5 rounded-md ${iconBg} ${iconColor}`}>
-            {categoryLabel}
-          </span>
-        )}
         {showLocalBadge && (
           <span className="flex items-center gap-1 text-success text-[10px] font-medium">
             <CheckCircle2 className="w-3 h-3" /> local

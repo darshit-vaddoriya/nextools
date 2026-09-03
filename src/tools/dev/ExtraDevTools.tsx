@@ -3,6 +3,7 @@ import { marked } from 'marked';
 import TurndownService from 'turndown';
 import { CopyButton } from '../../components/CopyButton';
 import { Select } from '../../components/Select';
+import { DarkPanel, WhitePanel, Segmented, SegmentedButton, StatusPill } from '../../components/DevToolChrome';
 import { errorMessage } from '../../utils/errorMessage';
 import {
   AlertTriangle,
@@ -1006,9 +1007,40 @@ function diffLines(a: string[], b: string[]): DiffOp[] {
   return ops;
 }
 
+/** Row for the split (side-by-side) diff view — mirrors diffchecker.com's two-gutter layout. */
+type SplitRow = { num: number | null; line: string; type: 'equal' | 'add' | 'remove' | 'empty' };
+
+function buildSplitRows(ops: DiffOp[]): { leftRows: SplitRow[]; rightRows: SplitRow[] } {
+  const leftRows: SplitRow[] = [];
+  const rightRows: SplitRow[] = [];
+  let leftNum = 1;
+  let rightNum = 1;
+  for (const op of ops) {
+    if (op.type === 'equal') {
+      leftRows.push({ num: leftNum++, line: op.line, type: 'equal' });
+      rightRows.push({ num: rightNum++, line: op.line, type: 'equal' });
+    } else if (op.type === 'remove') {
+      leftRows.push({ num: leftNum++, line: op.line, type: 'remove' });
+      rightRows.push({ num: null, line: '', type: 'empty' });
+    } else {
+      leftRows.push({ num: null, line: '', type: 'empty' });
+      rightRows.push({ num: rightNum++, line: op.line, type: 'add' });
+    }
+  }
+  return { leftRows, rightRows };
+}
+
+const DIFF_ROW_BG: Record<SplitRow['type'], string> = {
+  equal: '',
+  add: 'bg-emerald-500/[0.14]',
+  remove: 'bg-rose-500/[0.14]',
+  empty: 'bg-muted/40',
+};
+
 export const DiffCheckerTool: React.FC = () => {
   const [left, setLeft] = useState('line one\nline two\nline three');
   const [right, setRight] = useState('line one\nline two changed\nline three\nline four');
+  const [view, setView] = useState<'split' | 'unified'>('split');
 
   const ops = useMemo(() => diffLines(left.split('\n'), right.split('\n')), [left, right]);
   const stats = useMemo(() => {
@@ -1020,58 +1052,94 @@ export const DiffCheckerTool: React.FC = () => {
     }
     return { added, removed };
   }, [ops]);
+  const identical = stats.added === 0 && stats.removed === 0;
+  const { leftRows, rightRows } = useMemo(() => buildSplitRows(ops), [ops]);
 
   return (
-    <div className="space-y-4">
-      <ToolBar>
-        <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-          <GitCompare className="w-3.5 h-3.5" />
-          <span>Line-level diff (LCS-based)</span>
+    <div className="space-y-3.5">
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <div className="flex items-center gap-1.5 text-[13px] font-semibold text-muted-foreground">
+          <GitCompare className="w-4 h-4 text-primary" />
+          <span>Compare two blocks of code or text line-by-line, entirely on-device</span>
         </div>
-        <div className="flex items-center gap-3 text-[11px] font-mono">
-          <span className="text-emerald-500">+{stats.added} added</span>
-          <span className="text-rose-500">-{stats.removed} removed</span>
+        <div className="flex items-center gap-2">
+          <Segmented>
+            <SegmentedButton active={view === 'split'} onClick={() => setView('split')}>Split</SegmentedButton>
+            <SegmentedButton active={view === 'unified'} onClick={() => setView('unified')}>Unified</SegmentedButton>
+          </Segmented>
+          <StatusPill valid={identical} validLabel="Identical" invalidLabel={`+${stats.added} -${stats.removed}`} />
         </div>
-      </ToolBar>
+      </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        <Panel title="Original" heightClass="h-[260px]">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-3.5">
+        <DarkPanel label="Original" className="h-[240px]">
           <textarea
             value={left}
             onChange={(e) => setLeft(e.target.value)}
-            placeholder="Paste original text..."
-            className="flex-1 w-full bg-transparent p-3.5 text-xs font-mono text-foreground placeholder:text-muted-foreground resize-none focus:outline-none leading-relaxed"
+            spellCheck={false}
+            placeholder="Paste original text or code..."
+            className="flex-1 w-full bg-transparent p-4 text-[13.5px] font-mono text-[color:var(--devpanel-text)] placeholder:text-[color:var(--devpanel-label)] resize-none focus:outline-none leading-relaxed"
           />
-        </Panel>
-        <Panel title="Changed" heightClass="h-[260px]">
+        </DarkPanel>
+        <DarkPanel label="Changed" className="h-[240px]">
           <textarea
             value={right}
             onChange={(e) => setRight(e.target.value)}
-            placeholder="Paste changed text..."
-            className="flex-1 w-full bg-transparent p-3.5 text-xs font-mono text-foreground placeholder:text-muted-foreground resize-none focus:outline-none leading-relaxed"
+            spellCheck={false}
+            placeholder="Paste changed text or code..."
+            className="flex-1 w-full bg-transparent p-4 text-[13.5px] font-mono text-[color:var(--devpanel-text)] placeholder:text-[color:var(--devpanel-label)] resize-none focus:outline-none leading-relaxed"
           />
-        </Panel>
+        </DarkPanel>
       </div>
 
-      <Panel title="Unified Diff" heightClass="h-[380px]">
-        <div className="flex-1 overflow-auto font-mono text-xs leading-relaxed">
-          {ops.map((op, idx) => (
-            <div
-              key={idx}
-              className={`px-3.5 py-0.5 whitespace-pre-wrap ${
-                op.type === 'add'
-                  ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400'
-                  : op.type === 'remove'
-                  ? 'bg-rose-500/10 text-rose-600 dark:text-rose-400'
-                  : 'text-muted-foreground'
-              }`}
-            >
-              {op.type === 'add' ? '+ ' : op.type === 'remove' ? '- ' : '  '}
-              {op.line || ' '}
-            </div>
-          ))}
-        </div>
-      </Panel>
+      <WhitePanel
+        label={view === 'split' ? 'Side-by-side diff' : 'Unified diff'}
+        headerRight={
+          <div className="flex items-center gap-3 text-[11px] font-mono">
+            <span className="text-emerald-600 dark:text-emerald-400 font-bold">+{stats.added}</span>
+            <span className="text-rose-600 dark:text-rose-400 font-bold">-{stats.removed}</span>
+          </div>
+        }
+      >
+        {view === 'split' ? (
+          <div className="grid grid-cols-2 max-h-[420px] overflow-auto font-mono text-[12.5px] leading-relaxed divide-x divide-border">
+            {[leftRows, rightRows].map((rows, side) => (
+              <div key={side} className="min-w-0">
+                {rows.map((r, idx) => (
+                  <div key={idx} className={`flex ${DIFF_ROW_BG[r.type]}`}>
+                    <span className="shrink-0 w-9 px-2 py-0.5 text-right text-muted-foreground/60 select-none border-r border-border/60">
+                      {r.num ?? ''}
+                    </span>
+                    <span className="flex-1 px-2.5 py-0.5 whitespace-pre-wrap break-all text-foreground/90">
+                      {r.line || (r.type === 'empty' ? '' : ' ')}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div className="max-h-[420px] overflow-auto font-mono text-[12.5px] leading-relaxed">
+            {ops.map((op, idx) => (
+              <div
+                key={idx}
+                className={`px-4 py-0.5 whitespace-pre-wrap break-all ${
+                  op.type === 'add'
+                    ? 'bg-emerald-500/[0.14] text-emerald-700 dark:text-emerald-400'
+                    : op.type === 'remove'
+                    ? 'bg-rose-500/[0.14] text-rose-700 dark:text-rose-400'
+                    : 'text-muted-foreground'
+                }`}
+              >
+                <span className="select-none opacity-70 mr-1.5">
+                  {op.type === 'add' ? '+' : op.type === 'remove' ? '−' : ' '}
+                </span>
+                {op.line || ' '}
+              </div>
+            ))}
+          </div>
+        )}
+      </WhitePanel>
     </div>
   );
 };

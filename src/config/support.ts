@@ -1,4 +1,3 @@
-// Update this once the Razorpay Payment Page / Subscription link is live,
-// e.g. 'https://pages.razorpay.com/support-nexttool'.
+// Razorpay Payment Page for one-off "buy me a coffee" style support.
 // Leave empty to hide the support button everywhere.
-export const SUPPORT_URL = '';
+export const SUPPORT_URL = 'https://pages.razorpay.com/nexttool';

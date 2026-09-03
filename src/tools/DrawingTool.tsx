@@ -131,7 +131,7 @@ const RangeField: React.FC<{
       step={step}
       value={value}
       onChange={(e) => onChange(Number(e.target.value))}
-      className="w-full h-1.5 cursor-pointer accent-indigo-500"
+      className="w-full h-1.5 cursor-pointer accent-primary"
     />
   </label>
 );
@@ -172,15 +172,14 @@ const RailBtn: React.FC<{
     aria-label={title}
     className={`relative group w-10 h-10 shrink-0 rounded-xl flex items-center justify-center transition-colors border
       ${active
-        ? 'dark:bg-indigo-500/20 dark:border-indigo-500/40 dark:text-indigo-300 bg-indigo-100 border-indigo-300 text-indigo-700'
+        ? 'dark:bg-primary/20 dark:border-primary/40 dark:text-primary/40 bg-primary-container border-primary/40 text-on-primary-container'
         : ' dark:hover:bg-white/[0.06] dark:border-transparent text-muted-foreground hover:bg-muted border-transparent'}`}
   >
     {children}
     {shortcut && (
       <span className="pointer-events-none absolute z-50 whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-150
         left-1/2 -translate-x-1/2 top-full mt-1.5 px-2 py-1 rounded-md text-[10px] font-medium
-        dark:bg-zinc-800  dark:border dark:border-white/10
-        bg-slate-900 text-white border border-slate-700 shadow-lg
+        bg-foreground text-background border border-border shadow-lg
         lg:left-full lg:top-1/2 lg:translate-x-0 lg:-translate-y-1/2 lg:ml-2 lg:mt-0">
         {title}
         <kbd className="ml-1.5 font-mono opacity-70">{shortcut}</kbd>
@@ -1082,8 +1081,8 @@ export const DrawingTool: React.FC = () => {
         <div className="grid sm:grid-cols-2 gap-4">
           <div className="rounded-2xl border   bg-card border-border p-5 space-y-4">
             <div className="flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-lg dark:bg-indigo-500/15 bg-indigo-100 flex items-center justify-center">
-                <FilePlus2 className="w-4 h-4 text-indigo-500" />
+              <div className="w-8 h-8 rounded-lg dark:bg-primary/15 bg-primary-container flex items-center justify-center">
+                <FilePlus2 className="w-4 h-4 text-primary" />
               </div>
               <div>
                 <h3 className="text-[13px] font-semibold  text-foreground">Blank canvas</h3>
@@ -1099,7 +1098,7 @@ export const DrawingTool: React.FC = () => {
                   onClick={() => { setSetupW(p.w); setSetupH(p.h); }}
                   className={`px-2 py-2 rounded-lg border text-left transition-colors ${
                     setupW === p.w && setupH === p.h
-                      ? 'dark:border-indigo-500/50 dark:bg-indigo-500/15 bg-indigo-100 border-indigo-300'
+                      ? 'dark:border-primary/50 dark:bg-primary/15 bg-primary-container border-primary/40'
                       : 'dark:border-white/[0.08] dark:hover:bg-white/[0.05] dark:bg-white/[0.03] border-border hover:bg-muted bg-card'
                   }`}
                 >
@@ -1120,7 +1119,7 @@ export const DrawingTool: React.FC = () => {
                   max={MAX_DIM}
                   value={setupW}
                   onChange={(e) => setSetupW(Number(e.target.value))}
-                  className="w-full rounded-lg border px-3 py-2 text-xs focus:outline-none focus:ring-2 focus:ring-indigo-500/25 dark:bg-white/[0.07] dark:border-white/[0.14]  bg-card border-border text-foreground"
+                  className="w-full rounded-lg border px-3 py-2 text-xs focus:outline-none focus:ring-2 focus:ring-primary/25 dark:bg-white/[0.07] dark:border-white/[0.14]  bg-card border-border text-foreground"
                 />
               </label>
               <span className="pb-2 text-xs  text-muted-foreground">×</span>
@@ -1132,7 +1131,7 @@ export const DrawingTool: React.FC = () => {
                   max={MAX_DIM}
                   value={setupH}
                   onChange={(e) => setSetupH(Number(e.target.value))}
-                  className="w-full rounded-lg border px-3 py-2 text-xs focus:outline-none focus:ring-2 focus:ring-indigo-500/25 dark:bg-white/[0.07] dark:border-white/[0.14]  bg-card border-border text-foreground"
+                  className="w-full rounded-lg border px-3 py-2 text-xs focus:outline-none focus:ring-2 focus:ring-primary/25 dark:bg-white/[0.07] dark:border-white/[0.14]  bg-card border-border text-foreground"
                 />
               </label>
             </div>
@@ -1151,7 +1150,7 @@ export const DrawingTool: React.FC = () => {
                     aria-label={`Background ${o.label}`}
                     onClick={() => setBg(o.value)}
                     className={`w-8 h-8 rounded-lg border transition-transform hover:scale-110 ${o.class} ${
-                      bg === o.value ? 'ring-2 ring-indigo-500 ring-offset-1 dark:ring-offset-dark-card' : ''
+                      bg === o.value ? 'ring-2 ring-primary ring-offset-1 dark:ring-offset-dark-card' : ''
                     }`}
                   />
                 ))}
@@ -1163,7 +1162,7 @@ export const DrawingTool: React.FC = () => {
               type="button"
               onClick={() => startBlank(setupW, setupH, bg)}
               disabled={!(isFinite(setupW) && isFinite(setupH) && setupW >= 32 && setupH >= 32)}
-              className="w-full h-10 rounded-xl text-[13px] font-semibold bg-indigo-600 hover:bg-indigo-500 text-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full h-10 rounded-xl text-[13px] font-semibold bg-primary hover:opacity-90 text-primary-foreground transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
               Create canvas
             </button>
@@ -1190,18 +1189,18 @@ export const DrawingTool: React.FC = () => {
                 if (files.length) handleFiles(files);
               }}
               className={`rounded-xl border-2 border-dashed text-center transition-all duration-200 p-6 space-y-3 ${
-                isDragging ? 'border-indigo-500 bg-indigo-500/[0.06] scale-[1.01]' : ' border-border'
+                isDragging ? 'border-primary bg-primary/[0.06] scale-[1.01]' : ' border-border'
               }`}
             >
-              <div className="w-11 h-11 rounded-xl dark:bg-indigo-500/10 bg-indigo-50 border dark:border-indigo-500/20 border-indigo-200 mx-auto flex items-center justify-center">
-                <Upload className="w-5 h-5 text-indigo-500" />
+              <div className="w-11 h-11 rounded-xl dark:bg-primary/10 bg-primary-container border dark:border-primary/20 border-primary/30 mx-auto flex items-center justify-center">
+                <Upload className="w-5 h-5 text-primary" />
               </div>
               <p className="text-[12px] font-semibold  text-foreground">{isDragging ? 'Drop it to open' : 'Upload an image'}</p>
               <p className="text-[11px]  text-muted-foreground">PNG, JPG, WebP, GIF & more</p>
               <button
                 type="button"
                 onClick={() => fileInputRef.current?.click()}
-                className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-[12px] font-semibold bg-indigo-600 hover:bg-indigo-500 text-white transition-colors"
+                className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-[12px] font-semibold bg-primary hover:opacity-90 text-primary-foreground transition-colors"
               >
                 <Upload className="w-3.5 h-3.5" /> Choose image
               </button>
@@ -1321,7 +1320,7 @@ export const DrawingTool: React.FC = () => {
         <div className="hidden md:block w-40 shrink-0">
           <Select value={format} options={EXPORT_FORMATS} onChange={setFormat} />
         </div>
-        <button onClick={download} className="h-9 px-3.5 rounded-lg inline-flex items-center gap-1.5 text-xs font-semibold bg-indigo-600 hover:bg-indigo-500 text-white transition-colors shrink-0">
+        <button onClick={download} className="h-9 px-3.5 rounded-lg inline-flex items-center gap-1.5 text-xs font-semibold bg-primary hover:opacity-90 text-primary-foreground transition-colors shrink-0">
           <Download className="w-4 h-4" /> Export
         </button>
       </header>
@@ -1369,8 +1368,8 @@ export const DrawingTool: React.FC = () => {
           <div className="shrink-0 flex items-center justify-between gap-3 px-3 py-1.5 border-t dark:bg-[#12121a] dark:border-white/[0.08] bg-card border-border text-[11px]">
             <p className=" text-muted-foreground truncate flex-1">
               {isPanning ? 'Dragging to pan…' : HINT_BY_TOOL[tool]}{' '}
-              <span className="hidden md:inline  text-slate-300">· Ctrl+Z undo · Ctrl+Shift+Z redo · Ctrl+D duplicate · Del delete</span>
-              <span className="hidden sm:inline  text-slate-300"> · Hold Space to pan</span>
+              <span className="hidden md:inline  text-muted-foreground">· Ctrl+Z undo · Ctrl+Shift+Z redo · Ctrl+D duplicate · Del delete</span>
+              <span className="hidden sm:inline  text-muted-foreground"> · Hold Space to pan</span>
             </p>
             <span className=" text-muted-foreground font-mono shrink-0">{objects.length} object{objects.length === 1 ? '' : 's'} · {zoomPct}</span>
           </div>
@@ -1402,7 +1401,7 @@ export const DrawingTool: React.FC = () => {
                     onClick={() => setColor(c)}
                     title={c}
                     aria-label={`Color ${c}`}
-                    className={`w-6 h-6 rounded-full border transition-transform hover:scale-110 ${color === c ? 'ring-2 ring-indigo-500 ring-offset-1 dark:ring-offset-dark-card' : ''} dark:border-white/20 border-border`}
+                    className={`w-6 h-6 rounded-full border transition-transform hover:scale-110 ${color === c ? 'ring-2 ring-primary ring-offset-1 dark:ring-offset-dark-card' : ''} dark:border-white/20 border-border`}
                     style={{ backgroundColor: c }}
                   />
                 ))}
@@ -1422,10 +1421,10 @@ export const DrawingTool: React.FC = () => {
                       onClick={() => setSize(s)}
                       title={`${s}px`}
                       aria-label={`${s}px brush`}
-                      className={`w-7 h-7 rounded-lg flex items-center justify-center border transition-colors ${size === s ? 'dark:border-indigo-500/50 dark:bg-indigo-500/15 bg-indigo-100 border-indigo-300' : 'dark:border-white/[0.1] dark:hover:bg-white/[0.06] border-border hover:bg-muted'}`}
+                      className={`w-7 h-7 rounded-lg flex items-center justify-center border transition-colors ${size === s ? 'dark:border-primary/50 dark:bg-primary/15 bg-primary-container border-primary/40' : 'dark:border-white/[0.1] dark:hover:bg-white/[0.06] border-border hover:bg-muted'}`}
                     >
                       <span
-                        className="rounded-full dark:bg-zinc-200 bg-slate-600"
+                        className="rounded-full bg-background"
                         style={{ width: Math.min(12, Math.max(3, s / 4)), height: Math.min(12, Math.max(3, s / 4)) }}
                       />
                     </button>
@@ -1435,7 +1434,7 @@ export const DrawingTool: React.FC = () => {
             )}
             {isShapeTool && (
               <label className="flex items-center gap-2.5 text-xs  text-muted-foreground cursor-pointer select-none mt-3">
-                <input type="checkbox" checked={fill} onChange={(e) => setFill(e.target.checked)} className="w-4 h-4 accent-indigo-500" />
+                <input type="checkbox" checked={fill} onChange={(e) => setFill(e.target.checked)} className="w-4 h-4 accent-primary" />
                 <span>Fill shape</span>
               </label>
             )}
@@ -1447,7 +1446,7 @@ export const DrawingTool: React.FC = () => {
                     value={textValue}
                     onChange={(e) => setTextValue(e.target.value)}
                     onKeyDown={(e) => { if (e.key === 'Enter') e.currentTarget.blur(); }}
-                    className="w-full rounded-lg border px-3 py-2 text-xs focus:outline-none focus:ring-2 focus:ring-indigo-500/25 focus:border-indigo-400 dark:bg-white/[0.07] dark:border-white/[0.14]  bg-card border-border text-foreground"
+                    className="w-full rounded-lg border px-3 py-2 text-xs focus:outline-none focus:ring-2 focus:ring-primary/25 focus:border-primary dark:bg-white/[0.07] dark:border-white/[0.14]  bg-card border-border text-foreground"
                   />
                 </div>
                 <div className="mt-3">
@@ -1458,8 +1457,8 @@ export const DrawingTool: React.FC = () => {
           </div>
 
           {selectedObj && (
-            <div className="rounded-xl border dark:border-indigo-500/25 border-indigo-200 dark:bg-indigo-500/[0.07] bg-indigo-50 p-3">
-              <h3 className="section-kicker mb-2.5 flex items-center gap-1.5 dark:text-indigo-300 text-indigo-700">
+            <div className="rounded-xl border dark:border-primary/25 border-primary/30 dark:bg-primary/[0.07] bg-primary-container p-3">
+              <h3 className="section-kicker mb-2.5 flex items-center gap-1.5 dark:text-primary/40 text-on-primary-container">
                 Selected {TYPE_META[selectedObj.type].label}
               </h3>
               {selectedObj.type === 'text' && (
@@ -1476,7 +1475,7 @@ export const DrawingTool: React.FC = () => {
                       const id = selectedObj.id;
                       setObjects(prev => prev.map(o => o.id === id && o.type === 'text' ? { ...o, text: e.target.value } : o));
                     }}
-                    className="w-full rounded-lg border px-3 py-1.5 text-xs focus:outline-none focus:ring-2 focus:ring-indigo-500/25 dark:bg-white/[0.07] dark:border-white/[0.14]  bg-card border-border text-foreground"
+                    className="w-full rounded-lg border px-3 py-1.5 text-xs focus:outline-none focus:ring-2 focus:ring-primary/25 dark:bg-white/[0.07] dark:border-white/[0.14]  bg-card border-border text-foreground"
                   />
                 </div>
               )}
@@ -1518,7 +1517,7 @@ export const DrawingTool: React.FC = () => {
                         onClick={() => setSelectedId(o.id)}
                         className={`flex-1 min-w-0 flex items-center gap-2 px-2 py-1.5 rounded-lg border text-left transition-colors
                           ${active
-                            ? 'dark:bg-indigo-500/15 dark:border-indigo-500/40 dark:text-indigo-200 bg-indigo-100 border-indigo-300 text-indigo-800'
+                            ? 'dark:bg-primary/15 dark:border-primary/40 dark:text-primary/30 bg-primary-container border-primary/40 text-on-primary-container'
                             : 'dark:bg-white/[0.03] dark:border-white/[0.07] dark:hover:bg-white/[0.06]  bg-card border-border hover:bg-muted text-muted-foreground'}`}
                       >
                         <span className="w-2.5 h-2.5 rounded-full shrink-0 border dark:border-white/20 border-border" style={{ backgroundColor: o.color }} />
@@ -1542,7 +1541,7 @@ export const DrawingTool: React.FC = () => {
 
           <div className="rounded-xl dark:bg-white/[0.03] bg-muted border dark:border-white/[0.06] border-border p-3">
             <div className="flex items-center gap-2 text-[11px]  text-muted-foreground mb-1.5">
-              <Layers className="w-3.5 h-3.5 text-indigo-500" />
+              <Layers className="w-3.5 h-3.5 text-primary" />
               <span className="font-semibold">Canvas</span>
             </div>
             <p className="text-[10.5px] font-mono  text-muted-foreground leading-relaxed">

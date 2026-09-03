@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { CopyButton } from '../components/CopyButton';
 import { Shield } from 'lucide-react';
+import { DarkPanel } from '../components/DevToolChrome';
 
 export const HashGenerator: React.FC = () => {
   const [input, setInput] = useState<string>('NextTool - free online tools');
@@ -108,75 +109,43 @@ export const HashGenerator: React.FC = () => {
     generateHashes();
   }, [input, generateHashes]);
 
+  const hashRows: { key: keyof typeof hashes; label: string; icon?: boolean }[] = [
+    { key: 'sha256', label: 'SHA-256', icon: true },
+    { key: 'sha512', label: 'SHA-512' },
+    { key: 'sha1', label: 'SHA-1' },
+    { key: 'md5', label: 'MD5' },
+  ];
+
   return (
-    <div className="space-y-5">
+    <div className="space-y-3.5">
       {/* Input Section */}
-      <div className="rounded-xl border   bg-card border-border p-4 space-y-2 shadow-xs">
-        <label className="text-xs font-bold uppercase tracking-wider  text-foreground flex items-center justify-between">
-          <span>Input String / Data</span>
-          <span className="text-muted-foreground font-mono text-[11px]">{input.length} chars</span>
-        </label>
+      <DarkPanel
+        label="Input"
+        headerRight={<span className="font-mono text-[11px] text-[color:var(--devpanel-label)]">{input.length} chars</span>}
+      >
         <textarea
           value={input}
           onChange={(e) => setInput(e.target.value)}
+          spellCheck={false}
           placeholder="Enter text to generate cryptographic hashes..."
-          className="w-full    bg-muted border-border border rounded-lg p-3 text-xs font-mono placeholder:text-muted-foreground focus:outline-none leading-relaxed h-24"
+          className="w-full h-[160px] bg-transparent p-4 text-[13.5px] font-mono text-[color:var(--devpanel-text)] placeholder:text-[color:var(--devpanel-label)] resize-none focus:outline-none leading-relaxed outline-none"
         />
-      </div>
+      </DarkPanel>
 
       {/* Hashes List */}
       <div className="space-y-3">
-        {/* SHA-256 */}
-        <div className="rounded-xl border   bg-card border-border p-4 space-y-1.5 shadow-xs">
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-bold  text-foreground uppercase tracking-wider flex items-center gap-1.5">
-              <Shield className="w-3.5 h-3.5 text-primary" /> SHA-256 (Recommended)
+        {hashRows.map(({ key, label, icon }) => (
+          <div
+            key={key}
+            className="bg-card border border-border rounded-2xl px-[18px] py-[18px] flex items-center gap-3"
+          >
+            <span className="flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wider text-muted-foreground shrink-0 w-20">
+              {icon && <Shield className="w-3.5 h-3.5 text-primary" />} {label}
             </span>
-            <CopyButton text={hashes.sha256} />
+            <span className="flex-1 font-mono text-[14px] break-all select-all">{hashes[key] || 'Generating...'}</span>
+            <CopyButton text={hashes[key]} className="shrink-0" />
           </div>
-          <div className="p-2.5   bg-muted border-border border rounded-lg text-xs font-mono text-success break-all select-all font-semibold">
-            {hashes.sha256 || 'Generating...'}
-          </div>
-        </div>
-
-        {/* SHA-512 */}
-        <div className="rounded-xl border   bg-card border-border p-4 space-y-1.5 shadow-xs">
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-bold  text-foreground uppercase tracking-wider">
-              SHA-512
-            </span>
-            <CopyButton text={hashes.sha512} />
-          </div>
-          <div className="p-2.5   bg-muted border-border border rounded-lg text-xs font-mono text-sky-600 dark:text-sky-400 break-all select-all font-semibold">
-            {hashes.sha512 || 'Generating...'}
-          </div>
-        </div>
-
-        {/* SHA-1 */}
-        <div className="rounded-xl border   bg-card border-border p-4 space-y-1.5 shadow-xs">
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-bold  text-foreground uppercase tracking-wider">
-              SHA-1
-            </span>
-            <CopyButton text={hashes.sha1} />
-          </div>
-          <div className="p-2.5   bg-muted border-border border rounded-lg text-xs font-mono text-amber-600 dark:text-amber-400 break-all select-all font-semibold">
-            {hashes.sha1 || 'Generating...'}
-          </div>
-        </div>
-
-        {/* MD5 */}
-        <div className="rounded-xl border   bg-card border-border p-4 space-y-1.5 shadow-xs">
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-bold  text-foreground uppercase tracking-wider">
-              MD5 Digest
-            </span>
-            <CopyButton text={hashes.md5} />
-          </div>
-          <div className="p-2.5   bg-muted border-border border rounded-lg text-xs font-mono text-purple-600 dark:text-purple-400 break-all select-all font-semibold">
-            {hashes.md5 || 'Generating...'}
-          </div>
-        </div>
+        ))}
       </div>
     </div>
   );

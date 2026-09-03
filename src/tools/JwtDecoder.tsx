@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { CopyButton } from '../components/CopyButton';
 import { errorMessage } from '../utils/errorMessage';
 import { AlertTriangle, ShieldCheck, ShieldX } from 'lucide-react';
+import { DarkPanel, WhitePanel } from '../components/DevToolChrome';
 
 export const JwtDecoder: React.FC = () => {
   const [token, setToken] = useState<string>(
@@ -42,18 +43,18 @@ export const JwtDecoder: React.FC = () => {
     : null;
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-3.5">
       {/* Token Input */}
-      <div className=" bg-card rounded-xl border  border-border p-4 space-y-2.5">
-        <p className="section-label">Encoded JWT Token</p>
+      <DarkPanel label="Encoded token">
         <textarea
           value={token}
           onChange={(e) => setToken(e.target.value)}
+          spellCheck={false}
           placeholder="Paste JWT token here…"
           rows={4}
-          className="textarea-base font-mono break-all h-24 text-[11.5px]"
+          className="w-full h-[100px] bg-transparent p-4 text-[13px] font-mono text-[color:var(--devpanel-text)] placeholder:text-[color:var(--devpanel-label)] resize-none focus:outline-none leading-relaxed outline-none break-all"
         />
-      </div>
+      </DarkPanel>
 
       {/* Error */}
       {error && (
@@ -86,40 +87,45 @@ export const JwtDecoder: React.FC = () => {
       )}
 
       {/* Dual Output */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-3.5">
         {/* Header */}
-        <div className=" bg-card rounded-xl border  border-border overflow-hidden flex flex-col h-[360px]">
-          <div className="px-4 py-2.5  bg-muted border-b  border-border flex items-center justify-between">
-            <div>
-              <span className="text-xs font-bold  text-muted-foreground">Header</span>
-              <span className="text-[10px]  text-muted-foreground ml-2">Algorithm & Type</span>
-            </div>
-            <CopyButton text={JSON.stringify(header, null, 2)} />
-          </div>
-          <div className="flex-1 p-4 overflow-auto font-mono text-xs text-rose-500 dark:text-rose-400 whitespace-pre-wrap leading-relaxed">
+        <WhitePanel
+          label="Header"
+          headerRight={<CopyButton text={JSON.stringify(header, null, 2)} />}
+          className="h-[300px] lg:h-[360px]"
+        >
+          <pre className="flex-1 p-4 overflow-auto font-mono text-[13px] whitespace-pre-wrap leading-relaxed">
             {header
               ? JSON.stringify(header, null, 2)
-              : <span className=" text-muted-foreground font-sans italic text-xs">Decoded header appears here…</span>
+              : <span className="text-muted-foreground font-sans italic text-xs">Decoded header appears here…</span>
             }
-          </div>
-        </div>
+          </pre>
+        </WhitePanel>
 
         {/* Payload */}
-        <div className=" bg-card rounded-xl border  border-border overflow-hidden flex flex-col h-[360px]">
-          <div className="px-4 py-2.5  bg-muted border-b  border-border flex items-center justify-between">
-            <div>
-              <span className="text-xs font-bold  text-muted-foreground">Payload</span>
-              <span className="text-[10px]  text-muted-foreground ml-2">Claims & User Data</span>
+        <WhitePanel
+          label="Payload"
+          headerRight={
+            <div className="flex items-center gap-2">
+              {expInfo && (
+                <span className={`text-[11.5px] font-bold px-2.5 py-0.5 rounded-full ${
+                  expInfo.isExpired ? 'bg-danger/10 text-danger' : 'bg-success/10 text-success'
+                }`}>
+                  {expInfo.isExpired ? 'EXPIRED' : 'ACTIVE'}
+                </span>
+              )}
+              <CopyButton text={JSON.stringify(payload, null, 2)} />
             </div>
-            <CopyButton text={JSON.stringify(payload, null, 2)} />
-          </div>
-          <div className="flex-1 p-4 overflow-auto font-mono text-xs text-cyan-500 dark:text-cyan-400 whitespace-pre-wrap leading-relaxed">
+          }
+          className="h-[300px] lg:h-[360px]"
+        >
+          <pre className="flex-1 p-4 overflow-auto font-mono text-[13px] whitespace-pre-wrap leading-relaxed">
             {payload
               ? JSON.stringify(payload, null, 2)
-              : <span className=" text-muted-foreground font-sans italic text-xs">Decoded payload appears here…</span>
+              : <span className="text-muted-foreground font-sans italic text-xs">Decoded payload appears here…</span>
             }
-          </div>
-        </div>
+          </pre>
+        </WhitePanel>
       </div>
     </div>
   );

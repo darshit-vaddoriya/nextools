@@ -1,11 +1,11 @@
 import React, { useMemo, useState } from 'react';
 import { CopyButton } from '../components/CopyButton';
 import { errorMessage } from '../utils/errorMessage';
-import { Select } from '../components/Select';
 import {
-  Play, Minimize2, Trash2, CheckCircle, AlertTriangle, Sparkles,
-  Download, FileJson, ListTree, AlignLeft,
+  Play, Minimize2, Trash2, AlertTriangle, Sparkles,
+  Download, FileJson, ListTree,
 } from 'lucide-react';
+import { DarkPanel, WhitePanel, Segmented, SegmentedButton, StatusPill } from '../components/DevToolChrome';
 
 const SAMPLE = {
   status: 'success',
@@ -137,24 +137,31 @@ export const JsonFormatter: React.FC = () => {
   const isValid = !error && output.length > 0;
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-3">
       {/* ── Toolbar ─────────────────────────────────────────── */}
-      <div className="flex flex-wrap items-center justify-between gap-3 p-3 rounded-2xl border border-border bg-card shadow-card">
-        <div className="flex items-center gap-1.5">
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <div className="flex flex-wrap items-center gap-2">
           <button
             onClick={handleFormat}
-            className="inline-flex items-center gap-1.5 px-3.5 py-2 bg-primary hover:brightness-110 text-primary-foreground text-[12.5px] font-semibold rounded-lg transition-all duration-150 active:scale-[0.98] shadow-sm"
+            className="inline-flex items-center gap-1.5 px-4 py-2 bg-primary hover:bg-primary/90 text-primary-foreground text-[13.5px] font-bold rounded-[9px] transition-all duration-150 active:scale-[0.98]"
           >
             <Play className="w-3.5 h-3.5" />
-            Format JSON
+            Beautify
           </button>
           <button
             onClick={handleMinify}
-            className="inline-flex items-center gap-1.5 px-3 py-2 bg-muted text-foreground/80 border border-border hover:bg-muted/70 hover:border-input text-[12.5px] font-medium rounded-lg transition-colors duration-150"
+            className="inline-flex items-center gap-1.5 px-4 py-2 bg-card text-foreground border border-border hover:bg-muted text-[13.5px] font-bold rounded-[9px] transition-colors duration-150"
           >
             <Minimize2 className="w-3.5 h-3.5" />
             Minify
           </button>
+          <Segmented>
+            {[2, 4, 8].map((n) => (
+              <SegmentedButton key={n} active={indent === n} onClick={() => { setIndent(n); runFormat(input, n); }}>
+                {n}
+              </SegmentedButton>
+            ))}
+          </Segmented>
           <button
             onClick={sampleData}
             className="inline-flex items-center gap-1.5 px-3 py-2 text-[12.5px] font-medium text-muted-foreground hover:text-foreground border border-border rounded-lg hover:bg-muted transition-colors duration-150"
@@ -171,30 +178,7 @@ export const JsonFormatter: React.FC = () => {
           </button>
         </div>
 
-        <div className="flex items-center gap-2.5">
-          <div className="flex items-center gap-1.5 text-[12px] text-muted-foreground">
-            <AlignLeft className="w-3.5 h-3.5 shrink-0" />
-            <Select
-              value={String(indent)}
-              onChange={(v) => setIndent(Number(v))}
-              options={[
-                { value: '2', label: '2 Spaces' },
-                { value: '4', label: '4 Spaces' },
-                { value: '8', label: '8 Spaces' },
-              ]}
-              className="w-32"
-            />
-          </div>
-          <CopyButton text={output} label="Copy" />
-          <button
-            onClick={() => downloadText(output, 'formatted.json')}
-            disabled={!output}
-            className="inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-medium rounded-md border border-border bg-muted text-foreground/80 hover:bg-muted hover:border-input hover:text-foreground transition-all duration-150 disabled:opacity-40 disabled:cursor-not-allowed"
-          >
-            <Download className="w-3.5 h-3.5" />
-            Download
-          </button>
-        </div>
+        <StatusPill valid={isValid} validLabel={`Valid · ${output.length} chars`} invalidLabel={error ? 'Invalid JSON' : 'Empty'} />
       </div>
 
       {error && (
@@ -205,15 +189,13 @@ export const JsonFormatter: React.FC = () => {
       )}
 
       {/* ── Editor grid ─────────────────────────────────────── */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-3.5">
         {/* Input pane */}
-        <div className="rounded-2xl border border-border bg-card overflow-hidden flex flex-col h-[360px] lg:h-[520px] shadow-card">
-          <div className="px-3.5 py-2.5 border-b border-border bg-muted/60 flex items-center justify-between text-xs text-muted-foreground">
-            <span className="inline-flex items-center gap-1.5 font-semibold text-foreground">
-              <FileJson className="w-3.5 h-3.5 text-primary" /> Input JSON
-            </span>
-            <span className="font-mono text-[11px]">{input.length} chars · {inputLines} lines</span>
-          </div>
+        <DarkPanel
+          label="Input"
+          headerRight={<span className="font-mono text-[11px] text-[color:var(--devpanel-label)]">{input.length} chars · {inputLines} lines</span>}
+          className="h-[360px] lg:h-[520px]"
+        >
           <textarea
             value={input}
             onChange={(e) => {
@@ -222,47 +204,46 @@ export const JsonFormatter: React.FC = () => {
             }}
             spellCheck={false}
             placeholder="Paste your unformatted JSON here... (live format)"
-            className="flex-1 w-full bg-transparent p-3.5 text-xs font-mono text-foreground placeholder:text-muted-foreground resize-none focus:outline-none leading-relaxed"
+            className="flex-1 w-full bg-transparent p-4 text-[13.5px] font-mono text-[color:var(--devpanel-text)] placeholder:text-[color:var(--devpanel-label)] resize-none focus:outline-none leading-relaxed outline-none"
           />
-        </div>
+        </DarkPanel>
 
         {/* Output pane */}
-        <div className="rounded-2xl border border-border bg-card overflow-hidden flex flex-col h-[440px] lg:h-[520px] shadow-card">
-          <div className="px-3 py-2 border-b border-border bg-muted/60 flex items-center justify-between gap-2">
+        <WhitePanel
+          label="Output"
+          headerRight={
             <div className="flex items-center gap-1">
               <button
                 onClick={() => setActiveTab('formatted')}
-                className={`inline-flex items-center gap-1.5 px-2.5 py-1.5 text-xs font-medium rounded-md transition-colors duration-150 ${
-                  activeTab === 'formatted'
-                    ? 'bg-primary/10 text-primary border border-primary/30'
-                    : 'text-muted-foreground hover:text-foreground border border-transparent'
+                className={`inline-flex items-center gap-1.5 px-2.5 py-1.5 text-[11.5px] font-bold rounded-md transition-colors duration-150 ${
+                  activeTab === 'formatted' ? 'text-primary' : 'text-muted-foreground hover:text-foreground'
                 }`}
               >
                 <FileJson className="w-3.5 h-3.5" /> Formatted
               </button>
               <button
                 onClick={() => setActiveTab('tree')}
-                className={`inline-flex items-center gap-1.5 px-2.5 py-1.5 text-xs font-medium rounded-md transition-colors duration-150 ${
-                  activeTab === 'tree'
-                    ? 'bg-primary/10 text-primary border border-primary/30'
-                    : 'text-muted-foreground hover:text-foreground border border-transparent'
+                className={`inline-flex items-center gap-1.5 px-2.5 py-1.5 text-[11.5px] font-bold rounded-md transition-colors duration-150 ${
+                  activeTab === 'tree' ? 'text-primary' : 'text-muted-foreground hover:text-foreground'
                 }`}
               >
                 <ListTree className="w-3.5 h-3.5" /> Tree
               </button>
+              <CopyButton text={output} label="Copy" />
+              <button
+                onClick={() => downloadText(output, 'formatted.json')}
+                disabled={!output}
+                className="inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-medium rounded-md border border-border bg-muted text-foreground/80 hover:bg-muted hover:border-input hover:text-foreground transition-all duration-150 disabled:opacity-40 disabled:cursor-not-allowed"
+              >
+                <Download className="w-3.5 h-3.5" />
+              </button>
             </div>
-            {isValid ? (
-              <span className="text-[11px] text-success flex items-center gap-1 font-mono shrink-0">
-                <CheckCircle className="w-3 h-3" /> Valid · {output.length} chars
-              </span>
-            ) : (
-              <span className="text-[11px] text-muted-foreground font-mono shrink-0">{outputLines > 0 ? `${outputLines} lines` : ''}</span>
-            )}
-          </div>
-
-          <div className="flex-1 p-3.5 overflow-auto font-mono text-xs">
+          }
+          className="h-[440px] lg:h-[520px]"
+        >
+          <div className="flex-1 p-4 overflow-auto font-mono text-[13.5px]">
             {activeTab === 'formatted' ? (
-              <pre className="text-success whitespace-pre-wrap leading-relaxed select-text">
+              <pre className="text-foreground whitespace-pre-wrap leading-relaxed select-text">
                 {output || <span className="text-muted-foreground font-sans">Formatted output will appear here...</span>}
               </pre>
             ) : (
@@ -275,7 +256,7 @@ export const JsonFormatter: React.FC = () => {
               </div>
             )}
           </div>
-        </div>
+        </WhitePanel>
       </div>
     </div>
   );

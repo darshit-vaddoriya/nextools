@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { CopyButton } from '../components/CopyButton';
 import { RefreshCw, KeyRound } from 'lucide-react';
+import { Segmented, SegmentedButton } from '../components/DevToolChrome';
 
 export const UuidGenerator: React.FC = () => {
   const [count, setCount] = useState<number>(5);
@@ -35,69 +36,49 @@ export const UuidGenerator: React.FC = () => {
   }, [handleGenerate]);
 
   return (
-    <div className="space-y-4">
+    <div className="bg-card border border-border rounded-[18px] p-5 sm:p-[22px] space-y-5">
       {/* Controls Bar */}
-      <div className="p-4  bg-card rounded-xl border  border-border flex flex-wrap items-center justify-between gap-4">
-        <div className="flex flex-wrap items-center gap-5">
-          <div className="flex items-center gap-2 text-xs">
-            <span className=" text-muted-foreground font-medium">Quantity:</span>
-            <input
-              type="number"
-              min={1}
-              max={100}
-              value={count}
-              onChange={(e) => setCount(Math.min(100, Math.max(1, parseInt(e.target.value) || 1)))}
-              className="w-16    bg-muted border-border text-foreground border rounded-lg px-2 py-1 text-xs focus:outline-none focus:ring-2 focus:ring-primary/40 text-center"
-            />
-          </div>
-
-          <label className="flex items-center gap-1.5 text-xs  text-muted-foreground cursor-pointer select-none">
-            <input
-              type="checkbox"
-              checked={uppercase}
-              onChange={(e) => setUppercase(e.target.checked)}
-              className="rounded   border-border text-primary focus:ring-0 focus:ring-offset-0"
-            />
-            <span>Uppercase</span>
-          </label>
-
-          <label className="flex items-center gap-1.5 text-xs  text-muted-foreground cursor-pointer select-none">
-            <input
-              type="checkbox"
-              checked={hyphens}
-              onChange={(e) => setHyphens(e.target.checked)}
-              className="rounded   border-border text-primary focus:ring-0 focus:ring-offset-0"
-            />
-            <span>Include Hyphens</span>
-          </label>
+      <div className="flex flex-wrap items-center gap-5">
+        <div className="flex items-center gap-2 text-xs flex-1 min-w-[180px]">
+          <span className="text-muted-foreground font-bold">Quantity</span>
+          <input
+            type="range"
+            min={1}
+            max={100}
+            value={count}
+            onChange={(e) => setCount(parseInt(e.target.value) || 1)}
+            className="flex-1 accent-primary"
+          />
+          <span className="font-mono text-[13px] font-bold w-8 text-right">{count}</span>
         </div>
 
-        <div className="flex items-center gap-2">
-          <button onClick={handleGenerate} className="btn-primary text-xs py-1.5 px-3">
-            <RefreshCw className="w-3.5 h-3.5" />
-            <span>Generate New</span>
-          </button>
-          <CopyButton text={uuids.join('\n')} label="Copy All" />
-        </div>
+        <Segmented>
+          <SegmentedButton active={uppercase} onClick={() => setUppercase((v) => !v)}>UPPER</SegmentedButton>
+          <SegmentedButton active={hyphens} onClick={() => setHyphens((v) => !v)}>Hyphens</SegmentedButton>
+        </Segmented>
+
+        <button onClick={handleGenerate} className="btn-primary text-[13.5px] py-2.5 px-5 rounded-[10px]">
+          <RefreshCw className="w-3.5 h-3.5" />
+          <span>Generate</span>
+        </button>
       </div>
 
       {/* UUID List */}
-      <div className=" bg-card rounded-xl border  border-border overflow-hidden">
-        <div className="px-4 py-2.5  bg-muted border-b  border-border flex items-center justify-between">
-          <div className="flex items-center gap-2 text-xs font-semibold  text-muted-foreground">
+      <div className="space-y-2">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2 text-xs font-semibold text-muted-foreground">
             <KeyRound className="w-3.5 h-3.5 text-primary" />
-            <span>{uuids.length} UUIDs Generated</span>
+            <span>{uuids.length} UUIDs generated</span>
           </div>
+          <CopyButton text={uuids.join('\n')} label="Copy all" />
         </div>
-        <div className="p-3 space-y-2 max-h-[480px] overflow-y-auto">
+        <div className="space-y-2 max-h-[480px] overflow-y-auto">
           {uuids.map((id, index) => (
             <div
               key={index}
-              className="px-3 py-2.5   bg-muted border-border hover:border-primary/40 border rounded-xl flex items-center justify-between gap-3 group transition-all duration-150"
+              className="px-4 py-3 bg-muted/40 border border-border hover:border-primary/40 rounded-[10px] flex items-center justify-between gap-3 group transition-all duration-150"
             >
-              <span className="text-emerald-500  select-all font-mono text-[12.5px] font-semibold truncate">
-                {id}
-              </span>
+              <span className="select-all font-mono text-[14px] truncate">{id}</span>
               <CopyButton text={id} label="Copy" className="opacity-0 group-hover:opacity-100 transition-opacity shrink-0" />
             </div>
           ))}

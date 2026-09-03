@@ -5,9 +5,10 @@ import { workingToolCount } from '../utils/toolStats';
 import { ALL_CATEGORIES } from '../config/categories';
 import {
   X, Search, Home, Sun, Moon, MonitorSmartphone,
-  ChevronRight, LayoutGrid, ShieldCheck, Check, Blocks,
+  ChevronRight, LayoutGrid, ShieldCheck, Check, Blocks, Heart,
 } from 'lucide-react';
 import { ThemePreference } from '../utils/theme';
+import { SUPPORT_URL } from '../config/support';
 
 interface NavDrawerProps {
   isOpen: boolean;
@@ -97,6 +98,17 @@ export const NavDrawer: React.FC<NavDrawerProps> = ({
             <button onClick={() => { onOpenPrivacy(); onClose(); }} className="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-[13.5px] font-medium text-foreground hover:bg-muted transition-colors">
               <ShieldCheck className="w-4 h-4 text-muted-foreground" /> Privacy
             </button>
+            {SUPPORT_URL && (
+              <a
+                href={SUPPORT_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={onClose}
+                className="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-[13.5px] font-medium text-rose-500 hover:bg-rose-500/10 transition-colors"
+              >
+                <Heart className="w-4 h-4" fill="currentColor" /> Support NextTool
+              </a>
+            )}
           </nav>
 
           {/* Categories */}

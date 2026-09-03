@@ -19,12 +19,17 @@ import { trackPageView } from './utils/analytics';
 import {
   FileText, Globe, Command, X,
   ChevronRight, ArrowLeft, Star,
-  CheckCircle2, ShieldCheck, ArrowRight, Zap, Info,
+  ShieldCheck, Zap, Info,
   Lock, MonitorSmartphone, Infinity as InfinityIcon, ChevronDown,
   Terminal, AlignLeft, Shrink,
-  Copy, Download, Send, Sparkles,
+  Copy, Download, Sparkles,
 } from 'lucide-react';
 import { ALL_CATEGORIES } from './config/categories';
+import { DevRunPill } from './components/DevToolChrome';
+
+const LIVE_DEV_TOOL_IDS = new Set([
+  'json-formatter', 'base64', 'uuid-generator', 'password-generator', 'hash-generator', 'jwt-decoder', 'diff-checker',
+]);
 
 import { JsonFormatter }          from './tools/JsonFormatter';
 import { Base64Tool }             from './tools/Base64Tool';
@@ -529,7 +534,7 @@ export const App: React.FC = () => {
           ? <CategoryView cat={activeCategoryView} onSelectTool={openTool} onBack={goHome} categories={ALL_CATEGORIES} />
           : currentView === 'all'
           ? <AllToolsView onSelectTool={openTool} onBack={goHome} categories={ALL_CATEGORIES} />
-          : <HomeView onSelectTool={openTool} onSelectCategory={openCategory} onOpenSearch={() => setIsSearchOpen(true)} onOpenPrivacy={openPrivacy} />
+          : <HomeView onSelectTool={openTool} onSelectCategory={openCategory} onOpenSearch={() => setIsSearchOpen(true)} />
         }
       </main>
 
@@ -636,8 +641,7 @@ const HomeView: React.FC<{
   onSelectTool: (id: string) => void;
   onSelectCategory: (cat: ToolCategory | 'all') => void;
   onOpenSearch: () => void;
-  onOpenPrivacy: () => void;
-}> = ({ onSelectTool, onSelectCategory, onOpenSearch, onOpenPrivacy }) => {
+}> = ({ onSelectTool, onSelectCategory, onOpenSearch }) => {
   const popular = TOOLS.filter(t => t.isPopular).slice(0, 8);
   const newTools = TOOLS.filter(t => t.isNew).slice(0, 4);
 
@@ -666,55 +670,52 @@ const HomeView: React.FC<{
 
       {/* ── HERO ─────────────────────────────────────────── */}
       <section className="relative overflow-hidden">
-        <div className="hero-glow" />
-        <div className="hero-grid" />
-        <div className="max-w-6xl mx-auto px-5 sm:px-8 pt-16 pb-14 relative z-10 flex flex-col items-center justify-center text-center">
+        <div className="max-w-4xl mx-auto px-5 sm:px-8 pt-16 pb-8 relative z-10 flex flex-col items-center justify-center text-center">
 
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full glass-panel mb-6 fade-up">
-            <span className="w-2 h-2 rounded-full bg-success-green" />
-            <span className="text-[11px] font-semibold tracking-wide text-tertiary">
-              {workingToolCount()} free tools · 100% in-browser · No uploads
-            </span>
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-primary-container/60 text-on-primary-container text-[12.5px] font-semibold fade-up">
+            {workingToolCount()}+ tools · no upload · no account
           </div>
 
-          <h1 className="font-heading text-[38px] sm:text-[56px] font-extrabold text-on-surface mb-4 max-w-4xl tracking-tight leading-[1.1] fade-up" style={{ animationDelay: '60ms' }}>
-            Technical Precision. <br />
-            <span className="gradient-text">Zero Compromise.</span>
+          <h1 className="font-heading text-[38px] sm:text-[56px] font-extrabold text-on-surface mt-5 mb-4 max-w-3xl tracking-[-0.035em] leading-[1.05] fade-up" style={{ animationDelay: '60ms' }}>
+            Every file tool you need, <br />
+            <span className="text-primary">in one tab.</span>
           </h1>
 
-          <p className="text-[15px] sm:text-lg text-on-surface-variant max-w-2xl mb-8 leading-relaxed fade-up" style={{ animationDelay: '120ms' }}>
-            A high-performance, local-first utility suite engineered for developers. Process JSON, transform data, and format images without your data ever leaving your machine.
+          <p className="text-[15px] sm:text-[17.5px] text-muted-foreground max-w-xl mb-7 leading-relaxed fade-up" style={{ animationDelay: '120ms' }}>
+            PDF, image, video, developer and AI utilities that do the work right in your browser — your files never leave your machine.
           </p>
 
-          {/* Command Center Search */}
+          {/* Search pill */}
           <button
             onClick={onOpenSearch}
             aria-label="Search all tools"
-            className="w-full max-w-2xl glass-panel rounded-xl p-2 flex items-center shadow-card relative group mb-8 fade-up text-left"
+            className="w-full max-w-xl bg-card border border-outline-variant rounded-2xl p-2 pl-4 flex items-center gap-2.5 shadow-card relative group mb-7 fade-up text-left"
             style={{ animationDelay: '180ms' }}
           >
-            <span className="text-primary ml-4 mr-3 flex-shrink-0"><Terminal className="w-7 h-7" /></span>
-            <span className="flex-1 text-on-surface-variant text-[15px] sm:text-lg truncate">What do you need to process?</span>
-            <span className="bg-primary text-primary-foreground text-[12px] font-semibold px-5 py-2.5 rounded-lg ml-2 flex items-center gap-2 shrink-0">
-              Execute <Send className="w-3.5 h-3.5" />
+            <span className="text-muted-foreground shrink-0"><Terminal className="w-4 h-4" /></span>
+            <span className="flex-1 text-muted-foreground text-[14.5px] sm:text-[15.5px] truncate">Search {workingToolCount()}+ tools — try "compress"</span>
+            <span className="bg-primary text-primary-foreground text-[13px] font-semibold px-4 py-2.5 rounded-xl shrink-0 group-hover:brightness-110 transition-all">
+              Search
             </span>
-            <div className="absolute inset-0 rounded-xl border border-primary opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
           </button>
 
-          {/* Key Metrics */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 w-full max-w-3xl border-t border-outline-variant/40 pt-6 fade-up" style={{ animationDelay: '240ms' }}>
-            <div className="flex flex-col items-center">
-              <span className="text-[32px] font-bold text-primary leading-none tabular-nums">{workingToolCount()}+</span>
-              <span className="text-[10.5px] font-semibold tracking-[0.14em] text-on-surface-variant mt-1.5">NATIVE UTILITIES</span>
-            </div>
-            <div className="flex flex-col items-center sm:border-l sm:border-r border-outline-variant/40">
-              <span className="text-[32px] font-bold text-tertiary leading-none">100%</span>
-              <span className="text-[10.5px] font-semibold tracking-[0.14em] text-on-surface-variant mt-1.5">LOCAL EXECUTION</span>
-            </div>
-            <div className="flex flex-col items-center">
-              <span className="text-[32px] font-bold text-success-green leading-none">0</span>
-              <span className="text-[10.5px] font-semibold tracking-[0.14em] text-on-surface-variant mt-1.5">UPLOADS</span>
-            </div>
+          {/* Category filter pills */}
+          <div className="flex flex-wrap items-center justify-center gap-2 fade-up" style={{ animationDelay: '220ms' }}>
+            <button
+              onClick={() => onSelectCategory('all')}
+              className="px-4 py-2 rounded-full text-[13.5px] font-semibold bg-on-surface text-background hover:brightness-110 transition-all"
+            >
+              All tools
+            </button>
+            {ALL_CATEGORIES.filter(cat => TOOLS.some(t => t.category === cat.id)).slice(0, 8).map(cat => (
+              <button
+                key={cat.id}
+                onClick={() => onSelectCategory(cat.id)}
+                className="px-4 py-2 rounded-full text-[13.5px] font-semibold bg-card border border-outline-variant text-muted-foreground hover:border-primary/50 hover:text-foreground transition-all"
+              >
+                {cat.name.replace(/ Tools$| & .*/,'')}
+              </button>
+            ))}
           </div>
         </div>
       </section>
@@ -827,39 +828,6 @@ const HomeView: React.FC<{
         </div>
       </section>
 
-      {/* ── PRIVACY ──────────────────────────────────────── */}
-      <section className="max-w-6xl mx-auto px-5 sm:px-8 pb-14 border-t border-outline-variant/30 pt-14">
-        <div className="max-w-2xl">
-          <div>
-            <span className="section-kicker mb-2">Privacy</span>
-            <h2 className="text-[20px] sm:text-[22px] font-bold text-on-surface tracking-[-0.02em] mb-4">Architected for Privacy</h2>
-            <p className="text-[14px] text-on-surface-variant leading-relaxed mb-6">
-              Your data is your business. NextTool operates entirely within your browser. No cloud telemetry, no external API calls for processing.
-            </p>
-            <ul className="space-y-4">
-              {[
-                { title: 'Zero Server Processing', desc: 'Inputs never hit our servers. Everything is parsed locally.' },
-                { title: 'Files Stay on Your Device', desc: 'Nothing you process is uploaded or stored. Data is cleared when you leave the page.' },
-                { title: 'No Accounts, No Paywalls', desc: 'No sign-up, no email, no premium tiers. Every tool is free to use.' },
-              ].map(f => (
-                <li key={f.title} className="flex items-start gap-3">
-                  <div className="mt-0.5 w-6 h-6 rounded-full bg-success-green/20 flex items-center justify-center flex-shrink-0">
-                    <CheckCircle2 className="text-success-green" style={{ width: 14, height: 14 }} />
-                  </div>
-                  <div>
-                    <strong className="text-[14px] font-semibold text-on-surface block mb-0.5">{f.title}</strong>
-                    <span className="text-[13px] text-on-surface-variant leading-relaxed">{f.desc}</span>
-                  </div>
-                </li>
-              ))}
-            </ul>
-            <button onClick={onOpenPrivacy} className="btn-secondary mt-6 px-4 py-2 text-[13px] rounded-lg">
-              Read our privacy policy <ArrowRight className="w-4 h-4" />
-            </button>
-          </div>
-        </div>
-      </section>
-
       {/* ── BROWSE ───────────────────────────────────────── */}
       <div className="max-w-6xl mx-auto px-5 sm:px-8 py-12 space-y-16">
 
@@ -871,9 +839,7 @@ const HomeView: React.FC<{
             desc="The most-used tools"
             id="popular-heading"
             action={
-              <button onClick={onOpenSearch} className="btn-ghost text-[13px] hidden sm:flex">
-                Search tools <ChevronRight className="w-4 h-4" />
-              </button>
+              <span className="code-font text-[12.5px] text-muted-foreground hidden sm:inline">{popular.length} of {workingToolCount()}</span>
             }
           />
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
@@ -1038,7 +1004,7 @@ const HomeView: React.FC<{
 
         {/* ── Why NextTool ───────────────────────────────── */}
         <section aria-labelledby="why-heading">
-          <div className="text-center max-w-2xl mx-auto mb-10">
+          <div className="text-center max-w-2xl mx-auto mb-8">
             <span className="section-kicker mb-3">Why NextTool</span>
             <h2 id="why-heading" className="text-[24px] sm:text-[28px] font-bold text-foreground tracking-[-0.02em]">
               Everything you need, nothing you don't
@@ -1047,14 +1013,14 @@ const HomeView: React.FC<{
               No sign-ups, no uploads, no clutter. Just fast tools that respect your privacy.
             </p>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+          <div className="rounded-[22px] border border-border bg-card p-6 sm:p-10 grid grid-cols-1 sm:grid-cols-3 gap-8">
             {WHY_FEATURES.map(f => (
-              <div key={f.title} className="rounded-xl border border-border bg-card p-5 flex flex-col gap-3">
-                <div className="w-10 h-10 rounded-xl bg-primary/10 text-primary flex items-center justify-center">
-                  <f.icon className="w-5 h-5" />
+              <div key={f.title}>
+                <div className="w-[34px] h-[34px] rounded-[10px] bg-primary/10 text-primary flex items-center justify-center">
+                  <f.icon className="w-4 h-4" />
                 </div>
-                <h3 className="text-[15px] font-semibold text-foreground">{f.title}</h3>
-                <p className="text-[13px] text-muted-foreground leading-relaxed">{f.desc}</p>
+                <h3 className="mt-4 mb-1.5 text-[16px] font-bold text-foreground">{f.title}</h3>
+                <p className="text-[14px] text-muted-foreground leading-relaxed">{f.desc}</p>
               </div>
             ))}
           </div>
@@ -1221,6 +1187,7 @@ const ToolView: React.FC<{
                 </p>
               </div>
               <div className="shrink-0 flex items-center gap-2">
+                {LIVE_DEV_TOOL_IDS.has(activeTool.id) && <DevRunPill />}
                 <span className="badge badge-success">
                   <span className="w-1.5 h-1.5 rounded-full bg-success pulse-dot" />
                   Local only
@@ -1230,7 +1197,11 @@ const ToolView: React.FC<{
             </div>
           </div>
 
-          {renderTool()}
+          {LIVE_DEV_TOOL_IDS.has(activeTool.id) ? (
+            <div className="w-full">{renderTool()}</div>
+          ) : (
+            renderTool()
+          )}
 
           {!activeTool.isComingSoon && TOOL_EXPLANATIONS[activeTool.id] && (
             <div className="rounded-2xl border bg-card border-border p-5 sm:p-6 shadow-card">

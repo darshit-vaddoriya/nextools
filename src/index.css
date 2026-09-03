@@ -9,14 +9,14 @@
    Tailwind via rgb(var(--x) / <alpha-value>).
 ══════════════════════════════════════════════════════════ */
 :root {
-  --background:          255 255 255;
-  --foreground:          15 15 17;
-  --muted:               243 243 245;
-  --muted-foreground:    90 90 97;
+  --background:          250 249 252;
+  --foreground:          23 21 32;
+  --muted:               241 239 246;
+  --muted-foreground:    107 103 121;
   --card:                255 255 255;
-  --card-foreground:     15 15 17;
-  --border:              225 225 229;
-  --input:               141 141 148;
+  --card-foreground:     23 21 32;
+  --border:              232 229 239;
+  --input:               156 152 171;
   --primary:             99 43 226;
   --primary-foreground:  255 255 255;
   --primary-container:   237 228 253;
@@ -36,21 +36,30 @@
   --danger:              200 30 30;
   --danger-foreground:   255 255 255;
   --ring:                99 43 226;
-  --surface:             255 255 255;
-  --on-surface:          15 15 17;
-  --surface-container-low: 250 250 251;
-  --surface-container:   244 244 246;
-  --surface-container-high: 237 237 240;
-  --surface-container-highest: 229 229 233;
-  --surface-variant:     237 237 240;
-  --on-surface-variant:  90 90 97;
-  --outline:             141 141 148;
-  --outline-variant:     225 225 229;
+  --surface:             250 249 252;
+  --on-surface:          23 21 32;
+  --surface-container-low: 250 249 252;
+  --surface-container:   244 242 249;
+  --surface-container-high: 237 234 244;
+  --surface-container-highest: 229 225 240;
+  --surface-variant:     237 234 244;
+  --on-surface-variant:  107 103 121;
+  --outline:             156 152 171;
+  --outline-variant:     232 229 239;
   --success-green:       16 145 105;
   --warning-amber:       194 116 9;
   --radius:              0.625rem;
   --range-track:         #e1e1e5;
   --range-fill:          #632be2;
+
+  /* Dev-tool "code editor" panel — stays dark regardless of theme toggle */
+  --devpanel-bg:         #171520;
+  --devpanel-border:     #322f42;
+  --devpanel-text:       #ece9f5;
+  --devpanel-label:      #a19dae;
+  --segmented-bg:        #f4f2f8;
+  --segmented-active-bg: #171520;
+  --segmented-inactive-fg: #57536a;
 }
 
 .dark {

@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { Search, ShieldCheck, Command, Menu, ArrowRight, Blocks } from 'lucide-react';
+import { ShieldCheck, Menu, Blocks, Heart } from 'lucide-react';
 import { NavDrawer } from './NavDrawer';
 import { ThemeMenu } from './ThemeMenu';
 import { ToolCategory } from '../types';
 import { ThemePreference } from '../utils/theme';
+import { SUPPORT_URL } from '../config/support';
 
 export type HeaderView = 'home' | 'tool' | 'category' | 'privacy' | 'all';
 
@@ -93,22 +94,6 @@ export const Header: React.FC<HeaderProps> = ({
           {/* ── RIGHT ACTIONS ──────────────────────────────────── */}
           <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
 
-            {/* Search pill (desktop) */}
-            <button
-              onClick={onOpenSearch}
-              aria-label="Search tools (Ctrl+K)"
-              className="hidden md:flex items-center gap-2 max-w-[240px] flex-1
-                h-9 px-3.5 rounded-full glass-panel hover:border-tertiary
-                text-[13px] text-on-surface-variant transition-colors duration-150"
-            >
-              <Search className="w-3.5 h-3.5 shrink-0" />
-              <span className="truncate">Search utilities...</span>
-              <span className="ml-auto hidden xl:flex items-center gap-0.5 px-1.5 py-0.5 rounded text-[10px] font-mono shrink-0
-                bg-surface-container border border-outline-variant text-on-surface-variant">
-                <Command className="w-2.5 h-2.5" />K
-              </span>
-            </button>
-
             {/* Private badge */}
             <div className="hidden xl:flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-medium
               bg-success/10 border border-success/25 text-success">
@@ -116,27 +101,26 @@ export const Header: React.FC<HeaderProps> = ({
               Private &amp; local
             </div>
 
-            {/* Search — mobile icon */}
-            <button
-              onClick={onOpenSearch}
-              className="md:hidden w-11 h-11 flex items-center justify-center rounded-lg border border-outline-variant text-on-surface-variant hover:bg-surface-container transition-colors"
-              aria-label="Search tools"
-            >
-              <Search className="w-4 h-4" />
-            </button>
-
             {/* Theme */}
             <ThemeMenu theme={theme} resolvedDark={resolvedDark} onThemeChange={onThemeChange} />
 
-            {/* Primary CTA — desktop */}
-            <button
-              onClick={onOpenAllTools}
-              className="hidden lg:inline-flex items-center gap-1.5 h-9 px-4 rounded-lg text-[12.5px] font-semibold
-                bg-primary text-primary-foreground
-                hover:brightness-110 active:scale-[0.98] transition-all duration-150"
-            >
-              Get Started <ArrowRight className="w-3.5 h-3.5" />
-            </button>
+            {/* Support / Buy me a coffee */}
+            {SUPPORT_URL && (
+              <a
+                href={SUPPORT_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Support NextTool"
+                title="Support NextTool"
+                className="inline-flex items-center gap-1.5 h-9 px-3.5 rounded-lg text-[12.5px] font-semibold
+                  bg-rose-500 text-white shadow-sm shadow-rose-500/30
+                  hover:bg-rose-600 hover:shadow-rose-500/40
+                  active:scale-[0.98] transition-all duration-150"
+              >
+                <Heart className="w-3.5 h-3.5" fill="currentColor" />
+                <span>Support</span>
+              </a>
+            )}
 
             {/* Menu — mobile */}
             <button

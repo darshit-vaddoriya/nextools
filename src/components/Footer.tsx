@@ -144,9 +144,6 @@ export const Footer: React.FC<FooterProps> = ({
             <h4 className="section-label mb-3.5">Company</h4>
             <ul className="space-y-2.5">
               <li>
-                <button onClick={onGoHome} className={linkClass}>About</button>
-              </li>
-              <li>
                 <a href="mailto:dk.coder7250@gmail.com" className={linkClass}>Contact</a>
               </li>
             </ul>

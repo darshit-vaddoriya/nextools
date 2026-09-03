@@ -260,8 +260,7 @@ const RailBtn: React.FC<{
     {shortcut && (
       <span className="pointer-events-none absolute z-50 whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-150
         left-1/2 -translate-x-1/2 top-full mt-1.5 px-2 py-1 rounded-md text-[10px] font-medium
-        dark:bg-zinc-800  dark:border 
-        bg-slate-900 text-white border border-slate-700 shadow-lg
+        bg-foreground text-background border border-border shadow-lg
         lg:left-full lg:top-1/2 lg:translate-x-0 lg:-translate-y-1/2 lg:ml-2 lg:mt-0">
         {title}
         <kbd className="ml-1.5 font-mono opacity-70">{shortcut}</kbd>
@@ -2278,14 +2277,14 @@ export const ImageEditorTool: React.FC<{ onExit?: () => void }> = ({ onExit }) =
                           width: cropBox.w * zoom, height: cropBox.h * zoom,
                         }}
                       >
-                        <span className="absolute -top-6 left-0 text-[10px] font-mono dark:bg-zinc-800/90 bg-slate-900/90 text-white px-1.5 py-0.5 rounded">
+                        <span className="absolute -top-6 left-0 text-[10px] font-mono bg-foreground/90 text-background px-1.5 py-0.5 rounded">
                           {Math.round(cropBox.w)} × {Math.round(cropBox.h)}
                         </span>
                       </div>
                       {(['nw', 'n', 'ne', 'e', 'se', 's', 'sw', 'w'] as const).map(h => (
                         <div
                           key={h}
-                          className="absolute w-3 h-3 bg-card border border-slate-400 rounded-sm"
+                          className="absolute w-3 h-3 bg-card border border-border rounded-sm"
                           style={{
                             left: (h.includes('w') ? cropBox.x * zoom - 6 : h === 'e' ? (cropBox.x + cropBox.w) * zoom - 6 : cropBox.x * zoom + cropBox.w * zoom / 2 - 6),
                             top: (h.includes('n') ? cropBox.y * zoom - 6 : h === 's' ? (cropBox.y + cropBox.h) * zoom - 6 : cropBox.y * zoom + cropBox.h * zoom / 2 - 6),
@@ -2426,7 +2425,7 @@ export const ImageEditorTool: React.FC<{ onExit?: () => void }> = ({ onExit }) =
                           {BRUSH_SIZES.map(s => (
                             <button key={s} type="button" onClick={() => setSize(s)} title={`${s}px`} aria-label={`${s}px brush`}
                               className={`w-7 h-7 rounded-lg flex items-center justify-center border transition-colors ${size === s ? 'bg-primary/10 border-primary' : 'border-border hover:bg-muted'}`}>
-                              <span className="rounded-full dark:bg-zinc-200 bg-slate-600" style={{ width: Math.min(12, Math.max(3, s / 4)), height: Math.min(12, Math.max(3, s / 4)) }} />
+                              <span className="rounded-full bg-foreground" style={{ width: Math.min(12, Math.max(3, s / 4)), height: Math.min(12, Math.max(3, s / 4)) }} />
                             </button>
                           ))}
                         </div>
