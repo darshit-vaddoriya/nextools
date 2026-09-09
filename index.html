@@ -40,6 +40,11 @@
     <meta name="google-adsense-account" content="ca-pub-3383457039703768" />
     <link rel="canonical" href="https://nexttool.app/" />
 
+    <!-- ── Google AdSense loader — needed for site review and for serving ── -->
+    <script async
+      src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3383457039703768"
+      crossorigin="anonymous"></script>
+
     <!-- ── Open Graph ─────────────────────────────────────── -->
     <meta property="og:type"        content="website" />
     <meta property="og:site_name"   content="NextTool" />
@@ -81,54 +86,37 @@
     }
     </script>
 
-    <!-- ── Structured Data — SoftwareApplication ─────────── -->
+    <!-- ── Structured Data — Organization (publisher identity) ── -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
-      "@type": "SoftwareApplication",
+      "@type": "Organization",
       "name": "NextTool",
       "url": "https://nexttool.app/",
-      "applicationCategory": "UtilitiesApplication",
-      "operatingSystem": "Web",
-      "offers": {
-        "@type": "Offer",
-        "price": "0",
-        "priceCurrency": "USD"
+      "logo": "https://nexttool.app/favicon-512.png",
+      "description": "Independent publisher of free, privacy-first browser tools for PDF, image, developer and AI tasks.",
+      "email": "dk.coder7250@gmail.com",
+      "contactPoint": {
+        "@type": "ContactPoint",
+        "contactType": "customer support",
+        "email": "dk.coder7250@gmail.com",
+        "url": "https://nexttool.app/contact",
+        "availableLanguage": ["en"]
       },
-      "description": "Free browser tools including PDF merge, image compressor, AI background remover, JSON formatter, video trimmer and more.",
-      "isAccessibleForFree": true
-    }
-    </script>
-
-    <!-- ── Structured Data — FAQPage ─────────────────────── -->
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "FAQPage",
-      "mainEntity": [
-        {
-          "@type": "Question",
-          "name": "Are NextTool really free?",
-          "acceptedAnswer": { "@type": "Answer", "text": "Yes. Every tool on NextTool is free, with no hidden fees, premium tiers, or usage limits." }
-        },
-        {
-          "@type": "Question",
-          "name": "Do my files get uploaded to a server?",
-          "acceptedAnswer": { "@type": "Answer", "text": "No. All processing happens on your device, so your files are never sent anywhere." }
-        },
-        {
-          "@type": "Question",
-          "name": "Do I need to create an account?",
-          "acceptedAnswer": { "@type": "Answer", "text": "No account, no email, no sign-up required. Just open a tool and start using it immediately." }
-        },
-        {
-          "@type": "Question",
-          "name": "How is NextTool different from iLovePDF or SmallPDF?",
-          "acceptedAnswer": { "@type": "Answer", "text": "Unlike cloud-based alternatives, NextTool processes everything locally for faster results, complete privacy, and no upload limits." }
-        }
+      "sameAs": [
+        "https://www.instagram.com/dkcoder8/",
+        "https://www.youtube.com/@dkcoder"
       ]
     }
     </script>
+
+    <!--
+      SoftwareApplication and FAQPage are intentionally NOT declared here.
+      Anything in this file is served on all ~185 routes, which would make
+      /privacy claim to be an app and answer the homepage's FAQs — a
+      schema/content mismatch. Both are injected for the homepage only,
+      by updateHomeMeta() in src/utils/seo.ts.
+    -->
 
     <!-- ── Fonts ──────────────────────────────────────────── -->
     <!-- Self-hosted via @fontsource (see src/main.tsx) — koi external CDN request nahi -->

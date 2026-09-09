@@ -56,13 +56,18 @@ async function main() {
   const page = await browser.newPage();
 
   let done = 0;
+  const incomplete = [];
   for (const route of routes) {
     await page.goto(`http://localhost:${PORT}${route}`, { waitUntil: 'networkidle0' });
-    // give React a tick to run the SEO effect that sets title/meta/JSON-LD
+
+    // Wait for the page's real heading, not just a title — index.html ships a
+    // static <title>, so a title check passes instantly and snapshots the page
+    // before a lazily-loaded tool has mounted its content.
     await page.waitForFunction(
-      () => document.title && document.title !== '',
-      { timeout: 5000 },
-    ).catch(() => {});
+      () => document.querySelector('h1') !== null,
+      { timeout: 15000 },
+    ).catch(() => { incomplete.push(route); });
+
     const html = await page.content();
 
     const outDir = route === '/' ? dist : path.join(dist, route);
@@ -76,6 +81,13 @@ async function main() {
 
   await browser.close();
   server.close();
+
+  // Surface partial snapshots loudly — a page captured before it rendered ships
+  // to search engines with no heading and almost no content.
+  if (incomplete.length) {
+    console.warn(`\n⚠ ${incomplete.length} route(s) had no <h1> before the timeout:`);
+    for (const route of incomplete) console.warn(`    ${route}`);
+  }
   console.log('✓ prerender complete');
 }
 

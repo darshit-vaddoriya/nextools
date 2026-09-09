@@ -4,7 +4,7 @@ import { TOOLS } from '../config/tools';
 import { ToolCard } from './ToolCard';
 import { useFavorites } from '../utils/favorites';
 import {
-  Search, ArrowLeft, X, Layers, FileText, Star, CheckCircle2,
+  Search, ArrowLeft, X, Layers, FileText, Star,
 } from 'lucide-react';
 
 interface CategoryConf {
@@ -53,22 +53,22 @@ export const AllToolsView: React.FC<AllToolsViewProps> = ({ onSelectTool, onBack
         <span className="text-muted-foreground/70">All Tools</span>
       </div>
 
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
-        <div className="flex items-center gap-3.5">
-          <div className="w-12 h-12 rounded-2xl flex items-center justify-center shrink-0 bg-primary/10 border border-primary/15">
-            <Layers className="w-5.5 h-5.5 text-primary" style={{ width: 22, height: 22 }} />
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 pb-6 border-b border-border">
+        <div className="flex items-center gap-4">
+          <div className="cat-icon bg-primary/10 w-[50px] h-[50px] rounded-[15px] shrink-0">
+            <Layers className="text-primary" style={{ width: 24, height: 24 }} />
           </div>
           <div>
-            <h1 className="text-xl sm:text-2xl font-bold text-foreground tracking-[-0.02em]">All Tools</h1>
-            <p className="text-[13px] text-muted-foreground mt-0.5">
+            <h1 className="font-heading font-extrabold text-[22px] sm:text-[27px] leading-tight tracking-[-0.02em] text-foreground">All Tools</h1>
+            <p className="text-[13px] text-muted-foreground mt-1">
               {filtered.length} of {TOOLS.length} tools · every one runs in your browser
             </p>
           </div>
         </div>
-        <div className="inline-flex items-center gap-1.5 self-start sm:self-auto px-3 py-1.5 rounded-full text-[11px] font-medium bg-success/10 border border-success/25 text-success shrink-0">
-          <CheckCircle2 className="w-3.5 h-3.5 shrink-0" />
+        <span className="badge badge-success self-start sm:self-auto shrink-0">
+          <span className="w-1.5 h-1.5 rounded-full bg-success pulse-dot" />
           100% local · no uploads
-        </div>
+        </span>
       </div>
 
       {/* ── Search + filter bar ────────────────────────────── */}

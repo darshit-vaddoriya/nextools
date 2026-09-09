@@ -1149,7 +1149,9 @@ export const DiffCheckerTool: React.FC = () => {
  * ──────────────────────────────────────────────────────────────────────── */
 
 export const MarkdownPreviewTool: React.FC = () => {
-  const [input, setInput] = useState('# Hello NextTool\n\nThis is **live** markdown preview with `code` support.\n\n- Item one\n- Item two\n\n> Blockquote example');
+  // Sample starts at h2 — an h1 here renders a second <h1> into the tool page,
+  // competing with the page's real heading.
+  const [input, setInput] = useState('## Hello NextTool\n\nThis is **live** markdown preview with `code` support.\n\n- Item one\n- Item two\n\n> Blockquote example');
 
   const html = useMemo(() => {
     try {

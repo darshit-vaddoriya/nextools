@@ -2,6 +2,7 @@ import React from 'react';
 import { ChevronRight, Star, CheckCircle2, Sparkles, Construction } from 'lucide-react';
 import { Tool } from '../types';
 import { FavoriteButton } from './FavoriteButton';
+import { AppLink } from './AppLink';
 import { resolveToolIcon } from '../utils/toolIcons';
 
 interface ToolCardProps {
@@ -24,23 +25,11 @@ export const ToolCard: React.FC<ToolCardProps> = ({
 }) => {
   const Icon = resolveToolIcon(tool.icon, fallbackIcon);
 
-  const handleKey = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter' || e.key === ' ') {
-      e.preventDefault();
-      onSelect(tool.id);
-    }
-  };
-
   return (
     <article
-      role="button"
-      tabIndex={0}
-      aria-label={`Open ${tool.name}`}
-      onClick={() => onSelect(tool.id)}
-      onKeyDown={handleKey}
       style={style}
       className={`group relative flex flex-col p-5 rounded-2xl border text-left cursor-pointer
-        transition-all duration-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary/60
+        transition-all duration-200 focus-within:outline focus-within:outline-2 focus-within:outline-primary/60
         hover:-translate-y-1 hover:shadow-card
         ${tool.isComingSoon
           ? 'border-warning/25 bg-warning/[0.03] hover:border-warning/50'
@@ -72,11 +61,26 @@ export const ToolCard: React.FC<ToolCardProps> = ({
               <Star className="w-3.5 h-3.5 text-warning fill-current" />
             </span>
           )}
-          <FavoriteButton toolId={tool.id} toolName={tool.name} />
+          {/* Sits above the stretched link so it stays independently clickable. */}
+          <span className="relative z-10">
+            <FavoriteButton toolId={tool.id} toolName={tool.name} />
+          </span>
         </div>
       </div>
       <h3 className="text-[15px] font-bold text-foreground leading-snug mb-1.5 tracking-[-0.01em] group-hover:text-primary transition-colors">
-        {tool.name}
+        {/*
+          The card's clickable surface is this anchor, stretched over the whole
+          article via ::after. That keeps one real crawlable <a href> per tool —
+          with the tool name as anchor text — instead of a click handler that
+          search engines cannot follow.
+        */}
+        <AppLink
+          href={`/tool/${tool.id}`}
+          onNavigate={() => onSelect(tool.id)}
+          className="after:absolute after:inset-0 after:content-[''] after:rounded-2xl focus:outline-none"
+        >
+          {tool.name}
+        </AppLink>
       </h3>
       <p className="text-[12.5px] text-muted-foreground leading-relaxed line-clamp-2 flex-1">
         {tool.description}

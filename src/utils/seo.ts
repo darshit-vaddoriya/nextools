@@ -1,6 +1,9 @@
 import { TOOLS } from '../config/tools';
 import { ToolCategory } from '../types';
 import { TOOL_SEO_CONTENT } from '../config/seoContent';
+import { StaticPageId, getStaticPage, getStaticPageByPath } from '../config/pages';
+import { BLOG_POSTS, getPost, BLOG_CATEGORY_LABELS, readingMinutes } from '../config/blog';
+import { HOME_FAQ } from '../config/faq';
 
 const SITE = 'https://nexttool.app';
 const DEFAULT_TITLE = 'NextTool - Free Online Tools';
@@ -69,7 +72,7 @@ function breadcrumbList(items: { name: string; url: string }[]) {
   };
 }
 
-function clearBreadcrumb() {
+function clearPageSchema() {
   const el = document.getElementById('breadcrumb-jsonld');
   if (el) el.remove();
   const faqEl = document.getElementById('faq-jsonld');
@@ -77,7 +80,7 @@ function clearBreadcrumb() {
 }
 
 export function updateHomeMeta() {
-  clearBreadcrumb();
+  clearPageSchema();
   document.title = DEFAULT_TITLE;
   setMeta('description', DEFAULT_DESC);
   setMeta('og:title', DEFAULT_TITLE, true);
@@ -87,17 +90,31 @@ export function updateHomeMeta() {
   setMeta('twitter:description', DEFAULT_DESC);
   setCanonical(`${SITE}/`);
 
+  // WebSite + Organization are declared once in index.html for every route.
+  // These two describe the homepage specifically, so they are injected here
+  // rather than in index.html — otherwise /privacy would also claim to be an
+  // application and answer these questions.
   setJsonLd('page-jsonld', {
     '@context': 'https://schema.org',
-    '@type': 'WebSite',
+    '@type': 'SoftwareApplication',
     name: 'NextTool',
     url: `${SITE}/`,
+    applicationCategory: 'UtilitiesApplication',
+    operatingSystem: 'Web',
+    offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
     description: DEFAULT_DESC,
-    potentialAction: {
-      '@type': 'SearchAction',
-      target: { '@type': 'EntryPoint', urlTemplate: `${SITE}/?q={search_term_string}` },
-      'query-input': 'required name=search_term_string',
-    },
+    isAccessibleForFree: true,
+  });
+
+  // Mirrors the visible FAQ accordion on the homepage.
+  setJsonLd('faq-jsonld', {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: HOME_FAQ.map(f => ({
+      '@type': 'Question',
+      name: f.q,
+      acceptedAnswer: { '@type': 'Answer', text: f.a },
+    })),
   });
 }
 
@@ -154,6 +171,7 @@ export function updateToolMeta(toolId: string) {
 }
 
 export function updateCategoryMeta(cat: ToolCategory) {
+  clearPageSchema();
   const name = CATEGORY_NAMES[cat] ?? cat;
   const count = TOOLS.filter(t => t.category === cat).length;
   const title = `${name} | NextTool`;
@@ -187,22 +205,41 @@ export function updateCategoryMeta(cat: ToolCategory) {
   if (faqEl) faqEl.remove();
 }
 
-export function updatePrivacyMeta() {
-  clearBreadcrumb();
-  const title = 'Privacy Policy | NextTool';
-  const desc = 'How NextTool protects your privacy. Tools run on your device and your files are never uploaded or tracked.';
-  const url = `${SITE}/privacy`;
+export function updatePageMeta(pageId: StaticPageId) {
+  const page = getStaticPage(pageId);
+  if (!page) return updateHomeMeta();
+
+  clearPageSchema();
+  const title = `${page.title} | NextTool`;
+  const url = `${SITE}${page.path}`;
 
   document.title = title;
-  setMeta('description', desc);
+  setMeta('description', page.description);
   setMeta('og:title', title, true);
-  setMeta('og:description', desc, true);
+  setMeta('og:description', page.description, true);
   setMeta('og:url', url, true);
+  setMeta('twitter:title', title);
+  setMeta('twitter:description', page.description);
   setCanonical(url);
+
+  setJsonLd('page-jsonld', {
+    '@context': 'https://schema.org',
+    '@type': pageId === 'about' ? 'AboutPage' : pageId === 'contact' ? 'ContactPage' : 'WebPage',
+    name: page.title,
+    url,
+    description: page.description,
+    isPartOf: { '@type': 'WebSite', name: 'NextTool', url: `${SITE}/` },
+    publisher: { '@type': 'Organization', name: 'NextTool', url: `${SITE}/` },
+  });
+
+  setJsonLd('breadcrumb-jsonld', breadcrumbList([
+    { name: 'Home', url: `${SITE}/` },
+    { name: page.label, url },
+  ]));
 }
 
 export function updateAllToolsMeta() {
-  clearBreadcrumb();
+  clearPageSchema();
   const title = 'All Tools | NextTool';
   const desc = 'Browse all free NextTool utilities, from PDF and image tools to developer and AI helpers. Everything runs on your device.';
   const url = `${SITE}/all-tools`;
@@ -226,12 +263,105 @@ export function updateAllToolsMeta() {
   });
 }
 
+export function updateBlogIndexMeta() {
+  clearPageSchema();
+  const title = 'Blog | NextTool';
+  const desc = 'Practical guides to file formats, compression, encoding, security and privacy — the reasoning behind every tool on NextTool.';
+  const url = `${SITE}/blog`;
+
+  document.title = title;
+  setMeta('description', desc);
+  setMeta('og:title', title, true);
+  setMeta('og:description', desc, true);
+  setMeta('og:url', url, true);
+  setMeta('twitter:title', title);
+  setMeta('twitter:description', desc);
+  setCanonical(url);
+
+  setJsonLd('page-jsonld', {
+    '@context': 'https://schema.org',
+    '@type': 'Blog',
+    name: 'NextTool Blog',
+    url,
+    description: desc,
+    publisher: { '@type': 'Organization', name: 'NextTool', url: `${SITE}/` },
+    blogPost: BLOG_POSTS.slice(0, 10).map(p => ({
+      '@type': 'BlogPosting',
+      headline: p.title,
+      url: `${SITE}/blog/${p.slug}`,
+      datePublished: p.published,
+      description: p.description,
+    })),
+  });
+
+  setJsonLd('breadcrumb-jsonld', breadcrumbList([
+    { name: 'Home', url: `${SITE}/` },
+    { name: 'Blog', url },
+  ]));
+}
+
+export function updateBlogPostMeta(slug: string) {
+  const post = getPost(slug);
+  if (!post) return updateBlogIndexMeta();
+
+  clearPageSchema();
+  const title = `${post.title} | NextTool`;
+  const url = `${SITE}/blog/${post.slug}`;
+
+  document.title = title;
+  setMeta('description', post.description);
+  setMeta('og:title', post.title, true);
+  setMeta('og:description', post.description, true);
+  setMeta('og:url', url, true);
+  setMeta('og:type', 'article', true);
+  setMeta('article:published_time', post.published, true);
+  setMeta('article:section', BLOG_CATEGORY_LABELS[post.category], true);
+  setMeta('twitter:title', post.title);
+  setMeta('twitter:description', post.description);
+  setCanonical(url);
+
+  setJsonLd('page-jsonld', {
+    '@context': 'https://schema.org',
+    '@type': 'BlogPosting',
+    headline: post.title,
+    description: post.description,
+    url,
+    mainEntityOfPage: { '@type': 'WebPage', '@id': url },
+    datePublished: post.published,
+    dateModified: post.updated ?? post.published,
+    keywords: post.tags.join(', '),
+    wordCount: post.body.split(/\s+/).length,
+    timeRequired: `PT${readingMinutes(post.body)}M`,
+    articleSection: BLOG_CATEGORY_LABELS[post.category],
+    author: { '@type': 'Organization', name: 'NextTool', url: `${SITE}/` },
+    publisher: {
+      '@type': 'Organization',
+      name: 'NextTool',
+      url: `${SITE}/`,
+      logo: { '@type': 'ImageObject', url: `${SITE}/favicon-512.png` },
+    },
+    image: `${SITE}/og-image.png`,
+  });
+
+  setJsonLd('breadcrumb-jsonld', breadcrumbList([
+    { name: 'Home', url: `${SITE}/` },
+    { name: 'Blog', url: `${SITE}/blog` },
+    { name: post.title, url },
+  ]));
+}
+
 export function parseRoute(pathname: string): {
-  view: 'home' | 'tool' | 'category' | 'privacy' | 'all';
+  view: 'home' | 'tool' | 'category' | 'page' | 'all' | 'blog';
   toolId?: string;
   category?: ToolCategory;
+  pageId?: StaticPageId;
+  blogSlug?: string;
 } {
-  if (pathname === '/privacy') return { view: 'privacy' };
+  const page = getStaticPageByPath(pathname);
+  if (page) return { view: 'page', pageId: page.id };
+  if (pathname === '/blog') return { view: 'blog' };
+  const postMatch = pathname.match(/^\/blog\/([a-z0-9-]+)$/);
+  if (postMatch) return { view: 'blog', blogSlug: postMatch[1] };
   if (pathname === '/all-tools') return { view: 'all' };
   const toolMatch = pathname.match(/^\/tool\/([a-z0-9-]+)$/);
   if (toolMatch) return { view: 'tool', toolId: toolMatch[1] };
@@ -241,7 +371,8 @@ export function parseRoute(pathname: string): {
 }
 
 export function buildPath(view: string, id?: string): string {
-  if (view === 'privacy') return '/privacy';
+  if (view === 'page' && id) return getStaticPage(id)?.path ?? '/';
+  if (view === 'blog') return id ? `/blog/${id}` : '/blog';
   if (view === 'all') return '/all-tools';
   if (view === 'tool' && id) return `/tool/${id}`;
   if (view === 'category' && id) return `/category/${id}`;

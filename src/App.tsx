@@ -4,31 +4,48 @@ import { CommandPalette }  from './components/CommandPalette';
 import { AdBanner }        from './components/AdBanner';
 import { Footer }          from './components/Footer';
 import { AllToolsView }    from './components/AllToolsView';
-import { PrivacyPolicy }   from './pages/PrivacyPolicy';
+import { StaticPageView }  from './pages/StaticPageView';
+import { Blog }            from './pages/Blog';
+import { BlogPostView }    from './pages/BlogPostView';
+import { getPost }         from './config/blog';
+import { StaticPageId }    from './config/pages';
 import { ToolCategory }    from './types';
 import { TOOLS }           from './config/tools';
 import { workingToolCount } from './utils/toolStats';
 import { PLANNED_FEATURES } from './config/toolFeatures';
 import { TOOL_EXPLANATIONS } from './config/toolExplanations';
 import { TOOL_SEO_CONTENT } from './config/seoContent';
+import { HOME_FAQ }        from './config/faq';
 import {
-  updateHomeMeta, updateToolMeta, updateCategoryMeta, updatePrivacyMeta,
+  updateHomeMeta, updateToolMeta, updateCategoryMeta, updatePageMeta,
+  updateBlogIndexMeta, updateBlogPostMeta,
   updateAllToolsMeta, parseRoute, buildPath,
 } from './utils/seo';
 import { trackPageView } from './utils/analytics';
 import {
-  FileText, Globe, Command, X,
+  FileText, Globe,
   ChevronRight, ArrowLeft, Star,
   ShieldCheck, Zap, Info,
   Lock, MonitorSmartphone, Infinity as InfinityIcon, ChevronDown,
   Terminal, AlignLeft, Shrink,
   Copy, Download, Sparkles,
+  CheckCircle2, Lightbulb,
 } from 'lucide-react';
 import { ALL_CATEGORIES } from './config/categories';
 import { DevRunPill } from './components/DevToolChrome';
+import { resolveToolIcon } from './utils/toolIcons';
 
 const LIVE_DEV_TOOL_IDS = new Set([
   'json-formatter', 'base64', 'uuid-generator', 'password-generator', 'hash-generator', 'jwt-decoder', 'diff-checker',
+]);
+
+// Tools whose own UI is a wide, dual-pane editor (input | output side by side) — these get a
+// "stacked" tool-page layout where the sidebar cards move below as a horizontal row instead of
+// a narrow sticky column, so the editor panes get the full page width to breathe.
+const WIDE_TOOL_IDS = new Set([
+  'json-formatter', 'base64', 'jwt-decoder', 'xml-formatter', 'yaml-formatter',
+  'sql-formatter', 'html-formatter', 'css-formatter', 'js-formatter',
+  'diff-checker', 'markdown-preview',
 ]);
 
 import { JsonFormatter }          from './tools/JsonFormatter';
@@ -62,6 +79,7 @@ import { DrawingTool } from './tools/DrawingTool';
 import { WordTools }              from './tools/WordTools';
 import { ToolPlaceholder }        from './tools/ToolPlaceholder';
 import { ToolCard }               from './components/ToolCard';
+import { AppLink }                from './components/AppLink';
 import { FavoriteButton }         from './components/FavoriteButton';
 import { ToolViewSkeleton }       from './components/Skeleton';
 import { useFavorites }           from './utils/favorites';
@@ -357,26 +375,24 @@ export const App: React.FC = () => {
 
   const [activeToolId,        setActiveToolId]        = useState(initRoute.toolId ?? '');
   const [isSearchOpen,        setIsSearchOpen]        = useState(false);
-  const [currentView,         setCurrentView]         = useState<'home'|'tool'|'category'|'privacy'|'all'>(initRoute.view);
+  const [currentView,         setCurrentView]         = useState<'home'|'tool'|'category'|'page'|'all'|'blog'>(initRoute.view);
   const [activeCategoryView,  setActiveCategoryView]  = useState<ToolCategory|null>(initRoute.category ?? null);
-  const [showSearchTip,       setShowSearchTip]       = useState(() => {
-    try { return localStorage.getItem('nexttool-seen-search-tip') !== '1'; } catch { return true; }
-  });
-
-  const dismissSearchTip = () => {
-    setShowSearchTip(false);
-    try { localStorage.setItem('nexttool-seen-search-tip', '1'); } catch { /* ignore */ }
-  };
+  const [activePageId,        setActivePageId]        = useState<StaticPageId>(initRoute.pageId ?? 'privacy');
+  const [activeBlogSlug,      setActiveBlogSlug]      = useState(initRoute.blogSlug ?? '');
 
   const { preference: theme, resolvedDark, setTheme } = useTheme();
 
   const syncMeta = useCallback(() => {
-    if (currentView === 'privacy') updatePrivacyMeta();
+    if (currentView === 'page') updatePageMeta(activePageId);
+    else if (currentView === 'blog') {
+      if (activeBlogSlug) updateBlogPostMeta(activeBlogSlug);
+      else updateBlogIndexMeta();
+    }
     else if (currentView === 'all') updateAllToolsMeta();
     else if (currentView === 'tool' && activeToolId) updateToolMeta(activeToolId);
     else if (currentView === 'category' && activeCategoryView) updateCategoryMeta(activeCategoryView);
     else updateHomeMeta();
-  }, [currentView, activeToolId, activeCategoryView]);
+  }, [currentView, activeToolId, activeCategoryView, activePageId, activeBlogSlug]);
 
   useEffect(() => { syncMeta(); }, [syncMeta]);
 
@@ -387,7 +403,7 @@ export const App: React.FC = () => {
       return;
     }
     trackPageView(window.location.pathname, document.title);
-  }, [currentView, activeToolId, activeCategoryView]);
+  }, [currentView, activeToolId, activeCategoryView, activePageId, activeBlogSlug]);
 
   useEffect(() => {
     const onPopState = () => {
@@ -395,6 +411,8 @@ export const App: React.FC = () => {
       setCurrentView(route.view);
       setActiveToolId(route.toolId ?? '');
       setActiveCategoryView(route.category ?? null);
+      if (route.pageId) setActivePageId(route.pageId);
+      setActiveBlogSlug(route.blogSlug ?? '');
     };
     window.addEventListener('popstate', onPopState);
     return () => window.removeEventListener('popstate', onPopState);
@@ -444,9 +462,22 @@ export const App: React.FC = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  const openPrivacy = () => {
-    setCurrentView('privacy');
-    navigate('privacy');
+  const openBlog = (slug?: string) => {
+    setActiveBlogSlug(slug ?? '');
+    setCurrentView('blog');
+    setActiveToolId('');
+    setActiveCategoryView(null);
+    navigate('blog', slug);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const openPage = (id: StaticPageId) => {
+    setActivePageId(id);
+    setCurrentView('page');
+    setActiveToolId('');
+    setActiveCategoryView(null);
+    setActiveBlogSlug('');
+    navigate('page', id);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -512,7 +543,10 @@ export const App: React.FC = () => {
         resolvedDark={resolvedDark}
         onThemeChange={setTheme}
         onGoHome={goHome}
-        onOpenPrivacy={openPrivacy}
+        onOpenPage={openPage}
+        onOpenBlog={() => openBlog()}
+        isBlogActive={currentView === 'blog'}
+        activePageId={currentView === 'page' ? activePageId : undefined}
         onOpenCategories={scrollToCategories}
         onOpenAllTools={openAllTools}
         onSelectCategory={openCategory}
@@ -525,11 +559,20 @@ export const App: React.FC = () => {
       />
 
       <main className="flex-1">
-        {currentView === 'privacy'
-          ? <div className="max-w-4xl mx-auto px-4 sm:px-6 py-8"><PrivacyPolicy onBack={goHome} /></div>
+        {currentView === 'page'
+          ? <div className="max-w-4xl mx-auto px-4 sm:px-6 py-8">
+              <StaticPageView pageId={activePageId} onBack={goHome} onOpenPage={openPage} />
+            </div>
+          : currentView === 'blog'
+          ? (() => {
+              const post = activeBlogSlug ? getPost(activeBlogSlug) : undefined;
+              return post
+                ? <BlogPostView post={post} onBackToBlog={() => openBlog()} onOpenPost={openBlog} onSelectTool={openTool} />
+                : <Blog onBack={goHome} onOpenPost={openBlog} />;
+            })()
           : currentView === 'tool'
           ? <ToolView activeTool={activeTool} onBack={goHome} renderTool={renderTool} categories={ALL_CATEGORIES}
-              onOpenPrivacy={openPrivacy} onSelectTool={openTool} onSelectCategory={openCategory} onGoHome={goHome} onOpenFaq={scrollToFaq} onOpenCategories={scrollToCategories} />
+              onOpenPage={openPage} onOpenBlog={openBlog} onSelectTool={openTool} onSelectCategory={openCategory} onGoHome={goHome} onOpenFaq={scrollToFaq} onOpenCategories={scrollToCategories} />
           : currentView === 'category' && activeCategoryView
           ? <CategoryView cat={activeCategoryView} onSelectTool={openTool} onBack={goHome} categories={ALL_CATEGORIES} />
           : currentView === 'all'
@@ -539,39 +582,9 @@ export const App: React.FC = () => {
       </main>
 
       {currentView !== 'tool' && (
-        <Footer onOpenPrivacy={openPrivacy} onSelectTool={openTool} onSelectCategory={openCategory} onGoHome={goHome} onOpenFaq={scrollToFaq} onOpenCategories={scrollToCategories} />
+        <Footer onOpenPage={openPage} onOpenBlog={openBlog} onSelectTool={openTool} onSelectCategory={openCategory} onGoHome={goHome} onOpenFaq={scrollToFaq} onOpenCategories={scrollToCategories} />
       )}
 
-      {/* First-visit search tip */}
-      {showSearchTip && currentView === 'home' && (
-        <div className="fixed bottom-5 left-1/2 -translate-x-1/2 sm:left-5 sm:translate-x-0 z-50 flex items-center gap-3 px-4 py-3 rounded-2xl border border-primary/25 bg-card shadow-2xl fade-in max-w-[calc(100vw-32px)] sm:max-w-sm">
-          <div className="w-9 h-9 rounded-xl bg-primary/10 text-primary flex items-center justify-center shrink-0">
-            <Command className="w-4 h-4" />
-          </div>
-          <div className="min-w-0 text-left">
-            <div className="text-[13px] font-semibold text-foreground leading-tight">Search any tool instantly</div>
-            <div className="text-[11.5px] text-muted-foreground mt-0.5">
-              Press <kbd className="px-1 py-0.5 rounded bg-muted border border-border font-mono text-[10px]">Ctrl</kbd>
-              {' '}+ <kbd className="px-1 py-0.5 rounded bg-muted border border-border font-mono text-[10px]">K</kbd> to jump to any tool
-            </div>
-          </div>
-          <div className="flex items-center gap-1 shrink-0">
-            <button
-              onClick={() => { dismissSearchTip(); setIsSearchOpen(true); }}
-              className="h-8 px-3 rounded-lg bg-primary text-primary-foreground text-[12px] font-semibold hover:brightness-110 transition-all"
-            >
-              Try it
-            </button>
-            <button
-              onClick={dismissSearchTip}
-              aria-label="Dismiss tip"
-              className="w-8 h-8 flex items-center justify-center rounded-lg text-muted-foreground hover:bg-muted hover:text-foreground transition-colors"
-            >
-              <X className="w-4 h-4" />
-            </button>
-          </div>
-        </div>
-      )}
     </div>
   );
 };
@@ -593,13 +606,7 @@ const WHY_FEATURES = [
   { icon: Globe,           title: 'Nothing to install',   desc: 'Just open a tool and start working on any modern browser.' },
 ];
 
-const FAQ_ITEMS = [
-  { q: 'Are the tools really free?', a: 'Yes. Every tool on NextTool is free, with no hidden fees, premium tiers or usage limits.' },
-  { q: 'Do my files get uploaded to a server?', a: 'No. All processing happens on your device, so your files are never sent anywhere.' },
-  { q: 'Do I need to create an account?', a: 'No account, no email and no sign-up required. Just open a tool and start using it immediately.' },
-  { q: 'What happens to my files after I finish?', a: 'Your files are only read by the tool you opened and are cleared when you leave the page. Nothing is stored or tracked.' },
-  { q: 'How is NextTool different from iLovePDF or SmallPDF?', a: 'Unlike cloud-based alternatives, NextTool processes everything locally for faster results, complete privacy and no upload limits.' },
-];
+const FAQ_ITEMS = HOME_FAQ;
 
 const SectionHeading: React.FC<{
   kicker: string;
@@ -701,20 +708,22 @@ const HomeView: React.FC<{
 
           {/* Category filter pills */}
           <div className="flex flex-wrap items-center justify-center gap-2 fade-up" style={{ animationDelay: '220ms' }}>
-            <button
-              onClick={() => onSelectCategory('all')}
+            <AppLink
+              href="/all-tools"
+              onNavigate={() => onSelectCategory('all')}
               className="px-4 py-2 rounded-full text-[13.5px] font-semibold bg-on-surface text-background hover:brightness-110 transition-all"
             >
               All tools
-            </button>
+            </AppLink>
             {ALL_CATEGORIES.filter(cat => TOOLS.some(t => t.category === cat.id)).slice(0, 8).map(cat => (
-              <button
+              <AppLink
                 key={cat.id}
-                onClick={() => onSelectCategory(cat.id)}
+                href={`/category/${cat.id}`}
+                onNavigate={() => onSelectCategory(cat.id)}
                 className="px-4 py-2 rounded-full text-[13.5px] font-semibold bg-card border border-outline-variant text-muted-foreground hover:border-primary/50 hover:text-foreground transition-all"
               >
                 {cat.name.replace(/ Tools$| & .*/,'')}
-              </button>
+              </AppLink>
             ))}
           </div>
         </div>
@@ -727,9 +736,9 @@ const HomeView: React.FC<{
             <span className="section-kicker mb-2">Toolchain</span>
             <h2 className="text-[20px] sm:text-[22px] font-bold text-on-surface tracking-[-0.02em]">Core Toolchain</h2>
           </div>
-          <button onClick={() => onSelectCategory('all')} className="btn-ghost text-[13px] hidden sm:flex">
+          <AppLink href="/all-tools" onNavigate={() => onSelectCategory('all')} className="btn-ghost text-[13px] hidden sm:flex">
             View all <ChevronRight className="w-4 h-4" />
-          </button>
+          </AppLink>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {TOOLCHAIN_CATEGORIES.map((cat, idx) => {
@@ -737,9 +746,10 @@ const HomeView: React.FC<{
             const Icon = conf?.icon ?? FileText;
             const count = TOOLS.filter(t => t.category === cat.id).length;
             return (
-              <button
+              <AppLink
                 key={cat.id}
-                onClick={() => onSelectCategory(cat.id)}
+                href={`/category/${cat.id}`}
+                onNavigate={() => onSelectCategory(cat.id)}
                 className="glass-panel rounded-xl p-5 flex flex-col text-left transition-all duration-300 hover:-translate-y-1 hover:shadow-pop group fade-up"
                 style={{ animationDelay: `${idx * 40}ms` }}
               >
@@ -756,7 +766,7 @@ const HomeView: React.FC<{
                     <span className="text-[10.5px] font-mono text-tertiary bg-surface-container px-2 py-0.5 rounded">+{count - cat.tags.length}</span>
                   )}
                 </div>
-              </button>
+              </AppLink>
             );
           })}
         </div>
@@ -883,9 +893,10 @@ const HomeView: React.FC<{
               const Icon = cat.icon;
               const count = TOOLS.filter(t => t.category === cat.id).length;
               return (
-                <button
+                <AppLink
                   key={cat.id}
-                  onClick={() => onSelectCategory(cat.id)}
+                  href={`/category/${cat.id}`}
+                  onNavigate={() => onSelectCategory(cat.id)}
                   className="cat-card group flex flex-col p-4 rounded-xl border border-border bg-card text-left transition-all duration-150 fade-up"
                   style={{ animationDelay: `${idx * 25}ms` }}
                 >
@@ -899,7 +910,7 @@ const HomeView: React.FC<{
                     <span className="text-[11px] text-muted-foreground font-medium">{count} tools</span>
                     <ChevronRight className="w-3 h-3 text-primary opacity-0 -translate-x-1 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-150 ml-auto" />
                   </div>
-                </button>
+                </AppLink>
               );
             })}
           </div>
@@ -1107,23 +1118,30 @@ const ToolView: React.FC<{
   onBack: () => void;
   renderTool: () => React.ReactNode;
   categories: typeof ALL_CATEGORIES;
-  onOpenPrivacy: () => void;
+  onOpenPage: (id: StaticPageId) => void;
+  onOpenBlog: (slug?: string) => void;
   onSelectTool: (id: string) => void;
   onSelectCategory: (cat: ToolCategory | 'all') => void;
   onGoHome: () => void;
   onOpenFaq: () => void;
   onOpenCategories: () => void;
-}> = ({ activeTool, onBack, renderTool, categories, onOpenPrivacy, onSelectTool, onSelectCategory, onGoHome, onOpenFaq, onOpenCategories }) => {
+}> = ({ activeTool, onBack, renderTool, categories, onOpenPage, onOpenBlog, onSelectTool, onSelectCategory, onGoHome, onOpenFaq, onOpenCategories }) => {
   const conf = categories.find(c => c.id === activeTool?.category);
-  const Icon = conf?.icon ?? FileText;
+  const CategoryIcon = conf?.icon ?? FileText;
+  const Icon = activeTool ? resolveToolIcon(activeTool.icon, CategoryIcon) : CategoryIcon;
   const related = activeTool
     ? TOOLS.filter(t => t.category === activeTool.category && t.id !== activeTool.id).slice(0, 4)
     : [];
+  const [learnMoreOpen, setLearnMoreOpen] = useState(true);
 
   if (activeTool?.id === 'image-editor') return <>{renderTool()}</>;
 
+  const seo = activeTool ? TOOL_SEO_CONTENT[activeTool.id] : undefined;
+  const stacked = !!activeTool && WIDE_TOOL_IDS.has(activeTool.id);
+  const sidebarCardCls = `rounded-2xl border bg-card border-border p-5 shadow-card${stacked ? ' flex-1 min-w-[240px]' : ''}`;
+
   return (
-    <div className="max-w-[1920px] w-full mx-auto px-3 sm:px-6 md:px-8 py-4 sm:py-6 space-y-4 sm:space-y-5 fade-in">
+    <div className="max-w-[1360px] w-full mx-auto px-3 sm:px-6 md:px-8 py-4 sm:py-6 space-y-5 sm:space-y-6 fade-in">
       <AdBanner type="leaderboard" />
 
       {activeTool && (
@@ -1134,23 +1152,23 @@ const ToolView: React.FC<{
               Home
             </button>
             <ChevronRight className="w-3 h-3 text-border" />
-            <button onClick={() => onSelectCategory(activeTool.category)}
+            <AppLink href={`/category/${activeTool.category}`} onNavigate={() => onSelectCategory(activeTool.category)}
               className="text-muted-foreground hover:text-primary transition-colors capitalize">
               {conf?.name}
-            </button>
+            </AppLink>
             <ChevronRight className="w-3 h-3 text-border" />
             <span className="text-foreground font-medium truncate max-w-[240px]">{activeTool.name}</span>
           </nav>
 
-          {/* Tool header */}
-          <div className="rounded-2xl border bg-card border-border p-5 sm:p-6 shadow-card">
-            <div className="flex flex-col sm:flex-row sm:items-center gap-4">
-              <div className={`cat-icon ${conf?.iconBg} w-12 h-12 rounded-xl`}>
+          {/* Tool header — sits directly on the page background, separated by a border */}
+          <div className="flex flex-wrap items-start justify-between gap-5 pb-6 border-b border-border">
+            <div className="flex gap-4 items-start min-w-0">
+              <div className={`cat-icon ${conf?.iconBg} w-[50px] h-[50px] rounded-[15px] shrink-0`}>
                 <Icon className={conf?.iconColor} style={{ width: 24, height: 24 }} />
               </div>
-              <div className="flex-1 min-w-0">
+              <div className="min-w-0">
                 <div className="flex flex-wrap items-center gap-2">
-                  <h1 className="text-xl sm:text-2xl font-bold text-foreground tracking-[-0.02em]">
+                  <h1 className="font-heading font-extrabold text-[22px] sm:text-[27px] leading-tight tracking-[-0.02em] text-foreground">
                     {activeTool.name}
                   </h1>
                   {!activeTool.isComingSoon && TOOL_EXPLANATIONS[activeTool.id] && (
@@ -1173,61 +1191,114 @@ const ToolView: React.FC<{
                       </div>
                     </span>
                   )}
-                  <button onClick={() => onSelectCategory(activeTool.category)} className="badge badge-primary capitalize">
+                </div>
+                <div className="flex flex-wrap items-center gap-2 mt-2">
+                  <AppLink
+                    href={`/category/${activeTool.category}`}
+                    onNavigate={() => onSelectCategory(activeTool.category)}
+                    className={`badge capitalize border-transparent ${conf?.iconBg} ${conf?.iconColor}`}
+                  >
                     {conf?.name}
-                  </button>
+                  </AppLink>
                   {activeTool.isPopular && (
                     <span className="badge badge-warning">
                       <Star className="w-3 h-3 fill-current" /> Popular
                     </span>
                   )}
+                  <span className="badge badge-success">
+                    <span className="w-1.5 h-1.5 rounded-full bg-success pulse-dot" />
+                    Local only
+                  </span>
                 </div>
-                <p className="text-[13px] text-muted-foreground mt-1.5 leading-relaxed max-w-2xl">
+                <p className="text-[13.5px] text-muted-foreground mt-2.5 leading-relaxed max-w-2xl">
                   {activeTool.description}
                 </p>
               </div>
-              <div className="shrink-0 flex items-center gap-2">
-                {LIVE_DEV_TOOL_IDS.has(activeTool.id) && <DevRunPill />}
-                <span className="badge badge-success">
-                  <span className="w-1.5 h-1.5 rounded-full bg-success pulse-dot" />
-                  Local only
-                </span>
-                <FavoriteButton toolId={activeTool.id} toolName={activeTool.name} size="md" />
-              </div>
+            </div>
+            <div className="shrink-0 flex items-center gap-2">
+              {LIVE_DEV_TOOL_IDS.has(activeTool.id) && <DevRunPill />}
+              <FavoriteButton toolId={activeTool.id} toolName={activeTool.name} size="md" />
             </div>
           </div>
 
-          {LIVE_DEV_TOOL_IDS.has(activeTool.id) ? (
-            <div className="w-full">{renderTool()}</div>
-          ) : (
-            renderTool()
-          )}
+          <div className="flex flex-wrap items-start gap-4 sm:gap-6">
+            {/* Main column — tool body sits first, so the sidebar aligns beside it from the top */}
+            <div className={stacked ? 'w-full flex flex-col gap-4 sm:gap-5' : 'flex-1 min-w-[300px] basis-[560px] flex flex-col gap-4 sm:gap-5'}>
+              {renderTool()}
 
-          {!activeTool.isComingSoon && TOOL_EXPLANATIONS[activeTool.id] && (
-            <div className="rounded-2xl border bg-card border-border p-5 sm:p-6 shadow-card">
-              <h2 className="flex items-center gap-2 text-[15px] font-bold text-foreground tracking-[-0.02em] mb-2">
-                <Info className="w-4 h-4 text-primary shrink-0" />
-                How to use
-              </h2>
-              <p className="text-[13px] text-muted-foreground leading-relaxed">
-                {TOOL_EXPLANATIONS[activeTool.id]}
-              </p>
+              {!activeTool.isComingSoon && seo?.useCases && seo.useCases.length > 0 && (
+                <div className="rounded-2xl border bg-card border-border p-5 sm:p-6 shadow-card">
+                  <span className="section-kicker mb-3">When to use this</span>
+                  <ul className="space-y-2 mt-3">
+                    {seo.useCases.map((useCase, i) => (
+                      <li key={i} className="flex items-start gap-2.5">
+                        <CheckCircle2 className="w-4 h-4 text-success shrink-0 mt-0.5" />
+                        <span className="text-[13px] text-foreground leading-relaxed">{useCase}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+
+              {/* Privacy note */}
+              <div className="flex items-center gap-2.5 px-4 py-3 rounded-xl bg-success/5 border border-success/20">
+                <ShieldCheck className="w-4 h-4 text-success shrink-0" />
+                <p className="text-xs text-success leading-relaxed">
+                  <strong>Free and private.</strong> Everything runs on your own device, with no account and no uploads.
+                </p>
+              </div>
+
+              {/* Learn more / FAQs — lives in the main column so it fills the space below the
+                  privacy note instead of leaving a gap when the sidebar runs taller. */}
+              {!activeTool.isComingSoon && seo && (
+                <div className="rounded-2xl border bg-card border-border p-6 sm:p-7">
+                  <button
+                    onClick={() => setLearnMoreOpen(o => !o)}
+                    className="w-full flex items-center justify-between gap-3 text-left min-h-11"
+                  >
+                    <div>
+                      <span className="section-kicker mb-2">Learn more</span>
+                      <h2 className="font-heading text-[17px] sm:text-[18.5px] font-extrabold tracking-[-0.01em] text-foreground">
+                        About {activeTool.name} &amp; FAQs
+                      </h2>
+                    </div>
+                    <ChevronDown className={`w-4 h-4 shrink-0 text-muted-foreground transition-transform duration-150 ${learnMoreOpen ? 'rotate-180' : ''}`} />
+                  </button>
+
+                  {learnMoreOpen && (
+                    <div className="mt-5">
+                      <p className="text-[13px] text-muted-foreground leading-relaxed mb-5">
+                        {seo.intro}
+                      </p>
+
+                      {seo.faqs.length > 0 && (
+                        <div className="space-y-2">
+                          {seo.faqs.map((faq, i) => (
+                            <details key={i} className="group rounded-xl border border-border bg-muted/40 px-4 py-3">
+                              <summary className="text-[13px] font-semibold text-foreground cursor-pointer list-none flex items-center justify-between gap-3">
+                                {faq.question}
+                                <ChevronRight className="w-3.5 h-3.5 text-muted-foreground shrink-0 transition-transform group-open:rotate-90" />
+                              </summary>
+                              <p className="text-[12.5px] text-muted-foreground leading-relaxed mt-2">{faq.answer}</p>
+                            </details>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
-          )}
 
-          {!activeTool.isComingSoon && TOOL_SEO_CONTENT[activeTool.id] && (
-            <div className="rounded-2xl border bg-card border-border p-5 sm:p-6 shadow-card space-y-6">
-              <p className="text-[13px] text-muted-foreground leading-relaxed">
-                {TOOL_SEO_CONTENT[activeTool.id].intro}
-              </p>
-
-              {TOOL_SEO_CONTENT[activeTool.id].steps.length > 0 && (
-                <div>
-                  <h2 className="text-[15px] font-bold text-foreground tracking-[-0.02em] mb-3">
-                    How to use {activeTool.name}
-                  </h2>
-                  <ol className="space-y-3">
-                    {TOOL_SEO_CONTENT[activeTool.id].steps.map((step, i) => (
+            {/* Sidebar */}
+            <div className={stacked
+              ? 'w-full flex flex-wrap gap-4 sm:gap-5'
+              : 'w-full lg:w-[340px] shrink-0 flex flex-col gap-4 sm:gap-5 lg:sticky lg:top-[82px] lg:self-start'}>
+              {!activeTool.isComingSoon && seo?.steps && seo.steps.length > 0 && (
+                <div className={sidebarCardCls}>
+                  <span className="section-kicker mb-3">How it works</span>
+                  <ol className="space-y-3 mt-3">
+                    {seo.steps.map((step, i) => (
                       <li key={i} className="flex gap-3">
                         <span className="shrink-0 w-6 h-6 rounded-full bg-primary/10 text-primary text-[11px] font-bold flex items-center justify-center mt-0.5">
                           {i + 1}
@@ -1242,64 +1313,63 @@ const ToolView: React.FC<{
                 </div>
               )}
 
-              {TOOL_SEO_CONTENT[activeTool.id].faqs.length > 0 && (
-                <div>
-                  <h2 className="text-[15px] font-bold text-foreground tracking-[-0.02em] mb-3">
-                    Frequently asked questions
-                  </h2>
-                  <div className="space-y-2">
-                    {TOOL_SEO_CONTENT[activeTool.id].faqs.map((faq, i) => (
-                      <details key={i} className="group rounded-xl border border-border bg-muted/40 px-4 py-3">
-                        <summary className="text-[13px] font-semibold text-foreground cursor-pointer list-none flex items-center justify-between gap-3">
-                          {faq.question}
-                          <ChevronRight className="w-3.5 h-3.5 text-muted-foreground shrink-0 transition-transform group-open:rotate-90" />
-                        </summary>
-                        <p className="text-[12.5px] text-muted-foreground leading-relaxed mt-2">{faq.answer}</p>
-                      </details>
-                    ))}
+              {/* Related tools */}
+              {related.length > 0 && (
+                <div className={sidebarCardCls}>
+                  <span className="section-kicker mb-3">More in {conf?.name}</span>
+                  <div className="space-y-1 mt-3">
+                    {related.map(tool => {
+                      const RelatedIcon = resolveToolIcon(tool.icon, CategoryIcon);
+                      return (
+                      <AppLink
+                        key={tool.id}
+                        href={`/tool/${tool.id}`}
+                        onNavigate={() => onSelectTool(tool.id)}
+                        className="group w-full flex items-center gap-3 p-2.5 -mx-2.5 rounded-xl text-left hover:bg-muted/60 transition-colors duration-150"
+                      >
+                        <div className={`cat-icon ${conf?.iconBg} w-8 h-8 rounded-lg shrink-0`}>
+                          <RelatedIcon className={conf?.iconColor} style={{ width: 15, height: 15 }} />
+                        </div>
+                        <div className="min-w-0 flex-1">
+                          <div className="text-[12.5px] font-semibold text-foreground leading-snug line-clamp-1 group-hover:text-primary transition-colors">
+                            {tool.name}
+                          </div>
+                          <div className="text-[11px] text-muted-foreground line-clamp-1 leading-relaxed">
+                            {tool.description}
+                          </div>
+                        </div>
+                        <ChevronRight className="w-3.5 h-3.5 text-muted-foreground shrink-0" />
+                      </AppLink>
+                      );
+                    })}
                   </div>
                 </div>
               )}
-            </div>
-          )}
 
-          {/* Privacy note */}
-          <div className="flex items-center gap-2.5 px-4 py-3 rounded-xl bg-success/5 border border-success/20">
-            <ShieldCheck className="w-4 h-4 text-success shrink-0" />
-            <p className="text-xs text-success leading-relaxed">
-              <strong>Free and private.</strong> Everything runs on your own device, with no account and no uploads.
-            </p>
+              {!activeTool.isComingSoon && seo?.tips && seo.tips.length > 0 && (
+                <div className={sidebarCardCls}>
+                  <span className="section-kicker mb-3">
+                    <Lightbulb className="w-3 h-3 shrink-0" />
+                    Pro tips
+                  </span>
+                  <ul className="space-y-2.5 mt-3">
+                    {seo.tips.map((tip, i) => (
+                      <li key={i} className="flex items-start gap-2 text-[12.5px] text-muted-foreground leading-relaxed">
+                        <span className="shrink-0 text-primary font-bold">·</span>
+                        {tip}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+            </div>
           </div>
 
-          {/* Related tools */}
-          {related.length > 0 && (
-            <section aria-label="Related tools">
-              <h2 className="text-[15px] font-bold text-foreground tracking-[-0.02em] mb-3">
-                More in {conf?.name}
-              </h2>
-              <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-2.5">
-                {related.map(tool => (
-                  <button
-                    key={tool.id}
-                    onClick={() => onSelectTool(tool.id)}
-                    className="group p-3 rounded-xl border border-border bg-card text-left hover:border-primary/30 hover:shadow-card transition-all duration-150"
-                  >
-                    <div className="text-[12px] font-semibold text-foreground leading-snug line-clamp-1 group-hover:text-primary transition-colors">
-                      {tool.name}
-                    </div>
-                    <div className="text-[10.5px] text-muted-foreground mt-1 line-clamp-2 leading-relaxed">
-                      {tool.description}
-                    </div>
-                  </button>
-                ))}
-              </div>
-            </section>
-          )}
         </>
       )}
 
       <AdBanner type="footer" />
-      <Footer onOpenPrivacy={onOpenPrivacy} onSelectTool={onSelectTool} onSelectCategory={onSelectCategory} onGoHome={onGoHome} onOpenFaq={onOpenFaq} onOpenCategories={onOpenCategories} />
+      <Footer onOpenPage={onOpenPage} onOpenBlog={onOpenBlog} onSelectTool={onSelectTool} onSelectCategory={onSelectCategory} onGoHome={onGoHome} onOpenFaq={onOpenFaq} onOpenCategories={onOpenCategories} />
     </div>
   );
 };

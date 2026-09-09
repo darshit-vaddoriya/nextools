@@ -5,10 +5,12 @@ import { workingToolCount } from '../utils/toolStats';
 import { ALL_CATEGORIES } from '../config/categories';
 import {
   X, Search, Home, Sun, Moon, MonitorSmartphone,
-  ChevronRight, LayoutGrid, ShieldCheck, Check, Blocks, Heart,
+  ChevronRight, LayoutGrid, ShieldCheck, Check, Blocks, Heart, Info, Mail, Newspaper,
 } from 'lucide-react';
 import { ThemePreference } from '../utils/theme';
 import { SUPPORT_URL } from '../config/support';
+import { StaticPageId, getStaticPage } from '../config/pages';
+import { AppLink } from './AppLink';
 
 interface NavDrawerProps {
   isOpen: boolean;
@@ -16,15 +18,18 @@ interface NavDrawerProps {
   onSelectCategory: (cat: ToolCategory | 'all') => void;
   onOpenSearch: () => void;
   onGoHome: () => void;
-  onOpenPrivacy: () => void;
+  onOpenPage: (id: StaticPageId) => void;
+  onOpenBlog: () => void;
   theme: ThemePreference;
   resolvedDark: boolean;
   onThemeChange: (t: ThemePreference) => void;
 }
 
+const navPath = (id: StaticPageId) => getStaticPage(id)?.path ?? '/';
+
 export const NavDrawer: React.FC<NavDrawerProps> = ({
   isOpen, onClose, onSelectCategory, onOpenSearch,
-  onGoHome, onOpenPrivacy, theme, resolvedDark, onThemeChange,
+  onGoHome, onOpenPage, onOpenBlog, theme, resolvedDark, onThemeChange,
 }) => {
   useEffect(() => {
     if (!isOpen) return;
@@ -59,14 +64,14 @@ export const NavDrawer: React.FC<NavDrawerProps> = ({
       >
         {/* Header */}
         <div className="flex items-center justify-between px-4 h-16 border-b border-border shrink-0">
-          <button onClick={onGoHome} className="flex items-center gap-2.5" aria-label="NextTool Home">
+          <AppLink href="/" onNavigate={onGoHome} className="flex items-center gap-2.5" aria-label="NextTool Home">
             <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-primary to-tertiary text-white flex items-center justify-center shrink-0">
               <Blocks className="w-4 h-4" strokeWidth={2.25} />
             </div>
             <span className="text-[18px] font-extrabold tracking-[-0.02em]">
               <span>Next</span><span className="text-primary">Tool</span>
             </span>
-          </button>
+          </AppLink>
           <button
             onClick={onClose}
             aria-label="Close menu"
@@ -89,15 +94,24 @@ export const NavDrawer: React.FC<NavDrawerProps> = ({
 
           {/* Primary nav */}
           <nav className="mt-4 space-y-0.5" aria-label="Primary">
-            <button onClick={() => { onGoHome(); onClose(); }} className="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-[13.5px] font-medium text-foreground hover:bg-muted transition-colors">
+            <AppLink href="/" onNavigate={() => { onGoHome(); onClose(); }} className="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-[13.5px] font-medium text-foreground hover:bg-muted transition-colors">
               <Home className="w-4 h-4 text-muted-foreground" /> Home
-            </button>
-            <button onClick={() => { onSelectCategory('all'); onClose(); }} className="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-[13.5px] font-medium text-foreground hover:bg-muted transition-colors">
+            </AppLink>
+            <AppLink href="/all-tools" onNavigate={() => { onSelectCategory('all'); onClose(); }} className="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-[13.5px] font-medium text-foreground hover:bg-muted transition-colors">
               <LayoutGrid className="w-4 h-4 text-muted-foreground" /> All Tools
-            </button>
-            <button onClick={() => { onOpenPrivacy(); onClose(); }} className="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-[13.5px] font-medium text-foreground hover:bg-muted transition-colors">
-              <ShieldCheck className="w-4 h-4 text-muted-foreground" /> Privacy
-            </button>
+            </AppLink>
+            <AppLink href="/blog" onNavigate={() => { onOpenBlog(); onClose(); }} className="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-[13.5px] font-medium text-foreground hover:bg-muted transition-colors">
+              <Newspaper className="w-4 h-4 text-muted-foreground" /> Blog
+            </AppLink>
+            <AppLink href={navPath('about')} onNavigate={() => { onOpenPage('about'); onClose(); }} className="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-[13.5px] font-medium text-foreground hover:bg-muted transition-colors">
+              <Info className="w-4 h-4 text-muted-foreground" /> About Us
+            </AppLink>
+            <AppLink href={navPath('contact')} onNavigate={() => { onOpenPage('contact'); onClose(); }} className="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-[13.5px] font-medium text-foreground hover:bg-muted transition-colors">
+              <Mail className="w-4 h-4 text-muted-foreground" /> Contact Us
+            </AppLink>
+            <AppLink href={navPath('privacy')} onNavigate={() => { onOpenPage('privacy'); onClose(); }} className="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-[13.5px] font-medium text-foreground hover:bg-muted transition-colors">
+              <ShieldCheck className="w-4 h-4 text-muted-foreground" /> Privacy Policy
+            </AppLink>
             {SUPPORT_URL && (
               <a
                 href={SUPPORT_URL}
@@ -120,9 +134,10 @@ export const NavDrawer: React.FC<NavDrawerProps> = ({
               const Icon = cat.icon;
               const count = TOOLS.filter(t => t.category === cat.id).length;
               return (
-                <button
+                <AppLink
                   key={cat.id}
-                  onClick={() => { onSelectCategory(cat.id); onClose(); }}
+                  href={`/category/${cat.id}`}
+                  onNavigate={() => { onSelectCategory(cat.id); onClose(); }}
                   className="w-full flex items-center gap-2.5 px-2.5 py-2 rounded-lg text-[13px] text-foreground/90 hover:bg-muted transition-colors text-left"
                 >
                   <div className={`w-7 h-7 rounded-lg flex items-center justify-center shrink-0 ${cat.iconBg}`}>
@@ -131,7 +146,7 @@ export const NavDrawer: React.FC<NavDrawerProps> = ({
                   <span className="flex-1 truncate">{cat.name}</span>
                   <span className="text-[10px] font-mono text-muted-foreground">{count}</span>
                   <ChevronRight className="w-3.5 h-3.5 text-muted-foreground" />
-                </button>
+                </AppLink>
               );
             })}
           </div>

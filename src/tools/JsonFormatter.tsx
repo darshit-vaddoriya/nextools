@@ -133,7 +133,6 @@ export const JsonFormatter: React.FC = () => {
   }, [output]);
 
   const inputLines = input ? input.split('\n').length : 0;
-  const outputLines = output ? output.split('\n').length : 0;
   const isValid = !error && output.length > 0;
 
   return (

@@ -9,10 +9,13 @@ export interface AdConfig {
   slots: Record<'leaderboard' | 'sidebar' | 'native' | 'footer', string>;
 }
 
+// `enabled` false rehta hai jab tak AdSense site approve na kare. Review ke liye jo chahiye
+// wo index.html ka loader script hai — ad units approval se pehle serve kar hi nahi sakte,
+// isliye niche ke slot IDs asli aane ke baad hi ise true karna.
 export const AD_CONFIG: AdConfig = {
   enabled: false,
   showPlaceholders: false,
-  client: 'ca-pub-XXXXXXXXXXXXXXXX',
+  client: 'ca-pub-3383457039703768',
   slots: {
     leaderboard: '0000000000000',
     sidebar:     '0000000000000',

@@ -9,7 +9,7 @@ export function getStoredTheme(): ThemePreference {
     const t = localStorage.getItem(KEY);
     if (t === 'light' || t === 'dark' || t === 'system') return t;
   } catch { /* ignore */ }
-  return 'system';
+  return 'light';
 }
 
 export function getSystemDark(): boolean {

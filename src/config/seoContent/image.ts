@@ -17,6 +17,17 @@ export const IMAGE_SEO_CONTENT: ToolSeoMap = {
       { question: 'Are my images uploaded anywhere?', answer: 'No. Compression happens locally using your browser Canvas API; the file never leaves your computer or phone.' },
       { question: 'Does it work on mobile browsers?', answer: 'Yes, the compressor works on modern mobile browsers, though very large images may take a moment longer to process than on desktop.' },
     ],
+    useCases: [
+      'Shrinking product photos before uploading them to a marketplace listing with a file size cap',
+      'Reducing image weight on a blog or portfolio site to improve Core Web Vitals scores',
+      'Compressing photo attachments so they fit under an email provider size limit',
+      'Trimming screenshots down before pasting them into a bug report or ticket',
+    ],
+    tips: [
+      'Push the quality slider down gradually while watching the preview — most photos hold up fine down to 60-70% quality with no visible artifacts',
+      'WebP and AVIF typically compress smaller than JPEG at the same visual quality, so switch formats if size matters more than compatibility',
+      'PNG compression gains are limited on photos; convert to JPEG or WebP first if you need aggressive size reduction on photographic content',
+    ],
   },
   'image-resize': {
     intro:
@@ -33,6 +44,17 @@ export const IMAGE_SEO_CONTENT: ToolSeoMap = {
       { question: 'What image formats can I resize?', answer: 'Common formats like JPEG, PNG, and WebP are all supported for upload and export.' },
       { question: 'Does resizing reduce image quality?', answer: 'Enlarging an image beyond its original resolution can soften detail, but shrinking it generally preserves visual quality well.' },
       { question: 'Is my photo uploaded to a server?', answer: 'No, resizing is done in-browser using canvas rendering, so your file stays on your device.' },
+    ],
+    useCases: [
+      'Matching an exact 1200x1200 pixel requirement for a marketplace or Amazon product listing',
+      'Scaling a banner image down by 50% so a page loads faster',
+      'Preparing a profile picture at the precise dimensions a platform requests',
+      'Resizing a batch of screenshots to a consistent width for a document or slide deck',
+    ],
+    tips: [
+      'Lock the aspect ratio first, then adjust one dimension — the other updates automatically without distortion',
+      'Enlarging past the original resolution will soften detail, so try to resize down rather than up whenever possible',
+      'Use percentage mode when you just need a proportionally smaller version rather than an exact pixel target',
     ],
   },
   'image-crop': {
@@ -51,6 +73,17 @@ export const IMAGE_SEO_CONTENT: ToolSeoMap = {
       { question: 'Is the cropped image saved anywhere online?', answer: 'No, cropping runs locally in your browser and the image is never uploaded.' },
       { question: 'Does it work with PNG images with transparency?', answer: 'Yes, transparency is preserved when cropping PNG files.' },
     ],
+    useCases: [
+      'Isolating a single product from a group photo before listing it individually',
+      'Framing a profile picture to a square 1:1 ratio for a social media avatar',
+      'Removing distracting edges from a screenshot before sharing it with a client',
+      'Cutting a photo down to a 16:9 crop for a video thumbnail or banner',
+    ],
+    tips: [
+      'Lock a preset aspect ratio first if the destination platform has fixed dimensions — it avoids awkward manual resizing later',
+      'Crop tighter than you think you need; you can always add padding back but cannot recover cropped-away pixels',
+      'Cropping only reduces file size when the selection is meaningfully smaller than the original, so trivial crops won\'t save much space',
+    ],
   },
   'image-rotate': {
     intro:
@@ -67,6 +100,17 @@ export const IMAGE_SEO_CONTENT: ToolSeoMap = {
       { question: 'Does rotation reduce quality?', answer: 'A quality slider lets you control the output compression, and rotation itself does not blur the image at standard angles like 90 or 180 degrees.' },
       { question: 'Can I rotate PNG images with transparent backgrounds?', answer: 'Yes, transparent areas remain transparent after rotation.' },
       { question: 'Is this processed in the cloud?', answer: 'No, rotation is done entirely in your browser using canvas transforms.' },
+    ],
+    useCases: [
+      'Straightening a scanned document that was fed into the scanner at a slight tilt',
+      'Fixing a phone photo that displays sideways because orientation metadata was lost',
+      'Correcting a crooked horizon line in a landscape photo by a few degrees',
+      'Turning a landscape photo 90 degrees to fit a portrait-oriented layout',
+    ],
+    tips: [
+      'For crooked horizons, nudge in 1-2 degree increments and use the live preview rather than guessing the exact angle',
+      'Rotating by a non-90-degree angle expands the canvas to avoid cropping, so plan to crop the resulting empty corners afterward if needed',
+      'Keep the quality slider high for scanned text documents, since compression artifacts make small text harder to read',
     ],
   },
   'image-flip': {
@@ -85,6 +129,17 @@ export const IMAGE_SEO_CONTENT: ToolSeoMap = {
       { question: 'Will text in my image be mirrored too?', answer: 'Yes, any text baked into the image pixels will appear reversed after a horizontal flip, since the whole image is mirrored.' },
       { question: 'Is my image uploaded to process the flip?', answer: 'No, the flip happens locally in your browser.' },
     ],
+    useCases: [
+      'Correcting a front-camera selfie that appears mirrored compared to how it looked when taken',
+      'Mirroring a graphic horizontally to build a symmetrical design mockup',
+      'Flipping a scanned image that was fed into a scanner upside down or backwards',
+      'Creating a mirrored variant of an icon for a design that needs facing pairs',
+    ],
+    tips: [
+      'Combine a horizontal and vertical flip in sequence if you need a full 180-degree mirror rather than a rotation',
+      'Remember any text baked into the image pixels will read backwards after a horizontal flip — use rotate instead if the text needs to stay legible',
+      'Flipping is lossless, so it is safe to apply and reverse repeatedly without any quality loss',
+    ],
   },
   'image-convert': {
     intro:
@@ -101,6 +156,17 @@ export const IMAGE_SEO_CONTENT: ToolSeoMap = {
       { question: 'Does converting to a lossy format reduce quality?', answer: 'Converting to JPG, WebP, or AVIF uses a quality slider so you can control the compression level and resulting file size.' },
       { question: 'Which format should I use for the web?', answer: 'WebP or AVIF typically produce the smallest files at comparable visual quality, while JPG and PNG offer the broadest compatibility.' },
       { question: 'Are my files uploaded to a server for conversion?', answer: 'No, all conversion happens locally in your browser.' },
+    ],
+    useCases: [
+      'Converting HEIC photos exported from an iPhone into JPG so they open on any device or CMS',
+      'Turning a batch of PNG screenshots into WebP to cut page weight on a website',
+      'Converting a BMP or TIFF file from an old scanner into a modern, shareable format',
+      'Standardizing a mixed folder of image formats into a single format before uploading to a CMS',
+    ],
+    tips: [
+      'Use WebP or AVIF for web delivery when file size matters most, and JPG or PNG when maximum compatibility matters most',
+      'Keep PNG as the target when the source has transparency you need to preserve, since JPG will flatten it against a solid background',
+      'Batch conversion applies the same quality setting to every file, so separate out images that need different quality levels',
     ],
   },
   'svg-converter': {
@@ -119,6 +185,17 @@ export const IMAGE_SEO_CONTENT: ToolSeoMap = {
       { question: 'Is my SVG file uploaded anywhere?', answer: 'No, the SVG is rendered and rasterized locally in your browser.' },
       { question: 'Can I batch convert multiple SVGs?', answer: 'This tool is optimized for converting one SVG at a time to a chosen resolution and format.' },
     ],
+    useCases: [
+      'Exporting a vector logo as a PNG at multiple pixel sizes for an icon set',
+      'Producing a static preview image of an SVG asset for a platform that does not render vectors',
+      'Rasterizing an SVG illustration to JPG for a print workflow that requires flattened raster images',
+      'Generating a high-resolution PNG from a small SVG icon for use on a retina display',
+    ],
+    tips: [
+      'Set the output resolution well above the SVG viewBox size if you need a crisp result on retina or print, since rasterizing is done at your specified pixel dimensions, not the source size',
+      'Choose PNG over JPG whenever the SVG has transparent areas you want to keep transparent',
+      'Double check that any fonts in the SVG are embedded rather than linked externally, or text may not render correctly',
+    ],
   },
   'ico-generator': {
     intro:
@@ -136,6 +213,17 @@ export const IMAGE_SEO_CONTENT: ToolSeoMap = {
       { question: 'Can I use a PNG with transparency as the source?', answer: 'Yes, transparency is preserved in the generated ICO sizes.' },
       { question: 'Is this processed on a server?', answer: 'No, the ICO packaging happens entirely in your browser.' },
     ],
+    useCases: [
+      'Generating a favicon.ico for a website from an existing logo PNG',
+      'Producing a multi-size icon file for a desktop application installer',
+      'Refreshing an outdated single-size favicon with a properly bundled multi-resolution one',
+      'Building a taskbar-ready icon from a square brand mark for a Windows app',
+    ],
+    tips: [
+      'Start from a source image at least 256x256 pixels so smaller icon sizes can be downsampled cleanly instead of upscaled',
+      'Include the standard set of sizes (16x16, 32x32, 48x48) at minimum for the broadest browser and OS compatibility',
+      'Use a square, centered source image so nothing important gets cropped when it is resized to each icon dimension',
+    ],
   },
   'ai-upscaler': {
     intro:
@@ -152,6 +240,17 @@ export const IMAGE_SEO_CONTENT: ToolSeoMap = {
       { question: 'How long does upscaling take?', answer: 'Processing time depends on your device and the chosen scale factor, typically ranging from a few seconds to around a minute for 4x upscaling.' },
       { question: 'Will upscaling invent detail that was not in the original?', answer: 'Yes, AI super-resolution reconstructs plausible texture and edges statistically, so results look sharper but are not a perfect recovery of lost detail.' },
       { question: 'Does it work on mobile devices?', answer: 'It can run on mobile browsers with WASM support, though performance is slower than on desktop and very high scale factors may be limited by device memory.' },
+    ],
+    useCases: [
+      'Restoring an old, low-resolution family photo before printing it at a larger size',
+      'Upscaling a small product thumbnail so it looks sharp on a full-size listing page',
+      'Enlarging a compressed image pulled from an old website or archive',
+      'Preparing a low-res image for print where the original file is too small to reproduce cleanly',
+    ],
+    tips: [
+      'Use a WebGPU-capable browser if possible — it processes noticeably faster than the WASM fallback, especially at 4x scale',
+      'Start with a lower scale factor like 2x if you just need a modest quality bump, since 4x takes considerably longer',
+      'Remember the model reconstructs plausible detail rather than recovering the original — it improves sharpness but is not a perfect restoration',
     ],
   },
   'ai-bg-remover': {
@@ -171,6 +270,17 @@ export const IMAGE_SEO_CONTENT: ToolSeoMap = {
       { question: 'Does it work well on complex backgrounds like hair or fur?', answer: 'The AI segmentation handles fine edges like hair reasonably well, but very busy or low-contrast backgrounds can produce a rougher edge that may need manual cleanup.' },
       { question: 'Can I use this on a phone?', answer: 'Yes, though older phones without WASM/WebGPU acceleration will process more slowly than a modern desktop browser.' },
     ],
+    useCases: [
+      'Isolating a product photo onto a clean white or transparent background for a marketplace listing',
+      'Cutting a subject out of a photo to composite them onto a new background for social media',
+      'Removing a busy background from a headshot before using it as a profile picture',
+      'Preparing transparent PNG assets for a design project without opening Photoshop',
+    ],
+    tips: [
+      'Use the before/after slider to check edge quality around hair or fur, which is where segmentation is most likely to need manual touch-up',
+      'Choose a smaller output size if processing feels slow on your device — it reduces the compute load on the segmentation model',
+      'Photos with high contrast between subject and background produce cleaner masks than busy or low-contrast scenes',
+    ],
   },
   'image-sharpen': {
     intro:
@@ -187,6 +297,17 @@ export const IMAGE_SEO_CONTENT: ToolSeoMap = {
       { question: 'What formats can I sharpen?', answer: 'JPEG, PNG, and WebP images are all supported.' },
       { question: 'Is this done with AI?', answer: 'No, sharpening uses a standard convolution filter applied via canvas, so it is fast and works on any device without a GPU.' },
       { question: 'Are my images uploaded anywhere?', answer: 'No, the filter is applied locally in your browser.' },
+    ],
+    useCases: [
+      'Crisping up a slightly soft phone photo before posting it online',
+      'Sharpening a product photo so texture and detail read clearly on a listing page',
+      'Restoring some perceived detail to an image that lost crispness after resizing',
+      'Punching up edge definition on a scanned image before printing it',
+    ],
+    tips: [
+      'Increase intensity gradually and check the preview closely — overshooting introduces visible halos around edges',
+      'Apply sharpening as the last step in your workflow, after resizing or compressing, since those operations can soften edges again',
+      'Skip heavy sharpening on already-noisy or high-ISO photos, since it tends to amplify grain along with detail',
     ],
   },
   'image-adjust': {
@@ -205,6 +326,17 @@ export const IMAGE_SEO_CONTENT: ToolSeoMap = {
       { question: 'Is there a quality loss from adjusting the image?', answer: 'The adjustments themselves are non-destructive until export, at which point the format and quality setting you choose determine final file size.' },
       { question: 'Is my photo sent to a server?', answer: 'No, all adjustments are rendered locally using canvas filters.' },
     ],
+    useCases: [
+      'Correcting exposure on a photo that came out too dark or too flat',
+      'Boosting saturation on a social media photo to make colors pop before posting',
+      'Fixing an off color cast by nudging the hue slider on a photo shot under odd lighting',
+      'Giving a batch of listing photos a consistent brightness and contrast look',
+    ],
+    tips: [
+      'Make small adjustments to multiple sliders rather than a large push on one — it usually looks more natural',
+      'Increase contrast slightly after boosting saturation, since higher saturation alone can make an image look washed out',
+      'Reset a slider to default if an adjustment looks off, rather than trying to correct it with a different slider',
+    ],
   },
   'image-to-base64': {
     intro:
@@ -221,6 +353,17 @@ export const IMAGE_SEO_CONTENT: ToolSeoMap = {
       { question: 'Is there a file size limit?', answer: 'Very large images can produce extremely long strings that may be slow to copy or paste, so it works best for icons, logos, and moderately sized photos.' },
       { question: 'Is my image uploaded to generate the Base64 string?', answer: 'No, the FileReader API reads and encodes the file locally in your browser.' },
     ],
+    useCases: [
+      'Inlining a small icon or logo directly into a CSS background-image to avoid an extra HTTP request',
+      'Embedding an image in a JSON payload for testing an API that expects Base64-encoded image data',
+      'Pasting an image directly into HTML email markup where external image hosting is unreliable',
+      'Generating a data URL to hardcode a placeholder image in source code or documentation',
+    ],
+    tips: [
+      'Remember the encoded string is about 33% larger than the original file, so reserve this for small icons and logos rather than full photos',
+      'Copy the full data URL (including the data:image/...;base64, prefix) if you plan to paste it directly into HTML or CSS',
+      'For large photos, encoding still works but the resulting string can be unwieldy to copy, paste, or store in version control',
+    ],
   },
   'base64-to-image': {
     intro:
@@ -236,6 +379,17 @@ export const IMAGE_SEO_CONTENT: ToolSeoMap = {
       { question: 'What image formats can be decoded?', answer: 'PNG, JPG, WebP, and GIF data URLs are all supported.' },
       { question: 'Is my pasted data sent anywhere?', answer: 'No, decoding happens entirely in your browser using the data URL directly.' },
       { question: 'Can I decode very large Base64 strings?', answer: 'Yes, though extremely long strings may take a brief moment to render depending on your device.' },
+    ],
+    useCases: [
+      'Recovering a viewable image from a Base64 string returned by an API response during debugging',
+      'Extracting an embedded image from source code or a saved HTML file to save it as a standalone file',
+      'Turning a Base64 string from an email attachment or export into a downloadable PNG or JPG',
+      'Verifying that a Base64 payload your application generated actually renders as a valid image',
+    ],
+    tips: [
+      'Include the "data:image/..." prefix when pasting for the most reliable format detection',
+      'If decoding fails, check the string wasn\'t truncated when copied — a cut-off Base64 string cannot be decoded into a valid image',
+      'Strip any surrounding quotes or whitespace from a string copied out of JSON before pasting it in',
     ],
   },
   'ocr-image': {
@@ -254,6 +408,17 @@ export const IMAGE_SEO_CONTENT: ToolSeoMap = {
       { question: 'Is my image uploaded to an OCR service?', answer: 'No, Tesseract.js runs as a WebAssembly module inside your browser, so the image is analyzed locally.' },
       { question: 'Why is OCR slow on my device?', answer: 'OCR is computationally heavier than simple image edits since it runs a full recognition model in WASM; larger images and older devices will take longer.' },
     ],
+    useCases: [
+      'Digitizing a scanned printed document into editable, searchable text',
+      'Extracting text from a screenshot instead of retyping it manually',
+      'Pulling line items and totals off a photographed receipt for expense tracking',
+      'Converting a photo of a whiteboard from a meeting into text notes',
+    ],
+    tips: [
+      'Crop the image to just the text region first — a tighter, cleaner input improves recognition accuracy',
+      'Straighten skewed or angled photos before running OCR, since tilted text reduces accuracy significantly',
+      'Well-lit, high-contrast printed text gives the best results; low light and busy backgrounds hurt accuracy the most',
+    ],
   },
   'image-watermark': {
     intro:
@@ -270,6 +435,17 @@ export const IMAGE_SEO_CONTENT: ToolSeoMap = {
       { question: 'Where can I place the watermark?', answer: 'The watermark can be positioned anywhere on the image, including common presets like corners or center.' },
       { question: 'Does watermarking reduce image quality?', answer: 'The base image quality is preserved except for the watermark overlay itself; export quality settings then determine final file size.' },
       { question: 'Is my photo uploaded to apply the watermark?', answer: 'No, the watermark is composited locally on a canvas in your browser.' },
+    ],
+    useCases: [
+      'Stamping a photography portfolio sample with a copyright notice before posting it publicly',
+      'Branding marketing images with a company logo before distribution',
+      'Adding a subtle "draft" or "sample" watermark to a proof image sent to a client',
+      'Marking ownership on images shared to social media to discourage unauthorized reuse',
+    ],
+    tips: [
+      'Keep opacity low (around 20-40%) for a watermark that deters theft without distracting from the photo',
+      'Position the watermark over a busy area of the image, since it is harder to crop out cleanly than one placed in an empty corner',
+      'Use a logo watermark for brand consistency across a whole batch of images rather than retyping text each time',
     ],
   },
   'image-draw': {
@@ -288,6 +464,17 @@ export const IMAGE_SEO_CONTENT: ToolSeoMap = {
       { question: 'What file formats can I annotate?', answer: 'JPEG, PNG, and WebP images can all be uploaded and annotated.' },
       { question: 'Is my image uploaded anywhere while I draw?', answer: 'No, drawing happens on a canvas layer in your browser and nothing is sent to a server.' },
     ],
+    useCases: [
+      'Circling a bug in a UI screenshot before sending it to a developer',
+      'Highlighting a specific detail in a photo for a client review',
+      'Annotating a diagram with arrows and notes for a classroom lesson',
+      'Marking up a floor plan or map image with instructions before sharing it',
+    ],
+    tips: [
+      'Choose a bright, high-contrast pen color like red or yellow so annotations stand out clearly against the photo',
+      'Increase brush thickness for annotations meant to be viewed at a glance, and reduce it for precise detail markup',
+      'Use the eraser to clean up stray marks before exporting rather than starting the whole annotation over',
+    ],
   },
   'image-editor': {
     intro:
@@ -305,6 +492,17 @@ export const IMAGE_SEO_CONTENT: ToolSeoMap = {
       { question: 'What formats can I export to?', answer: 'You can export the edited image as JPEG, PNG, or WebP.' },
       { question: 'Is this a replacement for a full desktop editor?', answer: 'It covers the most common editing needs — crop, resize, rotate, flip, color, blur, and basic annotation — for quick edits, though it does not include layers or advanced retouching found in dedicated desktop software.' },
       { question: 'Is my image uploaded during editing?', answer: 'No, the entire editing pipeline runs locally in your browser using canvas rendering.' },
+    ],
+    useCases: [
+      'Preparing a final asset that needs cropping, color correction, and a logo watermark in one pass',
+      'Touching up a photo before posting it, without installing a full desktop editor',
+      'Combining a resize, rotate, and brightness fix into a single export for a freelance deliverable',
+      'Making several small corrections to a scanned document in one session instead of switching tools repeatedly',
+    ],
+    tips: [
+      'Do transform operations like crop, resize, and rotate before color and blur adjustments, since transforms can affect how filters are applied',
+      'Save annotation and text additions for last so they don\'t get distorted by a later crop or resize',
+      'Export as PNG if you need to preserve transparency from earlier steps, otherwise JPEG keeps file size down for photos',
     ],
   },
   drawing: {
@@ -325,6 +523,17 @@ export const IMAGE_SEO_CONTENT: ToolSeoMap = {
       { question: 'Is my drawing saved automatically?', answer: 'No, the canvas exists only in your browser session, so remember to export your work before closing the tab.' },
       { question: 'Is anything uploaded while I draw?', answer: 'No, all drawing and layer rendering happens locally in your browser.' },
     ],
+    useCases: [
+      'Sketching a quick idea or wireframe from scratch on a blank canvas',
+      'Illustrating a concept over an uploaded diagram for a classroom lesson',
+      'Brainstorming visually during a planning session using shapes and text',
+      'Drawing on a tablet with a stylus for a digital art sketch',
+    ],
+    tips: [
+      'Use separate layers for background, sketch, and text so you can adjust or hide each independently while working',
+      'Export your work periodically, since the canvas only exists in your browser session and nothing is saved automatically',
+      'Lower brush opacity for shading and layering strokes, and keep it at full opacity for clean line work',
+    ],
   },
   'image-metadata': {
     intro:
@@ -341,6 +550,17 @@ export const IMAGE_SEO_CONTENT: ToolSeoMap = {
       { question: 'Does this protect my location if I share the photo?', answer: 'Yes, GPS coordinates embedded in EXIF data are one of the fields removed, which helps prevent location leaks when sharing photos publicly.' },
       { question: 'Which formats carry metadata that can be stripped?', answer: 'JPEG and TIFF files commonly carry EXIF metadata; PNG files typically carry little to none by comparison.' },
       { question: 'Is my photo uploaded to remove metadata?', answer: 'No, metadata stripping happens locally in your browser by re-encoding the image without the metadata fields.' },
+    ],
+    useCases: [
+      'Stripping GPS location data from a photo before posting it publicly on social media',
+      'Removing camera model and timestamp metadata from images before sharing them with strangers online',
+      'Protecting a source location by cleaning EXIF data from a journalist\'s photo before publication',
+      'Cleaning metadata from photos before uploading them to a platform that displays EXIF details publicly',
+    ],
+    tips: [
+      'Check for GPS metadata specifically before sharing photos taken on a phone, since location is the most sensitive field typically embedded',
+      'Run this on JPEG and TIFF files where it matters most — PNG files rarely carry meaningful EXIF data to begin with',
+      'Re-strip metadata after any edit made in another tool, since some editors re-add fields like software version or timestamp on save',
     ],
   },
   'batch-resize': {
@@ -359,6 +579,17 @@ export const IMAGE_SEO_CONTENT: ToolSeoMap = {
       { question: 'Is there a way to keep aspect ratio consistent across all images?', answer: 'Yes, locking aspect ratio applies proportional scaling to each image individually based on its own original dimensions.' },
       { question: 'Are my images uploaded to a server for batch processing?', answer: 'No, every image is resized locally in your browser, one at a time, without leaving your device.' },
     ],
+    useCases: [
+      'Standardizing an entire product catalog to one dimension before uploading to an online store',
+      'Resizing every photo in a gallery down to a consistent web-friendly size at once',
+      'Preparing a set of thumbnails at the same dimensions for a portfolio page',
+      'Shrinking a folder of vacation photos before archiving or sharing them as a group',
+    ],
+    tips: [
+      'Lock aspect ratio when your source images have varying orientations, so each one scales proportionally rather than stretching',
+      'Process large batches in smaller chunks if your browser starts to feel sluggish, since memory use scales with the number of images',
+      'Double check a couple of results from the batch before trusting the whole set, especially if source images have mixed dimensions',
+    ],
   },
   'image-collage': {
     intro:
@@ -375,6 +606,17 @@ export const IMAGE_SEO_CONTENT: ToolSeoMap = {
       { question: 'What file format is the exported collage?', answer: 'The combined collage is exported as a single JPEG or PNG image.' },
       { question: 'Does image quality suffer when combined into a collage?', answer: 'Each source image is placed at the resolution the layout allows, so very small collage cells will show less detail than the original full-size photo.' },
       { question: 'Are my images uploaded to build the collage?', answer: 'No, the collage is composed locally on a canvas in your browser.' },
+    ],
+    useCases: [
+      'Building a grid of vacation photos to share as a single image on social media',
+      'Creating a before/after comparison image from two related photos',
+      'Combining multiple angles of a product into one collage for a marketplace listing',
+      'Putting together a photo grid announcement image for an event or celebration',
+    ],
+    tips: [
+      'Use similarly sized and oriented source photos for the cleanest-looking grid layout',
+      'Keep the collage to a handful of images if you want each one to stay large enough to show real detail',
+      'Export as PNG if any source images have transparency you want preserved in the final collage',
     ],
   },
   'meme-generator': {
@@ -393,6 +635,17 @@ export const IMAGE_SEO_CONTENT: ToolSeoMap = {
       { question: 'Is there a limit on how much text I can add?', answer: 'Longer captions will wrap or shrink to fit within the top and bottom caption areas, but very long text can start to look cramped.' },
       { question: 'Is my image uploaded to a meme service?', answer: 'No, the entire meme is generated locally in your browser using canvas text rendering.' },
     ],
+    useCases: [
+      'Reacting to a trending image with a quick top/bottom caption for a group chat',
+      'Making an inside joke image to share with friends without opening a design app',
+      'Turning a screenshot into a meme format for a social media post',
+      'Adding classic meme-style captions to a reaction image on short notice',
+    ],
+    tips: [
+      'Use a thick text outline/stroke so captions stay readable over busy or light-colored backgrounds',
+      'Keep captions short — long text will wrap or shrink and can start to look cramped in the caption area',
+      'Bump the font size up for images meant to be viewed small, like in a chat thumbnail, so the text stays legible',
+    ],
   },
   'qr-generator': {
     intro:
@@ -410,6 +663,17 @@ export const IMAGE_SEO_CONTENT: ToolSeoMap = {
       { question: 'Can I print the QR code at large sizes?', answer: 'Yes, the code is generated at high resolution so it stays scannable when printed large, such as on posters or signage.' },
       { question: 'Are barcodes supported too, not just QR codes?', answer: 'Yes, common barcode formats are supported alongside QR codes for encoding data.' },
       { question: 'Is the data I enter sent to any server?', answer: 'No, the QR code or barcode image is generated entirely in your browser from the data you type in.' },
+    ],
+    useCases: [
+      'Sharing Wi-Fi credentials at a cafe or office by printing a scannable QR code near the router',
+      'Printing a vCard QR code on a business card so contacts can save your info by scanning',
+      'Linking a printed poster or flyer to a website or event registration page',
+      'Generating barcodes for inventory or product labeling without a paid service',
+    ],
+    tips: [
+      'Raise the error correction level if the QR code will be printed small or placed somewhere it might get partially obscured, like on packaging',
+      'Test scan the generated code with a phone before printing it at scale, especially for posters and signage',
+      'Since the data is encoded directly rather than through a redirect link, double-check the entered content is correct before generating, as it cannot be edited after printing',
     ],
   },
 };

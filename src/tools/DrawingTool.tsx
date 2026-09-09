@@ -1070,9 +1070,10 @@ export const DrawingTool: React.FC = () => {
       <div className="max-w-3xl mx-auto fade-in">
         <div className="mb-6">
           <span className="section-kicker mb-2">Create & draw</span>
-          <h1 className="text-xl sm:text-2xl font-bold  text-foreground tracking-[-0.02em]">
+          {/* h2, not h1 — the tool page shell already renders the page's single h1 */}
+          <h2 className="text-xl sm:text-2xl font-bold  text-foreground tracking-[-0.02em]">
             Drawing Board
-          </h1>
+          </h2>
           <p className="text-[13px]  text-muted-foreground mt-1">
             Sketch on a blank canvas from scratch or draw over a photo — everything stays on your device.
           </p>

@@ -1,11 +1,14 @@
 import React from 'react';
-import { Mail, Instagram, Youtube, LayoutGrid, ShieldCheck, Sparkles, LifeBuoy, FolderTree, ArrowUpRight, Heart, Blocks } from 'lucide-react';
+import { Mail, Instagram, Youtube, LayoutGrid, ShieldCheck, Sparkles, LifeBuoy, FolderTree, ArrowUpRight, Heart, Blocks, Info, Scale, AlertTriangle, Cookie, Newspaper } from 'lucide-react';
 import { ToolCategory } from '../types';
 import { SUPPORT_URL } from '../config/support';
 import { workingToolCount } from '../utils/toolStats';
+import { StaticPageId, CONTACT_EMAIL, getStaticPage } from '../config/pages';
+import { AppLink } from './AppLink';
 
 interface FooterProps {
-  onOpenPrivacy: () => void;
+  onOpenPage: (id: StaticPageId) => void;
+  onOpenBlog: (slug?: string) => void;
   onSelectTool: (id: string) => void;
   onSelectCategory: (cat: ToolCategory | 'all') => void;
   onGoHome: () => void;
@@ -24,9 +27,25 @@ const POPULAR_TOOLS = [
 const linkClass =
   'text-[13px] text-muted-foreground hover:text-primary transition-colors duration-150 text-left';
 
+const pagePath = (id: StaticPageId) => getStaticPage(id)?.path ?? '/';
+
 export const Footer: React.FC<FooterProps> = ({
-  onOpenPrivacy, onSelectTool, onSelectCategory, onGoHome, onOpenFaq, onOpenCategories,
+  onOpenPage, onOpenBlog, onSelectTool, onSelectCategory, onGoHome, onOpenFaq, onOpenCategories,
 }) => {
+  /** Footer row link — a real anchor so crawlers can follow it. */
+  const Row: React.FC<{ href: string; go: () => void; icon?: React.ElementType; children: React.ReactNode }> =
+    ({ href, go, icon: Icon, children }) => (
+      <li>
+        <AppLink
+          href={href}
+          onNavigate={go}
+          className={Icon ? `${linkClass} inline-flex items-center gap-2` : linkClass}
+        >
+          {Icon && <Icon className="w-3.5 h-3.5 shrink-0" />} {children}
+        </AppLink>
+      </li>
+    );
+
   return (
     <footer className="border-t border-border bg-card mt-auto">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 py-10 sm:py-14">
@@ -34,14 +53,14 @@ export const Footer: React.FC<FooterProps> = ({
 
           {/* Brand */}
           <div className="sm:col-span-2 lg:col-span-2">
-            <button onClick={onGoHome} className="flex items-center gap-2.5" aria-label="NextTool Home">
+            <AppLink href="/" onNavigate={onGoHome} className="flex items-center gap-2.5" aria-label="NextTool Home">
               <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-primary to-tertiary text-white flex items-center justify-center shrink-0">
                 <Blocks className="w-4 h-4" strokeWidth={2.25} />
               </div>
               <span className="text-[18px] font-extrabold tracking-[-0.02em] text-foreground">
                 <span>Next</span><span className="text-primary">Tool</span>
               </span>
-            </button>
+            </AppLink>
             <p className="mt-3.5 text-[13px] text-muted-foreground leading-relaxed max-w-sm">
               Free browser-based tools for PDF, image, developer and AI tasks.
               Everything runs locally on your device.
@@ -51,14 +70,15 @@ export const Footer: React.FC<FooterProps> = ({
               Files never leave your device
             </div>
             <div className="flex items-center gap-2 mt-5">
-              <a
-                href="mailto:dk.coder7250@gmail.com"
-                aria-label="Email us"
-                title="Email"
+              <AppLink
+                href={pagePath('contact')}
+                onNavigate={() => onOpenPage('contact')}
+                aria-label="Contact us"
+                title="Contact"
                 className="w-9 h-9 flex items-center justify-center rounded-xl border border-border bg-muted text-muted-foreground hover:text-primary hover:border-primary/40 transition-all duration-150"
               >
                 <Mail className="w-4 h-4" />
-              </a>
+              </AppLink>
               <a
                 href="https://www.instagram.com/dkcoder8/"
                 target="_blank"
@@ -86,23 +106,10 @@ export const Footer: React.FC<FooterProps> = ({
           <div>
             <h4 className="section-label mb-3.5">Product</h4>
             <ul className="space-y-2.5">
-              <li>
-                <button onClick={() => onSelectCategory('all')} className={`${linkClass} inline-flex items-center gap-2`}>
-                  <LayoutGrid className="w-3.5 h-3.5 shrink-0" /> All Tools
-                </button>
-              </li>
-              <li>
-                <button onClick={onOpenCategories} className={`${linkClass} inline-flex items-center gap-2`}>
-                  <FolderTree className="w-3.5 h-3.5 shrink-0" /> Categories
-                </button>
-              </li>
-              <li>
-                <button onClick={onGoHome} className={linkClass}>Popular Tools</button>
-              </li>
+              <Row href="/all-tools" go={() => onSelectCategory('all')} icon={LayoutGrid}>All Tools</Row>
+              <Row href="/#categories-section" go={onOpenCategories} icon={FolderTree}>Categories</Row>
               {POPULAR_TOOLS.slice(0, 3).map(t => (
-                <li key={t.id}>
-                  <button onClick={() => onSelectTool(t.id)} className={linkClass}>{t.label}</button>
-                </li>
+                <Row key={t.id} href={`/tool/${t.id}`} go={() => onSelectTool(t.id)}>{t.label}</Row>
               ))}
             </ul>
           </div>
@@ -111,19 +118,10 @@ export const Footer: React.FC<FooterProps> = ({
           <div>
             <h4 className="section-label mb-3.5">Resources</h4>
             <ul className="space-y-2.5">
-              <li>
-                <button onClick={onOpenFaq} className={`${linkClass} inline-flex items-center gap-2`}>
-                  <Sparkles className="w-3.5 h-3.5 shrink-0" /> FAQ
-                </button>
-              </li>
-              <li>
-                <a href="mailto:dk.coder7250@gmail.com" className={`${linkClass} inline-flex items-center gap-2`}>
-                  <LifeBuoy className="w-3.5 h-3.5 shrink-0" /> Support
-                </a>
-              </li>
-              <li>
-                <a href="mailto:dk.coder7250@gmail.com" className={linkClass}>Feedback</a>
-              </li>
+              <Row href="/#faq-heading" go={onOpenFaq} icon={Sparkles}>FAQ</Row>
+              <Row href="/blog" go={() => onOpenBlog()} icon={Newspaper}>Blog</Row>
+              <Row href={pagePath('contact')} go={() => onOpenPage('contact')} icon={LifeBuoy}>Support</Row>
+              <Row href={pagePath('contact')} go={() => onOpenPage('contact')}>Feedback</Row>
               {SUPPORT_URL && (
                 <li>
                   <a
@@ -143,8 +141,10 @@ export const Footer: React.FC<FooterProps> = ({
           <div>
             <h4 className="section-label mb-3.5">Company</h4>
             <ul className="space-y-2.5">
+              <Row href={pagePath('about')} go={() => onOpenPage('about')} icon={Info}>About Us</Row>
+              <Row href={pagePath('contact')} go={() => onOpenPage('contact')} icon={Mail}>Contact Us</Row>
               <li>
-                <a href="mailto:dk.coder7250@gmail.com" className={linkClass}>Contact</a>
+                <a href={`mailto:${CONTACT_EMAIL}`} className={linkClass}>{CONTACT_EMAIL}</a>
               </li>
             </ul>
           </div>
@@ -153,11 +153,10 @@ export const Footer: React.FC<FooterProps> = ({
           <div>
             <h4 className="section-label mb-3.5">Legal</h4>
             <ul className="space-y-2.5">
-              <li>
-                <button onClick={onOpenPrivacy} className={`${linkClass} inline-flex items-center gap-2`}>
-                  <ShieldCheck className="w-3.5 h-3.5 shrink-0" /> Privacy Policy
-                </button>
-              </li>
+              <Row href={pagePath('privacy')} go={() => onOpenPage('privacy')} icon={ShieldCheck}>Privacy Policy</Row>
+              <Row href={pagePath('terms')} go={() => onOpenPage('terms')} icon={Scale}>Terms of Service</Row>
+              <Row href={pagePath('disclaimer')} go={() => onOpenPage('disclaimer')} icon={AlertTriangle}>Disclaimer</Row>
+              <Row href={pagePath('cookies')} go={() => onOpenPage('cookies')} icon={Cookie}>Cookie Policy</Row>
             </ul>
           </div>
         </div>
@@ -178,12 +177,13 @@ export const Footer: React.FC<FooterProps> = ({
                 <Heart className="w-3.5 h-3.5" /> Support NextTool
               </a>
             )}
-            <button
-              onClick={() => onSelectCategory('all')}
+            <AppLink
+              href="/all-tools"
+              onNavigate={() => onSelectCategory('all')}
               className="inline-flex items-center gap-1.5 text-[13px] font-semibold text-primary hover:brightness-110 transition-all duration-150"
             >
               Browse all tools <ArrowUpRight className="w-3.5 h-3.5" />
-            </button>
+            </AppLink>
           </div>
         </div>
 
