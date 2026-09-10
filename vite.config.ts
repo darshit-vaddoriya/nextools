@@ -6,7 +6,7 @@ import { TOOLS } from './src/config/tools';
 import { STATIC_PAGES } from './src/config/pages';
 import { BLOG_POSTS } from './src/config/blog';
 
-const SITE = 'https://nexttool.app';
+const SITE = 'https://nexttool.click';
 
 function sitemapPlugin() {
   return {

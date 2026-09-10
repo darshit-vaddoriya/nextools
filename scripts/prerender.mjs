@@ -45,8 +45,10 @@ async function main() {
   }
 
   const sitemap = await readFile(path.join(dist, 'sitemap.xml'), 'utf8');
-  const routes = [...sitemap.matchAll(/<loc>https:\/\/nexttool\.app([^<]*)<\/loc>/g)]
-    .map(m => m[1] || '/');
+  // Host-agnostic on purpose — the sitemap's domain is set in vite.config.ts,
+  // and a hardcoded host here would silently yield zero routes if it changes.
+  const routes = [...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)]
+    .map(m => new URL(m[1]).pathname);
 
   const server = serveStatic();
   await new Promise(resolve => server.listen(PORT, resolve));

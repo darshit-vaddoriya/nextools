@@ -2,7 +2,7 @@
 
 **Free online tools that run entirely in your browser.** Merge PDFs, convert documents, compress images, remove backgrounds with AI and more — no uploads, no accounts, no limits.
 
-> 🔗 **Live site:** [nexttool.app](https://nexttool.app)
+> 🔗 **Live site:** [nexttool.click](https://nexttool.click)
 
 ---
 

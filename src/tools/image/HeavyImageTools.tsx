@@ -165,7 +165,7 @@ type QrKind = 'url' | 'text' | 'wifi' | 'vcard';
 
 export const QrGeneratorTool: React.FC = () => {
   const [kind, setKind] = useState<QrKind>('url');
-  const [url, setUrl] = useState('https://nexttool.app');
+  const [url, setUrl] = useState('https://nexttool.click');
   const [text, setText] = useState('Hello from NextTool!');
   const [ssid, setSsid] = useState('MyWiFi');
   const [wifiPass, setWifiPass] = useState('');

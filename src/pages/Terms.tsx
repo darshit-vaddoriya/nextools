@@ -17,7 +17,7 @@ export const Terms: React.FC<TermsProps> = ({ onBack }) => (
     <PageProse>
       <PageSection title="1. Acceptance of these terms">
         <p>
-          These Terms of Service govern your access to and use of https://nexttool.app and the
+          These Terms of Service govern your access to and use of https://nexttool.click and the
           tools published on it (the "Service"). By using the Service you agree to be bound by
           these terms. If you do not agree, do not use the Service.
         </p>

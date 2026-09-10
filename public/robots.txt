@@ -1,7 +1,7 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://nexttool.app/sitemap.xml
+Sitemap: https://nexttool.click/sitemap.xml
 
 # Block build artifacts
 Disallow: /assets/

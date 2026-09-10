@@ -5,7 +5,7 @@ import { StaticPageId, getStaticPage, getStaticPageByPath } from '../config/page
 import { BLOG_POSTS, getPost, BLOG_CATEGORY_LABELS, readingMinutes } from '../config/blog';
 import { HOME_FAQ } from '../config/faq';
 
-const SITE = 'https://nexttool.app';
+const SITE = 'https://nexttool.click';
 const DEFAULT_TITLE = 'NextTool - Free Online Tools';
 const DEFAULT_DESC =
   'Free browser tools for PDF, image, developer and AI tasks. Files are processed on your own device, so nothing is uploaded.';

@@ -41,7 +41,7 @@ export const PrivacyPolicy: React.FC<PrivacyPolicyProps> = ({ onBack, onOpenCook
         <PageSection title="1. Who we are">
           <p>
             This Privacy Policy explains how NextTool ("NextTool", "we", "us") handles information
-            when you visit <strong className="text-foreground">https://nexttool.app</strong> and use
+            when you visit <strong className="text-foreground">https://nexttool.click</strong> and use
             the tools published there. NextTool is an independent, ad-supported website operated
             from India. For any privacy question or request you can write to{' '}
             <a href={`mailto:${CONTACT_EMAIL}`} className="text-primary underline underline-offset-2 hover:brightness-110">

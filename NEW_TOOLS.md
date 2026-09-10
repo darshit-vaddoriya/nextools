@@ -127,4 +127,4 @@ src/tools/pdf/PdfExtractTools.tsx    → to/from images, OCR, text/image extract
 src/tools/pdf/PdfShared.tsx          → shared PDF UI helpers
 ```
 
-> Live at: [nexttool.app](https://nexttool.app) — Local dev: `npm run dev` → http://localhost:5173
+> Live at: [nexttool.click](https://nexttool.click) — Local dev: `npm run dev` → http://localhost:5173
