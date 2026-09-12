@@ -281,7 +281,7 @@ export const FileChecksumTool: React.FC = () => {
               <CopyButton text={sha1} className="shrink-0" />
             </div>
           </div>
-          <p className="text-[11px] text-muted-foreground italic">MD5 is not included — it requires a third-party library which this tool avoids.</p>
+          <p className="text-[11px] text-muted-foreground italic">MD5 is not included, it requires a third-party library which this tool avoids.</p>
 
           <div className="space-y-1.5 pt-2 border-t border-border">
             <p className="text-xs text-muted-foreground font-medium">Compare Against</p>

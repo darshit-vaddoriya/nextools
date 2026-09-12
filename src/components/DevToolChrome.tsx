@@ -3,10 +3,10 @@ import React from 'react';
 /* ══════════════════════════════════════════════════════════
    Shared visual chrome for the "developer tool" pages
    (JSON formatter, Base64, UUID, Password, Hash, JWT).
-   Pure presentational pieces — no tool logic lives here.
+   Pure presentational pieces, no tool logic lives here.
 ══════════════════════════════════════════════════════════ */
 
-/** Small pill badge: "runs live, on-device" — shown next to dev-tool titles. */
+/** Small pill badge: "runs live, on-device", shown next to dev-tool titles. */
 export const DevRunPill: React.FC<{ className?: string }> = ({ className = '' }) => (
   <div
     className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/10 border border-primary/25 shrink-0 ${className}`}

@@ -56,9 +56,8 @@ export const PrivacyPolicy: React.FC<PrivacyPolicyProps> = ({ onBack, onOpenCook
 
         <PageSection title="2. The files you process are never collected">
           <p>
-            NextTool is a static website. Every tool — PDF merging and splitting, image compression
-            and conversion, AI background removal, OCR, code formatting, hashing and the rest —
-            executes inside your browser using standard browser technologies such as the WebCrypto
+            NextTool is a static website. Every tool, PDF merging and splitting, image compression
+            and conversion, AI background removal, OCR, code formatting, hashing and the rest, executes inside your browser using standard browser technologies such as the WebCrypto
             API, HTML5 Canvas, WebAssembly and on-device machine-learning models.
           </p>
           <p>
@@ -88,8 +87,7 @@ export const PrivacyPolicy: React.FC<PrivacyPolicyProps> = ({ onBack, onOpenCook
           <p>
             A cookie is a small file a website stores in your browser. NextTool itself sets no
             tracking cookies; the cookies present on this site come from Google Analytics and
-            Google AdSense. You can block or delete cookies at any time in your browser settings —
-            the tools will keep working, though ads may become less relevant.
+            Google AdSense. You can block or delete cookies at any time in your browser settings, the tools will keep working, though ads may become less relevant.
           </p>
           <p>
             A full, itemised list is in our{' '}
@@ -108,7 +106,7 @@ export const PrivacyPolicy: React.FC<PrivacyPolicyProps> = ({ onBack, onOpenCook
             To keep every tool free without subscriptions or login walls, NextTool displays
             advertising served by Google AdSense. Advertisements are clearly labelled and are kept
             outside the working area of each tool. Ad networks never receive the files or text you
-            process — that content never leaves your browser in the first place.
+            process, that content never leaves your browser in the first place.
           </p>
           <PageList
             items={[
@@ -123,7 +121,7 @@ export const PrivacyPolicy: React.FC<PrivacyPolicyProps> = ({ onBack, onOpenCook
             tags, cookies and web beacons in the advertisements shown on this site, which are sent
             directly to your browser. They automatically receive your IP address when this occurs.
             NextTool has no access to or control over the cookies used by third-party advertisers,
-            and this Privacy Policy does not cover their practices — consult their own policies for
+            and this Privacy Policy does not cover their practices, consult their own policies for
             details and opt-out instructions.
           </p>
         </PageSection>
@@ -137,8 +135,8 @@ export const PrivacyPolicy: React.FC<PrivacyPolicyProps> = ({ onBack, onOpenCook
             the opt-out links above or your browser settings.
           </p>
           <p>
-            Where we rely on consent — specifically for personalised advertising and analytics
-            cookies — you may withdraw it at any time through the consent banner or your browser.
+            Where we rely on consent, specifically for personalised advertising and analytics
+            cookies, you may withdraw it at any time through the consent banner or your browser.
             Our lawful basis for the strictly necessary operation of the site is our legitimate
             interest in providing and securing it. You also have the right to complain to your
             local data protection authority.

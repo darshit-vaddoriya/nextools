@@ -12,9 +12,9 @@ export const TEXT_DEV_SEO_CONTENT: ToolSeoMap = {
     ],
     faqs: [
       { question: 'Does this tool count words the same way Microsoft Word does?', answer: 'It uses a whitespace-based word split similar to most word processors, so counts should closely match Word or Google Docs, though edge cases like hyphenated words or numbers can vary slightly between tools.' },
-      { question: 'Is my text uploaded anywhere?', answer: 'No. All counting happens locally in your browser using JavaScript — nothing is sent to a server.' },
+      { question: 'Is my text uploaded anywhere?', answer: 'No. All counting happens locally in your browser using JavaScript, nothing is sent to a server.' },
       { question: 'What does the readability score mean?', answer: 'It gives a rough estimate of how easy the text is to read based on sentence length and word complexity, useful as a general guide rather than an exact grade level.' },
-      { question: 'Can I count text from a PDF or Word document?', answer: 'Yes, just copy the text out of the document and paste it into the box — formatting like bold or italics is ignored, only the plain text is counted.' },
+      { question: 'Can I count text from a PDF or Word document?', answer: 'Yes, just copy the text out of the document and paste it into the box, formatting like bold or italics is ignored, only the plain text is counted.' },
       { question: 'Does it work on mobile browsers?', answer: 'Yes, the counter works on any modern mobile or desktop browser without needing an app.' },
     ],
     useCases: [
@@ -24,8 +24,8 @@ export const TEXT_DEV_SEO_CONTENT: ToolSeoMap = {
       'Comparing sentence and paragraph length to spot overly dense writing',
     ],
     tips: [
-      'Paste the whole document rather than section by section — paragraph and sentence stats need the full context to be accurate.',
-      'Use the readability score as a directional signal, not a grade — pair it with a human read-through for tone.',
+      'Paste the whole document rather than section by section, paragraph and sentence stats need the full context to be accurate.',
+      'Use the readability score as a directional signal, not a grade, pair it with a human read-through for tone.',
       'If your word count looks off compared to another tool, check for hyphenated words or numbers, which some counters split differently.',
     ],
   },
@@ -54,7 +54,7 @@ export const TEXT_DEV_SEO_CONTENT: ToolSeoMap = {
     ],
     tips: [
       'Mixed-format input like "user_firstName-value" still converts correctly since the tool splits on underscores, hyphens and camel humps together.',
-      'Run multi-line lists through in one pass — each line converts independently, so you can batch-convert dozens of identifiers at once.',
+      'Run multi-line lists through in one pass, each line converts independently, so you can batch-convert dozens of identifiers at once.',
       'Double-check acronyms after conversion (e.g. "userID" to snake_case) since acronym boundaries can split in unexpected ways.',
     ],
   },
@@ -82,7 +82,7 @@ export const TEXT_DEV_SEO_CONTENT: ToolSeoMap = {
       'Tidying up a list of URLs or IDs before feeding them into another script',
     ],
     tips: [
-      'Lowercase your text first if you want "Apple" and "apple" treated as the same line — comparison is case-sensitive by default.',
+      'Lowercase your text first if you want "Apple" and "apple" treated as the same line, comparison is case-sensitive by default.',
       'Trim trailing spaces before pasting, since two visually identical lines with different whitespace will not be caught as duplicates.',
       'Remember only the first occurrence of each line is kept, so reorder your list beforehand if you care which version survives.',
     ],
@@ -111,9 +111,9 @@ export const TEXT_DEV_SEO_CONTENT: ToolSeoMap = {
       'Sorting a list of numeric IDs or scores for a quick visual scan',
     ],
     tips: [
-      'Use numeric sort only when the list is mostly numbers — mixed text and numbers can sort unpredictably.',
+      'Use numeric sort only when the list is mostly numbers, mixed text and numbers can sort unpredictably.',
       'Check your locale-sensitive expectations for alphabetical sort, since case can affect ordering depending on the browser.',
-      'Run Remove Duplicate Lines first if you need both a clean and sorted list — sorting alone will not drop repeats.',
+      'Run Remove Duplicate Lines first if you need both a clean and sorted list, sorting alone will not drop repeats.',
     ],
   },
 
@@ -141,14 +141,14 @@ export const TEXT_DEV_SEO_CONTENT: ToolSeoMap = {
     ],
     tips: [
       'Use word-order reversal instead of character reversal if you want each word to stay readable.',
-      'Watch for complex emoji made of multiple code points — reversing character by character can occasionally split them apart.',
+      'Watch for complex emoji made of multiple code points, reversing character by character can occasionally split them apart.',
       'Paste multi-line text if you need each line reversed independently rather than the whole block treated as one string.',
     ],
   },
 
   'lorem-ipsum': {
     intro:
-      'Designers mocking up a landing page and developers filling a template before real copy is ready both reach for placeholder text. This generator produces classic Lorem Ipsum in the amount you need — by paragraphs, sentences or words — so you can drop realistic-looking filler text into a design or prototype without waiting on final content.',
+      'Designers mocking up a landing page and developers filling a template before real copy is ready both reach for placeholder text. This generator produces classic Lorem Ipsum in the amount you need, by paragraphs, sentences or words, so you can drop realistic-looking filler text into a design or prototype without waiting on final content.',
     steps: [
       { title: 'Choose a unit', description: 'Select whether you want paragraphs, sentences, or words.' },
       { title: 'Set the amount', description: 'Enter how many paragraphs, sentences or words to generate.' },
@@ -160,7 +160,7 @@ export const TEXT_DEV_SEO_CONTENT: ToolSeoMap = {
       { question: 'Can I generate a huge amount of text for stress-testing a layout?', answer: 'Yes, you can request a large number of paragraphs or words to test how a layout behaves with long content, limited only by your browser performance.' },
       { question: 'Does the output include HTML tags like paragraph tags?', answer: 'The generator outputs plain text; wrap it in your own HTML tags if you need it embedded in markup.' },
       { question: 'Is Lorem Ipsum generated locally?', answer: 'Yes, text is assembled entirely in the browser with no server calls.' },
-      { question: 'Can I use this text in a live production site?', answer: 'It is meant for mockups and testing only — replace it with real content before launching to users and search engines.' },
+      { question: 'Can I use this text in a live production site?', answer: 'It is meant for mockups and testing only, replace it with real content before launching to users and search engines.' },
     ],
     useCases: [
       'Filling a design mockup with realistic-looking body copy before real content is ready',
@@ -171,13 +171,13 @@ export const TEXT_DEV_SEO_CONTENT: ToolSeoMap = {
     tips: [
       'Generate by words instead of paragraphs when you need to fill a small, exact-sized UI element like a card or tooltip.',
       'Request an unusually large amount of text specifically to test how your layout handles overflow and pagination.',
-      'Remember the output is plain text — wrap it in your own HTML tags if you are pasting into markup.',
+      'Remember the output is plain text, wrap it in your own HTML tags if you are pasting into markup.',
     ],
   },
 
   'slug-generator': {
     intro:
-      'Publishing a blog post, naming a product page, or building clean file names for a CMS all require a URL-friendly slug — lowercase, hyphen-separated, with no special characters. This tool converts any title or phrase into a proper slug automatically, with customizable separators like hyphens or underscores, so your URLs stay consistent and SEO-friendly without manual cleanup.',
+      'Publishing a blog post, naming a product page, or building clean file names for a CMS all require a URL-friendly slug, lowercase, hyphen-separated, with no special characters. This tool converts any title or phrase into a proper slug automatically, with customizable separators like hyphens or underscores, so your URLs stay consistent and SEO-friendly without manual cleanup.',
     steps: [
       { title: 'Type or paste your title', description: 'Enter the heading or phrase you want turned into a slug.' },
       { title: 'Pick a separator', description: 'Choose a hyphen, underscore or other separator between words.' },
@@ -198,7 +198,7 @@ export const TEXT_DEV_SEO_CONTENT: ToolSeoMap = {
       'Standardizing routing paths across a project that mixes hyphens and underscores',
     ],
     tips: [
-      'Pick your separator before generating — switching between hyphens and underscores later means re-running every slug.',
+      'Pick your separator before generating, switching between hyphens and underscores later means re-running every slug.',
       'Check accented titles carefully; normalization is close to correct but always worth a quick visual review for unusual characters.',
       'For non-Latin scripts, expect to handle transliteration separately since the generator focuses on Latin-based text.',
     ],
@@ -217,7 +217,7 @@ export const TEXT_DEV_SEO_CONTENT: ToolSeoMap = {
       { question: 'Will this strip all HTML tags from pasted web content?', answer: 'Yes, when HTML tag removal is enabled it strips tags like <div> or <span> while keeping the visible text content.' },
       { question: 'Does it fix curly quotes and em dashes?', answer: 'It can normalize common typographic characters like smart quotes and em dashes to their plain ASCII equivalents.' },
       { question: 'Can it remove extra blank lines as well as extra spaces?', answer: 'Yes, whitespace cleanup collapses repeated spaces and can also reduce multiple consecutive blank lines.' },
-      { question: 'Is this a substitute for a full HTML sanitizer?', answer: 'No, it is meant for cleaning readable text, not for sanitizing HTML for security purposes — do not rely on it to prevent XSS.' },
+      { question: 'Is this a substitute for a full HTML sanitizer?', answer: 'No, it is meant for cleaning readable text, not for sanitizing HTML for security purposes, do not rely on it to prevent XSS.' },
       { question: 'Does the tool send my text anywhere to process it?', answer: 'No, all cleaning rules run locally in JavaScript in your browser.' },
     ],
     useCases: [
@@ -227,7 +227,7 @@ export const TEXT_DEV_SEO_CONTENT: ToolSeoMap = {
       'Preparing scraped content for a CMS field that expects clean plain text',
     ],
     tips: [
-      'Enable only the cleanup options you need — stripping HTML on already-plain text is harmless but unnecessary.',
+      'Enable only the cleanup options you need, stripping HTML on already-plain text is harmless but unnecessary.',
       'Do not rely on this for security-sensitive HTML sanitization; it is built for readability, not preventing XSS.',
       'Run text through here before a word counter or diff tool if hidden characters are throwing off your results.',
     ],
@@ -257,7 +257,7 @@ export const TEXT_DEV_SEO_CONTENT: ToolSeoMap = {
       'Cleaning up inconsistent terminology across marketing copy in one pass',
     ],
     tips: [
-      'Test your regex in the dedicated Regex Tester first if the pattern is complex — this tool applies it but does not visualize matches.',
+      'Test your regex in the dedicated Regex Tester first if the pattern is complex, this tool applies it but does not visualize matches.',
       'Reference capture groups like $1 in the replacement field to preserve parts of the matched text.',
       'Remember plain-text search is case-sensitive by default; switch to regex mode with the "i" flag if you need case-insensitive matching.',
     ],
@@ -287,7 +287,7 @@ export const TEXT_DEV_SEO_CONTENT: ToolSeoMap = {
     ],
     tips: [
       'This also strips whitespace-only lines, not just fully empty ones, so tab- or space-padded blank lines are caught too.',
-      'It only removes blank lines — pair it with a paragraph reflow step if you also need to merge broken-up text.',
+      'It only removes blank lines, pair it with a paragraph reflow step if you also need to merge broken-up text.',
       'Run this before a word or line counter if blank lines are skewing your stats.',
     ],
   },
@@ -315,9 +315,9 @@ export const TEXT_DEV_SEO_CONTENT: ToolSeoMap = {
       'Building a deduplicated mailing list from text copied across multiple documents',
     ],
     tips: [
-      'Paste raw HTML directly — the regex matches the email pattern regardless of surrounding tags.',
+      'Paste raw HTML directly, the regex matches the email pattern regardless of surrounding tags.',
       'Results are deduplicated automatically, so you do not need to clean the list again before exporting.',
-      'For strict validation of a single address, treat a match here as a good sign, not a guarantee — combine with an actual verification service if deliverability matters.',
+      'For strict validation of a single address, treat a match here as a good sign, not a guarantee, combine with an actual verification service if deliverability matters.',
     ],
   },
 
@@ -334,7 +334,7 @@ export const TEXT_DEV_SEO_CONTENT: ToolSeoMap = {
       { question: 'Does it extract URLs from href attributes in raw HTML?', answer: 'Yes, since the extraction is regex-based on the URL pattern itself, it finds links whether they appear in href attributes or as plain text.' },
       { question: 'Will it include duplicate links if they appear multiple times?', answer: 'The tool generally deduplicates the results so each unique URL appears once.' },
       { question: 'Does it capture URLs without the http:// prefix?', answer: 'It primarily matches URLs that include a recognizable scheme like http:// or https://; bare domains without a protocol may not be matched.' },
-      { question: 'Can I extract URLs from a very long article?', answer: 'Yes, there is no artificial limit — performance depends on your browser and device.' },
+      { question: 'Can I extract URLs from a very long article?', answer: 'Yes, there is no artificial limit, performance depends on your browser and device.' },
       { question: 'Is my pasted content stored anywhere?', answer: 'No, everything is processed locally in your browser and discarded when you leave the page.' },
     ],
     useCases: [
@@ -344,7 +344,7 @@ export const TEXT_DEV_SEO_CONTENT: ToolSeoMap = {
       'Collecting external links mentioned across a batch of pasted articles or emails',
     ],
     tips: [
-      'Paste raw HTML if you need links from href attributes — the extractor matches the URL pattern itself regardless of markup.',
+      'Paste raw HTML if you need links from href attributes, the extractor matches the URL pattern itself regardless of markup.',
       'Bare domains without http:// or https:// will not be picked up, so check your source text if you expect protocol-less links.',
       'The output is deduplicated, so run it directly into a spreadsheet without a separate cleanup pass.',
     ],
@@ -352,7 +352,7 @@ export const TEXT_DEV_SEO_CONTENT: ToolSeoMap = {
 
   'extract-phones': {
     intro:
-      'Customer service teams cleaning up support tickets and businesses parsing scanned contact lists often need to pull phone numbers out of unstructured text. This tool searches pasted content for common phone number formats — with area codes, country codes, dashes or parentheses — and extracts them into a clean list you can copy straight into a CRM.',
+      'Customer service teams cleaning up support tickets and businesses parsing scanned contact lists often need to pull phone numbers out of unstructured text. This tool searches pasted content for common phone number formats, with area codes, country codes, dashes or parentheses, and extracts them into a clean list you can copy straight into a CRM.',
     steps: [
       { title: 'Paste the text', description: 'Add the text or document content containing phone numbers.' },
       { title: 'Extract phone numbers', description: 'Run extraction to find number patterns in various common formats.' },
@@ -362,9 +362,9 @@ export const TEXT_DEV_SEO_CONTENT: ToolSeoMap = {
     faqs: [
       { question: 'Does it support international phone number formats?', answer: 'It matches a range of common formats including country codes, parentheses and dashes, but extremely unusual regional formats may not always be captured perfectly.' },
       { question: 'Can it distinguish a phone number from a random string of digits?', answer: 'It relies on common phone number patterns like grouped digits and separators, so a coincidental sequence of digits formatted similarly could occasionally be picked up as a false positive.' },
-      { question: 'Does it validate that a number is actually reachable?', answer: 'No, it only extracts text matching phone number patterns — it does not verify that the number is real or currently in service.' },
+      { question: 'Does it validate that a number is actually reachable?', answer: 'No, it only extracts text matching phone number patterns, it does not verify that the number is real or currently in service.' },
       { question: 'Is this suitable for scanning large customer data exports?', answer: 'Yes, it works well on pasted exports, though very large files are limited by your browser memory rather than a server cap.' },
-      { question: 'Where does the extraction happen?', answer: 'Entirely in your browser using JavaScript regex — no data is uploaded.' },
+      { question: 'Where does the extraction happen?', answer: 'Entirely in your browser using JavaScript regex, no data is uploaded.' },
     ],
     useCases: [
       'Pulling phone numbers out of a bulk support ticket export to build a callback list',
@@ -374,8 +374,8 @@ export const TEXT_DEV_SEO_CONTENT: ToolSeoMap = {
     ],
     tips: [
       'Review extracted matches against the source text, since digit sequences formatted like phone numbers can occasionally be false positives.',
-      'Expect very unusual international formats to sometimes be missed — spot-check results for non-US or non-standard number styles.',
-      'This only extracts pattern matches, it does not verify a number is real or reachable — pair it with a validation service if that matters.',
+      'Expect very unusual international formats to sometimes be missed, spot-check results for non-US or non-standard number styles.',
+      'This only extracts pattern matches, it does not verify a number is real or reachable, pair it with a validation service if that matters.',
     ],
   },
 
@@ -403,7 +403,7 @@ export const TEXT_DEV_SEO_CONTENT: ToolSeoMap = {
     ],
     tips: [
       'Results are split into separate hashtag and mention lists, so you do not need to sort them manually afterward.',
-      'Duplicate tags are consolidated to one entry each — cross-check with a word frequency tool if you need actual usage counts.',
+      'Duplicate tags are consolidated to one entry each, cross-check with a word frequency tool if you need actual usage counts.',
       'Works on plain text pasted from any platform, so you can mix content from Twitter/X, Instagram and LinkedIn in one pass.',
     ],
   },
@@ -422,7 +422,7 @@ export const TEXT_DEV_SEO_CONTENT: ToolSeoMap = {
       { question: 'Which regex flavor does this tool use?', answer: 'It uses your browser\'s native JavaScript RegExp engine, so behavior matches exactly what you would get running the same pattern in JavaScript code.' },
       { question: 'Can I see capture groups for each match?', answer: 'Yes, matched capture groups are displayed alongside the full match so you can verify a pattern before using it in code.' },
       { question: 'Does it support named capture groups?', answer: 'Yes, JavaScript-supported named groups using the (?<name>...) syntax work and their names are shown with the match.' },
-      { question: 'Will patterns written for Python or PCRE behave identically here?', answer: 'Not always — some syntax differs between regex flavors, so a pattern written for Python\'s re module or PCRE may need small adjustments to work identically in JavaScript.' },
+      { question: 'Will patterns written for Python or PCRE behave identically here?', answer: 'Not always, some syntax differs between regex flavors, so a pattern written for Python\'s re module or PCRE may need small adjustments to work identically in JavaScript.' },
       { question: 'Is my test data sent anywhere?', answer: 'No, matching runs entirely client-side using the browser\'s built-in regex engine.' },
     ],
     useCases: [
@@ -432,7 +432,7 @@ export const TEXT_DEV_SEO_CONTENT: ToolSeoMap = {
       'Checking a regex for catastrophic backtracking risk by testing against tricky sample strings',
     ],
     tips: [
-      'Test against edge-case inputs, not just the happy path — the highlighted matches make false positives easy to spot.',
+      'Test against edge-case inputs, not just the happy path, the highlighted matches make false positives easy to spot.',
       'Remember this uses JavaScript\'s RegExp engine, so patterns copied from Python or PCRE may need small syntax tweaks.',
       'Named capture groups with (?<name>...) are supported and shown by name, which is worth using for anything you will read back later in code.',
     ],
@@ -461,7 +461,7 @@ export const TEXT_DEV_SEO_CONTENT: ToolSeoMap = {
       'Spotting subtle wording changes between two policy or documentation versions',
     ],
     tips: [
-      'Keep formatting consistent between the two versions before comparing — stray whitespace differences can clutter the diff.',
+      'Keep formatting consistent between the two versions before comparing, stray whitespace differences can clutter the diff.',
       'For code specifically, use the dedicated Diff Checker tool instead, which gives clearer line-based results.',
       'Reordered content shows as a deletion plus an addition rather than a "moved" marker, so read both changes together to understand what actually happened.',
     ],
@@ -491,9 +491,9 @@ export const TEXT_DEV_SEO_CONTENT: ToolSeoMap = {
       'Exploring a deeply nested API response using the tree view instead of scrolling raw text',
     ],
     tips: [
-      'Use the tree view for deeply nested structures — collapsing branches is far faster than scanning indentation by eye.',
+      'Use the tree view for deeply nested structures, collapsing branches is far faster than scanning indentation by eye.',
       'The repair feature handles common issues like trailing commas, but treat it as a starting point, not a guarantee, for badly malformed input.',
-      'Remember standard JSON does not support comments — comment-like text will trigger a validation error rather than being stripped.',
+      'Remember standard JSON does not support comments, comment-like text will trigger a validation error rather than being stripped.',
     ],
   },
 
@@ -522,7 +522,7 @@ export const TEXT_DEV_SEO_CONTENT: ToolSeoMap = {
     tips: [
       'Well-formedness checks catch unclosed or mismatched tags, but this does not validate against an XSD or DTD schema.',
       'CDATA sections and comments are preserved through formatting, so it is safe to run on documents that rely on them.',
-      'If an error is reported, check near the location given first — the parser usually stops close to the actual problem.',
+      'If an error is reported, check near the location given first, the parser usually stops close to the actual problem.',
     ],
   },
 
@@ -536,9 +536,9 @@ export const TEXT_DEV_SEO_CONTENT: ToolSeoMap = {
       { title: 'Copy the result', description: 'Copy the output into your config file or codebase.' },
     ],
     faqs: [
-      { question: 'Does this tool support YAML anchors and aliases?', answer: 'No, anchors, aliases and custom tags are not supported — stick to plain key-value and list structures for reliable results.' },
+      { question: 'Does this tool support YAML anchors and aliases?', answer: 'No, anchors, aliases and custom tags are not supported, stick to plain key-value and list structures for reliable results.' },
       { question: 'Can it handle multi-document YAML files separated by ---?', answer: 'Multi-document YAML files are not supported; format or convert one document at a time.' },
-      { question: 'What happens if my YAML has inconsistent indentation?', answer: 'Since YAML structure depends on indentation, inconsistently indented input can be parsed incorrectly or reported as invalid — fix indentation before formatting.' },
+      { question: 'What happens if my YAML has inconsistent indentation?', answer: 'Since YAML structure depends on indentation, inconsistently indented input can be parsed incorrectly or reported as invalid, fix indentation before formatting.' },
       { question: 'Will converting YAML to JSON preserve comments?', answer: 'No, JSON has no concept of comments, so any comments in the YAML are dropped during conversion.' },
       { question: 'Is my configuration file uploaded anywhere?', answer: 'No, parsing and conversion happen entirely client-side in your browser.' },
     ],
@@ -549,9 +549,9 @@ export const TEXT_DEV_SEO_CONTENT: ToolSeoMap = {
       'Reformatting a messy YAML config pulled from another team\'s repository',
     ],
     tips: [
-      'Fix indentation issues in the source before formatting — YAML structure depends on indentation, so inconsistent spacing can be misread.',
+      'Fix indentation issues in the source before formatting, YAML structure depends on indentation, so inconsistent spacing can be misread.',
       'Avoid anchors, aliases and multi-document files split by "---" since neither is supported here.',
-      'Remember comments are dropped when converting YAML to JSON, since JSON has no comment syntax — keep a copy of the original if comments matter.',
+      'Remember comments are dropped when converting YAML to JSON, since JSON has no comment syntax, keep a copy of the original if comments matter.',
     ],
   },
 
@@ -567,7 +567,7 @@ export const TEXT_DEV_SEO_CONTENT: ToolSeoMap = {
     faqs: [
       { question: 'Does this formatter validate that my SQL syntax is correct?', answer: 'It focuses on formatting and indentation rather than full syntax validation, so it may still format a query that contains a logical or syntax error.' },
       { question: 'Does it support dialect-specific syntax like T-SQL or PL/pgSQL?', answer: 'It handles common standard SQL syntax well, but highly dialect-specific extensions may not be formatted with the same precision as a dedicated dialect-aware formatter.' },
-      { question: 'Will it change my column or table names?', answer: 'No, it only affects whitespace, line breaks and keyword casing — identifiers like table and column names are left untouched.' },
+      { question: 'Will it change my column or table names?', answer: 'No, it only affects whitespace, line breaks and keyword casing, identifiers like table and column names are left untouched.' },
       { question: 'Can it format very long queries with many joins and subqueries?', answer: 'Yes, nested subqueries and multiple joins are indented to reflect their structure, though extremely complex queries may need manual review afterward.' },
       { question: 'Is my SQL query sent to a server for formatting?', answer: 'No, formatting runs entirely in your browser using JavaScript.' },
     ],
@@ -578,7 +578,7 @@ export const TEXT_DEV_SEO_CONTENT: ToolSeoMap = {
       'Making a generated ORM query readable enough to spot an obvious logic issue',
     ],
     tips: [
-      'This formats structure and casing, it does not validate logic — a nicely formatted query can still be wrong.',
+      'This formats structure and casing, it does not validate logic, a nicely formatted query can still be wrong.',
       'Adjust the indent size to match your team\'s existing SQL style guide before copying the result into a shared file.',
       'For heavily dialect-specific syntax like T-SQL extensions, review the output manually since formatting precision can vary.',
     ],
@@ -594,10 +594,10 @@ export const TEXT_DEV_SEO_CONTENT: ToolSeoMap = {
       { title: 'Copy the result', description: 'Copy the processed HTML into your project.' },
     ],
     faqs: [
-      { question: 'Will formatting change how the page renders in the browser?', answer: 'No, formatting only adjusts whitespace and indentation in the source code — it does not alter the DOM structure or how the page looks when rendered.' },
+      { question: 'Will formatting change how the page renders in the browser?', answer: 'No, formatting only adjusts whitespace and indentation in the source code, it does not alter the DOM structure or how the page looks when rendered.' },
       { question: 'Does minify remove HTML comments?', answer: 'Minification typically strips unnecessary whitespace and can remove comments, which shrinks file size but also removes any inline notes for other developers.' },
-      { question: 'Can it format embedded inline JavaScript and CSS inside <script> and <style> tags?', answer: 'Basic indentation is applied around these blocks, but the JavaScript or CSS content itself is not deeply reformatted — use the dedicated JS or CSS formatter for that.' },
-      { question: 'Is this tool a substitute for an HTML validator?', answer: 'No, it focuses on formatting rather than checking for invalid or deprecated HTML — use a dedicated validator if you need standards compliance checking.' },
+      { question: 'Can it format embedded inline JavaScript and CSS inside <script> and <style> tags?', answer: 'Basic indentation is applied around these blocks, but the JavaScript or CSS content itself is not deeply reformatted, use the dedicated JS or CSS formatter for that.' },
+      { question: 'Is this tool a substitute for an HTML validator?', answer: 'No, it focuses on formatting rather than checking for invalid or deprecated HTML, use a dedicated validator if you need standards compliance checking.' },
       { question: 'Is my HTML processed locally?', answer: 'Yes, everything runs in your browser with no data sent to a server.' },
     ],
     useCases: [
@@ -607,8 +607,8 @@ export const TEXT_DEV_SEO_CONTENT: ToolSeoMap = {
       'Standardizing indentation across HTML templates maintained by multiple developers',
     ],
     tips: [
-      'Formatting only touches whitespace and indentation — it will not fix invalid or deprecated markup, so pair it with a validator if standards compliance matters.',
-      'Use the dedicated JS or CSS formatter for the contents of <script> and <style> blocks — this tool only lightly indents around them.',
+      'Formatting only touches whitespace and indentation, it will not fix invalid or deprecated markup, so pair it with a validator if standards compliance matters.',
+      'Use the dedicated JS or CSS formatter for the contents of <script> and <style> blocks, this tool only lightly indents around them.',
       'Minifying strips comments along with whitespace, so keep an unminified copy if you rely on inline notes for other developers.',
     ],
   },
@@ -623,7 +623,7 @@ export const TEXT_DEV_SEO_CONTENT: ToolSeoMap = {
       { title: 'Copy the styles', description: 'Copy the result straight into your stylesheet or build process.' },
     ],
     faqs: [
-      { question: 'Does this fully support SCSS features like nesting and mixins?', answer: 'Basic SCSS and LESS syntax is handled for formatting purposes, but this is a lightweight formatter, not a full preprocessor — it will not compile nested SCSS into plain CSS.' },
+      { question: 'Does this fully support SCSS features like nesting and mixins?', answer: 'Basic SCSS and LESS syntax is handled for formatting purposes, but this is a lightweight formatter, not a full preprocessor, it will not compile nested SCSS into plain CSS.' },
       { question: 'Will minifying my CSS break any functionality?', answer: 'Minification only removes whitespace and comments, so valid CSS should continue to work identically, but always test after minifying production stylesheets.' },
       { question: 'Does it reorder CSS properties alphabetically?', answer: 'No, it preserves your original property order and only adjusts indentation and line breaks.' },
       { question: 'Can it detect invalid CSS syntax?', answer: 'It is focused on formatting rather than strict validation, so some malformed CSS may still be reformatted without an explicit error.' },
@@ -636,7 +636,7 @@ export const TEXT_DEV_SEO_CONTENT: ToolSeoMap = {
       'Standardizing indentation across stylesheets contributed by different developers',
     ],
     tips: [
-      'This is a lightweight formatter, not a preprocessor — it will not compile nested SCSS or resolve mixins into plain CSS.',
+      'This is a lightweight formatter, not a preprocessor, it will not compile nested SCSS or resolve mixins into plain CSS.',
       'Property order is preserved exactly as written, so use a separate linter if you want properties sorted alphabetically.',
       'Always spot-test a minified stylesheet in the browser afterward, even though minification should not change behavior.',
     ],
@@ -644,7 +644,7 @@ export const TEXT_DEV_SEO_CONTENT: ToolSeoMap = {
 
   'js-formatter': {
     intro:
-      'Sometimes you just need to quickly re-indent a tangled snippet of JavaScript or shrink a script before pasting it somewhere space-constrained, without pulling in a full build tool. This is a lightweight formatter that strips comments and extra whitespace to minify code, or re-indents based on bracket depth to make it readable again — a fast pocket tool rather than a full parser-based formatter like Prettier.',
+      'Sometimes you just need to quickly re-indent a tangled snippet of JavaScript or shrink a script before pasting it somewhere space-constrained, without pulling in a full build tool. This is a lightweight formatter that strips comments and extra whitespace to minify code, or re-indents based on bracket depth to make it readable again, a fast pocket tool rather than a full parser-based formatter like Prettier.',
     steps: [
       { title: 'Paste your JS or TS code', description: 'Add the script or snippet you want to clean up.' },
       { title: 'Choose Format or Minify', description: 'Pick re-indentation for readability or minification for size.' },
@@ -652,8 +652,8 @@ export const TEXT_DEV_SEO_CONTENT: ToolSeoMap = {
       { title: 'Copy the code', description: 'Copy the formatted or minified code back into your project.' },
     ],
     faqs: [
-      { question: 'Is this the same as running Prettier?', answer: 'No — this is a lightweight, bracket-depth-based re-indenter and whitespace/comment stripper, not a full AST-based parser like Prettier, so it will not catch or fix syntax errors and may not perfectly format every edge case (template literals, complex JSX, etc).' },
-      { question: 'Will minifying rename variables to shorten the code further?', answer: 'No, it only strips comments and unnecessary whitespace — it does not perform variable renaming or dead-code elimination like a dedicated bundler minifier (e.g. Terser) would.' },
+      { question: 'Is this the same as running Prettier?', answer: 'No, this is a lightweight, bracket-depth-based re-indenter and whitespace/comment stripper, not a full AST-based parser like Prettier, so it will not catch or fix syntax errors and may not perfectly format every edge case (template literals, complex JSX, etc).' },
+      { question: 'Will minifying rename variables to shorten the code further?', answer: 'No, it only strips comments and unnecessary whitespace, it does not perform variable renaming or dead-code elimination like a dedicated bundler minifier (e.g. Terser) would.' },
       { question: 'Can I format TypeScript code, including types and interfaces?', answer: 'Basic TypeScript syntax is handled reasonably well since formatting is based on brackets and structure rather than full type parsing, but very complex generics or type-level code may not indent perfectly.' },
       { question: 'Is it safe to use this in a CI pipeline instead of Prettier or ESLint?', answer: 'It is best used for quick manual cleanup, not as a replacement for Prettier or ESLint in an automated pipeline, since it does not enforce a strict, verified style guide.' },
       { question: 'Does it upload my source code anywhere?', answer: 'No, all processing happens locally in your browser.' },
@@ -665,9 +665,9 @@ export const TEXT_DEV_SEO_CONTENT: ToolSeoMap = {
       'Cleaning up a small TypeScript snippet without pulling a build tool into a one-off task',
     ],
     tips: [
-      'Treat this as a pocket tool, not a Prettier replacement — it will not catch syntax errors or perfectly handle complex JSX or template literals.',
+      'Treat this as a pocket tool, not a Prettier replacement, it will not catch syntax errors or perfectly handle complex JSX or template literals.',
       'Do not rely on it in a CI pipeline in place of Prettier or ESLint since it does not enforce a verified style guide.',
-      'Minify mode only strips comments and whitespace — it will not rename variables or eliminate dead code like a bundler minifier would.',
+      'Minify mode only strips comments and whitespace, it will not rename variables or eliminate dead code like a bundler minifier would.',
     ],
   },
 
@@ -684,7 +684,7 @@ export const TEXT_DEV_SEO_CONTENT: ToolSeoMap = {
       { question: 'What is the difference between encoding a component versus a full URL?', answer: 'Component encoding (encodeURIComponent) escapes nearly every special character including "/" and "&", suitable for a single query value, while full URL encoding (encodeURI) leaves characters like "/" and ":" untouched since they are structurally part of a valid URL.' },
       { question: 'Will decoding fail on malformed percent-encoded input?', answer: 'Yes, if the input contains an invalid percent-encoding sequence, decoding will report an error rather than silently guessing at the intended value.' },
       { question: 'Does it handle Unicode characters like emoji or non-Latin text?', answer: 'Yes, Unicode characters are encoded into their correct percent-encoded UTF-8 byte sequences and can be decoded back correctly.' },
-      { question: 'Is URL encoding the same as Base64 encoding?', answer: 'No, they are different schemes for different purposes — URL encoding escapes characters for safe use in a URL, while Base64 encodes binary data as ASCII text; use the dedicated Base64 tool for that.' },
+      { question: 'Is URL encoding the same as Base64 encoding?', answer: 'No, they are different schemes for different purposes, URL encoding escapes characters for safe use in a URL, while Base64 encodes binary data as ASCII text; use the dedicated Base64 tool for that.' },
       { question: 'Is any of this data sent to a server?', answer: 'No, encoding and decoding use built-in browser JavaScript functions and never leave your device.' },
     ],
     useCases: [
@@ -695,8 +695,8 @@ export const TEXT_DEV_SEO_CONTENT: ToolSeoMap = {
     ],
     tips: [
       'Use component encoding (encodeURIComponent) for a single query value, and full URL encoding (encodeURI) when the input is already a whole URL.',
-      'A decode error usually means the input has an invalid percent-encoding sequence — check for stray "%" characters not followed by two hex digits.',
-      'Do not confuse this with Base64 — URL encoding escapes characters for safe URL use, while Base64 encodes binary data as text.',
+      'A decode error usually means the input has an invalid percent-encoding sequence, check for stray "%" characters not followed by two hex digits.',
+      'Do not confuse this with Base64, URL encoding escapes characters for safe URL use, while Base64 encodes binary data as text.',
     ],
   },
 
@@ -711,8 +711,8 @@ export const TEXT_DEV_SEO_CONTENT: ToolSeoMap = {
     ],
     faqs: [
       { question: 'Can I encode binary files like images, not just text?', answer: 'Yes, you can upload a file and the tool will produce its Base64 representation, which is useful for embedding small assets directly in code or data URIs.' },
-      { question: 'Why does decoding sometimes fail with an error?', answer: 'Decoding fails if the input is not valid Base64 — for example if it contains characters outside the Base64 alphabet or has incorrect padding.' },
-      { question: 'Is Base64 encoding a form of encryption?', answer: 'No, Base64 is only an encoding scheme for representing binary data as text — it provides no security or confidentiality, and anyone can decode it instantly.' },
+      { question: 'Why does decoding sometimes fail with an error?', answer: 'Decoding fails if the input is not valid Base64, for example if it contains characters outside the Base64 alphabet or has incorrect padding.' },
+      { question: 'Is Base64 encoding a form of encryption?', answer: 'No, Base64 is only an encoding scheme for representing binary data as text, it provides no security or confidentiality, and anyone can decode it instantly.' },
       { question: 'Does it support URL-safe Base64 variants?', answer: 'Standard Base64 with "+" and "/" characters is supported; if you need the URL-safe variant using "-" and "_" you may need to substitute characters manually.' },
       { question: 'Is my file or text uploaded to a server during encoding?', answer: 'No, all encoding and decoding happens locally using the Web APIs available in your browser.' },
     ],
@@ -723,7 +723,7 @@ export const TEXT_DEV_SEO_CONTENT: ToolSeoMap = {
       'Converting a small file to Base64 for a config value or environment variable',
     ],
     tips: [
-      'Remember Base64 is not encryption — anyone can decode it instantly, so never use it to hide sensitive data.',
+      'Remember Base64 is not encryption, anyone can decode it instantly, so never use it to hide sensitive data.',
       'If decoding fails, check for missing padding or characters outside the standard Base64 alphabet.',
       'For URL-safe contexts, be ready to swap "+" and "/" for "-" and "_" manually, since only standard Base64 is produced here.',
     ],
@@ -739,11 +739,11 @@ export const TEXT_DEV_SEO_CONTENT: ToolSeoMap = {
       { title: 'Inspect specific claims', description: 'Review individual claims like sub, iat and custom fields.' },
     ],
     faqs: [
-      { question: 'Does this tool verify the JWT signature?', answer: 'No — it only decodes the header and payload from Base64URL to show their contents; it does not verify the signature against a secret or public key, so a decoded token could still be forged or tampered with.' },
-      { question: 'Can I trust the claims shown without also verifying the token server-side?', answer: 'No, decoding alone tells you what a token claims, not whether those claims are authentic — always verify the signature server-side before trusting the token in a real authentication flow.' },
+      { question: 'Does this tool verify the JWT signature?', answer: 'No, it only decodes the header and payload from Base64URL to show their contents; it does not verify the signature against a secret or public key, so a decoded token could still be forged or tampered with.' },
+      { question: 'Can I trust the claims shown without also verifying the token server-side?', answer: 'No, decoding alone tells you what a token claims, not whether those claims are authentic, always verify the signature server-side before trusting the token in a real authentication flow.' },
       { question: 'Why does the tool say my token is expired?', answer: 'It compares the "exp" claim, a Unix timestamp, against the current time on your device, and flags the token as expired if that time has passed.' },
       { question: 'Does it work with JWTs signed using RS256 as well as HS256?', answer: 'Yes, since decoding does not require the signing key, it works the same way regardless of which signing algorithm was used.' },
-      { question: 'Is my token sent to a server when I paste it here?', answer: 'No, decoding happens entirely in your browser — the token, which may contain sensitive claims, never leaves your device.' },
+      { question: 'Is my token sent to a server when I paste it here?', answer: 'No, decoding happens entirely in your browser, the token, which may contain sensitive claims, never leaves your device.' },
     ],
     useCases: [
       'Debugging an API 401 error by checking a token\'s expiry and issuer claims',
@@ -752,9 +752,9 @@ export const TEXT_DEV_SEO_CONTENT: ToolSeoMap = {
       'Checking whether a token from a support ticket has simply expired',
     ],
     tips: [
-      'This only decodes the token, it does not verify the signature — never treat the displayed claims as proof of authenticity.',
+      'This only decodes the token, it does not verify the signature, never treat the displayed claims as proof of authenticity.',
       'Compare the "exp" claim against the current time in the token\'s own timezone context, since it is a Unix timestamp evaluated against your device clock.',
-      'Because tokens can contain sensitive data, avoid pasting production tokens into any tool you do not fully trust — this one processes everything locally.',
+      'Because tokens can contain sensitive data, avoid pasting production tokens into any tool you do not fully trust, this one processes everything locally.',
     ],
   },
 
@@ -783,7 +783,7 @@ export const TEXT_DEV_SEO_CONTENT: ToolSeoMap = {
     tips: [
       'Generate in bulk and paste the whole batch into a SQL insert or fixture file rather than generating one at a time.',
       'Choose the no-hyphen format if your target system expects a plain 32-character hex string.',
-      'This produces only random v4 UUIDs — use a dedicated library if you need time-ordered v1 or v7 identifiers.',
+      'This produces only random v4 UUIDs, use a dedicated library if you need time-ordered v1 or v7 identifiers.',
     ],
   },
 
@@ -797,8 +797,8 @@ export const TEXT_DEV_SEO_CONTENT: ToolSeoMap = {
       { title: 'Copy the hash', description: 'Copy the resulting hash for comparison or storage.' },
     ],
     faqs: [
-      { question: 'Can I convert a hash back into the original text?', answer: 'No, hashing is a one-way function by design — there is no way to reverse a hash back into its original input, which is exactly what makes hashes useful for integrity checks and password storage.' },
-      { question: 'Is MD5 or SHA-1 safe to use for security purposes?', answer: 'No, both MD5 and SHA-1 are considered cryptographically broken for security-sensitive purposes like password hashing or digital signatures due to known collision vulnerabilities — use SHA-256 or SHA-512 for anything security-related.' },
+      { question: 'Can I convert a hash back into the original text?', answer: 'No, hashing is a one-way function by design, there is no way to reverse a hash back into its original input, which is exactly what makes hashes useful for integrity checks and password storage.' },
+      { question: 'Is MD5 or SHA-1 safe to use for security purposes?', answer: 'No, both MD5 and SHA-1 are considered cryptographically broken for security-sensitive purposes like password hashing or digital signatures due to known collision vulnerabilities, use SHA-256 or SHA-512 for anything security-related.' },
       { question: 'Why would two different pieces of text produce the same hash?', answer: 'This is called a hash collision, and while theoretically possible for any hash function, it is computationally impractical to find for SHA-256 and SHA-512, and only practically demonstrated for weaker algorithms like MD5.' },
       { question: 'Can I hash a file instead of just text?', answer: 'This tool is designed for hashing text input directly; for hashing files you would need to first extract or paste their text content.' },
       { question: 'Is my text sent to a server to compute the hash?', answer: 'No, hashing is computed locally using the Web Crypto API built into your browser.' },
@@ -810,8 +810,8 @@ export const TEXT_DEV_SEO_CONTENT: ToolSeoMap = {
       'Testing hash output for a small piece of data before wiring up the same logic in code',
     ],
     tips: [
-      'Use SHA-256 or SHA-512 for anything security-related — MD5 and SHA-1 are broken for that purpose and should only be used for simple integrity checks.',
-      'Remember hashing is one-way — there is no decode option because none exists mathematically.',
+      'Use SHA-256 or SHA-512 for anything security-related, MD5 and SHA-1 are broken for that purpose and should only be used for simple integrity checks.',
+      'Remember hashing is one-way, there is no decode option because none exists mathematically.',
       'To hash a file, extract or paste its text content first, since this tool hashes text input directly.',
     ],
   },
@@ -841,7 +841,7 @@ export const TEXT_DEV_SEO_CONTENT: ToolSeoMap = {
     tips: [
       'Paste full file contents on both sides for the clearest line-by-line comparison rather than partial snippets.',
       'Check for a whitespace-ignore option if indentation-only changes are cluttering the diff with noise.',
-      'Use this for quick ad hoc comparisons — for an actual repository workflow, git diff and merge tooling still handle history and conflicts better.',
+      'Use this for quick ad hoc comparisons, for an actual repository workflow, git diff and merge tooling still handle history and conflicts better.',
     ],
   },
 
@@ -868,7 +868,7 @@ export const TEXT_DEV_SEO_CONTENT: ToolSeoMap = {
       'Reviewing how fenced code blocks with syntax highlighting will look before publishing',
     ],
     tips: [
-      'The editor holds content only in memory for the session — copy your Markdown out before closing or refreshing the tab.',
+      'The editor holds content only in memory for the session, copy your Markdown out before closing or refreshing the tab.',
       'Check embedded raw HTML in the preview if your Markdown mixes in inline tags, since rendering follows standard Markdown-parser behavior.',
       'Copy the rendered HTML directly if you need to paste formatted content into a tool that does not support Markdown.',
     ],
@@ -885,7 +885,7 @@ export const TEXT_DEV_SEO_CONTENT: ToolSeoMap = {
     ],
     faqs: [
       { question: 'Will HTML-to-Markdown conversion preserve complex layouts like nested tables?', answer: 'Simple structures like headings, links, lists and basic tables convert cleanly, but deeply nested or heavily styled HTML layouts may lose some visual fidelity since Markdown has a simpler feature set than HTML.' },
-      { question: 'Does Markdown-to-HTML conversion include a full stylesheet?', answer: 'No, it generates semantic HTML elements without any styling — you will need to apply your own CSS if you want the output to match a specific visual design.' },
+      { question: 'Does Markdown-to-HTML conversion include a full stylesheet?', answer: 'No, it generates semantic HTML elements without any styling, you will need to apply your own CSS if you want the output to match a specific visual design.' },
       { question: 'What happens to inline styles or custom HTML attributes when converting to Markdown?', answer: 'Inline styles and custom attributes are generally dropped during conversion, since Markdown does not have an equivalent syntax for arbitrary HTML attributes.' },
       { question: 'Can I round-trip content, converting HTML to Markdown and back, without losing anything?', answer: 'For simple content the round trip is usually close to lossless, but complex formatting like custom classes, multi-column layouts or embedded scripts will not survive the conversion in either direction.' },
       { question: 'Is my content processed on a server during conversion?', answer: 'No, the conversion logic runs entirely in your browser using JavaScript.' },
@@ -898,8 +898,8 @@ export const TEXT_DEV_SEO_CONTENT: ToolSeoMap = {
     ],
     tips: [
       'Expect simple structures like headings, links and lists to convert cleanly, but review deeply nested tables or heavily styled HTML by hand afterward.',
-      'Markdown-to-HTML output has no styling attached — apply your own CSS if you need it to match a specific design.',
-      'Do not expect a lossless round trip for complex content — custom classes, multi-column layouts and embedded scripts do not survive conversion either direction.',
+      'Markdown-to-HTML output has no styling attached, apply your own CSS if you need it to match a specific design.',
+      'Do not expect a lossless round trip for complex content, custom classes, multi-column layouts and embedded scripts do not survive conversion either direction.',
     ],
   },
 };

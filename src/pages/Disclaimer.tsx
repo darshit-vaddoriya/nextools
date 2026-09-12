@@ -17,8 +17,8 @@ export const Disclaimer: React.FC<DisclaimerProps> = ({ onBack }) => (
     <PageProse>
       <PageSection title="General information only">
         <p>
-          All content on https://nexttool.click — including tool descriptions, how-to guides, FAQs
-          and calculator outputs — is published for general information and convenience. We make
+          All content on https://nexttool.click, including tool descriptions, how-to guides, FAQs
+          and calculator outputs, is published for general information and convenience. We make
           every reasonable effort to keep it accurate and current, but we give no warranty of any
           kind, express or implied, about the completeness, accuracy, reliability or suitability of
           the site or its content for any purpose. Any reliance you place on it is strictly at your

@@ -986,7 +986,7 @@ export const ImageDrawTool: React.FC = () => {
         <DropZone
           onFiles={handleFiles}
           label="Select or drag & drop an image to draw on"
-          hint="Draw shapes, add text and move things around — all on your device"
+          hint="Draw shapes, add text and move things around, all on your device"
         />
         <ErrorNotice message={error} />
       </div>

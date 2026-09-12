@@ -53,7 +53,7 @@ The reason server-side processing was standard is that browsers used to be too w
 - **WebGPU** gives access to the graphics card, which is what makes on-device machine-learning models practical.
 - **The File System Access API** reads large files without loading them entirely into memory.
 
-Put together, a browser tab is now a capable computing environment. The tasks people most commonly hand to a server — merging PDFs, compressing images, formatting JSON, hashing a file, removing a background — are all comfortably within reach.
+Put together, a browser tab is now a capable computing environment. The tasks people most commonly hand to a server, merging PDFs, compressing images, formatting JSON, hashing a file, removing a background, are all comfortably within reach.
 
 ## The honest limitations
 
@@ -75,7 +75,7 @@ Client-side is not a magic property, and it is worth being precise about what it
 
 Not everything needs this level of care. A meme does not.
 
-A lease, a medical report, a passport scan, an unreleased product photo, a customer export, a production API token — these do. For that category, the question "is a copy of this on someone else's hardware?" has a much better answer than "for how long?".
+A lease, a medical report, a passport scan, an unreleased product photo, a customer export, a production API token, these do. For that category, the question "is a copy of this on someone else's hardware?" has a much better answer than "for how long?".
 
 Every tool on NextTool is built the second way, which is why there are no size limits, no accounts, and no upload progress bars.`,
   },
@@ -93,7 +93,7 @@ Every tool on NextTool is built the second way, which is why there are no size l
 
 ## What is in there
 
-**Location.** If location services were enabled for the camera, the file contains GPS latitude and longitude — typically accurate to a handful of metres — plus altitude and sometimes compass bearing. A photo taken in your living room contains your home address in a form any mapping tool can read directly.
+**Location.** If location services were enabled for the camera, the file contains GPS latitude and longitude, typically accurate to a handful of metres, plus altitude and sometimes compass bearing. A photo taken in your living room contains your home address in a form any mapping tool can read directly.
 
 **Time.** Original capture timestamp, often with time zone.
 
@@ -103,21 +103,21 @@ Every tool on NextTool is built the second way, which is why there are no size l
 
 **Software history.** Which editor touched the file and when. XMP records can retain an edit history.
 
-**Embedded thumbnail.** A small preview image. Critically, **this is not always regenerated when the main image is edited**. There are documented cases of a cropped photo retaining a thumbnail showing the uncropped original — including the part that was cropped out precisely because it was sensitive.
+**Embedded thumbnail.** A small preview image. Critically, **this is not always regenerated when the main image is edited**. There are documented cases of a cropped photo retaining a thumbnail showing the uncropped original, including the part that was cropped out precisely because it was sensitive.
 
-**Author and copyright**, where set — often the photographer's real name.
+**Author and copyright**, where set, often the photographer's real name.
 
 ## The realistic risks
 
 - **Home and workplace location** from personal photos.
 - **Pattern of life.** A set of timestamped, geotagged photos reconstructs where someone was and when.
 - **Device linking.** The serial number connects a pseudonymous account to a named one.
-- **Marketplace listings.** Selling furniture with a photo geotagged to your home advertises where the item — and you — can be found.
+- **Marketplace listings.** Selling furniture with a photo geotagged to your home advertises where the item, and you, can be found.
 - **Sources and safety.** For journalists, activists and anyone in a domestic-abuse situation, location metadata is a concrete physical risk.
 
 ## Which platforms strip it
 
-Most large social platforms strip EXIF on upload — partly for privacy, mostly because re-encoding images saves them bandwidth. Facebook, Instagram, X and WhatsApp generally remove it from images shared in-app.
+Most large social platforms strip EXIF on upload, partly for privacy, mostly because re-encoding images saves them bandwidth. Facebook, Instagram, X and WhatsApp generally remove it from images shared in-app.
 
 But this is unreliable as a general defence:
 
@@ -133,7 +133,7 @@ The rule: metadata is stripped only when a platform re-encodes the image, and on
 
 **The reliable method: re-encode the image.** Converting a JPEG to a new JPEG, PNG or WebP writes fresh pixel data with no metadata block. This removes everything, including the embedded thumbnail. Resizing does the same thing as a side effect.
 
-**Selective removal** is better when some metadata is wanted — a photographer may want camera settings and copyright retained while stripping GPS. This needs a tool that edits specific EXIF tags rather than dropping the whole block.
+**Selective removal** is better when some metadata is wanted, a photographer may want camera settings and copyright retained while stripping GPS. This needs a tool that edits specific EXIF tags rather than dropping the whole block.
 
 **Screenshotting a photo** removes all metadata, at the cost of quality and resolution.
 
@@ -141,13 +141,13 @@ Note that **a screenshot has its own metadata**, and on some systems includes th
 
 ## PDFs and documents too
 
-This is not only a photo issue. PDFs carry author, title, producing software, and creation and modification timestamps. Word documents historically carried the author name, the company, the file path, and revision history — which has embarrassed organisations that published documents without checking.
+This is not only a photo issue. PDFs carry author, title, producing software, and creation and modification timestamps. Word documents historically carried the author name, the company, the file path, and revision history, which has embarrassed organisations that published documents without checking.
 
 If you are publishing a document anonymously or externally, check its properties before you send it.
 
 ## Checking your own files
 
-The only way to know what a file contains is to look. NextTool's [image metadata viewer](/tool/image-metadata) shows every EXIF field in a photo, and the [PDF metadata tool](/tool/pdf-metadata) does the same for documents. Both read the file in your browser — which is the correct behaviour for a tool whose entire purpose is finding out whether a file contains something you did not want to share.
+The only way to know what a file contains is to look. NextTool's [image metadata viewer](/tool/image-metadata) shows every EXIF field in a photo, and the [PDF metadata tool](/tool/pdf-metadata) does the same for documents. Both read the file in your browser, which is the correct behaviour for a tool whose entire purpose is finding out whether a file contains something you did not want to share.
 
 Take a photo with your phone right now and inspect it. Most people are surprised by how precise the coordinates are.`,
   },
@@ -161,7 +161,7 @@ Take a photo with your phone right now and inspect it. Most people are surprised
     tags: ['privacy', 'uploads', 'data-retention'],
     published: '2026-08-26',
     relatedTools: ['pdf-compress', 'pdf-merge', 'image-compressor', 'pdf-redact'],
-    body: `Free online converters are useful and enormously popular. It is worth understanding what happens after you click upload — not because these services are malicious, but because the ordinary architecture of a web service creates more copies than most people picture.
+    body: `Free online converters are useful and enormously popular. It is worth understanding what happens after you click upload, not because these services are malicious, but because the ordinary architecture of a web service creates more copies than most people picture.
 
 ## The journey
 
@@ -171,13 +171,13 @@ Take a photo with your phone right now and inspect it. Most people are surprised
 
 **3. A load balancer routes it** to an available application server.
 
-**4. The application server writes it to disk.** Processing libraries generally need a file path, so the upload is written to temporary storage — commonly \`/tmp\`.
+**4. The application server writes it to disk.** Processing libraries generally need a file path, so the upload is written to temporary storage, commonly \`/tmp\`.
 
 **5. It may be copied to object storage.** In a horizontally scaled deployment, the machine that processed the file may not be the one that serves the download, so the input and output are placed in shared storage such as S3.
 
 **6. Logs are written at several layers.** Web server access logs, application logs, error logs. If processing failed, the error log may contain a stack trace including file contents or metadata. Logs are frequently shipped to a third-party aggregation service.
 
-**7. Backups run on schedule.** If a nightly snapshot of the storage volume runs while your file is present, it is in that backup — and backups are typically retained for weeks or months, on a schedule that has nothing to do with the one-hour deletion policy.
+**7. Backups run on schedule.** If a nightly snapshot of the storage volume runs while your file is present, it is in that backup, and backups are typically retained for weeks or months, on a schedule that has nothing to do with the one-hour deletion policy.
 
 ## What "deleted after 1 hour" usually means
 
@@ -198,7 +198,7 @@ None of this implies dishonesty. It reflects the fact that deleting every trace 
 Some free tools reserve broad rights in their terms of service. Clauses worth looking for:
 
 - A licence to **store, reproduce or modify** uploaded content
-- Permission to use uploaded content **to improve services** — which now often means training models
+- Permission to use uploaded content **to improve services**, which now often means training models
 - **Sharing with partners or affiliates**
 - **No stated retention period** at all
 - Jurisdiction and applicable law, which affects what recourse you have
@@ -215,7 +215,7 @@ Not every file warrants this analysis. Sort by consequence:
 
 **High.** ID documents, contracts, medical records, financial statements, anything containing other people's personal data, credentials, unreleased commercial material. **Do not upload these to a free tool.** Use software that runs locally.
 
-That last category is, awkwardly, the one people upload most — because it is exactly the sort of document that needs merging, compressing and redacting.
+That last category is, awkwardly, the one people upload most, because it is exactly the sort of document that needs merging, compressing and redacting.
 
 ## Regulatory dimension
 
@@ -227,7 +227,7 @@ Uploading a customer list to a free converter to reformat it is, in strict terms
 
 Open your browser's developer tools, go to the Network tab, and select a file in whichever tool you use. If a request appears carrying your file, it was uploaded. If nothing does, it was not.
 
-That is the whole test, and it is worth doing once for any tool you use regularly. Every tool on NextTool — [compression](/tool/pdf-compress), [merging](/tool/pdf-merge), [redaction](/tool/pdf-redact) — will show you nothing in that tab, because there is no endpoint to send anything to.`,
+That is the whole test, and it is worth doing once for any tool you use regularly. Every tool on NextTool, [compression](/tool/pdf-compress), [merging](/tool/pdf-merge), [redaction](/tool/pdf-redact), will show you nothing in that tab, because there is no endpoint to send anything to.`,
   },
 
   {
@@ -239,13 +239,13 @@ That is the whole test, and it is worth doing once for any tool you use regularl
     tags: ['cookies', 'tracking', 'fingerprinting', 'gdpr'],
     published: '2026-09-02',
     relatedTools: ['user-agent-parser', 'url-parser', 'secure-notes'],
-    body: `Cookies are small pieces of text a site asks your browser to store and send back on later requests. HTTP is stateless, so without them a site could not keep you logged in between two clicks. They are infrastructure, not surveillance — the surveillance comes from how some of them are used.
+    body: `Cookies are small pieces of text a site asks your browser to store and send back on later requests. HTTP is stateless, so without them a site could not keep you logged in between two clicks. They are infrastructure, not surveillance, the surveillance comes from how some of them are used.
 
 ## First-party and third-party
 
 **First-party cookies** are set by the site you are visiting. Session cookies, your theme preference, items in a cart. These are what make a website work.
 
-**Third-party cookies** are set by a different domain whose content is embedded in the page — an ad network, an analytics provider, a social widget. Because the same third party is embedded across many sites, it can recognise the same browser on each of them and build a profile of the pages you visit.
+**Third-party cookies** are set by a different domain whose content is embedded in the page, an ad network, an analytics provider, a social widget. Because the same third party is embedded across many sites, it can recognise the same browser on each of them and build a profile of the pages you visit.
 
 This is the distinction that matters, and it is the one consent banners are ultimately about.
 
@@ -269,7 +269,7 @@ Defences are partial. Firefox and Safari actively resist fingerprinting by norma
 
 ## What consent banners actually do
 
-Under GDPR and the ePrivacy Directive, consent is required before setting non-essential cookies. Strictly necessary ones — session, security, load balancing — do not need consent.
+Under GDPR and the ePrivacy Directive, consent is required before setting non-essential cookies. Strictly necessary ones, session, security, load balancing, do not need consent.
 
 In practice, banner quality varies enormously. Some genuinely gate all non-essential storage behind your choice. Others set tracking cookies before you interact at all, which regulators across Europe have repeatedly fined organisations for.
 

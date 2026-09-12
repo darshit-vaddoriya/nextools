@@ -13,7 +13,7 @@ export const IMAGE_SEO_CONTENT: ToolSeoMap = {
     faqs: [
       { question: 'Will compressing my image reduce its quality?', answer: 'Some quality is traded for smaller file size, but the tool uses lossy compression with a live preview so you can pick the point where savings are worthwhile without visible artifacts.' },
       { question: 'Which formats are supported?', answer: 'JPEG, PNG, WebP, and AVIF are all supported for both input and compressed output.' },
-      { question: 'Is there a file size limit?', answer: 'The tool runs entirely in your browser, so the practical limit is your device memory rather than a server upload cap — most photos up to tens of megabytes compress instantly.' },
+      { question: 'Is there a file size limit?', answer: 'The tool runs entirely in your browser, so the practical limit is your device memory rather than a server upload cap, most photos up to tens of megabytes compress instantly.' },
       { question: 'Are my images uploaded anywhere?', answer: 'No. Compression happens locally using your browser Canvas API; the file never leaves your computer or phone.' },
       { question: 'Does it work on mobile browsers?', answer: 'Yes, the compressor works on modern mobile browsers, though very large images may take a moment longer to process than on desktop.' },
     ],
@@ -24,7 +24,7 @@ export const IMAGE_SEO_CONTENT: ToolSeoMap = {
       'Trimming screenshots down before pasting them into a bug report or ticket',
     ],
     tips: [
-      'Push the quality slider down gradually while watching the preview — most photos hold up fine down to 60-70% quality with no visible artifacts',
+      'Push the quality slider down gradually while watching the preview, most photos hold up fine down to 60-70% quality with no visible artifacts',
       'WebP and AVIF typically compress smaller than JPEG at the same visual quality, so switch formats if size matters more than compatibility',
       'PNG compression gains are limited on photos; convert to JPEG or WebP first if you need aggressive size reduction on photographic content',
     ],
@@ -52,7 +52,7 @@ export const IMAGE_SEO_CONTENT: ToolSeoMap = {
       'Resizing a batch of screenshots to a consistent width for a document or slide deck',
     ],
     tips: [
-      'Lock the aspect ratio first, then adjust one dimension — the other updates automatically without distortion',
+      'Lock the aspect ratio first, then adjust one dimension, the other updates automatically without distortion',
       'Enlarging past the original resolution will soften detail, so try to resize down rather than up whenever possible',
       'Use percentage mode when you just need a proportionally smaller version rather than an exact pixel target',
     ],
@@ -80,7 +80,7 @@ export const IMAGE_SEO_CONTENT: ToolSeoMap = {
       'Cutting a photo down to a 16:9 crop for a video thumbnail or banner',
     ],
     tips: [
-      'Lock a preset aspect ratio first if the destination platform has fixed dimensions — it avoids awkward manual resizing later',
+      'Lock a preset aspect ratio first if the destination platform has fixed dimensions, it avoids awkward manual resizing later',
       'Crop tighter than you think you need; you can always add padding back but cannot recover cropped-away pixels',
       'Cropping only reduces file size when the selection is meaningfully smaller than the original, so trivial crops won\'t save much space',
     ],
@@ -137,13 +137,13 @@ export const IMAGE_SEO_CONTENT: ToolSeoMap = {
     ],
     tips: [
       'Combine a horizontal and vertical flip in sequence if you need a full 180-degree mirror rather than a rotation',
-      'Remember any text baked into the image pixels will read backwards after a horizontal flip — use rotate instead if the text needs to stay legible',
+      'Remember any text baked into the image pixels will read backwards after a horizontal flip, use rotate instead if the text needs to stay legible',
       'Flipping is lossless, so it is safe to apply and reverse repeatedly without any quality loss',
     ],
   },
   'image-convert': {
     intro:
-      'Different platforms and tools demand different image formats — a CMS might reject HEIC photos straight from an iPhone, or you might need a PNG turned into a lighter WebP for the web — and this converter handles JPG, PNG, WebP, AVIF, HEIC, BMP, TIFF, and more in one place. Web developers use it to modernize legacy image assets, while everyday users use it to make iPhone photos compatible with services that only accept JPG or PNG. Multiple files can be converted in a batch, all processed locally without uploading anything.',
+      'Different platforms and tools demand different image formats, a CMS might reject HEIC photos straight from an iPhone, or you might need a PNG turned into a lighter WebP for the web, and this converter handles JPG, PNG, WebP, AVIF, HEIC, BMP, TIFF, and more in one place. Web developers use it to modernize legacy image assets, while everyday users use it to make iPhone photos compatible with services that only accept JPG or PNG. Multiple files can be converted in a batch, all processed locally without uploading anything.',
     steps: [
       { title: 'Add one or more images', description: 'Drop in a single file or multiple images at once using the multi-file drop zone.' },
       { title: 'Choose the target format', description: 'Select the output format you need, such as PNG, WebP, AVIF, or JPG.' },
@@ -225,34 +225,6 @@ export const IMAGE_SEO_CONTENT: ToolSeoMap = {
       'Use a square, centered source image so nothing important gets cropped when it is resized to each icon dimension',
     ],
   },
-  'ai-upscaler': {
-    intro:
-      'Old low-resolution photos, small product thumbnails, or compressed images that need to be printed larger can be enhanced using AI super-resolution models that run directly on your device via WebGPU or WASM, upscaling images up to 4x while reconstructing plausible detail rather than simply stretching pixels. Photographers restoring old family photos and sellers upscaling thumbnail-sized product shots both rely on this. Because the neural network runs locally rather than on a remote server, nothing is uploaded, though larger scale factors take noticeably more processing time and benefit from a device with WebGPU support.',
-    steps: [
-      { title: 'Upload the image to upscale', description: 'Select a low-resolution image you want to enhance.' },
-      { title: 'Choose an upscale factor', description: 'Pick how much larger you want the output, up to 4x the original resolution.' },
-      { title: 'Run the AI model', description: 'Start processing and wait while the super-resolution model runs locally in your browser.' },
-      { title: 'Download the upscaled image', description: 'Save the enhanced, higher-resolution result once processing finishes.' },
-    ],
-    faqs: [
-      { question: 'How does this upscale without uploading my photo?', answer: 'An AI super-resolution model is downloaded once and then runs directly in your browser using WebGPU or WASM, so the image itself is processed locally and never sent to a server.' },
-      { question: 'Do I need a powerful GPU?', answer: 'A WebGPU-capable browser and GPU will process much faster; devices without WebGPU fall back to a slower WASM CPU path but will still work.' },
-      { question: 'How long does upscaling take?', answer: 'Processing time depends on your device and the chosen scale factor, typically ranging from a few seconds to around a minute for 4x upscaling.' },
-      { question: 'Will upscaling invent detail that was not in the original?', answer: 'Yes, AI super-resolution reconstructs plausible texture and edges statistically, so results look sharper but are not a perfect recovery of lost detail.' },
-      { question: 'Does it work on mobile devices?', answer: 'It can run on mobile browsers with WASM support, though performance is slower than on desktop and very high scale factors may be limited by device memory.' },
-    ],
-    useCases: [
-      'Restoring an old, low-resolution family photo before printing it at a larger size',
-      'Upscaling a small product thumbnail so it looks sharp on a full-size listing page',
-      'Enlarging a compressed image pulled from an old website or archive',
-      'Preparing a low-res image for print where the original file is too small to reproduce cleanly',
-    ],
-    tips: [
-      'Use a WebGPU-capable browser if possible — it processes noticeably faster than the WASM fallback, especially at 4x scale',
-      'Start with a lower scale factor like 2x if you just need a modest quality bump, since 4x takes considerably longer',
-      'Remember the model reconstructs plausible detail rather than recovering the original — it improves sharpness but is not a perfect restoration',
-    ],
-  },
   'ai-bg-remover': {
     intro:
       'Cutting a subject out from its background used to require a subscription tool or careful manual masking in Photoshop, but this tool detects the foreground automatically using an AI segmentation model that runs on-device through WebGPU or WASM. E-commerce sellers use it to create clean white-background product shots, and social media users use it to place themselves onto new backgrounds. A before/after slider lets you check the mask quality, and because the model runs locally, your photo never leaves your device even though it is being processed by an AI network.',
@@ -278,13 +250,13 @@ export const IMAGE_SEO_CONTENT: ToolSeoMap = {
     ],
     tips: [
       'Use the before/after slider to check edge quality around hair or fur, which is where segmentation is most likely to need manual touch-up',
-      'Choose a smaller output size if processing feels slow on your device — it reduces the compute load on the segmentation model',
+      'Choose a smaller output size if processing feels slow on your device, it reduces the compute load on the segmentation model',
       'Photos with high contrast between subject and background produce cleaner masks than busy or low-contrast scenes',
     ],
   },
   'image-sharpen': {
     intro:
-      'A slightly soft or blurry photo — from a shaky phone shot or a resized image that lost some crispness — can often be improved with an edge-enhancement filter, and this tool applies an adjustable sharpening kernel entirely in your browser. It is popular with photographers doing quick touch-ups and sellers wanting product photos to look crisper on a listing page. You control the sharpening strength and preview the effect before exporting.',
+      'A slightly soft or blurry photo, from a shaky phone shot or a resized image that lost some crispness, can often be improved with an edge-enhancement filter, and this tool applies an adjustable sharpening kernel entirely in your browser. It is popular with photographers doing quick touch-ups and sellers wanting product photos to look crisper on a listing page. You control the sharpening strength and preview the effect before exporting.',
     steps: [
       { title: 'Upload the photo', description: 'Select the image you want to sharpen.' },
       { title: 'Adjust the sharpen intensity', description: 'Move the slider to increase or decrease the strength of edge enhancement.' },
@@ -305,7 +277,7 @@ export const IMAGE_SEO_CONTENT: ToolSeoMap = {
       'Punching up edge definition on a scanned image before printing it',
     ],
     tips: [
-      'Increase intensity gradually and check the preview closely — overshooting introduces visible halos around edges',
+      'Increase intensity gradually and check the preview closely, overshooting introduces visible halos around edges',
       'Apply sharpening as the last step in your workflow, after resizing or compressing, since those operations can soften edges again',
       'Skip heavy sharpening on already-noisy or high-ISO photos, since it tends to amplify grain along with detail',
     ],
@@ -333,7 +305,7 @@ export const IMAGE_SEO_CONTENT: ToolSeoMap = {
       'Giving a batch of listing photos a consistent brightness and contrast look',
     ],
     tips: [
-      'Make small adjustments to multiple sliders rather than a large push on one — it usually looks more natural',
+      'Make small adjustments to multiple sliders rather than a large push on one, it usually looks more natural',
       'Increase contrast slightly after boosting saturation, since higher saturation alone can make an image look washed out',
       'Reset a slider to default if an adjustment looks off, rather than trying to correct it with a different slider',
     ],
@@ -388,7 +360,7 @@ export const IMAGE_SEO_CONTENT: ToolSeoMap = {
     ],
     tips: [
       'Include the "data:image/..." prefix when pasting for the most reliable format detection',
-      'If decoding fails, check the string wasn\'t truncated when copied — a cut-off Base64 string cannot be decoded into a valid image',
+      'If decoding fails, check the string wasn\'t truncated when copied, a cut-off Base64 string cannot be decoded into a valid image',
       'Strip any surrounding quotes or whitespace from a string copied out of JSON before pasting it in',
     ],
   },
@@ -415,14 +387,14 @@ export const IMAGE_SEO_CONTENT: ToolSeoMap = {
       'Converting a photo of a whiteboard from a meeting into text notes',
     ],
     tips: [
-      'Crop the image to just the text region first — a tighter, cleaner input improves recognition accuracy',
+      'Crop the image to just the text region first, a tighter, cleaner input improves recognition accuracy',
       'Straighten skewed or angled photos before running OCR, since tilted text reduces accuracy significantly',
       'Well-lit, high-contrast printed text gives the best results; low light and busy backgrounds hurt accuracy the most',
     ],
   },
   'image-watermark': {
     intro:
-      'Protecting photos from unauthorized reuse or branding images before sharing them publicly is easy here — add custom text or a logo watermark with full control over opacity, position, and size before exporting. Photographers protecting portfolio samples and businesses branding marketing images both use this to stamp ownership onto their work quickly. The watermark is composited directly onto the canvas in your browser, so originals stay private until you choose to export.',
+      'Protecting photos from unauthorized reuse or branding images before sharing them publicly is easy here, add custom text or a logo watermark with full control over opacity, position, and size before exporting. Photographers protecting portfolio samples and businesses branding marketing images both use this to stamp ownership onto their work quickly. The watermark is composited directly onto the canvas in your browser, so originals stay private until you choose to export.',
     steps: [
       { title: 'Upload the base image', description: 'Select the photo you want to watermark.' },
       { title: 'Add text or upload a logo', description: 'Type a watermark text string or upload a logo image to overlay.' },
@@ -450,7 +422,7 @@ export const IMAGE_SEO_CONTENT: ToolSeoMap = {
   },
   'image-draw': {
     intro:
-      'Sometimes you need to mark up a screenshot or photo directly — circling a bug in a UI, highlighting a detail for a client, or annotating a diagram — and this tool lets you upload an image and draw over it with a pen, eraser, and color picker. Support teams annotating bug reports and teachers marking up diagrams for students both find this faster than opening a full editor. Everything is drawn onto an in-browser canvas layered over your image, with nothing uploaded to a server.',
+      'Sometimes you need to mark up a screenshot or photo directly, circling a bug in a UI, highlighting a detail for a client, or annotating a diagram, and this tool lets you upload an image and draw over it with a pen, eraser, and color picker. Support teams annotating bug reports and teachers marking up diagrams for students both find this faster than opening a full editor. Everything is drawn onto an in-browser canvas layered over your image, with nothing uploaded to a server.',
     steps: [
       { title: 'Upload the image', description: 'Drop in the photo or screenshot you want to annotate.' },
       { title: 'Pick a tool and color', description: 'Choose the pen or eraser and select a drawing color.' },
@@ -490,7 +462,7 @@ export const IMAGE_SEO_CONTENT: ToolSeoMap = {
       { question: 'Can I combine multiple edits in one session?', answer: 'Yes, you can crop, resize, rotate, adjust colors, blur, and annotate all within the same editing session before exporting once.' },
       { question: 'Can I undo an edit I made earlier in the session?', answer: 'The editor keeps your image in an editable state until export, so you can revisit and adjust earlier transforms before saving the final result.' },
       { question: 'What formats can I export to?', answer: 'You can export the edited image as JPEG, PNG, or WebP.' },
-      { question: 'Is this a replacement for a full desktop editor?', answer: 'It covers the most common editing needs — crop, resize, rotate, flip, color, blur, and basic annotation — for quick edits, though it does not include layers or advanced retouching found in dedicated desktop software.' },
+      { question: 'Is this a replacement for a full desktop editor?', answer: 'It covers the most common editing needs, crop, resize, rotate, flip, color, blur, and basic annotation, for quick edits, though it does not include layers or advanced retouching found in dedicated desktop software.' },
       { question: 'Is my image uploaded during editing?', answer: 'No, the entire editing pipeline runs locally in your browser using canvas rendering.' },
     ],
     useCases: [
@@ -559,7 +531,7 @@ export const IMAGE_SEO_CONTENT: ToolSeoMap = {
     ],
     tips: [
       'Check for GPS metadata specifically before sharing photos taken on a phone, since location is the most sensitive field typically embedded',
-      'Run this on JPEG and TIFF files where it matters most — PNG files rarely carry meaningful EXIF data to begin with',
+      'Run this on JPEG and TIFF files where it matters most, PNG files rarely carry meaningful EXIF data to begin with',
       'Re-strip metadata after any edit made in another tool, since some editors re-add fields like software version or timestamp on save',
     ],
   },
@@ -593,7 +565,7 @@ export const IMAGE_SEO_CONTENT: ToolSeoMap = {
   },
   'image-collage': {
     intro:
-      'Combining several photos into one shareable image — a grid of vacation snapshots, a before/after comparison, or a product collage for a listing — is done here by arranging multiple uploaded images into a collage layout and exporting them as a single file. Social media users creating photo grids and sellers combining multiple product angles into one image both use this instead of a dedicated design app. The layout is composed on canvas locally, so your photos are combined without ever being uploaded.',
+      'Combining several photos into one shareable image, a grid of vacation snapshots, a before/after comparison, or a product collage for a listing, is done here by arranging multiple uploaded images into a collage layout and exporting them as a single file. Social media users creating photo grids and sellers combining multiple product angles into one image both use this instead of a dedicated design app. The layout is composed on canvas locally, so your photos are combined without ever being uploaded.',
     steps: [
       { title: 'Upload multiple images', description: 'Add all the photos you want to include in the collage.' },
       { title: 'Choose a layout', description: 'Pick a grid or arrangement style for how the images will be placed.' },
@@ -643,7 +615,7 @@ export const IMAGE_SEO_CONTENT: ToolSeoMap = {
     ],
     tips: [
       'Use a thick text outline/stroke so captions stay readable over busy or light-colored backgrounds',
-      'Keep captions short — long text will wrap or shrink and can start to look cramped in the caption area',
+      'Keep captions short, long text will wrap or shrink and can start to look cramped in the caption area',
       'Bump the font size up for images meant to be viewed small, like in a chat thumbnail, so the text stays legible',
     ],
   },

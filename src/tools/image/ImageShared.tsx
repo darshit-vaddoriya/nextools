@@ -1,6 +1,7 @@
 import React, { useRef, useState } from 'react';
-import { Upload, Download, Loader2, AlertTriangle, Image as ImageIcon } from 'lucide-react';
+import { Upload, Download, Loader2, AlertTriangle, Image as ImageIcon, Maximize2 } from 'lucide-react';
 import { formatBytes, type ProcessedImage } from './ImageUtils';
+import { Lightbox } from '../../components/ui/Lightbox';
 
 interface DropZoneProps {
   onFiles: (files: File[]) => void;
@@ -75,6 +76,7 @@ interface ResultPanelProps {
 }
 
 export const ResultPanel: React.FC<ResultPanelProps> = ({ result, onDownload, downloadLabel = 'Download Image', extraInfo }) => {
+  const [isFull, setIsFull] = useState(false);
   if (!result) return null;
   return (
     <div className="rounded-2xl border border-border bg-card p-4 space-y-3 shadow-card">
@@ -86,13 +88,33 @@ export const ResultPanel: React.FC<ResultPanelProps> = ({ result, onDownload, do
           {result.width} × {result.height} · {formatBytes(result.blob.size)}{extraInfo ? ` · ${extraInfo}` : ''}
         </span>
       </div>
-      <div className="rounded-xl overflow-hidden border border-border bg-muted flex items-center justify-center max-h-[340px]">
+      <button
+        type="button"
+        onClick={() => setIsFull(true)}
+        aria-label="View result full screen"
+        className="group relative w-full rounded-xl overflow-hidden border border-border bg-muted
+                   flex items-center justify-center max-h-[340px]
+                   focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+      >
         <img src={result.url} alt="Result preview" className="max-w-full max-h-[340px] object-contain" />
-      </div>
+        <span
+          aria-hidden="true"
+          className="absolute inset-0 grid place-items-center bg-black/35 opacity-0
+                     transition-opacity duration-150 group-hover:opacity-100"
+        >
+          <Maximize2 className="w-6 h-6 text-white" />
+        </span>
+      </button>
       <button onClick={onDownload} className="w-full py-2.5 bg-success hover:brightness-110 text-success-foreground font-bold text-xs rounded-xl flex items-center justify-center gap-2 transition-all active:scale-[0.98]">
         <Download className="w-4 h-4" />
         <span>{downloadLabel}</span>
       </button>
+      <Lightbox
+        items={[{ src: result.url, label: 'Result preview' }]}
+        index={isFull ? 0 : null}
+        onClose={() => setIsFull(false)}
+        onIndexChange={() => {}}
+      />
     </div>
   );
 };

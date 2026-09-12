@@ -82,7 +82,7 @@ export const WORD_EXCEL_ARCHIVE_COLOR_SEO_CONTENT: ToolSeoMap = {
     tips: [
       'Double-check tables with merged cells since Markdown table syntax cannot represent cell merges.',
       'Run the output through a Markdown linter if your target platform expects a specific flavor like GFM.',
-      'Keep heading levels consistent in the source document — the converter maps Word heading styles directly to # levels.',
+      'Keep heading levels consistent in the source document, the converter maps Word heading styles directly to # levels.',
     ],
   },
   'docx-to-txt': {
@@ -108,7 +108,7 @@ export const WORD_EXCEL_ARCHIVE_COLOR_SEO_CONTENT: ToolSeoMap = {
       'Archiving the text content of a document separately from its formatting',
     ],
     tips: [
-      'If you need to preserve table structure, extract to HTML or Markdown instead — this tool flattens tables into plain lines.',
+      'If you need to preserve table structure, extract to HTML or Markdown instead, this tool flattens tables into plain lines.',
       'Legacy .doc files must be re-saved as .docx in Word first, since this tool only reads the modern XML format.',
       'Use this before a word count or text-analysis tool that gets thrown off by hidden formatting characters.',
     ],
@@ -136,7 +136,7 @@ export const WORD_EXCEL_ARCHIVE_COLOR_SEO_CONTENT: ToolSeoMap = {
       'Handing off web copy to someone who only works in Microsoft Word or Google Docs',
     ],
     tips: [
-      'Stick to semantic tags like headings, paragraphs, and lists for the most reliable conversion — heavy CSS layouts won\'t translate.',
+      'Stick to semantic tags like headings, paragraphs, and lists for the most reliable conversion, heavy CSS layouts won\'t translate.',
       'Check image sources are publicly reachable URLs or embedded data before converting, since broken links won\'t resolve.',
       'Review the output in Word for spacing differences, since HTML and Word use different default margins.',
     ],
@@ -166,7 +166,7 @@ export const WORD_EXCEL_ARCHIVE_COLOR_SEO_CONTENT: ToolSeoMap = {
     tips: [
       'Fenced code blocks convert to a monospace style, so keep code samples short to avoid awkward line wrapping in Word.',
       'Use standard Markdown table syntax rather than HTML tables embedded in Markdown for reliable conversion.',
-      'Review heading levels afterward — Word\'s default Heading styles may need font-size tweaks to match your house style.',
+      'Review heading levels afterward, Word\'s default Heading styles may need font-size tweaks to match your house style.',
     ],
   },
   'word-viewer': {
@@ -194,7 +194,7 @@ export const WORD_EXCEL_ARCHIVE_COLOR_SEO_CONTENT: ToolSeoMap = {
     tips: [
       'Use your browser\'s print dialog if you need a physical copy or PDF snapshot of what you\'re viewing.',
       'If a document fails to render, try re-saving it as .docx from its original application, since the viewer expects the standard XML format.',
-      'This is read-only by design — use a dedicated editor tool if you need to change the content.',
+      'This is read-only by design, use a dedicated editor tool if you need to change the content.',
     ],
   },
   'word-metadata': {
@@ -220,7 +220,7 @@ export const WORD_EXCEL_ARCHIVE_COLOR_SEO_CONTENT: ToolSeoMap = {
       'Confirming a document\'s real creation date when timing matters for compliance or records',
     ],
     tips: [
-      'Always check metadata before sending a document externally — author names and company fields often leak more than intended.',
+      'Always check metadata before sending a document externally, author names and company fields often leak more than intended.',
       'Custom document properties can hold leftover template data from wherever the file originated, so scan those too.',
       'Editing metadata only changes what\'s stored in the file properties, not the visible document content.',
     ],
@@ -304,7 +304,7 @@ export const WORD_EXCEL_ARCHIVE_COLOR_SEO_CONTENT: ToolSeoMap = {
       'Sharing a readable view of tabular data with someone who doesn\'t have Excel installed',
     ],
     tips: [
-      'If the table looks like one giant column, your delimiter guess is probably wrong — try switching it manually.',
+      'If the table looks like one giant column, your delimiter guess is probably wrong, try switching it manually.',
       'Watch the row/column count summary to catch truncated or malformed files early.',
       'Fields with embedded commas should be quoted in the source file; the parser respects standard CSV quoting rules.',
     ],
@@ -323,7 +323,7 @@ export const WORD_EXCEL_ARCHIVE_COLOR_SEO_CONTENT: ToolSeoMap = {
       { question: 'Does it save automatically?', answer: 'No automatic save happens; you export the edited table manually as a CSV file when you are done.' },
       { question: 'Is my spreadsheet data sent to a server while I edit it?', answer: 'No, all editing happens locally in your browser tab; data is never uploaded.' },
       { question: 'Can I rename column headers?', answer: 'Yes, header cells in the top row are editable text inputs just like any other cell.' },
-      { question: 'What delimiter does the exported file use?', answer: 'The export uses whichever delimiter you selected — comma, tab, pipe, or semicolon.' },
+      { question: 'What delimiter does the exported file use?', answer: 'The export uses whichever delimiter you selected, comma, tab, pipe, or semicolon.' },
     ],
     useCases: [
       'Making a quick fix to a data export, like correcting a typo, without opening Excel',
@@ -332,7 +332,7 @@ export const WORD_EXCEL_ARCHIVE_COLOR_SEO_CONTENT: ToolSeoMap = {
       'Building a small dataset from scratch in a spreadsheet-like grid, then exporting it as CSV',
     ],
     tips: [
-      'Export frequently while making a lot of edits — nothing is auto-saved, so a browser refresh loses unsaved changes.',
+      'Export frequently while making a lot of edits, nothing is auto-saved, so a browser refresh loses unsaved changes.',
       'Pick your delimiter before you start heavy editing since switching it later re-parses the underlying text.',
       'Use this for small-to-medium edits; for large datasets a dedicated spreadsheet app will feel faster.',
     ],
@@ -350,7 +350,7 @@ export const WORD_EXCEL_ARCHIVE_COLOR_SEO_CONTENT: ToolSeoMap = {
       { question: 'What kinds of issues does the cleaner fix?', answer: 'It trims leading/trailing whitespace in cells, removes rows that are entirely empty, and normalizes line endings between \\r\\n and \\n.' },
       { question: 'Does it fix broken text encoding automatically?', answer: 'It normalizes line endings and whitespace; if a file has corrupted character encoding, you may need to re-export it with the correct encoding first.' },
       { question: 'Is my data uploaded during cleaning?', answer: 'No, all cleaning operations run in your browser using JavaScript; no file is sent to a server.' },
-      { question: 'Can I choose which fixes to apply?', answer: 'Yes, each cleaning option — trimming, empty row removal, and line-ending normalization — has its own toggle.' },
+      { question: 'Can I choose which fixes to apply?', answer: 'Yes, each cleaning option, trimming, empty row removal, and line-ending normalization, has its own toggle.' },
       { question: 'Does it work with tab-separated files too?', answer: 'Yes, you can switch the delimiter to tab, pipe, or semicolon before cleaning.' },
     ],
     useCases: [
@@ -360,7 +360,7 @@ export const WORD_EXCEL_ARCHIVE_COLOR_SEO_CONTENT: ToolSeoMap = {
       'Standardizing whitespace in a CSV before running it through a stricter downstream parser',
     ],
     tips: [
-      'Toggle off fixes you don\'t need — for example, skip line-ending normalization if your pipeline already handles it.',
+      'Toggle off fixes you don\'t need, for example, skip line-ending normalization if your pipeline already handles it.',
       'If cells still look garbled after cleaning, the issue is likely character encoding, which this tool doesn\'t rewrite.',
       'Run the cleaner before deduplication so trailing whitespace doesn\'t cause near-identical rows to be treated as distinct.',
     ],
@@ -389,7 +389,7 @@ export const WORD_EXCEL_ARCHIVE_COLOR_SEO_CONTENT: ToolSeoMap = {
     ],
     tips: [
       'Make sure your header row has no blank or duplicate cells, or the tool will auto-label those columns as "col1", "col2", etc.',
-      'Numbers and booleans come through as strings by default — cast them in your own code if you need native types.',
+      'Numbers and booleans come through as strings by default, cast them in your own code if you need native types.',
       'Set the delimiter to match your source file exactly, since a mismatch produces one giant column of malformed keys.',
     ],
   },
@@ -416,7 +416,7 @@ export const WORD_EXCEL_ARCHIVE_COLOR_SEO_CONTENT: ToolSeoMap = {
       'Flattening application logs stored as JSON objects into a tabular file for auditing',
     ],
     tips: [
-      'If your objects have inconsistent keys, check the header row afterward — missing fields just show up as blank cells, not errors.',
+      'If your objects have inconsistent keys, check the header row afterward, missing fields just show up as blank cells, not errors.',
       'Nested objects and arrays are stringified into the cell as-is, so flatten deeply nested data yourself first for cleaner columns.',
       'Validate your JSON is a proper array of objects (not a single object or a string) before pasting it in.',
     ],
@@ -444,7 +444,7 @@ export const WORD_EXCEL_ARCHIVE_COLOR_SEO_CONTENT: ToolSeoMap = {
       'Quickly checking how the same dataset looks across CSV, TSV, and JSON representations',
     ],
     tips: [
-      'Double-check the input format selector matches your actual data — mismatched formats produce confusing parse errors.',
+      'Double-check the input format selector matches your actual data, mismatched formats produce confusing parse errors.',
       'When converting to JSON, make sure your source has a clear header row so field names come out correctly.',
       'Use this as a one-off; for repeated conversions in a pipeline, a script is faster than a browser tool.',
     ],
@@ -473,7 +473,7 @@ export const WORD_EXCEL_ARCHIVE_COLOR_SEO_CONTENT: ToolSeoMap = {
     ],
     tips: [
       'If your data contains the target delimiter inside values, confirm the output quotes those fields correctly before importing.',
-      'Preview the result before downloading — a wrong source delimiter guess will produce a single broken column.',
+      'Preview the result before downloading, a wrong source delimiter guess will produce a single broken column.',
       'This only swaps the delimiter character; it does not otherwise validate or clean the data.',
     ],
   },
@@ -501,7 +501,7 @@ export const WORD_EXCEL_ARCHIVE_COLOR_SEO_CONTENT: ToolSeoMap = {
     ],
     tips: [
       'Run the CSV Cleaner first to trim whitespace, since a trailing space can make otherwise-identical rows count as unique.',
-      'This checks the whole row, not a single key column — if you need dedup by one field only, sort or filter manually afterward.',
+      'This checks the whole row, not a single key column, if you need dedup by one field only, sort or filter manually afterward.',
       'Keep a copy of the original file until you\'ve confirmed the removed count and result look correct.',
     ],
   },
@@ -528,7 +528,7 @@ export const WORD_EXCEL_ARCHIVE_COLOR_SEO_CONTENT: ToolSeoMap = {
       'Merging exports from different tools that share the same column structure',
     ],
     tips: [
-      'Add files in the order you want their rows to appear — the first file\'s header sets the column order for the merge.',
+      'Add files in the order you want their rows to appear, the first file\'s header sets the column order for the merge.',
       'Heed the mismatched-headers warning; it usually means columns will be misaligned rather than automatically matched by name.',
       'Run the CSV Cleaner or Remove Duplicates afterward if the merged file might contain blank rows or repeats.',
     ],
@@ -556,9 +556,9 @@ export const WORD_EXCEL_ARCHIVE_COLOR_SEO_CONTENT: ToolSeoMap = {
       'Recovering files from an archive without installing dedicated unzip software',
     ],
     tips: [
-      'If the archive fails to open, try re-downloading it first — partial downloads are a common cause of "corrupted" errors.',
+      'If the archive fails to open, try re-downloading it first, partial downloads are a common cause of "corrupted" errors.',
       'Password-protected ZIPs need to be decrypted with desktop software first since the browser library can\'t handle encryption.',
-      'Use Download All only when you actually need every file — extracting individually is faster for large archives.',
+      'Use Download All only when you actually need every file, extracting individually is faster for large archives.',
     ],
   },
   'zip-creator': {
@@ -584,7 +584,7 @@ export const WORD_EXCEL_ARCHIVE_COLOR_SEO_CONTENT: ToolSeoMap = {
       'Creating a portable backup of a folder\'s worth of files without desktop software',
     ],
     tips: [
-      'Rename the archive before creating it — the name field only applies at creation time, not after download.',
+      'Rename the archive before creating it, the name field only applies at creation time, not after download.',
       'Check the total size shown before zipping if you\'re working within an upload size limit somewhere downstream.',
       'Remove any accidentally added files from the list before compressing to avoid re-doing the whole archive.',
     ],
@@ -612,7 +612,7 @@ export const WORD_EXCEL_ARCHIVE_COLOR_SEO_CONTENT: ToolSeoMap = {
       'Packaging multiple independent deliverables without merging them into one shared archive',
     ],
     tips: [
-      'Remember the download is one outer batch-zips.zip — extract it once to get all the individual inner archives.',
+      'Remember the download is one outer batch-zips.zip, extract it once to get all the individual inner archives.',
       'Use the regular ZIP Creator instead if recipients are meant to receive one shared archive rather than separate ones.',
       'Processing scales with file count, so expect longer wait times when batching many files compared to a single combined ZIP.',
     ],
@@ -641,7 +641,7 @@ export const WORD_EXCEL_ARCHIVE_COLOR_SEO_CONTENT: ToolSeoMap = {
     ],
     tips: [
       'Use the HSL output when you want to tweak lightness or saturation without changing the hue.',
-      'For print work, treat the RGB/HEX values as a starting point only — convert to CMYK in your print software for accurate results.',
+      'For print work, treat the RGB/HEX values as a starting point only, convert to CMYK in your print software for accurate results.',
       'The generated shade strip is a fast way to build a 5-10 step color scale without manual hue math.',
     ],
   },
@@ -669,7 +669,7 @@ export const WORD_EXCEL_ARCHIVE_COLOR_SEO_CONTENT: ToolSeoMap = {
       'Fine-tuning an existing gradient by visually adjusting stop positions instead of guessing percentages',
     ],
     tips: [
-      'Copy the CSS as soon as you\'re happy with a gradient — nothing is saved between sessions.',
+      'Copy the CSS as soon as you\'re happy with a gradient, nothing is saved between sessions.',
       'Use more than two color stops for smoother multi-color transitions instead of stacking multiple gradients.',
       'For radial gradients, remember the angle control doesn\'t apply since radial gradients spread from a center point instead.',
     ],
@@ -727,7 +727,7 @@ export const WORD_EXCEL_ARCHIVE_COLOR_SEO_CONTENT: ToolSeoMap = {
     tips: [
       'Large, bold headings can pass at a lower ratio than body copy, so check both text sizes rather than assuming one result covers all cases.',
       'If a pair fails, try darkening the text or lightening the background slightly rather than switching hues entirely.',
-      'Don\'t rely on color contrast alone for accessibility — pair it with sufficient font size and weight for real-world readability.',
+      'Don\'t rely on color contrast alone for accessibility, pair it with sufficient font size and weight for real-world readability.',
     ],
   },
   'glassmorphism': {
@@ -753,7 +753,7 @@ export const WORD_EXCEL_ARCHIVE_COLOR_SEO_CONTENT: ToolSeoMap = {
       'Generating ready-to-paste CSS for a design trend without writing it from scratch',
     ],
     tips: [
-      'The effect only shows up over something visually busy behind it — test it on top of an image or gradient, not a flat background.',
+      'The effect only shows up over something visually busy behind it, test it on top of an image or gradient, not a flat background.',
       'Keep blur values moderate; very high blur can make background content behind the glass unrecognizable and hurt usability.',
       'Check the effect on an older browser or device if your audience includes users on outdated software, since backdrop-filter support varies there.',
     ],

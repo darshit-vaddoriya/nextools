@@ -293,7 +293,7 @@ function htmlDecode(str: string): string {
 }
 
 export const HtmlEntityTool: React.FC = () => {
-  const [text, setText] = useState('<div class="greeting">Hello & "World" — café</div>');
+  const [text, setText] = useState('<div class="greeting">Hello & "World", café</div>');
   const [mode, setMode] = useState<'encode' | 'decode'>('encode');
 
   const result = useMemo(() => (mode === 'encode' ? htmlEncode(text) : htmlDecode(text)), [text, mode]);

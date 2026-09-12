@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useRef, useState } from 'react';
 import { PDFDocument, StandardFonts } from 'pdf-lib';
 import {
   ImageIcon, Images, ScanText, Type, FileCog, FileText, FilePlus,
@@ -11,6 +11,11 @@ import {
   pageSizeFromSelection,
 } from './PdfShared';
 import { Select } from '../../components/Select';
+import { SelectableResults } from '../../components/ui/SelectableResults';
+import { RichTextEditor, type RichTextEditorHandle } from '../../components/ui/RichTextEditor';
+import { TextPreview } from '../../components/ui/TextPreview';
+import { EmptyState } from '../../components/ui/EmptyState';
+import { renderBlocksToPdf } from '../../lib/renderBlocksToPdf';
 import { loadImage, blobFromCanvas, canvasExport, formatBytes } from '../image/ImageUtils';
 import { createWorker, type Worker } from 'tesseract.js';
 import { useExportProgress } from '../image/ExportProgress';
@@ -137,11 +142,10 @@ export const PdfToImagesTool: React.FC = () => {
       {busy && <LoadingBox label="Reading PDF…" />}
       {isBusy && <LoadingBox label="Converting pages…" />}
       {results.length > 0 && !isBusy && (
-        <ResultCard
-          title={`${results.length} images ready`}
-          subtitle="Your browser may ask for permission to download multiple files."
-          onDownload={() => downloadAll(results)}
-          downloadLabel={`Download all (${results.length})`}
+        <SelectableResults
+          items={results}
+          title={`${results.length} ${results.length === 1 ? 'image' : 'images'} ready`}
+          zipName={`${baseName(file?.name ?? 'pages')}_${format}`}
         />
       )}
       {overlay}
@@ -234,7 +238,7 @@ export const ImagesToPdfTool: React.FC = () => {
       {isBusy && <LoadingBox label="Creating PDF…" />}
       {result && !isBusy && (
         <ResultCard title="PDF created" subtitle={`${result.blob.size ? formatBytes(result.blob.size) : ''} · ${files.length} pages`}
-          onDownload={() => downloadAll([result])} downloadLabel="Download PDF" />
+          onDownload={() => downloadAll([result])} downloadLabel="Download PDF" blob={result.blob} filename={result.name} />
       )}
       {overlay}
     </div>
@@ -242,12 +246,89 @@ export const ImagesToPdfTool: React.FC = () => {
 };
 
 // ─── EXTRACT IMAGES FROM PDF ────────────────────────────────────
+/** A decoded image as pdf.js hands it over. */
+interface PdfImageObject {
+  width: number;
+  height: number;
+  kind?: number;
+  data?: Uint8Array | Uint8ClampedArray | null;
+  /** pdf.js 6 decodes images in the worker and returns an ImageBitmap. */
+  bitmap?: ImageBitmap | null;
+}
+
+/**
+ * Resolve an image XObject.
+ *
+ * The synchronous `objs.get(id)` throws "object isn't resolved yet" unless
+ * the object happens to be ready, so the callback form is the only reliable
+ * way to read images out of an operator list.
+ */
+function resolveImageObject(
+  objs: { get(id: string, cb: (obj: unknown) => void): void },
+  id: string,
+  timeoutMs = 8000,
+): Promise<PdfImageObject | null> {
+  return new Promise((resolve) => {
+    let settled = false;
+    const finish = (value: PdfImageObject | null) => {
+      if (settled) return;
+      settled = true;
+      resolve(value);
+    };
+    try {
+      objs.get(id, (obj) => finish((obj as PdfImageObject) ?? null));
+    } catch {
+      finish(null);
+    }
+    // A damaged object may never resolve; don't hang the whole extraction.
+    window.setTimeout(() => finish(null), timeoutMs);
+  });
+}
+
+/** Paint a decoded image object onto a canvas, whichever form it arrived in. */
+function imageObjectToCanvas(obj: PdfImageObject): HTMLCanvasElement | null {
+  const { width, height } = obj;
+  if (!width || !height) return null;
+
+  const canvas = document.createElement('canvas');
+  canvas.width = width;
+  canvas.height = height;
+  const ctx = canvas.getContext('2d');
+  if (!ctx) return null;
+
+  // Preferred path on pdf.js 6, the worker already decoded the pixels.
+  if (obj.bitmap) {
+    ctx.drawImage(obj.bitmap, 0, 0);
+    return canvas;
+  }
+
+  // Fallback: raw samples, laid out according to `kind`.
+  const src = obj.data;
+  if (!src) return null;
+  const image = ctx.createImageData(width, height);
+  const dst = image.data;
+  if (obj.kind === ImageKind.RGB_24BPP) {
+    for (let k = 0, j = 0; k < dst.length; k += 4, j += 3) {
+      dst[k] = src[j]; dst[k + 1] = src[j + 1]; dst[k + 2] = src[j + 2]; dst[k + 3] = 255;
+    }
+  } else if (obj.kind === ImageKind.RGBA_32BPP) {
+    dst.set(src.subarray(0, dst.length));
+  } else {
+    for (let k = 0, j = 0; k < dst.length; k += 4, j++) {
+      dst[k] = src[j]; dst[k + 1] = src[j]; dst[k + 2] = src[j]; dst[k + 3] = 255;
+    }
+  }
+  ctx.putImageData(image, 0, 0);
+  return canvas;
+}
+
 export const ExtractImagesTool: React.FC = () => {
   const { file, pageCount, busy, error, load, reset } = usePdfSource(0);
   const [isBusy, setIsBusy] = useState(false);
   const [err, setErr] = useState<string | null>(null);
   const [results, setResults] = useState<{ blob: Blob; name: string }[]>([]);
   const [summary, setSummary] = useState('');
+  const [hasRun, setHasRun] = useState(false);
   const { run, overlay } = useExportProgress();
 
   const handleFiles = useCallback((files: File[]) => {
@@ -255,6 +336,7 @@ export const ExtractImagesTool: React.FC = () => {
     if (f) {
       setResults([]);
       setSummary('');
+      setHasRun(false);
       setErr(null);
       load(f);
     } else setErr('Please select a valid PDF file.');
@@ -266,6 +348,7 @@ export const ExtractImagesTool: React.FC = () => {
     setErr(null);
     setResults([]);
     setSummary('');
+    setHasRun(false);
     try {
       await run(async (report) => {
         const pdfjs = await getPdfjs();
@@ -277,54 +360,42 @@ export const ExtractImagesTool: React.FC = () => {
         for (let p = 1; p <= doc.numPages; p++) {
           report(Math.round((p / doc.numPages) * 85), `Scanning page ${p}/${doc.numPages}…`);
           const page = await doc.getPage(p);
+          // Rendering is what makes the worker decode the page's image
+          // XObjects; until then there is nothing to fetch.
+          await renderPageToCanvas(page, 0.4);
           const ops = await page.getOperatorList();
           const { fnArray, argsArray } = ops;
+
           for (let i = 0; i < fnArray.length; i++) {
             const fn = fnArray[i];
             if (fn !== OPS.paintImageXObject && fn !== OPS.paintInlineImageXObject) continue;
             const arg = argsArray[i];
-            let obj: unknown;
+
+            let obj: PdfImageObject | null;
             let objId: string;
             if (fn === OPS.paintInlineImageXObject) {
-              obj = Array.isArray(arg) ? arg[0] : arg;
+              // Inline images travel in the operator list itself.
+              obj = (Array.isArray(arg) ? arg[0] : arg) as PdfImageObject;
               objId = `inline-p${p}-${i}`;
             } else {
               objId = Array.isArray(arg) ? String(arg[0]) : '';
-              obj = objId ? page.objs.get(objId) : null;
+              obj = objId ? await resolveImageObject(page.objs, objId) : null;
             }
+
             if (!obj || !objId || seen.has(objId)) continue;
-            const o = obj as { width: number; height: number; kind: number; data: Uint8Array };
-            if (!o.width || !o.height || !o.data) continue;
             seen.add(objId);
+
+            const canvas = imageObjectToCanvas(obj);
+            if (!canvas) continue;
+
             scanned++;
-            const canvas = document.createElement('canvas');
-            canvas.width = o.width;
-            canvas.height = o.height;
-            const ctx = canvas.getContext('2d');
-            if (!ctx) continue;
-            const im = ctx.createImageData(o.width, o.height);
-            const src = o.data;
-            const dst = im.data;
-            if (o.kind === ImageKind.RGB_24BPP) {
-              for (let k = 0, j = 0; k < dst.length; k += 4, j += 3) {
-                dst[k] = src[j]; dst[k + 1] = src[j + 1]; dst[k + 2] = src[j + 2]; dst[k + 3] = 255;
-              }
-            } else if (o.kind === ImageKind.RGBA_32BPP) {
-              for (let k = 0, j = 0; k < dst.length; k += 4, j += 4) {
-                dst[k] = src[j]; dst[k + 1] = src[j + 1]; dst[k + 2] = src[j + 2]; dst[k + 3] = src[j + 3];
-              }
-            } else {
-              for (let k = 0, j = 0; k < dst.length; k += 4, j++) {
-                dst[k] = src[j]; dst[k + 1] = src[j]; dst[k + 2] = src[j]; dst[k + 3] = 255;
-              }
-            }
-            ctx.putImageData(im, 0, 0);
             const { blob, ext } = await canvasExport(canvas, 'image/png');
             out.push({ blob, name: `${baseName(file.name)}_p${p}_${scanned}.${ext}` });
           }
         }
         report(100, 'Done');
         setResults(out);
+        setHasRun(true);
         setSummary(`${out.length} image${out.length === 1 ? '' : 's'} found`);
       });
     } catch (e) {
@@ -349,12 +420,18 @@ export const ExtractImagesTool: React.FC = () => {
       <ErrorBox message={err || error} />
       {busy && <LoadingBox label="Reading PDF…" />}
       {isBusy && <LoadingBox label="Extracting images…" />}
+      {hasRun && results.length === 0 && !isBusy && (
+        <EmptyState
+          icon={Images}
+          title="No images in this PDF"
+          description="Every page here is text or vector drawing, so there are no embedded photos or graphics to pull out."
+        />
+      )}
       {results.length > 0 && !isBusy && (
-        <ResultCard
+        <SelectableResults
+          items={results}
           title={summary}
-          subtitle="Your browser may ask for permission to download multiple files."
-          onDownload={() => downloadAll(results)}
-          downloadLabel={`Download all (${results.length})`}
+          zipName={`${baseName(file?.name ?? 'pdf')}_images`}
         />
       )}
       {overlay}
@@ -367,13 +444,15 @@ export const ExtractTextTool: React.FC = () => {
   const { file, pageCount, busy, error, load, reset } = usePdfSource(0);
   const [isBusy, setIsBusy] = useState(false);
   const [err, setErr] = useState<string | null>(null);
-  const [result, setResult] = useState<{ blob: Blob; name: string } | null>(null);
+  const [text, setText] = useState('');
+  const [isEmptyResult, setIsEmptyResult] = useState(false);
   const { run, overlay } = useExportProgress();
 
   const handleFiles = useCallback((files: File[]) => {
     const f = files.find(f => f.type === 'application/pdf' || f.name.toLowerCase().endsWith('.pdf'));
     if (f) {
-      setResult(null);
+      setText('');
+      setIsEmptyResult(false);
       setErr(null);
       load(f);
     } else setErr('Please select a valid PDF file.');
@@ -383,13 +462,15 @@ export const ExtractTextTool: React.FC = () => {
     if (!file) return;
     setIsBusy(true);
     setErr(null);
-    setResult(null);
+    setText('');
+    setIsEmptyResult(false);
     try {
       await run(async (report) => {
         const pdfjs = await getPdfjs();
         const data = new Uint8Array(await file.arrayBuffer());
         const doc = await pdfjs.getDocument({ data }).promise;
         const chunks: string[] = [];
+        let hasAnyText = false;
         for (let p = 1; p <= doc.numPages; p++) {
           report(Math.round((p / doc.numPages) * 90), `Reading page ${p}/${doc.numPages}…`);
           const page = await doc.getPage(p);
@@ -403,10 +484,12 @@ export const ExtractTextTool: React.FC = () => {
             .replace(/\s+/g, ' ')
             .trim();
           chunks.push(`Page ${p}\n${line}\n`);
+          hasAnyText = hasAnyText || line.length > 0;
         }
-        const text = chunks.join('\n');
-        const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
-        setResult({ blob, name: `${baseName(file.name)}.txt` });
+        setText(chunks.join('\n'));
+        // A scanned PDF has pages but no text layer, say so rather than
+        // handing over a file containing nothing but page markers.
+        setIsEmptyResult(!hasAnyText);
         report(100, 'Done');
       });
     } catch (e) {
@@ -431,8 +514,21 @@ export const ExtractTextTool: React.FC = () => {
       <ErrorBox message={err || error} />
       {busy && <LoadingBox label="Reading PDF…" />}
       {isBusy && <LoadingBox label="Extracting text…" />}
-      {result && !isBusy && (
-        <ResultCard title="Text extracted" subtitle="Plain text with page markers" onDownload={() => downloadAll([result])} downloadLabel="Download .txt" />
+
+      {isEmptyResult && !isBusy && (
+        <EmptyState
+          icon={ScanText}
+          title="This PDF has no text layer"
+          description="The pages are images, so there is nothing to copy out. Run it through PDF OCR to recognize the text first."
+        />
+      )}
+
+      {text && !isEmptyResult && !isBusy && (
+        <TextPreview
+          text={text}
+          filename={`${baseName(file?.name ?? 'document')}.txt`}
+          title="Extracted text"
+        />
       )}
       {overlay}
     </div>
@@ -445,12 +541,40 @@ interface OcrWord {
   bbox: { x0: number; y0: number; x1: number; y1: number };
 }
 
+/**
+ * Flatten tesseract's block → paragraph → line → word tree.
+ *
+ * `recognize()` only fills `blocks` when asked for it via the output flags;
+ * there is no top-level `words` array in tesseract.js v7.
+ */
+function wordsFromResult(page: { blocks?: unknown }): OcrWord[] {
+  const words: OcrWord[] = [];
+  const blocks = (page.blocks ?? []) as {
+    paragraphs?: { lines?: { words?: OcrWord[] }[] }[];
+  }[];
+  for (const block of blocks) {
+    for (const paragraph of block.paragraphs ?? []) {
+      for (const line of paragraph.lines ?? []) {
+        for (const word of line.words ?? []) {
+          if (word?.text?.trim() && word.bbox) words.push(word);
+        }
+      }
+    }
+  }
+  return words;
+}
+
+/** Helvetica is WinAnsi-encoded; anything outside it would throw on draw. */
+const isEncodable = (text: string) => /^[\x20-\x7E\xA0-\xFF]*$/.test(text);
+
 export const PdfOcrTool: React.FC = () => {
   const { file, pageCount, busy, error, load, reset } = usePdfSource(0);
   const [lang, setLang] = useState('eng');
   const [isBusy, setIsBusy] = useState(false);
   const [err, setErr] = useState<string | null>(null);
   const [result, setResult] = useState<{ blob: Blob; name: string } | null>(null);
+  const [recognizedText, setRecognizedText] = useState('');
+  const [notice, setNotice] = useState('');
   const { run, overlay } = useExportProgress();
   const workerRef = useRef<Worker | null>(null);
 
@@ -468,6 +592,8 @@ export const PdfOcrTool: React.FC = () => {
     setIsBusy(true);
     setErr(null);
     setResult(null);
+    setRecognizedText('');
+    setNotice('');
     try {
       await run(async (report) => {
         report(2, 'Loading OCR engine…');
@@ -478,37 +604,67 @@ export const PdfOcrTool: React.FC = () => {
         const doc = await pdfjs.getDocument({ data }).promise;
         const out = await PDFDocument.create();
         const font = await out.embedStandardFont(StandardFonts.Helvetica);
+
+        const pageTexts: string[] = [];
+        let wordsPlaced = 0;
+        let wordsSkipped = 0;
+
         for (let p = 1; p <= doc.numPages; p++) {
-          report(5 + Math.round((p / doc.numPages) * 88), `Recognizing page ${p}/${doc.numPages}… (large pages take a while)`);
+          report(5 + Math.round(((p - 1) / doc.numPages) * 88), `Recognizing page ${p}/${doc.numPages}… (large pages take a while)`);
           const page = await doc.getPage(p);
+          // One render serves both OCR and the embedded image, at 2x so the
+          // recognizer sees enough detail and the page stays sharp.
           const canvas = await renderPageToCanvas(page, 2);
           const w2 = workerRef.current;
           if (!w2) throw new Error('OCR engine failed to start.');
-          const { data: rec } = await w2.recognize(canvas, { rotateAuto: false });
+
+          // `blocks` must be requested explicitly, without it the result
+          // carries only plain text and the searchable layer comes out empty.
+          const { data: rec } = await w2.recognize(canvas, { rotateAuto: false }, { text: true, blocks: true });
+
           const baseViewport = page.getViewport({ scale: 1 });
           const outPage = out.addPage([baseViewport.width, baseViewport.height]);
-          const flat = await renderPageToCanvas(page, 1);
-          const png = await blobFromCanvas(flat, 'image/png');
+          const png = await blobFromCanvas(canvas, 'image/png');
           const pdfImg = await out.embedPng(new Uint8Array(await png.arrayBuffer()));
-          outPage.drawImage(pdfImg, { x: 0, y: 0, width: outPage.getSize().width, height: outPage.getSize().height });
-          const words = (rec as { words?: OcrWord[] }).words ?? [];
-          const k = outPage.getSize().width / canvas.width;
-          const pageH = outPage.getSize().height;
-          for (const w of words) {
-            if (!w.text || !w.bbox) continue;
-            const fs = Math.max(4, (w.bbox.y1 - w.bbox.y0) * k * 0.9);
-            outPage.drawText(w.text, {
-              x: w.bbox.x0 * k,
-              y: pageH - w.bbox.y1 * k,
-              size: fs,
+          const { width: pageW, height: pageH } = outPage.getSize();
+          outPage.drawImage(pdfImg, { x: 0, y: 0, width: pageW, height: pageH });
+
+          pageTexts.push(rec.text ?? '');
+
+          const words = wordsFromResult(rec as { blocks?: unknown });
+          const k = pageW / canvas.width;
+
+          for (const word of words) {
+            const text = word.text.trim();
+            // Helvetica can't encode non-Latin scripts; skip rather than throw.
+            if (!isEncodable(text)) { wordsSkipped += 1; continue; }
+            const size = Math.max(4, (word.bbox.y1 - word.bbox.y0) * k * 0.9);
+            outPage.drawText(text, {
+              x: word.bbox.x0 * k,
+              y: pageH - word.bbox.y1 * k,
+              size,
               font,
+              // Invisible: the scan stays legible, the text stays selectable.
+              opacity: 0,
             });
+            wordsPlaced += 1;
           }
         }
+
         report(95, 'Saving searchable PDF…');
         const bytes = await out.save();
         const buf = bytes.buffer.slice(bytes.byteOffset, bytes.byteOffset + bytes.byteLength) as ArrayBuffer;
         setResult({ blob: new Blob([buf], { type: 'application/pdf' }), name: `${baseName(file.name)}_searchable.pdf` });
+        setRecognizedText(pageTexts.join('\n\n').trim());
+
+        if (wordsPlaced === 0) {
+          setNotice(wordsSkipped > 0
+            ? `Recognized ${wordsSkipped} words, but this language uses characters the standard PDF font can’t store. The text below is complete, the PDF itself stays image-only.`
+            : 'No text was found on these pages. If the scan is faint or skewed, a higher-quality scan usually helps.');
+        } else if (wordsSkipped > 0) {
+          setNotice(`${wordsSkipped} words used characters the standard PDF font can’t store and were left out of the searchable layer.`);
+        }
+
         report(100, 'Done');
       });
     } catch (e) {
@@ -533,7 +689,8 @@ export const PdfOcrTool: React.FC = () => {
             <Select value={lang} options={ocrLangs} onChange={setLang} />
             <p className="text-[11px]  text-muted-foreground leading-relaxed">
               The first run downloads the language pack for your chosen language.
-              Text is placed on top of the scanned page, making the PDF searchable and copyable.
+              An invisible text layer is placed over the scan, so the page looks unchanged
+              but the text becomes searchable and selectable.
             </p>
             <ActionButton onClick={runOcr} busy={isBusy} busyLabel="Recognizing…" disabled={pageCount === 0}>
               <ScanText className="w-4 h-4" /> Recognize text
@@ -544,8 +701,22 @@ export const PdfOcrTool: React.FC = () => {
       <ErrorBox message={err || error} />
       {busy && <LoadingBox label="Reading PDF…" />}
       {isBusy && <LoadingBox label="Running OCR…" />}
+      {notice && !isBusy && (
+        <p className="flex items-start gap-2.5 rounded-[var(--radius-md)] border border-warning/30 bg-warning/[0.07]
+                      px-4 py-3 text-sm leading-relaxed text-foreground">
+          <FileCog className="w-4 h-4 mt-0.5 shrink-0 text-warning" aria-hidden="true" />
+          <span>{notice}</span>
+        </p>
+      )}
       {result && !isBusy && (
-        <ResultCard title="Searchable PDF ready" subtitle="Text was recognized and embedded" onDownload={() => downloadAll([result])} downloadLabel="Download PDF" />
+        <ResultCard title="Searchable PDF ready" subtitle="An invisible text layer was added over the scan" onDownload={() => downloadAll([result])} downloadLabel="Download PDF" blob={result.blob} filename={result.name} />
+      )}
+      {recognizedText && !isBusy && (
+        <TextPreview
+          text={recognizedText}
+          filename={`${baseName(file?.name ?? 'scan')}_ocr.txt`}
+          title="Recognized text"
+        />
       )}
       {overlay}
     </div>
@@ -647,7 +818,7 @@ export const MetadataTool: React.FC = () => {
               {fields.map(f => (
                 <div key={f.key}>
                   <FieldLabel>{f.label}</FieldLabel>
-                  <input className={textInputClass} value={meta[f.key]} onChange={e => set(f.key)(e.target.value)} placeholder={`— not set —`} />
+                  <input className={textInputClass} value={meta[f.key]} onChange={e => set(f.key)(e.target.value)} placeholder={`, not set, `} />
                 </div>
               ))}
             </div>
@@ -660,7 +831,7 @@ export const MetadataTool: React.FC = () => {
       <ErrorBox message={err} />
       {isBusy && <LoadingBox label="Saving metadata…" />}
       {result && !isBusy && (
-        <ResultCard title="Metadata updated" subtitle="A copy with the new properties was created" onDownload={() => downloadAll([result])} downloadLabel="Download PDF" />
+        <ResultCard title="Metadata updated" subtitle="A copy with the new properties was created" onDownload={() => downloadAll([result])} downloadLabel="Download PDF" blob={result.blob} filename={result.name} />
       )}
       {overlay}
     </div>
@@ -669,64 +840,34 @@ export const MetadataTool: React.FC = () => {
 
 // ─── TEXT → PDF ─────────────────────────────────────────────────
 export const TextToPdfTool: React.FC = () => {
-  const [text, setText] = useState('');
+  const editorRef = useRef<RichTextEditorHandle>(null);
   const [pageSize, setPageSize] = useState('a4');
+  const [stats, setStats] = useState({ words: 0, characters: 0 });
   const [isBusy, setIsBusy] = useState(false);
   const [err, setErr] = useState<string | null>(null);
   const [result, setResult] = useState<{ blob: Blob; name: string } | null>(null);
   const { run, overlay } = useExportProgress();
 
-  useEffect(() => {
-    const onPaste = (e: ClipboardEvent) => {
-      const t = e.clipboardData?.getData('text');
-      if (t) setText(t);
-    };
-    document.addEventListener('paste', onPaste);
-    return () => document.removeEventListener('paste', onPaste);
-  }, []);
-
   const create = async () => {
-    if (!text.trim()) { setErr('Paste or type some text first.'); return; }
+    const blocks = editorRef.current?.getBlocks() ?? [];
+    const hasContent = blocks.some(b => b.runs.some(r => r.text.trim()));
+    if (!hasContent) { setErr('Type or paste some text first.'); return; }
+
     setIsBusy(true);
     setErr(null);
     setResult(null);
     try {
       await run(async (report) => {
         report(10, 'Typesetting…');
-        const doc = await PDFDocument.create();
-        const font = await doc.embedStandardFont(StandardFonts.Helvetica);
         const size = pageSizeFromSelection(pageSize) ?? pageSizeFromSelection('a4')!;
-        const fontSize = 11;
-        const leading = 16;
-        const margin = 54;
-        const maxWidth = size.width - margin * 2;
-        let page = doc.addPage([size.width, size.height]);
-        let y = size.height - margin;
-        const lines: string[] = [];
-        for (const raw of text.split(/\r?\n/)) {
-          const words = raw.split(' ').filter(Boolean);
-          let cur = '';
-          for (const w of words) {
-            const probe = cur ? `${cur} ${w}` : w;
-            if (font.widthOfTextAtSize(probe, fontSize) > maxWidth && cur) {
-              lines.push(cur);
-              cur = w;
-            } else cur = probe;
-          }
-          lines.push(cur);
-        }
-        for (const line of lines) {
-          if (y < margin + leading) {
-            page = doc.addPage([size.width, size.height]);
-            y = size.height - margin;
-          }
-          page.drawText(line || ' ', { x: margin, y, size: fontSize, font });
-          y -= leading;
-        }
-        report(80, 'Saving PDF…');
-        const bytes = await doc.save();
+        const bytes = await renderBlocksToPdf(blocks, {
+          width: size.width,
+          height: size.height,
+          onProgress: (p) => report(Math.max(10, p), 'Typesetting…'),
+        });
+        report(95, 'Saving PDF…');
         const buf = bytes.buffer.slice(bytes.byteOffset, bytes.byteOffset + bytes.byteLength) as ArrayBuffer;
-        setResult({ blob: new Blob([buf], { type: 'application/pdf' }), name: 'text.pdf' });
+        setResult({ blob: new Blob([buf], { type: 'application/pdf' }), name: 'document.pdf' });
         report(100, 'Done');
       });
     } catch (e) {
@@ -738,26 +879,32 @@ export const TextToPdfTool: React.FC = () => {
 
   return (
     <div className="space-y-4">
-      <Card title="Your text">
-        <FieldLabel>Text (or paste with Ctrl+V)</FieldLabel>
-        <textarea
-          className={`${textInputClass} h-44 resize-y font-mono`}
-          value={text}
-          onChange={e => setText(e.target.value)}
-          placeholder="Type or paste plain text here…"
-        />
-        <div>
-          <FieldLabel>Page size</FieldLabel>
-          <Select value={pageSize} options={PAGE_SIZE_OPTIONS.filter(o => o.value !== 'auto')} onChange={setPageSize} />
-        </div>
-        <ActionButton onClick={create} busy={isBusy} busyLabel="Creating…" variant="success" disabled={!text.trim()}>
+      <RichTextEditor
+        ref={editorRef}
+        onStatsChange={setStats}
+        placeholder="Start typing, or paste your text. Use the toolbar to add headings, lists and emphasis, they all carry through to the PDF."
+      />
+
+      <div className="flex flex-wrap items-center justify-between gap-3 px-1">
+        <p className="text-xs text-muted-foreground">
+          <span className="font-mono">{stats.words}</span> {stats.words === 1 ? 'word' : 'words'}
+          {' · '}
+          <span className="font-mono">{stats.characters}</span> characters
+        </p>
+      </div>
+
+      <Card title="Page setup">
+        <FieldLabel>Page size</FieldLabel>
+        <Select value={pageSize} options={PAGE_SIZE_OPTIONS.filter(o => o.value !== 'auto')} onChange={setPageSize} />
+        <ActionButton onClick={create} busy={isBusy} busyLabel="Creating…" variant="success" disabled={stats.words === 0}>
           <Type className="w-4 h-4" /> Create PDF
         </ActionButton>
       </Card>
+
       <ErrorBox message={err} />
       {isBusy && <LoadingBox label="Creating PDF…" />}
       {result && !isBusy && (
-        <ResultCard title="PDF created" subtitle={`${formatBytes(result.blob.size)} · classic font (Latin characters)`} onDownload={() => downloadAll([result])} downloadLabel="Download PDF" />
+        <ResultCard title="PDF created" subtitle={`${formatBytes(result.blob.size)} · Helvetica (Latin characters)`} onDownload={() => downloadAll([result])} downloadLabel="Download PDF" blob={result.blob} filename={result.name} />
       )}
       {overlay}
     </div>

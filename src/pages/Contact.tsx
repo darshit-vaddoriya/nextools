@@ -25,13 +25,13 @@ export const Contact: React.FC<ContactProps> = ({ onBack }) => {
   const [addrCopied, setAddrCopied] = useState(false);
 
   const topicLabel = TOPICS.find(t => t.id === topic)?.label ?? 'Support';
-  const subjectText = `[NextTool] ${topicLabel}${name ? ` — ${name}` : ''}`;
-  const bodyText = message ? `${message}\n\n— ${name || 'NextTool user'}` : '';
+  const subjectText = `[NextTool] ${topicLabel}${name ? `, ${name}` : ''}`;
+  const bodyText = message ? `${message}\n\n, ${name || 'NextTool user'}` : '';
   const mailtoHref =
     `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(subjectText)}&body=${encodeURIComponent(bodyText)}`;
 
   // Desktop browsers only honour mailto: when the OS has a default mail app. Plenty of
-  // laptops never had one configured, so the click silently does nothing — this opens a
+  // laptops never had one configured, so the click silently does nothing, this opens a
   // pre-filled compose window in the browser instead.
   const gmailHref =
     'https://mail.google.com/mail/?view=cm&fs=1' +
@@ -45,7 +45,7 @@ export const Contact: React.FC<ContactProps> = ({ onBack }) => {
       done(true);
       setTimeout(() => done(false), 2000);
     } catch {
-      /* clipboard blocked — the address is shown on screen for manual copying */
+      /* clipboard blocked, the address is shown on screen for manual copying */
     }
   };
 
@@ -57,7 +57,7 @@ export const Contact: React.FC<ContactProps> = ({ onBack }) => {
     <PageLayout
       icon={Mail}
       title="Contact Us"
-      subtitle="Questions, bug reports, feature ideas or business enquiries — we read every message"
+      subtitle="Questions, bug reports, feature ideas or business enquiries, we read every message"
       onBack={onBack}
       showUpdated={false}
     >
@@ -106,11 +106,11 @@ export const Contact: React.FC<ContactProps> = ({ onBack }) => {
         })}
       </div>
 
-      {/* Compose form — opens the visitor's own mail client, no data is sent to us */}
+      {/* Compose form, opens the visitor's own mail client, no data is sent to us */}
       <div className="rounded-xl border border-border bg-card p-5 sm:p-6">
         <h2 className="text-[15px] font-bold text-foreground mb-1">Write to us</h2>
         <p className="text-[12.5px] text-muted-foreground mb-5">
-          This form composes the message in your own email app — nothing is submitted to or stored
+          This form composes the message in your own email app, nothing is submitted to or stored
           on our servers.
         </p>
 
@@ -223,7 +223,7 @@ export const Contact: React.FC<ContactProps> = ({ onBack }) => {
         <PageSection title="Before you write about a broken file">
           <p>
             Because every tool runs on your own device, we cannot see the file you were working
-            with — and we do not want to. Please describe the problem instead: which tool, which
+            with, and we do not want to. Please describe the problem instead: which tool, which
             browser and version, roughly how large the file was, and any message shown on screen.
             Do not attach confidential documents to a support email.
           </p>

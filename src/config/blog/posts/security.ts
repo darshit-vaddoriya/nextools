@@ -24,7 +24,7 @@ entropy = length × log₂(charset size)
 - Lowercase + uppercase + digits (62): 5.95 bits per character
 - Full printable ASCII (95): 6.55 bits per character
 
-So a random 8-character password from the full ASCII set is about 52 bits. A random 16-character lowercase password is about 75 bits — **dramatically stronger despite using a smaller alphabet**, because length multiplies while charset size only adds logarithmically.
+So a random 8-character password from the full ASCII set is about 52 bits. A random 16-character lowercase password is about 75 bits, **dramatically stronger despite using a smaller alphabet**, because length multiplies while charset size only adds logarithmically.
 
 **Length beats complexity, and it is not close.**
 
@@ -32,7 +32,7 @@ So a random 8-character password from the full ASCII set is about 52 bits. A ran
 
 That formula only applies if the password was chosen uniformly at random. Human-chosen passwords are nothing of the sort.
 
-\`P@ssw0rd!\` has 9 characters from a 95-character set — nominally 59 bits. Its real strength is close to zero, because it is a dictionary word with the four most predictable substitutions applied, and every cracking tool applies exactly those rules first. Password crackers do not brute-force; they use wordlists from previous breaches, then apply mangling rules.
+\`P@ssw0rd!\` has 9 characters from a 95-character set, nominally 59 bits. Its real strength is close to zero, because it is a dictionary word with the four most predictable substitutions applied, and every cracking tool applies exactly those rules first. Password crackers do not brute-force; they use wordlists from previous breaches, then apply mangling rules.
 
 Similarly, the requirement to include one uppercase, one digit and one symbol reliably produces passwords of the shape \`Capital + word + digits + !\`. The rule intended to add unpredictability instead narrowed the search space.
 
@@ -54,7 +54,7 @@ NIST's SP 800-63B guidance, which most modern policy follows, reversed decades o
 
 - **No mandatory periodic rotation.** Forcing a change every 90 days produces \`Summer2024!\` → \`Summer2025!\`. Change passwords when there is evidence of compromise.
 - **No composition rules.** Do not require particular character classes.
-- **Do require length** — a minimum of 8, and support for at least 64 so passphrases are usable.
+- **Do require length**, a minimum of 8, and support for at least 64 so passphrases are usable.
 - **Do check against breach lists.** Rejecting known-compromised passwords is far more effective than any complexity rule.
 - **Allow paste.** Blocking it actively breaks password managers, which are the single best thing a user can do.
 
@@ -78,9 +78,9 @@ Your email account deserves the strongest password you have. Everything else can
 
 ## Generating properly
 
-A generator is only as good as its randomness source. \`Math.random()\` is not cryptographically secure — its output is predictable from a modest number of samples. A password generator should use the platform CSPRNG (\`crypto.getRandomValues\`).
+A generator is only as good as its randomness source. \`Math.random()\` is not cryptographically secure, its output is predictable from a modest number of samples. A password generator should use the platform CSPRNG (\`crypto.getRandomValues\`).
 
-That is what the [password generator](/tool/password-generator) and [passphrase generator](/tool/passphrase-gen) here do, and because they run in your browser, the generated password is never transmitted to anyone — which is an obvious requirement that online generators do not all meet.
+That is what the [password generator](/tool/password-generator) and [passphrase generator](/tool/passphrase-gen) here do, and because they run in your browser, the generated password is never transmitted to anyone, which is an obvious requirement that online generators do not all meet.
 
 You can also check an existing password's entropy with the [strength checker](/tool/password-strength) without sending it anywhere.`,
   },
@@ -104,53 +104,53 @@ Base64, URL encoding, hex. These change the *representation* of data so it survi
 
 ## Encryption: reversible with a key
 
-AES, RSA, ChaCha20. Encryption transforms data so that only someone with the correct key can recover it. It is designed to be reversed — that is the point.
+AES, RSA, ChaCha20. Encryption transforms data so that only someone with the correct key can recover it. It is designed to be reversed, that is the point.
 
 **Purpose:** confidentiality. **Requires:** key management, which is the hard part.
 
 ## Hashing: not reversible at all
 
-SHA-256, bcrypt, Argon2. A hash function maps input of any length to a fixed-size output, deterministically, with no way back. There is no "dehashing", because the function discards information — infinitely many inputs map to each output.
+SHA-256, bcrypt, Argon2. A hash function maps input of any length to a fixed-size output, deterministically, with no way back. There is no "dehashing", because the function discards information, infinitely many inputs map to each output.
 
 **Purpose:** verifying that something is what you expect, without storing the thing itself.
 
 ## What makes a hash function good
 
-- **Deterministic** — same input, same output, always.
-- **Fast to compute** (for integrity uses) or **deliberately slow** (for passwords — see below).
-- **Avalanche effect** — flipping one input bit changes about half the output bits.
-- **Preimage resistance** — given a hash, you cannot find an input producing it.
-- **Collision resistance** — you cannot find two different inputs with the same hash.
+- **Deterministic**, same input, same output, always.
+- **Fast to compute** (for integrity uses) or **deliberately slow** (for passwords, see below).
+- **Avalanche effect**, flipping one input bit changes about half the output bits.
+- **Preimage resistance**, given a hash, you cannot find an input producing it.
+- **Collision resistance**, you cannot find two different inputs with the same hash.
 
 ## Which functions are still safe
 
-**MD5** — broken. Collisions have been practical since 2004 and can be produced in seconds. Acceptable only as a non-security checksum against accidental corruption. Never for anything an attacker touches.
+**MD5**, broken. Collisions have been practical since 2004 and can be produced in seconds. Acceptable only as a non-security checksum against accidental corruption. Never for anything an attacker touches.
 
-**SHA-1** — broken. Google demonstrated a practical collision (SHAttered) in 2017. Git still uses it for object identity for historical reasons, with hardening; do not choose it for anything new.
+**SHA-1**, broken. Google demonstrated a practical collision (SHAttered) in 2017. Git still uses it for object identity for historical reasons, with hardening; do not choose it for anything new.
 
-**SHA-256 / SHA-3** — current standards for integrity, signatures and general-purpose hashing.
+**SHA-256 / SHA-3**, current standards for integrity, signatures and general-purpose hashing.
 
-**bcrypt, scrypt, Argon2** — password hashing specifically. Different job, see below.
+**bcrypt, scrypt, Argon2**, password hashing specifically. Different job, see below.
 
 ## Passwords need a different kind of hash
 
 This is the distinction that causes the most damage in practice.
 
-SHA-256 is *fast* — that is a feature for verifying a file and a catastrophe for passwords. A modern GPU computes billions of SHA-256 hashes per second. Against a leaked database of SHA-256 password hashes, an attacker recovers every common password essentially immediately.
+SHA-256 is *fast*, that is a feature for verifying a file and a catastrophe for passwords. A modern GPU computes billions of SHA-256 hashes per second. Against a leaked database of SHA-256 password hashes, an attacker recovers every common password essentially immediately.
 
 Password hashing functions are built to be **slow and memory-hard**:
 
-- **Argon2id** — the current recommendation, winner of the Password Hashing Competition. Tunable in time, memory and parallelism.
-- **bcrypt** — older, extremely well-tested, still perfectly acceptable. Note its 72-byte input limit.
-- **scrypt** — memory-hard, also fine.
+- **Argon2id**, the current recommendation, winner of the Password Hashing Competition. Tunable in time, memory and parallelism.
+- **bcrypt**, older, extremely well-tested, still perfectly acceptable. Note its 72-byte input limit.
+- **scrypt**, memory-hard, also fine.
 
 They also **salt** automatically: a unique random value per password, stored alongside the hash. Salting means two users with the same password get different hashes, and it destroys the economics of precomputed rainbow tables.
 
-**Never store passwords with SHA-256, MD5, or any general-purpose hash — salted or not.**
+**Never store passwords with SHA-256, MD5, or any general-purpose hash, salted or not.**
 
 ## The email test
 
-If a service can email you your existing password, it is storing it either in plaintext or reversibly encrypted. A correctly built system cannot do this, because it does not have your password — only a hash of it. That is why real password recovery always means resetting, never retrieving.
+If a service can email you your existing password, it is storing it either in plaintext or reversibly encrypted. A correctly built system cannot do this, because it does not have your password, only a hash of it. That is why real password recovery always means resetting, never retrieving.
 
 It is a two-second assessment of how seriously a service takes this.
 
@@ -167,14 +167,14 @@ It is a two-second assessment of how seriously a service takes this.
 
 ## Computing hashes locally
 
-Hashing a file means reading every byte of it, which is exactly the operation you do not want to perform by uploading the file somewhere. Browsers expose SHA-256 through the Web Crypto API, so [hash generation](/tool/hash-generator) and [file checksums](/tool/file-checksum) run on your own machine — the file is read from disk into memory and never transmitted.`,
+Hashing a file means reading every byte of it, which is exactly the operation you do not want to perform by uploading the file somewhere. Browsers expose SHA-256 through the Web Crypto API, so [hash generation](/tool/hash-generator) and [file checksums](/tool/file-checksum) run on your own machine, the file is read from disk into memory and never transmitted.`,
   },
 
   {
     slug: 'verify-a-download-with-checksums',
     title: 'Verifying a download with a checksum: how, and what it actually proves',
     description: 'Comparing SHA-256 hashes catches corrupted and tampered files. Understanding its limits tells you when you need a signature instead.',
-    excerpt: 'Checking a hash takes fifteen seconds and catches both a truncated download and a compromised mirror. It does not catch everything — here is the boundary.',
+    excerpt: 'Checking a hash takes fifteen seconds and catches both a truncated download and a compromised mirror. It does not catch everything, here is the boundary.',
     category: 'security',
     tags: ['checksum', 'sha-256', 'integrity'],
     published: '2026-08-24',
@@ -183,7 +183,7 @@ Hashing a file means reading every byte of it, which is exactly the operation yo
 
 ## What you are checking
 
-The publisher computed a cryptographic hash — usually SHA-256 — of the exact file they intended to distribute. You compute the same hash of the file you received. If the strings match character for character, your copy is byte-identical to theirs.
+The publisher computed a cryptographic hash, usually SHA-256, of the exact file they intended to distribute. You compute the same hash of the file you received. If the strings match character for character, your copy is byte-identical to theirs.
 
 Because good hash functions have an avalanche property, a single flipped bit anywhere in a 4 GB file produces a completely different hash. There is no "close enough".
 
@@ -204,14 +204,14 @@ shasum -a 256 installer.dmg
 Get-FileHash installer.exe -Algorithm SHA256
 \`\`\`
 
-Then compare to the published value. Compare the whole string — checking the first and last six characters is a habit worth avoiding, because a targeted attack can afford to search for a partial match.
+Then compare to the published value. Compare the whole string, checking the first and last six characters is a habit worth avoiding, because a targeted attack can afford to search for a partial match.
 
 ## What it catches
 
 - **Incomplete or corrupted downloads.** Common on flaky connections, and the most frequent real cause of a mismatch.
 - **A compromised mirror.** Large projects distribute through many mirrors; a mirror serving a modified installer is a genuine attack pattern with real historical examples.
 - **Bit rot** on old storage.
-- **The wrong file entirely** — a different version than you thought.
+- **The wrong file entirely**, a different version than you thought.
 
 ## What it does not catch
 
@@ -222,7 +222,7 @@ Checksums protect against a compromised *distribution channel*, not a compromise
 Stronger options, in increasing order:
 
 1. **Fetch the checksum over HTTPS from the canonical domain**, not from the mirror serving the file. This is the minimum that makes the exercise meaningful.
-2. **Use a GPG signature** where the project publishes one. A signature proves the file was signed by a specific private key, which an attacker who defaces a website does not have. This requires having the project's public key from a trusted source — which is the part people skip.
+2. **Use a GPG signature** where the project publishes one. A signature proves the file was signed by a specific private key, which an attacker who defaces a website does not have. This requires having the project's public key from a trusted source, which is the part people skip.
 3. **Check the hash against a second independent source**, such as the project's GitHub releases page versus their website.
 
 ## MD5 checksums are still everywhere
@@ -235,12 +235,12 @@ An MD5 sum is still useful for detecting *accidental* corruption. It is not usef
 
 - **Backups.** Hash a file when you archive it, hash it again on restore. This is how you find out that a backup went bad before you need it.
 - **Deduplication.** Files with identical hashes are identical files. This is how deduplicating storage systems work.
-- **Evidence and record-keeping.** Recording a hash at a point in time proves a document has not been altered since — provided the hash was recorded somewhere the document's holder cannot change.
+- **Evidence and record-keeping.** Recording a hash at a point in time proves a document has not been altered since, provided the hash was recorded somewhere the document's holder cannot change.
 - **Confirming a transfer.** Hash before sending and after receiving to prove the transfer was clean.
 
 ## Checking a file without handing it over
 
-Hashing requires reading every byte, so an online checksum tool that uploads your file has just received a complete copy of whatever you were verifying — often a large installer, sometimes a private archive.
+Hashing requires reading every byte, so an online checksum tool that uploads your file has just received a complete copy of whatever you were verifying, often a large installer, sometimes a private archive.
 
 Browsers implement SHA-256 natively through the Web Crypto API, so there is no reason for that. NextTool's [file checksum tool](/tool/file-checksum) reads the file locally and streams it through the browser's hash implementation; nothing is transmitted, and there is no practical size limit beyond available memory.`,
   },
@@ -258,11 +258,11 @@ Browsers implement SHA-256 natively through the Web Crypto API, so there is no r
 
 ## Why a password manager is not optional
 
-The advice to use a different password everywhere is correct and, without tooling, impossible. Nobody remembers 200 unique high-entropy strings, so people reuse — and reuse is what credential stuffing exploits.
+The advice to use a different password everywhere is correct and, without tooling, impossible. Nobody remembers 200 unique high-entropy strings, so people reuse, and reuse is what credential stuffing exploits.
 
 A manager makes uniqueness free. You remember one strong passphrase; it remembers everything else.
 
-The objection is that it becomes a single point of failure. That is true, and it is still overwhelmingly the right trade. A well-built manager encrypts your vault locally with a key derived from your master password, so the provider stores ciphertext they cannot read. The realistic alternative — reused passwords across dozens of services — fails far more often.
+The objection is that it becomes a single point of failure. That is true, and it is still overwhelmingly the right trade. A well-built manager encrypts your vault locally with a key derived from your master password, so the provider stores ciphertext they cannot read. The realistic alternative, reused passwords across dozens of services, fails far more often.
 
 Practical points:
 
@@ -273,17 +273,17 @@ Practical points:
 
 ## Second factors, ranked
 
-**Passkeys / WebAuthn — best.** A key pair, with the private key held by your device or security key. The signature is bound to the site's actual domain, so a phishing site cannot obtain anything usable even if you are completely fooled. There is no shared secret to steal, and nothing to type. Where a service offers passkeys, use them.
+**Passkeys / WebAuthn, best.** A key pair, with the private key held by your device or security key. The signature is bound to the site's actual domain, so a phishing site cannot obtain anything usable even if you are completely fooled. There is no shared secret to steal, and nothing to type. Where a service offers passkeys, use them.
 
-**Hardware security keys (YubiKey and similar) — excellent.** The same phishing resistance in a physical form. Worth it for email and financial accounts. Buy two and register both, so losing one is not an account-recovery crisis.
+**Hardware security keys (YubiKey and similar), excellent.** The same phishing resistance in a physical form. Worth it for email and financial accounts. Buy two and register both, so losing one is not an account-recovery crisis.
 
-**TOTP authenticator apps — good.** The six-digit rotating codes. The app and the server share a secret and both compute a code from it and the current time (RFC 6238, 30-second window). No network needed, so no SMS interception.
+**TOTP authenticator apps, good.** The six-digit rotating codes. The app and the server share a secret and both compute a code from it and the current time (RFC 6238, 30-second window). No network needed, so no SMS interception.
 
 Its weakness: the code is typed, so a convincing phishing page can capture it and relay it within the 30-second window. That is real-time phishing, which is more effort than credential stuffing but well within the reach of off-the-shelf kits.
 
-**SMS — weak, but better than nothing.** Vulnerable to SIM swapping, where an attacker persuades a mobile operator to move your number to their SIM. This is not theoretical; it is the standard technique behind high-value account and cryptocurrency thefts. Use SMS only where nothing better is offered, and never as the recovery method for a critical account.
+**SMS, weak, but better than nothing.** Vulnerable to SIM swapping, where an attacker persuades a mobile operator to move your number to their SIM. This is not theoretical; it is the standard technique behind high-value account and cryptocurrency thefts. Use SMS only where nothing better is offered, and never as the recovery method for a critical account.
 
-**Email codes — weakest.** If your email is compromised, every second factor delivered to it is compromised too.
+**Email codes, weakest.** If your email is compromised, every second factor delivered to it is compromised too.
 
 ## Set it up in this order
 
@@ -305,7 +305,7 @@ More accounts are permanently lost to failed recovery than to attackers. Before 
 
 ## Generating the credentials
 
-Password generation is arithmetic on random bytes and needs no server. The [password generator](/tool/password-generator) and [passphrase generator](/tool/passphrase-gen) here use the browser's cryptographic RNG and never transmit what they produce — worth verifying about any generator before you use its output for an account that matters.`,
+Password generation is arithmetic on random bytes and needs no server. The [password generator](/tool/password-generator) and [passphrase generator](/tool/passphrase-gen) here use the browser's cryptographic RNG and never transmit what they produce, worth verifying about any generator before you use its output for an account that matters.`,
   },
 
   {
@@ -329,11 +329,11 @@ It is completely different from \`Math.random()\`, which is a fast non-cryptogra
 
 **\`crypto.subtle\`** provides the algorithms:
 
-- **AES-GCM, AES-CBC, AES-CTR** — symmetric encryption. GCM is the sensible default because it is authenticated, meaning tampering is detected rather than silently decrypted into garbage.
-- **RSA-OAEP, RSA-PSS, ECDSA, ECDH** — public key encryption, signatures and key agreement.
-- **SHA-256, SHA-384, SHA-512** — hashing.
-- **HMAC** — keyed authentication.
-- **PBKDF2, HKDF** — key derivation, for turning a password into a key.
+- **AES-GCM, AES-CBC, AES-CTR**, symmetric encryption. GCM is the sensible default because it is authenticated, meaning tampering is detected rather than silently decrypted into garbage.
+- **RSA-OAEP, RSA-PSS, ECDSA, ECDH**, public key encryption, signatures and key agreement.
+- **SHA-256, SHA-384, SHA-512**, hashing.
+- **HMAC**, keyed authentication.
+- **PBKDF2, HKDF**, key derivation, for turning a password into a key.
 
 Notably absent: **MD5 and SHA-1 are not offered for new use.** The API declines to make broken primitives convenient, which is a deliberate and good design decision.
 
@@ -350,7 +350,7 @@ The common mistakes it cannot prevent:
 
 ## Some real constraints
 
-**Secure context only.** \`crypto.subtle\` is unavailable on plain HTTP. It requires HTTPS or localhost — a sensible restriction, since delivering crypto code over an interceptable channel is pointless.
+**Secure context only.** \`crypto.subtle\` is unavailable on plain HTTP. It requires HTTPS or localhost, a sensible restriction, since delivering crypto code over an interceptable channel is pointless.
 
 **Asynchronous.** Everything returns a Promise, so operations do not block the main thread.
 
@@ -367,7 +367,7 @@ Because these primitives are native and fast, a browser tab can do work that gen
 - Generate keys and tokens with real entropy.
 - Verify signatures locally.
 
-Combined with WebAssembly for heavier work — PDF manipulation, image codecs, OCR — this is the reason a whole category of tools that used to be inherently server-side no longer has to be.
+Combined with WebAssembly for heavier work, PDF manipulation, image codecs, OCR, this is the reason a whole category of tools that used to be inherently server-side no longer has to be.
 
 ## The honest limitation
 
@@ -375,6 +375,6 @@ Client-side crypto protects data in transit and at rest. It does not protect you
 
 The mitigations are the ordinary web ones: HTTPS, a strict Content Security Policy, subresource integrity, and a small dependency surface. Nothing removes the requirement to trust the code you run.
 
-What client-side crypto *does* remove is the need to trust a server with your plaintext — which is the larger and more commonly abused trust. NextTool's [secure notes](/tool/secure-notes), [hash generator](/tool/hash-generator) and [checksum tool](/tool/file-checksum) all build on these primitives, which is why none of them need an upload endpoint.`,
+What client-side crypto *does* remove is the need to trust a server with your plaintext, which is the larger and more commonly abused trust. NextTool's [secure notes](/tool/secure-notes), [hash generator](/tool/hash-generator) and [checksum tool](/tool/file-checksum) all build on these primitives, which is why none of them need an upload endpoint.`,
   },
 ];

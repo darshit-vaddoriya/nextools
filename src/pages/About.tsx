@@ -15,12 +15,12 @@ const PILLARS = [
   {
     icon: Cpu,
     title: 'Built for the browser',
-    desc: 'Every tool is written in JavaScript and WebAssembly so the work happens on your own hardware — no queue, no upload progress bar, no server bill to pass on to you.',
+    desc: 'Every tool is written in JavaScript and WebAssembly so the work happens on your own hardware, no queue, no upload progress bar, no server bill to pass on to you.',
   },
   {
     icon: Lock,
     title: 'Privacy is the product',
-    desc: 'We never receive your documents, photos or code. That is not a policy promise we could quietly break — the files simply never leave the tab.',
+    desc: 'We never receive your documents, photos or code. That is not a policy promise we could quietly break, the files simply never leave the tab.',
   },
   {
     icon: InfinityIcon,
@@ -36,7 +36,7 @@ export const About: React.FC<AboutProps> = ({ onBack, onOpenContact }) => {
     <PageLayout
       icon={Info}
       title="About NextTool"
-      subtitle={`${workingToolCount()}+ free browser tools across ${categoryCount} categories — built and maintained independently`}
+      subtitle={`${workingToolCount()}+ free browser tools across ${categoryCount} categories, built and maintained independently`}
       onBack={onBack}
       showUpdated={false}
     >
@@ -89,7 +89,7 @@ export const About: React.FC<AboutProps> = ({ onBack, onOpenContact }) => {
           <PageList
             items={[
               <><strong className="text-foreground">Local first.</strong> If a feature cannot be built client-side, we would rather not ship it than start uploading your files.</>,
-              <><strong className="text-foreground">No dark patterns.</strong> No forced sign-ups, no fake progress bars, no "your download is ready — install this app" detours.</>,
+              <><strong className="text-foreground">No dark patterns.</strong> No forced sign-ups, no fake progress bars, no "your download is ready, install this app" detours.</>,
               <><strong className="text-foreground">Honest labelling.</strong> Tools that are still in progress are marked as coming soon rather than dressed up as finished.</>,
               <><strong className="text-foreground">Ads stay in their lane.</strong> Advertising is kept out of the working area of each tool and is clearly labelled where it appears.</>,
             ]}
@@ -104,8 +104,8 @@ export const About: React.FC<AboutProps> = ({ onBack, onOpenContact }) => {
             file formats or products are mentioned on this site.
           </p>
           <p>
-            Editorial content — the tool guides, FAQs and how-to explanations you see across the
-            site — is written by us for this site and is not syndicated from elsewhere.
+            Editorial content, the tool guides, FAQs and how-to explanations you see across the
+            site, is written by us for this site and is not syndicated from elsewhere.
           </p>
         </PageSection>
 
@@ -120,7 +120,7 @@ export const About: React.FC<AboutProps> = ({ onBack, onOpenContact }) => {
 
         <PageSection title="Talk to us">
           <p>
-            Bug reports, missing features and corrections are genuinely welcome — most of the tools
+            Bug reports, missing features and corrections are genuinely welcome, most of the tools
             on this site started as somebody's email. Reach us at{' '}
             <a href={`mailto:${CONTACT_EMAIL}`} className="text-primary underline underline-offset-2 hover:brightness-110">
               {CONTACT_EMAIL}

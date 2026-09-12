@@ -10,7 +10,7 @@ export const IMAGE_POSTS: BlogPost[] = [
     tags: ['formats', 'jpeg', 'png', 'webp', 'avif'],
     published: '2026-08-07',
     relatedTools: ['image-convert', 'image-compressor', 'svg-converter', 'image-metadata'],
-    body: `Image formats are not interchangeable containers for the same thing. Each one made a different bet about what kind of picture it would hold, and using the wrong one costs you either file size or visual quality — sometimes both.
+    body: `Image formats are not interchangeable containers for the same thing. Each one made a different bet about what kind of picture it would hold, and using the wrong one costs you either file size or visual quality, sometimes both.
 
 ## The short version
 
@@ -24,7 +24,7 @@ export const IMAGE_POSTS: BlogPost[] = [
 
 ## JPEG: built for photographs, hostile to edges
 
-JPEG splits the image into 8×8 pixel blocks, converts each to frequency information, and discards the high-frequency detail your eye is least likely to miss. It also usually throws away three-quarters of the colour resolution — a technique called chroma subsampling — because human vision is far more sensitive to brightness than to colour.
+JPEG splits the image into 8×8 pixel blocks, converts each to frequency information, and discards the high-frequency detail your eye is least likely to miss. It also usually throws away three-quarters of the colour resolution, a technique called chroma subsampling, because human vision is far more sensitive to brightness than to colour.
 
 That set of assumptions is excellent for a photograph of a face or a landscape, where colour changes gradually. It is actively bad for a screenshot, where a hard black-on-white edge is exactly the high-frequency detail JPEG is designed to throw away. The result is the coloured fringing and mosquito noise you see around text in a JPEG screenshot.
 
@@ -32,7 +32,7 @@ JPEG also has no transparency. Ever. If something must sit on a coloured backgro
 
 ## PNG: lossless, transparent, and heavy on photos
 
-PNG predicts each pixel from its neighbours, stores the difference, and compresses the result with DEFLATE. Nothing is discarded — decode a PNG and you get the exact original pixels back.
+PNG predicts each pixel from its neighbours, stores the difference, and compresses the result with DEFLATE. Nothing is discarded, decode a PNG and you get the exact original pixels back.
 
 That is perfect for content with large flat areas and sharp edges: screenshots, logos, icons, charts, anything with text. It is a poor fit for photographs, where no two adjacent pixels are alike and the prediction has nothing to work with. A photo saved as PNG is routinely five to ten times larger than the same photo as a good-quality JPEG, with no visible benefit.
 
@@ -42,7 +42,7 @@ One nuance: PNG-8 uses a 256-colour palette and can be dramatically smaller than
 
 ## WebP: the sensible default for the web
 
-WebP does both lossy and lossless, supports alpha transparency in both modes, and typically produces files around 25–35% smaller than JPEG at comparable perceptual quality. Crucially, it supports transparency *with* lossy compression — something neither JPEG nor PNG can do — which makes it excellent for a photographic image with a cut-out background.
+WebP does both lossy and lossless, supports alpha transparency in both modes, and typically produces files around 25–35% smaller than JPEG at comparable perceptual quality. Crucially, it supports transparency *with* lossy compression, something neither JPEG nor PNG can do, which makes it excellent for a photographic image with a cut-out background.
 
 Browser support stopped being a concern years ago; every current browser handles it, including Safari. The remaining friction is outside the browser: some older desktop software, printers and corporate document systems still do not accept it.
 
@@ -50,7 +50,7 @@ Browser support stopped being a concern years ago; every current browser handles
 
 ## AVIF: smaller still, at a cost
 
-AVIF uses the intra-frame coding from the AV1 video codec. At low-to-medium quality settings it is meaningfully smaller than WebP — often another 20% or more — and it degrades more gracefully, producing soft blur rather than blocky artefacts. It also handles 10- and 12-bit colour and wide gamut, which matters for HDR content.
+AVIF uses the intra-frame coding from the AV1 video codec. At low-to-medium quality settings it is meaningfully smaller than WebP, often another 20% or more, and it degrades more gracefully, producing soft blur rather than blocky artefacts. It also handles 10- and 12-bit colour and wide gamut, which matters for HDR content.
 
 The trade-offs are real: encoding is significantly slower than JPEG or WebP, support in non-browser software is patchier, and at very high quality settings the size advantage narrows.
 
@@ -90,7 +90,7 @@ One rule regardless of tool: **always convert from the highest-quality original 
 
 Lossless compression finds redundancy and encodes it more efficiently. PNG, for example, predicts each pixel from the ones above and to the left, stores only the difference, and then runs DEFLATE over the result. Decode it and you get back the exact original pixel values, bit for bit.
 
-The catch is that the amount of redundancy in a photograph is small. A gradient sky has no repeated runs and poor prediction accuracy, so lossless compression can only do so much. Typical savings on photographic content are modest — often 10–30%.
+The catch is that the amount of redundancy in a photograph is small. A gradient sky has no repeated runs and poor prediction accuracy, so lossless compression can only do so much. Typical savings on photographic content are modest, often 10–30%.
 
 Lossless shines on synthetic images: screenshots, diagrams, logos, anything with large uniform regions.
 
@@ -99,7 +99,7 @@ Lossless shines on synthetic images: screenshots, diagrams, logos, anything with
 Lossy compression exploits the limits of human vision. JPEG's approach, still the clearest example:
 
 1. **Convert colour space.** Separate brightness (luma) from colour (chroma), because the eye is much more sensitive to the former.
-2. **Subsample chroma.** Typically store colour at half resolution in each direction — a 75% reduction in colour data that is nearly invisible on photographic content.
+2. **Subsample chroma.** Typically store colour at half resolution in each direction, a 75% reduction in colour data that is nearly invisible on photographic content.
 3. **Transform in 8×8 blocks.** Each block is converted from pixel values into frequency coefficients: a few coefficients describe the broad tone of the block, many describe fine detail.
 4. **Quantise.** Divide those coefficients by a table of numbers and round. Fine-detail coefficients get divided by larger numbers, so most of them round to zero. **This is the lossy step, and this is what the quality slider controls.**
 5. **Entropy-code** the remaining values losslessly.
@@ -108,7 +108,7 @@ Lossy compression exploits the limits of human vision. JPEG's approach, still th
 
 The quality slider scales the quantisation table. Lower quality means larger divisors, means more coefficients rounded to zero, means fewer bytes and less detail.
 
-It is not a percentage of anything, and — this trips people up constantly — **it is not comparable between encoders.** Quality 80 in one library does not mean quality 80 in another. Different software uses different tables.
+It is not a percentage of anything, and, this trips people up constantly, **it is not comparable between encoders.** Quality 80 in one library does not mean quality 80 in another. Different software uses different tables.
 
 What is broadly true across encoders:
 
@@ -117,11 +117,11 @@ What is broadly true across encoders:
 - **60–75**: visible on close inspection, fine for thumbnails and secondary images.
 - **Below 50**: blocking and colour banding become obvious, particularly in smooth gradients like skies and skin.
 
-If you need one number: **80**. Then check the result on the content you actually have — a photo with fine texture tolerates more compression than one with large smooth areas, where banding shows up first.
+If you need one number: **80**. Then check the result on the content you actually have, a photo with fine texture tolerates more compression than one with large smooth areas, where banding shows up first.
 
 ## Generation loss is real
 
-Every lossy save re-runs quantisation on data that has already been quantised. The errors compound. Open a JPEG, crop it, save it, open it again, adjust it, save it again — after a few rounds you get visible blocking that no amount of care recovers.
+Every lossy save re-runs quantisation on data that has already been quantised. The errors compound. Open a JPEG, crop it, save it, open it again, adjust it, save it again, after a few rounds you get visible blocking that no amount of care recovers.
 
 Practical rules:
 
@@ -140,11 +140,11 @@ The general order of operations for getting a file small:
 1. **Resize to the dimensions you will actually display.** This is the biggest lever by a wide margin.
 2. **Choose the right format** for the content type.
 3. **Then** set quality, starting around 80 and checking the result.
-4. **Strip metadata** if you do not need it — EXIF blocks can carry hundreds of kilobytes of embedded thumbnails and colour profiles.
+4. **Strip metadata** if you do not need it, EXIF blocks can carry hundreds of kilobytes of embedded thumbnails and colour profiles.
 
 ## Compressing without uploading
 
-Canvas encoding in the browser handles all of this natively — JPEG, PNG and WebP encoding are built into every modern browser. NextTool's [image compressor](/tool/image-compressor) uses exactly that, so a folder of family photos or unreleased product shots is processed on your machine and never transmitted.
+Canvas encoding in the browser handles all of this natively, JPEG, PNG and WebP encoding are built into every modern browser. NextTool's [image compressor](/tool/image-compressor) uses exactly that, so a folder of family photos or unreleased product shots is processed on your machine and never transmitted.
 
 For a batch, [bulk resizing](/tool/batch-resize) before compressing usually gets you further than any quality setting alone.`,
   },
@@ -153,14 +153,14 @@ For a batch, [bulk resizing](/tool/batch-resize) before compressing usually gets
     slug: 'resize-vs-compress-images',
     title: 'Resize or compress? The difference that decides your file size',
     description: 'Resizing changes pixel dimensions, compressing changes how those pixels are stored. Reaching for the wrong one is why images end up blurry and still too big.',
-    excerpt: 'A 300 DPI setting does nothing for an image on a website. Pixels are the only unit the screen understands — and understanding that fixes a lot of frustration.',
+    excerpt: 'A 300 DPI setting does nothing for an image on a website. Pixels are the only unit the screen understands, and understanding that fixes a lot of frustration.',
     category: 'image',
     tags: ['resize', 'compression', 'dpi'],
     published: '2026-08-21',
     relatedTools: ['image-resize', 'image-compressor', 'batch-resize', 'image-crop'],
     body: `Two operations, constantly confused, with completely different effects on a file.
 
-**Resizing** changes how many pixels the image contains. A 4000×3000 photo resized to 1000×750 has one-sixteenth the pixels — and roughly one-sixteenth the data before any compression is applied.
+**Resizing** changes how many pixels the image contains. A 4000×3000 photo resized to 1000×750 has one-sixteenth the pixels, and roughly one-sixteenth the data before any compression is applied.
 
 **Compressing** keeps the pixel count and changes how efficiently those pixels are stored, discarding detail your eye is unlikely to notice.
 
@@ -170,7 +170,7 @@ Almost everyone reaches for compression first. For a modern phone photo, resizin
 
 A 12-megapixel phone photo is 4000×3000. If it is going into a blog post displayed 800 pixels wide, you are storing 15 times more pixel data than the page will ever show. The browser downsamples it on the fly, every time, for every visitor.
 
-Resize it to 1600 pixels wide — twice the display width, which covers high-density screens — and you have removed 84% of the data before touching the quality slider. The visible result on the page is identical.
+Resize it to 1600 pixels wide, twice the display width, which covers high-density screens, and you have removed 84% of the data before touching the quality slider. The visible result on the page is identical.
 
 Compressing the full-size original to reach the same file size means quality settings low enough to introduce visible artefacts. You end up with a large, ugly image instead of a small, clean one.
 
@@ -190,7 +190,7 @@ On screen, DPI is ignored entirely. Browsers, phones and monitors work in pixels
 
 Enlarging an image cannot add detail that was not captured. Traditional upscaling interpolates between existing pixels, producing a larger, softer version of the same picture with a bigger file size.
 
-AI upscalers are genuinely different — they hallucinate plausible detail based on training data — and they are useful. But it is invention, not recovery. For anything where accuracy matters (a document, a product photo, evidence), do not upscale; go back to the source.
+AI upscalers are genuinely different, they hallucinate plausible detail based on training data, and they are useful. But it is invention, not recovery. For anything where accuracy matters (a document, a product photo, evidence), do not upscale; go back to the source.
 
 ## Sizing guidelines that hold up
 
@@ -217,14 +217,14 @@ Doing it in this order means each step operates on the smallest data possible, a
 
 ## Batches
 
-If you are preparing a gallery or a product catalogue, doing this by hand for sixty images is how it stops getting done. [Batch resizing](/tool/batch-resize) applies a single width to a whole folder in one pass, in the browser, without uploading any of them — which matters when the folder is client work or unpublished product photography.`,
+If you are preparing a gallery or a product catalogue, doing this by hand for sixty images is how it stops getting done. [Batch resizing](/tool/batch-resize) applies a single width to a whole folder in one pass, in the browser, without uploading any of them, which matters when the folder is client work or unpublished product photography.`,
   },
 
   {
     slug: 'remove-image-background-in-browser',
     title: 'How AI background removal works, and where it still fails',
     description: 'Segmentation models can cut a subject out of a photo in seconds. Understanding what the model is doing tells you which photos will work and which will not.',
-    excerpt: 'The model is not "finding the person". It is assigning every pixel a probability of being foreground — which explains exactly why hair and glass give it trouble.',
+    excerpt: 'The model is not "finding the person". It is assigning every pixel a probability of being foreground, which explains exactly why hair and glass give it trouble.',
     category: 'image',
     tags: ['ai', 'background-removal', 'segmentation'],
     published: '2026-08-29',
@@ -235,30 +235,30 @@ If you are preparing a gallery or a product catalogue, doing this by hand for si
 
 A background-removal model does not identify objects and draw an outline around them. It performs **semantic segmentation**: for every pixel in the image, it outputs a value between 0 and 1 representing confidence that the pixel belongs to the foreground.
 
-The result is a greyscale mask the same size as the image — white where the model is confident it is subject, black where it is confident it is background, grey where it is unsure. That mask becomes the alpha channel of the output PNG.
+The result is a greyscale mask the same size as the image, white where the model is confident it is subject, black where it is confident it is background, grey where it is unsure. That mask becomes the alpha channel of the output PNG.
 
 Architectures like U²-Net are built for exactly this: an encoder progressively downsamples the image to understand global context ("this is a person standing in a room"), and a decoder upsamples back to full resolution while pulling in fine detail from earlier layers via skip connections. The two-scale design is why these models get both the overall shape and the edges reasonably right.
 
 ## Why edges are the hard part
 
-For most pixels the answer is obvious. The interesting pixels are the boundary ones, where a single pixel genuinely contains both subject and background — this is a real physical property of how cameras sample light, not a modelling shortcut.
+For most pixels the answer is obvious. The interesting pixels are the boundary ones, where a single pixel genuinely contains both subject and background, this is a real physical property of how cameras sample light, not a modelling shortcut.
 
 Getting those pixels right is a separate problem called **alpha matting**, and it is where quality differences between tools show up:
 
 - **Hair.** Thousands of strands thinner than one pixel each. A hard mask cuts them off and leaves a helmet-like silhouette; a good soft mask preserves partial transparency and keeps them looking like hair.
 - **Fur and feathers.** Same problem, more of it.
-- **Glass, smoke, water, veils.** Genuinely semi-transparent — the "correct" alpha is somewhere in the middle, and models trained mostly on opaque subjects tend to guess wrong.
+- **Glass, smoke, water, veils.** Genuinely semi-transparent, the "correct" alpha is somewhere in the middle, and models trained mostly on opaque subjects tend to guess wrong.
 - **Motion blur.** A blurred hand has no defined edge to find.
 
 ## What predicts a good result
 
-**Contrast between subject and background.** A dark jacket against a dark wall is hard for the same reason it is hard for you — there is little signal to separate them.
+**Contrast between subject and background.** A dark jacket against a dark wall is hard for the same reason it is hard for you, there is little signal to separate them.
 
 **A single, clear subject.** Models are typically trained on images with one salient foreground object. A group photo, or a person holding a bicycle, produces inconsistent decisions about what counts as subject.
 
 **In-focus edges.** Shallow depth of field that blurs the subject's outline removes the information the model needs.
 
-**Ordinary subject matter.** These models are trained heavily on people, animals, products and vehicles. Unusual subjects — machinery, abstract objects, cluttered scenes — fall outside the distribution and results degrade.
+**Ordinary subject matter.** These models are trained heavily on people, animals, products and vehicles. Unusual subjects, machinery, abstract objects, cluttered scenes, fall outside the distribution and results degrade.
 
 **Reasonable resolution.** Most models process at a fixed internal resolution (often around 320–1024 px) and the mask is scaled back up. Very fine detail in a huge image can be lost simply because it never survived the downscale.
 
@@ -266,17 +266,17 @@ Getting those pixels right is a separate problem called **alpha matting**, and i
 
 1. **Crop before removing.** Less background clutter means fewer chances to be wrong, and the subject occupies more of the model's internal resolution.
 2. **Improve contrast first** if the subject is poorly separated from its surroundings.
-3. **Always save as PNG or WebP.** JPEG has no alpha channel — export a cut-out as JPEG and the transparency is flattened to white or black, and the work is lost.
+3. **Always save as PNG or WebP.** JPEG has no alpha channel, export a cut-out as JPEG and the transparency is flattened to white or black, and the work is lost.
 4. **Check on both light and dark backgrounds.** Fringing from the original background colour is invisible against white and glaring against black.
 5. **Retouch rather than re-run.** If 95% is right, fixing the remaining edge by hand is faster than hunting for a better model.
 
 ## Running it on your own device
 
-This is the part that has genuinely changed. These models are a few tens of megabytes and can be exported to ONNX and run in a browser through WebAssembly or WebGPU — using your own CPU or graphics card rather than a rented one.
+This is the part that has genuinely changed. These models are a few tens of megabytes and can be exported to ONNX and run in a browser through WebAssembly or WebGPU, using your own CPU or graphics card rather than a rented one.
 
 That is what NextTool's [AI background remover](/tool/ai-bg-remover) does. The first run downloads the model, then every image is processed locally. It is slower than a datacentre GPU and it means your product photography, portraits and personal pictures never get uploaded to a service that may retain them for training.
 
-Expect a few seconds per image after the model loads, and expect a modern browser to be required — WebGPU support makes a substantial difference to speed.`,
+Expect a few seconds per image after the model loads, and expect a modern browser to be required, WebGPU support makes a substantial difference to speed.`,
   },
 
   {
@@ -288,7 +288,7 @@ Expect a few seconds per image after the model loads, and expect a modern browse
     tags: ['performance', 'web', 'core-web-vitals'],
     published: '2026-09-05',
     relatedTools: ['image-compressor', 'batch-resize', 'image-convert', 'svg-converter'],
-    body: `On a typical content page, images account for the majority of transferred bytes. They are also the element most likely to be the Largest Contentful Paint — the metric that decides whether a page feels fast. Four decisions cover almost all of the available improvement.
+    body: `On a typical content page, images account for the majority of transferred bytes. They are also the element most likely to be the Largest Contentful Paint, the metric that decides whether a page feels fast. Four decisions cover almost all of the available improvement.
 
 ## 1. Serve the right dimensions
 
@@ -332,7 +332,7 @@ And for anything that is a logo, icon, chart or diagram: **use SVG**. It is usua
 
 An image without dimensions has no reserved space in the layout. When it loads, everything below it jumps down. That is Cumulative Layout Shift, it is measurably annoying, and it is the reason you sometimes tap the wrong link on a page that is still loading.
 
-Setting the \`width\` and \`height\` attributes lets the browser compute the aspect ratio and reserve the correct box before a single byte of image data arrives. Your CSS can still size the element responsively — the attributes are used for the ratio, not as a fixed size.
+Setting the \`width\` and \`height\` attributes lets the browser compute the aspect ratio and reserve the correct box before a single byte of image data arrives. Your CSS can still size the element responsively, the attributes are used for the ratio, not as a fixed size.
 
 This costs nothing and is one of the highest-value one-line fixes available.
 
@@ -340,7 +340,7 @@ This costs nothing and is one of the highest-value one-line fixes available.
 
 - **Lazy-load below-the-fold images** with \`loading="lazy"\`. The browser defers them until the user scrolls near them.
 - **Do not lazy-load the hero image.** It is the LCP element; deferring it directly delays the metric you are trying to improve. Mark it \`fetchpriority="high"\` instead.
-- **Preload the LCP image** if it is discovered late — for example, if it is set as a CSS background.
+- **Preload the LCP image** if it is discovered late, for example, if it is set as a CSS background.
 - **Avoid CSS background images for meaningful content.** They are discovered later in the parse, they cannot be lazy-loaded intelligently, and they carry no alt text.
 
 ## The things that are not worth the effort
@@ -354,7 +354,7 @@ This costs nothing and is one of the highest-value one-line fixes available.
 1. Start from the highest-quality original.
 2. Resize to the largest size you will actually serve, and generate two or three smaller variants for \`srcset\`.
 3. Export AVIF or WebP, plus a JPEG fallback, at quality ~80.
-4. Strip metadata — EXIF blocks and embedded colour profiles can be hundreds of kilobytes.
+4. Strip metadata, EXIF blocks and embedded colour profiles can be hundreds of kilobytes.
 5. Set \`width\`, \`height\` and \`alt\` on every image.
 6. Lazy-load everything except the hero.
 

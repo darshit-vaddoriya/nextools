@@ -77,7 +77,7 @@ export const Blog: React.FC<BlogProps> = ({ onBack, onOpenPost }) => {
           Guides for working with files, safely
         </h1>
         <p className="text-[15px] text-muted-foreground mt-3.5 leading-relaxed max-w-2xl">
-          Practical write-ups on file formats, compression, encoding and privacy — the reasoning
+          Practical write-ups on file formats, compression, encoding and privacy, the reasoning
           behind the tools on this site, explained so you can make better choices whichever
           software you end up using.
         </p>
@@ -186,7 +186,7 @@ export const Blog: React.FC<BlogProps> = ({ onBack, onOpenPost }) => {
             </span>
           </div>
 
-          {/* Decorative panel — carries the category colour so the card reads at a glance */}
+          {/* Decorative panel, carries the category colour so the card reads at a glance */}
           <div className={`relative order-1 lg:order-2 min-h-[120px] lg:min-h-full ${featuredMeta.bg} flex items-center justify-center overflow-hidden`}>
             <FeaturedIcon
               className={`${featuredMeta.color} opacity-90 transition-transform duration-300 group-hover:scale-105`}

@@ -28,7 +28,7 @@ export const AdBanner: React.FC<AdBannerProps> = ({ type, className = '' }) => {
         (window as unknown as { adsbygoogle: unknown[] }).adsbygoogle || [];
       (window as unknown as { adsbygoogle: unknown[] }).adsbygoogle.push({});
     } catch {
-      /* ad script load nahi hua — chup chap ignore karo */
+      /* ad script load nahi hua, chup chap ignore karo */
     }
   }, [enabled]);
 

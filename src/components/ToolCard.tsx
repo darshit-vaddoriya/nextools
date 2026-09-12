@@ -70,8 +70,7 @@ export const ToolCard: React.FC<ToolCardProps> = ({
       <h3 className="text-[15px] font-bold text-foreground leading-snug mb-1.5 tracking-[-0.01em] group-hover:text-primary transition-colors">
         {/*
           The card's clickable surface is this anchor, stretched over the whole
-          article via ::after. That keeps one real crawlable <a href> per tool —
-          with the tool name as anchor text — instead of a click handler that
+          article via ::after. That keeps one real crawlable <a href> per tool, with the tool name as anchor text, instead of a click handler that
           search engines cannot follow.
         */}
         <AppLink

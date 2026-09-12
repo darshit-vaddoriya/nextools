@@ -869,7 +869,7 @@ export const JsFormatterTool: React.FC = () => {
 
       <p className="text-[11px] text-muted-foreground px-1 flex items-center gap-1">
         <Code2 className="w-3.5 h-3.5 shrink-0" />
-        Lightweight whitespace/comment-based formatter — not a full parser like Prettier or Terser. Works best on typical, syntactically valid code.
+        Lightweight whitespace/comment-based formatter, not a full parser like Prettier or Terser. Works best on typical, syntactically valid code.
       </p>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
@@ -955,7 +955,7 @@ export const UrlEncoderTool: React.FC = () => {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         <Panel title="Encoded" right={<CopyButton text={encoded} label="Copy" />}>
           <pre className="flex-1 p-3.5 overflow-auto font-mono text-xs text-success whitespace-pre-wrap break-all leading-relaxed select-text">
-            {encoded || <span className="text-muted-foreground font-sans">—</span>}
+            {encoded || <span className="text-muted-foreground font-sans">, </span>}
           </pre>
         </Panel>
         <Panel title="Decoded" right={<CopyButton text={decoded ?? ''} label="Copy" />}>
@@ -963,7 +963,7 @@ export const UrlEncoderTool: React.FC = () => {
             {decoded === null ? (
               <span className="text-rose-500 font-sans">Invalid encoded sequence for decoding.</span>
             ) : (
-              decoded || <span className="text-muted-foreground font-sans">—</span>
+              decoded || <span className="text-muted-foreground font-sans">, </span>
             )}
           </pre>
         </Panel>
@@ -1007,7 +1007,7 @@ function diffLines(a: string[], b: string[]): DiffOp[] {
   return ops;
 }
 
-/** Row for the split (side-by-side) diff view — mirrors diffchecker.com's two-gutter layout. */
+/** Row for the split (side-by-side) diff view, mirrors diffchecker.com's two-gutter layout. */
 type SplitRow = { num: number | null; line: string; type: 'equal' | 'add' | 'remove' | 'empty' };
 
 function buildSplitRows(ops: DiffOp[]): { leftRows: SplitRow[]; rightRows: SplitRow[] } {
@@ -1149,7 +1149,7 @@ export const DiffCheckerTool: React.FC = () => {
  * ──────────────────────────────────────────────────────────────────────── */
 
 export const MarkdownPreviewTool: React.FC = () => {
-  // Sample starts at h2 — an h1 here renders a second <h1> into the tool page,
+  // Sample starts at h2, an h1 here renders a second <h1> into the tool page,
   // competing with the page's real heading.
   const [input, setInput] = useState('## Hello NextTool\n\nThis is **live** markdown preview with `code` support.\n\n- Item one\n- Item two\n\n> Blockquote example');
 

@@ -7,7 +7,7 @@ export interface BlogPost {
   /** URL segment: /blog/<slug> */
   slug: string;
   title: string;
-  /** <meta name="description"> — keep under ~155 characters */
+  /** <meta name="description">, keep under ~155 characters */
   description: string;
   /** Card summary on the blog index */
   excerpt: string;
@@ -22,7 +22,7 @@ export interface BlogPost {
   body: string;
 }
 
-/** Per-category label, icon and colour classes — mirrors the tool category palette. */
+/** Per-category label, icon and colour classes, mirrors the tool category palette. */
 export const BLOG_CATEGORY_META: Record<BlogCategory, {
   label: string;
   icon: React.ElementType;

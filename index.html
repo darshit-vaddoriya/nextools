@@ -17,10 +17,10 @@
     <script>
       (function () {
         try {
+          // Light is the default regardless of OS preference; dark only
+          // applies once the visitor picks it explicitly.
           var t = localStorage.getItem('nexttool-theme');
-          var isDark = t === 'dark'
-            || (t !== 'light' && window.matchMedia('(prefers-color-scheme: dark)').matches);
-          if (isDark) document.documentElement.classList.add('dark');
+          if (t === 'dark') document.documentElement.classList.add('dark');
         } catch (e) {}
       })();
     </script>

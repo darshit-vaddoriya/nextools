@@ -9,101 +9,115 @@
    Tailwind via rgb(var(--x) / <alpha-value>).
 ══════════════════════════════════════════════════════════ */
 :root {
-  --background:          250 249 252;
-  --foreground:          23 21 32;
-  --muted:               241 239 246;
-  --muted-foreground:    107 103 121;
+  --background:          247 248 250;
+  --foreground:          16 20 34;
+  --muted:               238 240 244;
+  --muted-foreground:    91 100 114;
   --card:                255 255 255;
-  --card-foreground:     23 21 32;
-  --border:              232 229 239;
-  --input:               156 152 171;
-  --primary:             99 43 226;
+  --card-foreground:     16 20 34;
+  --border:              230 232 236;
+  --input:               154 163 178;
+  --primary:             35 71 255;
   --primary-foreground:  255 255 255;
-  --primary-container:   237 228 253;
-  --on-primary-container: 62 20 148;
-  --secondary:           13 148 196;
+  --primary-container:   228 233 255;
+  --on-primary-container: 10 31 140;
+  --secondary:           14 116 144;
   --secondary-foreground:255 255 255;
-  --secondary-container: 219 244 253;
-  --on-secondary-container: 8 92 122;
-  --tertiary:            219 39 119;
+  --secondary-container: 213 239 247;
+  --on-secondary-container: 8 78 98;
+  --tertiary:            190 42 137;
   --tertiary-foreground: 255 255 255;
-  --tertiary-container:  253 226 240;
-  --on-tertiary-container: 148 20 84;
-  --success:             16 145 105;
+  --tertiary-container:  252 228 243;
+  --on-tertiary-container: 131 20 92;
+  --success:             14 159 110;
   --success-foreground:  255 255 255;
-  --warning:             194 116 9;
+  --warning:             180 83 9;
   --warning-foreground:  255 255 255;
-  --danger:              200 30 30;
+  --danger:              220 38 38;
   --danger-foreground:   255 255 255;
-  --ring:                99 43 226;
-  --surface:             250 249 252;
-  --on-surface:          23 21 32;
-  --surface-container-low: 250 249 252;
-  --surface-container:   244 242 249;
-  --surface-container-high: 237 234 244;
-  --surface-container-highest: 229 225 240;
-  --surface-variant:     237 234 244;
-  --on-surface-variant:  107 103 121;
-  --outline:             156 152 171;
-  --outline-variant:     232 229 239;
-  --success-green:       16 145 105;
-  --warning-amber:       194 116 9;
-  --radius:              0.625rem;
-  --range-track:         #e1e1e5;
-  --range-fill:          #632be2;
+  --ring:                35 71 255;
+  --surface:             247 248 250;
+  --on-surface:          16 20 34;
+  --surface-container-low: 251 252 253;
+  --surface-container:   241 243 247;
+  --surface-container-high: 234 237 242;
+  --surface-container-highest: 226 230 237;
+  --surface-variant:     238 240 244;
+  --on-surface-variant:  91 100 114;
+  --outline:             154 163 178;
+  --outline-variant:     230 232 236;
+  --success-green:       14 159 110;
+  --warning-amber:       180 83 9;
+
+  /* Radius — varies by hierarchy, deliberately not one value everywhere */
+  --radius:              0.75rem;  /* 12px — legacy alias, = radius-md */
+  --radius-sm:           0.5rem;   /*  8px — chips, badges, inputs      */
+  --radius-md:           0.75rem;  /* 12px — buttons, tool cards        */
+  --radius-lg:           1rem;     /* 16px — panels, dialogs            */
+  --radius-xl:           1.5rem;   /* 24px — hero drop zone             */
+
+  /* Motion — durations paired with easings; gated on prefers-reduced-motion */
+  --motion-fast:         150ms;
+  --motion-base:         220ms;
+  --motion-slow:         380ms;
+  --ease:                cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-out:            cubic-bezier(0.16, 1, 0.3, 1);
+
+  --range-track:         #e1e4ea;
+  --range-fill:          #2347ff;
 
   /* Dev-tool "code editor" panel — stays dark regardless of theme toggle */
-  --devpanel-bg:         #171520;
-  --devpanel-border:     #322f42;
-  --devpanel-text:       #ece9f5;
-  --devpanel-label:      #a19dae;
-  --segmented-bg:        #f4f2f8;
-  --segmented-active-bg: #171520;
-  --segmented-inactive-fg: #57536a;
+  --devpanel-bg:         #12151c;
+  --devpanel-border:     #262c39;
+  --devpanel-text:       #e8eaf0;
+  --devpanel-label:      #9aa3b2;
+  --segmented-bg:        #f1f3f7;
+  --segmented-active-bg: #101422;
+  --segmented-inactive-fg: #5b6472;
 }
 
 .dark {
-  --background:          10 10 11;
-  --foreground:          237 237 239;
-  --muted:               24 24 26;
-  --muted-foreground:    161 161 170;
-  --card:                17 17 19;
-  --card-foreground:     237 237 239;
-  --border:              38 38 42;
-  --input:               113 113 122;
-  --primary:             172 130 255;
-  --primary-foreground:  30 8 74;
-  --primary-container:   58 30 120;
-  --on-primary-container: 224 204 255;
-  --secondary:           86 208 245;
+  --background:          11 13 18;
+  --foreground:          232 234 240;
+  --muted:               26 30 39;
+  --muted-foreground:    154 163 178;
+  --card:                18 21 28;
+  --card-foreground:     232 234 240;
+  --border:              35 40 52;
+  --input:               107 114 128;
+  --primary:             124 147 255;
+  --primary-foreground:  10 16 48;
+  --primary-container:   27 37 87;
+  --on-primary-container: 211 219 255;
+  --secondary:           56 189 248;
   --secondary-foreground:6 40 54;
-  --secondary-container: 20 66 84;
-  --on-secondary-container: 190 236 250;
+  --secondary-container: 16 62 80;
+  --on-secondary-container: 186 234 250;
   --tertiary:            244 114 182;
   --tertiary-foreground: 64 8 40;
   --tertiary-container:  92 24 62;
   --on-tertiary-container: 253 210 232;
-  --success:             52 199 152;
+  --success:             52 211 153;
   --success-foreground:  4 41 30;
-  --warning:             229 158 46;
+  --warning:             240 180 41;
   --warning-foreground:  58 33 4;
-  --danger:              240 110 105;
+  --danger:              248 113 113;
   --danger-foreground:   61 8 6;
-  --ring:                172 130 255;
-  --surface:             10 10 11;
-  --on-surface:          237 237 239;
-  --surface-container-low: 17 17 19;
-  --surface-container:   24 24 26;
-  --surface-container-high: 32 32 35;
-  --surface-container-highest: 42 42 46;
-  --surface-variant:     32 32 35;
-  --on-surface-variant:  161 161 170;
-  --outline:             113 113 122;
-  --outline-variant:     38 38 42;
-  --success-green:       52 199 152;
-  --warning-amber:       229 158 46;
-  --range-track:         #26262a;
-  --range-fill:          #ac82ff;
+  --ring:                124 147 255;
+  --surface:             11 13 18;
+  --on-surface:          232 234 240;
+  --surface-container-low: 18 21 28;
+  --surface-container:   26 30 39;
+  --surface-container-high: 33 38 49;
+  --surface-container-highest: 42 48 61;
+  --surface-variant:     33 38 49;
+  --on-surface-variant:  154 163 178;
+  --outline:             107 114 128;
+  --outline-variant:     35 40 52;
+  --success-green:       52 211 153;
+  --warning-amber:       240 180 41;
+  --range-track:         #232834;
+  --range-fill:          #7c93ff;
 }
 
 /* ══════════════════════════════════════════════════════════
@@ -600,7 +614,7 @@ input[type="range"].range-progress:focus-visible {
 .blog-prose > * + * { margin-top: 1.15em; }
 
 .blog-prose h2 {
-  font-family: 'Outfit Variable', 'Plus Jakarta Sans Variable', system-ui, sans-serif;
+  font-family: 'Plus Jakarta Sans Variable', system-ui, sans-serif;
   font-size: 22px;
   font-weight: 800;
   letter-spacing: -0.02em;
@@ -704,3 +718,40 @@ input[type="range"].range-progress:focus-visible {
   color: rgb(var(--foreground));
   white-space: nowrap;
 }
+
+/* ══════════════════════════════════════════════════════════
+   RICH TEXT EDITOR
+   Styles the contentEditable surface so what the user sees
+   matches what the PDF renderer will draw. Only the marks the
+   PDF supports are styled here — nothing else is reachable
+   from the toolbar.
+══════════════════════════════════════════════════════════ */
+.rich-text-surface h1 {
+  font-size: 1.5rem;
+  font-weight: 800;
+  line-height: 1.25;
+  margin: 1.25em 0 0.5em;
+  letter-spacing: -0.02em;
+}
+.rich-text-surface h2 {
+  font-size: 1.2rem;
+  font-weight: 700;
+  line-height: 1.3;
+  margin: 1.1em 0 0.45em;
+  letter-spacing: -0.01em;
+}
+.rich-text-surface h1:first-child,
+.rich-text-surface h2:first-child { margin-top: 0; }
+
+.rich-text-surface p { margin: 0 0 0.65em; }
+.rich-text-surface p:last-child { margin-bottom: 0; }
+
+.rich-text-surface ul,
+.rich-text-surface ol { margin: 0 0 0.75em; padding-left: 1.6em; }
+.rich-text-surface ul { list-style: disc; }
+.rich-text-surface ol { list-style: decimal; }
+.rich-text-surface li { margin: 0.2em 0; }
+
+.rich-text-surface b,
+.rich-text-surface strong { font-weight: 700; }
+.rich-text-surface u { text-decoration: underline; }

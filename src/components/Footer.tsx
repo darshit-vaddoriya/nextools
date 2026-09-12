@@ -32,7 +32,7 @@ const pagePath = (id: StaticPageId) => getStaticPage(id)?.path ?? '/';
 export const Footer: React.FC<FooterProps> = ({
   onOpenPage, onOpenBlog, onSelectTool, onSelectCategory, onGoHome, onOpenFaq, onOpenCategories,
 }) => {
-  /** Footer row link — a real anchor so crawlers can follow it. */
+  /** Footer row link, a real anchor so crawlers can follow it. */
   const Row: React.FC<{ href: string; go: () => void; icon?: React.ElementType; children: React.ReactNode }> =
     ({ href, go, icon: Icon, children }) => (
       <li>

@@ -7,8 +7,9 @@ import {
 import {
   PdfDropzone, SourceFileBar, usePdfSource, parsePageRanges, parseRangeGroups, ErrorBox,
   LoadingBox, ActionButton, ResultCard, downloadAll,
-  baseName, Card, FieldLabel, textInputClass, pageLabel,
+  baseName, Card, FieldLabel, textInputClass, pageLabel, renderPageToCanvas,
 } from './PdfShared';
+import { PagePreviewGrid } from '../../components/ui/PagePreviewGrid';
 import { formatBytes } from '../image/ImageUtils';
 import { useExportProgress } from '../image/ExportProgress';
 import { errorMessage } from '../../utils/errorMessage';
@@ -78,7 +79,7 @@ const PageGrid: React.FC<{
 type SplitMode = 'pages' | 'ranges';
 
 export const PdfSplitTool: React.FC = () => {
-  const { file, pageCount, busy, error, load, reset } = usePdfSource();
+  const { file, pdfjsDoc, pageCount, thumbs, busy, error, load, reset } = usePdfSource();
   const [mode, setMode] = useState<SplitMode>('pages');
   const [ranges, setRanges] = useState('1-2,4');
   const [isBusy, setIsBusy] = useState(false);
@@ -96,6 +97,14 @@ export const PdfSplitTool: React.FC = () => {
       setErr('Please select a valid PDF file.');
     }
   }, [load]);
+
+  /** Re-render a page at full size for the lightbox, on demand. */
+  const renderFullPage = useCallback(async (index: number) => {
+    if (!pdfjsDoc) throw new Error('Document not loaded');
+    const page = await pdfjsDoc.getPage(index + 1);
+    const canvas = await renderPageToCanvas(page, 2);
+    return canvas.toDataURL('image/jpeg', 0.9);
+  }, [pdfjsDoc]);
 
   const split = async () => {
     if (!file) return;
@@ -170,6 +179,15 @@ export const PdfSplitTool: React.FC = () => {
                   </p>
                 </div>
               )}
+              <PagePreviewGrid
+                className="mt-5"
+                thumbs={thumbs}
+                renderFull={renderFullPage}
+                // In range mode, dim the pages that won't be included.
+                selected={mode === 'pages'
+                  ? undefined
+                  : (i) => parsePageRanges(ranges, pageCount).includes(i + 1)}
+              />
               <ActionButton onClick={split} busy={isBusy} busyLabel="Splitting…" disabled={pageCount === 0}>
                 <Scissors className="w-4 h-4" /> Split into {mode === 'pages' ? `${pageCount} files` : `${parseRangeGroups(ranges, pageCount).length} files`}
               </ActionButton>
@@ -230,9 +248,11 @@ export const PdfRotateTool: React.FC = () => {
   }, []);
 
   const rotateAll = useCallback((delta: number) => {
-    setRotations(prev => prev.map(r => ((r + delta + 360) % 360)));
+    // `prev` starts empty until a page is rotated individually, build a
+    // full-length array so "rotate all" works from a fresh upload too.
+    setRotations(prev => Array.from({ length: pageCount }, (_, i) => (((prev[i] ?? 0) + delta + 360) % 360)));
     setResult(null);
-  }, []);
+  }, [pageCount]);
 
   const save = async () => {
     if (!file) return;
@@ -310,6 +330,8 @@ export const PdfRotateTool: React.FC = () => {
               title="Rotated PDF ready"
               subtitle="The rotated pages were saved on your device."
               onDownload={() => downloadAll([{ blob: result.blob, name: result.name }])}
+              blob={result.blob}
+              filename={result.name}
               downloadLabel={result.name}
             />
           )}
@@ -424,6 +446,8 @@ export const PdfDeletePagesTool: React.FC = () => {
               title={`PDF saved with ${pageCount - selected.size} pages`}
               subtitle="Removed pages were deleted on your device."
               onDownload={() => downloadAll([{ blob: result.blob, name: result.name }])}
+              blob={result.blob}
+              filename={result.name}
             />
           )}
         </>
@@ -530,6 +554,8 @@ export const PdfExtractPagesTool: React.FC = () => {
               title={`Extracted PDF with ${pageNums.length} pages`}
               subtitle="Extracted pages saved on your device."
               onDownload={() => downloadAll([{ blob: result.blob, name: result.name }])}
+              blob={result.blob}
+              filename={result.name}
             />
           )}
         </>
@@ -677,6 +703,8 @@ export const PdfReorderTool: React.FC = () => {
               title="Rearranged PDF ready"
               subtitle="New page order saved on your device."
               onDownload={() => downloadAll([{ blob: result.blob, name: result.name }])}
+              blob={result.blob}
+              filename={result.name}
             />
           )}
         </>

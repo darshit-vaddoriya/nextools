@@ -7,6 +7,7 @@ import { RotationTypes, type PDFDocument, type PDFPage } from 'pdf-lib';
 import type { PDFPageProxy } from 'pdfjs-dist';
 import { errorMessage } from '../../utils/errorMessage';
 import { downloadBlob, formatBytes } from '../image/ImageUtils';
+import { ResultPreviewThumb } from '../../components/ui/ResultPreviewThumb';
 
 // ─── Small helpers ──────────────────────────────────────────────
 export const baseName = (name: string) => name.replace(/\.[^.]+$/, '');
@@ -261,7 +262,10 @@ export const ResultCard: React.FC<{
   subtitle?: string;
   onDownload: () => void;
   downloadLabel?: string;
-}> = ({ title, subtitle, onDownload, downloadLabel = 'Download PDF' }) => (
+  /** When supplied, shows a click-to-fullscreen preview above the download button. */
+  blob?: Blob;
+  filename?: string;
+}> = ({ title, subtitle, onDownload, downloadLabel = 'Download PDF', blob, filename }) => (
   <div className="p-4 rounded-2xl border border-success/30 bg-success/10 text-xs space-y-3">
     <div className="flex items-center gap-2 text-success font-bold">
       <CheckCircle className="w-4 h-4" />
@@ -272,6 +276,9 @@ export const ResultCard: React.FC<{
         <ShieldCheck className="w-3.5 h-3.5 shrink-0" />
         <span>{subtitle}</span>
       </div>
+    )}
+    {blob && filename && (
+      <ResultPreviewThumb blob={blob} filename={filename} />
     )}
     <button
       onClick={onDownload}
@@ -301,8 +308,8 @@ export function parsePageRanges(input: string, pageCount: number): number[] {
   return Array.from(pages).sort((a, b) => a - b);
 }
 
-// Split a range input into separate groups — one per comma/semicolon
-// token — so "1-2,4" yields [{label:'1-2',indices:[1,2]},{label:'4',indices:[4]}].
+// Split a range input into separate groups, one per comma/semicolon
+// token, so "1-2,4" yields [{label:'1-2',indices:[1,2]},{label:'4',indices:[4]}].
 export function parseRangeGroups(input: string, pageCount: number): { label: string; indices: number[] }[] {
   const groups: { label: string; indices: number[] }[] = [];
   const parts = input.split(/[,;]+/).map(s => s.trim()).filter(Boolean);

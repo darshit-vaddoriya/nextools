@@ -62,7 +62,7 @@ export const BlogPostView: React.FC<BlogPostViewProps> = ({
             )}
           </header>
 
-          {/* Body — authored in this repo, so the HTML is ours, not user input */}
+          {/* Body, authored in this repo, so the HTML is ours, not user input */}
           <div className="blog-prose" dangerouslySetInnerHTML={{ __html: html }} />
 
           {/* Tags */}

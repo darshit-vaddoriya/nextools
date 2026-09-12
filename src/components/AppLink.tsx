@@ -1,7 +1,7 @@
 import React from 'react';
 
 interface AppLinkProps extends Omit<React.AnchorHTMLAttributes<HTMLAnchorElement>, 'onClick'> {
-  /** Real, absolute-from-root path — this is what search engines follow. */
+  /** Real, absolute-from-root path, this is what search engines follow. */
   href: string;
   /** Client-side navigation to run instead of a full page load. */
   onNavigate: () => void;

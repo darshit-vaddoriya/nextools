@@ -13,7 +13,7 @@ export interface ToolSeoContent {
   intro: string;
   /** 3-5 short numbered steps describing how to use the tool. */
   steps: ToolSeoStep[];
-  /** 4-6 genuinely useful FAQs — used for on-page content and FAQPage rich results. */
+  /** 4-6 genuinely useful FAQs, used for on-page content and FAQPage rich results. */
   faqs: ToolSeoFaq[];
   /** 3-4 short bullet points describing concrete scenarios where this tool is the right choice. */
   useCases?: string[];

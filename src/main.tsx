@@ -1,9 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import '@fontsource-variable/inter';
-import '@fontsource-variable/jetbrains-mono';
+// One sans carries the whole UI; mono is for code and numeric readouts.
+// Both are self-hosted, so the app makes no third-party font request.
 import '@fontsource-variable/plus-jakarta-sans';
-import '@fontsource-variable/outfit';
+import '@fontsource-variable/jetbrains-mono';
 import { App } from './App';
 import { ToastProvider } from './components/Toast';
 import { AD_CONFIG } from './config/ads';

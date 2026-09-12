@@ -32,7 +32,7 @@ export const CookiePolicy: React.FC<CookiePolicyProps> = ({ onBack, onOpenPrivac
     <PageProse>
       <PageSection title="What cookies are">
         <p>
-          Cookies are small text files that a website — or a third party it works with — stores in
+          Cookies are small text files that a website, or a third party it works with, stores in
           your browser. They are used to remember preferences and, in the case of advertising, to
           select and measure the ads you see. Similar technologies such as local storage, pixels
           and web beacons serve comparable purposes and are covered by this policy.
@@ -77,7 +77,7 @@ export const CookiePolicy: React.FC<CookiePolicyProps> = ({ onBack, onOpenPrivac
 
       <PageSection title="Local storage we use">
         <p>
-          These keys are written by NextTool itself and stay on your device — they are never sent
+          These keys are written by NextTool itself and stay on your device, they are never sent
           to us or to anyone else. Clearing your browser's site data removes them.
         </p>
         <div className="overflow-x-auto rounded-xl border border-border">
@@ -113,7 +113,7 @@ export const CookiePolicy: React.FC<CookiePolicyProps> = ({ onBack, onOpenPrivac
 
       <PageSection title="Turning cookies off in your browser">
         <p>
-          Every major browser lets you block or delete cookies from its settings — usually under
+          Every major browser lets you block or delete cookies from its settings, usually under
           Privacy or Site data. Blocking cookies does not break any tool on this site: everything
           still runs locally. You may simply see less relevant advertising, and your theme and
           recent-tools preferences will reset if you also clear local storage.

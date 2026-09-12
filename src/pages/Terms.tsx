@@ -93,7 +93,7 @@ export const Terms: React.FC<TermsProps> = ({ onBack }) => (
           To the maximum extent permitted by law, NextTool and its operators will not be liable for
           any indirect, incidental, special, consequential or exemplary damages, or for any loss of
           data, files, profits, revenue or goodwill, arising from or related to your use of or
-          inability to use the Service — even if we have been advised of the possibility of such
+          inability to use the Service, even if we have been advised of the possibility of such
           damages. Where liability cannot be excluded, it is limited to INR 1,000 or the amount you
           paid us in the preceding twelve months, whichever is greater.
         </p>

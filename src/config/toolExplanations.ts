@@ -15,7 +15,7 @@ export const TOOL_EXPLANATIONS: Record<string, string> = {
     'Reformats YAML with consistent indentation, and converts between YAML and JSON in either direction. Handy for editing config files like docker-compose or CI pipelines. Paste your YAML or JSON, pick the direction you need, and copy the output. Anchors, tags and multi-document files are not supported.',
 
   'sql-formatter':
-    'Beautifies SQL queries by capitalizing keywords and putting each major clause — SELECT, FROM, WHERE, JOIN, GROUP BY — on its own indented line, so long queries are easier to read and review. Paste your query and the formatted version appears instantly.',
+    'Beautifies SQL queries by capitalizing keywords and putting each major clause, SELECT, FROM, WHERE, JOIN, GROUP BY, on its own indented line, so long queries are easier to read and review. Paste your query and the formatted version appears instantly.',
 
   'html-formatter':
     'Prettifies HTML with clean, consistent indentation, or minifies it into a single compact line to shrink file size. Useful for tidying up scraped markup or shrinking a page before deploying it. Paste your HTML, choose Format or Minify, and copy the result.',
@@ -30,7 +30,7 @@ export const TOOL_EXPLANATIONS: Record<string, string> = {
     'Encodes special characters in text so they are safe to use inside a URL, or decodes an already-encoded string back to plain text. Switch between encoding a single URL component (like a query value) or a whole URL, paste your text, and copy the result.',
 
   'diff-checker':
-    'Compares two blocks of code or text line by line and highlights exactly what was added, removed or left unchanged — handy for reviewing edits before you commit them. Paste the original in one box and the changed version in the other, and the differences are marked automatically.',
+    'Compares two blocks of code or text line by line and highlights exactly what was added, removed or left unchanged, handy for reviewing edits before you commit them. Paste the original in one box and the changed version in the other, and the differences are marked automatically.',
 
   'markdown-preview':
     'A live Markdown editor with the rendered HTML shown side by side, so you can see exactly how your headings, lists, links and code blocks will look as you type. Write or paste Markdown on one side and watch the formatted preview update instantly on the other.',
@@ -106,9 +106,6 @@ export const TOOL_EXPLANATIONS: Record<string, string> = {
 
   'ocr-image':
     'Extracts written text from an image or scanned document so you can copy, edit or search it. Upload a clear image that contains text and wait while the tool reads it. Then copy or download the extracted text.',
-
-  'ai-upscaler':
-    'Increases the resolution of an image by up to 4x using AI, making small or blurry images larger and sharper. Upload your image, choose the scale such as 2x or 4x, and wait while it processes. Download the enlarged version when it is done.',
 
   'pdf-split':
     'Divides one PDF into several smaller files. You can split it into individual pages, or group pages together using ranges such as 1-2,4. Select your PDF, choose either Every page or Custom ranges, type the ranges you want as separate files, and click Split. Each group downloads as its own PDF.',
@@ -241,10 +238,10 @@ export const TOOL_EXPLANATIONS: Record<string, string> = {
     'Generates placeholder Lorem Ipsum text for mockups, designs and layout testing. Choose how many paragraphs, sentences or words you need and copy the generated text straight into your design.',
 
   'slug-generator':
-    'Converts any text into a clean, URL-friendly slug — lowercase, with spaces and symbols replaced by a separator of your choice. Handy for blog post URLs, file names and SEO-friendly links.',
+    'Converts any text into a clean, URL-friendly slug, lowercase, with spaces and symbols replaced by a separator of your choice. Handy for blog post URLs, file names and SEO-friendly links.',
 
   'text-cleaner':
-    'Cleans up messy text by collapsing extra whitespace, stripping HTML tags, and normalizing line endings — pick which fixes to apply. Paste your text and copy the cleaned result.',
+    'Cleans up messy text by collapsing extra whitespace, stripping HTML tags, and normalizing line endings, pick which fixes to apply. Paste your text and copy the cleaned result.',
 
   'find-replace':
     'Finds every match of a word, phrase or regular expression in your text and replaces it with something else, showing how many replacements were made. Great for quick bulk edits without opening a code editor.',
@@ -269,7 +266,7 @@ export const TOOL_EXPLANATIONS: Record<string, string> = {
 
   // ─── Web tools ────────────────────────────────────────────────
   'url-parser':
-    'Breaks any URL down into its parts — protocol, host, port, path, query parameters and hash — displayed in an easy-to-read table. Paste a URL to instantly see everything it contains.',
+    'Breaks any URL down into its parts, protocol, host, port, path, query parameters and hash, displayed in an easy-to-read table. Paste a URL to instantly see everything it contains.',
 
   'user-agent-parser':
     'Reads a browser User-Agent string and tells you the browser, version, operating system, rendering engine and device type behind it. Defaults to your own browser, or paste any User-Agent string to inspect it.',
@@ -312,13 +309,13 @@ export const TOOL_EXPLANATIONS: Record<string, string> = {
     'Calculates the monthly EMI for a loan from the principal, interest rate and tenure, along with the total interest and total amount payable over the loan\'s life, using the standard reducing-balance formula.',
 
   'scientific-calc':
-    'A full scientific calculator supporting trigonometry, logarithms, powers, roots, factorials and memory functions (M+/M-/MR/MC) — usable entirely with button clicks, just like a physical calculator.',
+    'A full scientific calculator supporting trigonometry, logarithms, powers, roots, factorials and memory functions (M+/M-/MR/MC), usable entirely with button clicks, just like a physical calculator.',
 
   'gst-calculator':
     'Calculates GST-inclusive and GST-exclusive amounts for an entered value, with quick presets for the common Indian GST slabs (5%, 12%, 18%, 28%). Enter an amount and rate to see the full breakdown.',
 
   'number-to-words':
-    'Spells out any integer — including negative numbers and numbers into the billions — as English words, the way you would write it on a cheque. Type a number and see it converted instantly.',
+    'Spells out any integer, including negative numbers and numbers into the billions, as English words, the way you would write it on a cheque. Type a number and see it converted instantly.',
 
   'roman-numerals':
     'Converts numbers to Roman numerals and Roman numerals back to numbers, both directions, with validation to catch invalid input. Type either format to see the conversion.',
@@ -328,7 +325,7 @@ export const TOOL_EXPLANATIONS: Record<string, string> = {
     'Generates memorable multi-word passphrases (like the "correct-horse-battery-staple" style) instead of random character strings, which are easier to remember and type while remaining hard to guess. Choose the word count, separator and casing options, then copy the result.',
 
   'password-strength':
-    'Analyzes a password and estimates its entropy in bits, how long it would take an offline attacker to crack it, and gives it an overall strength rating with a visual meter. Type a password to see the live analysis — nothing is sent anywhere.',
+    'Analyzes a password and estimates its entropy in bits, how long it would take an offline attacker to crack it, and gives it an overall strength rating with a visual meter. Type a password to see the live analysis, nothing is sent anywhere.',
 
   'file-checksum':
     'Computes the SHA-256 and SHA-1 checksums of any file directly in your browser, so you can verify a download has not been corrupted or tampered with. Upload a file and optionally paste a checksum to compare against for an instant match/mismatch check.',
@@ -337,40 +334,40 @@ export const TOOL_EXPLANATIONS: Record<string, string> = {
     'Generates cryptographically secure random strings using your browser\'s crypto API, with configurable length, character set (letters, digits, symbols) and output count. Useful for API keys, tokens or temporary secrets.',
 
   'secure-notes':
-    'Lets you write notes that are encrypted with a passphrase you choose (AES-GCM with PBKDF2 key derivation) before being saved in your browser\'s local storage — nothing is ever sent to a server. Losing the passphrase means losing the note, so keep it somewhere safe.',
+    'Lets you write notes that are encrypted with a passphrase you choose (AES-GCM with PBKDF2 key derivation) before being saved in your browser\'s local storage, nothing is ever sent to a server. Losing the passphrase means losing the note, so keep it somewhere safe.',
 
   // ─── Color tools ──────────────────────────────────────────────
   'gradient-generator':
     'Visually builds CSS linear or radial gradients with multiple color stops and an adjustable angle, showing a live preview as you design it. Copy the generated CSS straight into your stylesheet.',
 
   'palette-color':
-    'Generates a set of matching colors from a single seed color using classic color-harmony rules — complementary, analogous, triadic, tetradic or monochromatic. Pick a color and a harmony rule to get a ready-to-use palette with hex codes.',
+    'Generates a set of matching colors from a single seed color using classic color-harmony rules, complementary, analogous, triadic, tetradic or monochromatic. Pick a color and a harmony rule to get a ready-to-use palette with hex codes.',
 
   'contrast-checker':
     'Checks the contrast ratio between a foreground and background color against WCAG accessibility guidelines, showing pass/fail for AA and AAA levels on both normal and large text, with a live text preview.',
 
   'glassmorphism':
-    'Visually designs a frosted-glass ("glassmorphism") UI panel — blur, transparency, border and shadow — with a live preview, then gives you the ready-to-use CSS to copy into your project.',
+    'Visually designs a frosted-glass ("glassmorphism") UI panel, blur, transparency, border and shadow, with a live preview, then gives you the ready-to-use CSS to copy into your project.',
 
   // ─── Archive tools ──────────────────────────────────────────────
   'zip-extractor':
-    'Opens a ZIP archive in your browser and lists every file inside it with its size, letting you download individual files or everything at once — no upload, the archive never leaves your device.',
+    'Opens a ZIP archive in your browser and lists every file inside it with its size, letting you download individual files or everything at once, no upload, the archive never leaves your device.',
 
   'zip-creator':
     'Bundles multiple files you select or drag in into a single downloadable ZIP archive, built entirely in your browser.',
 
   'batch-zip':
-    'Zips each of several uploaded files individually rather than combining them into one archive, then bundles those individual zips together for a single download — handy when you need separate archives per file.',
+    'Zips each of several uploaded files individually rather than combining them into one archive, then bundles those individual zips together for a single download, handy when you need separate archives per file.',
 
   // ─── Excel / CSV tools ───────────────────────────────────────────
   'csv-viewer':
-    'Displays pasted or uploaded CSV/TSV data as a clean, readable table with automatic header detection — no spreadsheet software required.',
+    'Displays pasted or uploaded CSV/TSV data as a clean, readable table with automatic header detection, no spreadsheet software required.',
 
   'csv-editor':
     'An editable spreadsheet-style table for CSV data: click any cell to edit it, add or remove rows and columns, then export your changes back to a CSV file.',
 
   'csv-cleaner':
-    'Cleans up messy CSV data by trimming whitespace from every cell, removing fully empty rows, and normalizing line endings — pick which fixes to apply and download the cleaned file.',
+    'Cleans up messy CSV data by trimming whitespace from every cell, removing fully empty rows, and normalizing line endings, pick which fixes to apply and download the cleaned file.',
 
   'csv-to-json':
     'Converts CSV or TSV rows into a JSON array of objects, using the first row as the object keys. Paste or upload your data and copy or download the resulting JSON.',
@@ -382,7 +379,7 @@ export const TOOL_EXPLANATIONS: Record<string, string> = {
     'Converts freely between CSV, TSV and JSON in any direction, so you can move tabular data between formats without opening a spreadsheet app.',
 
   'delimiter-converter':
-    'Changes the delimiter of any delimited text file — for example turning comma-separated values into pipe- or semicolon-separated values. Pick the source and target delimiter and convert instantly.',
+    'Changes the delimiter of any delimited text file, for example turning comma-separated values into pipe- or semicolon-separated values. Pick the source and target delimiter and convert instantly.',
 
   'remove-duplicates':
     'Scans CSV data for exact-match duplicate rows and removes them, telling you how many were found and removed. Paste or upload your CSV and download the de-duplicated version.',
@@ -404,7 +401,7 @@ export const TOOL_EXPLANATIONS: Record<string, string> = {
     'Arranges 2 to 9 uploaded images into a single grid collage, automatically choosing a sensible layout based on how many images you add, then lets you download the combined result.',
 
   'meme-generator':
-    'Adds classic bold, white, black-outlined caption text to the top and bottom of any image — the familiar meme style — right in your browser. Upload an image, type your captions, and download the result.',
+    'Adds classic bold, white, black-outlined caption text to the top and bottom of any image, the familiar meme style, right in your browser. Upload an image, type your captions, and download the result.',
 
   'batch-resize':
     'Resizes many images at once to the same exact dimensions or the same percentage scale, then bundles all the results into a single downloadable ZIP file.',

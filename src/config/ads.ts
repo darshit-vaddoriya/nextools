@@ -3,14 +3,14 @@ export interface AdConfig {
   enabled: boolean;
   /** false = real ads hain, placeholder box bilkul mat dikhao (AdSense policy) */
   showPlaceholders: boolean;
-  /** Apna Google AdSense publisher ID — https://www.google.com/adsense/ me milta hai */
+  /** Apna Google AdSense publisher ID, https://www.google.com/adsense/ me milta hai */
   client: string;
   /** Har ad slot ka AdSense "Ad unit" ID (AdSense → Ads → By ad unit → get code me se data-ad-slot) */
   slots: Record<'leaderboard' | 'sidebar' | 'native' | 'footer', string>;
 }
 
 // `enabled` false rehta hai jab tak AdSense site approve na kare. Review ke liye jo chahiye
-// wo index.html ka loader script hai — ad units approval se pehle serve kar hi nahi sakte,
+// wo index.html ka loader script hai, ad units approval se pehle serve kar hi nahi sakte,
 // isliye niche ke slot IDs asli aane ke baad hi ise true karna.
 export const AD_CONFIG: AdConfig = {
   enabled: false,

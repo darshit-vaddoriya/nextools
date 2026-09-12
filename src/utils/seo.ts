@@ -92,7 +92,7 @@ export function updateHomeMeta() {
 
   // WebSite + Organization are declared once in index.html for every route.
   // These two describe the homepage specifically, so they are injected here
-  // rather than in index.html — otherwise /privacy would also claim to be an
+  // rather than in index.html, otherwise /privacy would also claim to be an
   // application and answer these questions.
   setJsonLd('page-jsonld', {
     '@context': 'https://schema.org',
@@ -266,7 +266,7 @@ export function updateAllToolsMeta() {
 export function updateBlogIndexMeta() {
   clearPageSchema();
   const title = 'Blog | NextTool';
-  const desc = 'Practical guides to file formats, compression, encoding, security and privacy — the reasoning behind every tool on NextTool.';
+  const desc = 'Practical guides to file formats, compression, encoding, security and privacy, the reasoning behind every tool on NextTool.';
   const url = `${SITE}/blog`;
 
   document.title = title;
@@ -351,7 +351,7 @@ export function updateBlogPostMeta(slug: string) {
 }
 
 export function parseRoute(pathname: string): {
-  view: 'home' | 'tool' | 'category' | 'page' | 'all' | 'blog';
+  view: 'home' | 'tool' | 'category' | 'page' | 'all' | 'blog' | 'files' | 'settings';
   toolId?: string;
   category?: ToolCategory;
   pageId?: StaticPageId;
@@ -359,6 +359,8 @@ export function parseRoute(pathname: string): {
 } {
   const page = getStaticPageByPath(pathname);
   if (page) return { view: 'page', pageId: page.id };
+  if (pathname === '/my-files') return { view: 'files' };
+  if (pathname === '/settings') return { view: 'settings' };
   if (pathname === '/blog') return { view: 'blog' };
   const postMatch = pathname.match(/^\/blog\/([a-z0-9-]+)$/);
   if (postMatch) return { view: 'blog', blogSlug: postMatch[1] };
@@ -371,6 +373,8 @@ export function parseRoute(pathname: string): {
 }
 
 export function buildPath(view: string, id?: string): string {
+  if (view === 'files') return '/my-files';
+  if (view === 'settings') return '/settings';
   if (view === 'page' && id) return getStaticPage(id)?.path ?? '/';
   if (view === 'blog') return id ? `/blog/${id}` : '/blog';
   if (view === 'all') return '/all-tools';

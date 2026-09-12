@@ -2079,7 +2079,7 @@ export const ImageEditorTool: React.FC<{ onExit?: () => void }> = ({ onExit }) =
                 Edit images privately in your browser
               </h3>
               <p className="text-[13px] text-muted-foreground mt-1.5 max-w-md mx-auto leading-relaxed">
-                Crop, resize, annotate, blur and export — your image never leaves your device.
+                Crop, resize, annotate, blur and export, your image never leaves your device.
               </p>
 
               <div className="mt-7 mx-auto max-w-md rounded-2xl border-2 border-dashed border-border bg-muted/40 px-6 py-10 text-center transition-colors">
@@ -2103,7 +2103,7 @@ export const ImageEditorTool: React.FC<{ onExit?: () => void }> = ({ onExit }) =
                 JPG • PNG • WebP
               </p>
               <p className="text-[11px] text-success font-medium mt-4 inline-flex items-center gap-1.5">
-                <Lock className="w-3.5 h-3.5" /> Processed locally in your browser — nothing is uploaded
+                <Lock className="w-3.5 h-3.5" /> Processed locally in your browser, nothing is uploaded
               </p>
             </div>
             <input
@@ -2803,7 +2803,7 @@ export const ImageEditorTool: React.FC<{ onExit?: () => void }> = ({ onExit }) =
                   </button>
                 </div>
                 <p className="text-[10px]  text-muted-foreground leading-relaxed">
-                  Drag the preview to another app. Drag-out isn't supported everywhere — use <span className=" text-muted-foreground font-medium">Copy Image</span> or <span className=" text-muted-foreground font-medium">Download</span> as a fallback.
+                  Drag the preview to another app. Drag-out isn't supported everywhere, use <span className=" text-muted-foreground font-medium">Copy Image</span> or <span className=" text-muted-foreground font-medium">Download</span> as a fallback.
                 </p>
               </div>
             </div>

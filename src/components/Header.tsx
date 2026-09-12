@@ -8,7 +8,7 @@ import { SUPPORT_URL } from '../config/support';
 import { StaticPageId, getStaticPage } from '../config/pages';
 import { AppLink } from './AppLink';
 
-export type HeaderView = 'home' | 'tool' | 'category' | 'page' | 'all' | 'blog';
+export type HeaderView = 'home' | 'tool' | 'category' | 'page' | 'all' | 'blog' | 'files' | 'settings';
 
 const navPath = (id: StaticPageId) => getStaticPage(id)?.path ?? '/';
 
@@ -154,7 +154,7 @@ export const Header: React.FC<HeaderProps> = ({
               </a>
             )}
 
-            {/* Menu — mobile */}
+            {/* Menu, mobile */}
             <button
               onClick={() => setIsDrawerOpen(true)}
               aria-label="Open menu"

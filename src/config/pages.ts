@@ -1,5 +1,5 @@
 // Static content pages (About / Contact / legal). These exist as real, crawlable
-// routes because ad networks — AdSense in particular — require a site to publish
+// routes because ad networks, AdSense in particular, require a site to publish
 // ownership, contact and policy information before it can be approved.
 
 export type StaticPageId =
@@ -75,7 +75,7 @@ export const getStaticPage = (id: string): StaticPageMeta | undefined =>
 export const getStaticPageByPath = (path: string): StaticPageMeta | undefined =>
   STATIC_PAGES.find(p => p.path === path);
 
-/** Contact address published on the site — must match the AdSense account owner. */
+/** Contact address published on the site, must match the AdSense account owner. */
 export const CONTACT_EMAIL = 'dk.coder7250@gmail.com';
 
 /** Human-readable date shown at the bottom of every policy page. */

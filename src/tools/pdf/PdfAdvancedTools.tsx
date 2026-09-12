@@ -117,7 +117,9 @@ export const PdfCropTool: React.FC = () => {
           <ErrorBox message={err} />
           {result && !isBusy && (
             <ResultCard title="Cropped PDF ready" subtitle="Margins were trimmed on every page."
-              onDownload={() => downloadAll([{ blob: result.blob, name: result.name }])} downloadLabel={result.name} />
+              onDownload={() => downloadAll([{ blob: result.blob, name: result.name }])}
+              blob={result.blob}
+              filename={result.name} downloadLabel={result.name} />
           )}
         </>
       )}
@@ -229,7 +231,9 @@ export const PdfHeaderFooterTool: React.FC = () => {
           <ErrorBox message={err} />
           {result && !isBusy && (
             <ResultCard title="Header & footer added" subtitle="Applied to every page."
-              onDownload={() => downloadAll([{ blob: result.blob, name: result.name }])} downloadLabel={result.name} />
+              onDownload={() => downloadAll([{ blob: result.blob, name: result.name }])}
+              blob={result.blob}
+              filename={result.name} downloadLabel={result.name} />
           )}
         </>
       )}
@@ -365,7 +369,9 @@ export const PdfFillFormsTool: React.FC = () => {
           <ErrorBox message={err} />
           {result && !isBusy && (
             <ResultCard title="Form filled" subtitle="Values were written into the PDF form."
-              onDownload={() => downloadAll([{ blob: result.blob, name: result.name }])} downloadLabel={result.name} />
+              onDownload={() => downloadAll([{ blob: result.blob, name: result.name }])}
+              blob={result.blob}
+              filename={result.name} downloadLabel={result.name} />
           )}
         </>
       )}
@@ -437,7 +443,9 @@ export const PdfFlattenTool: React.FC = () => {
           <ErrorBox message={err} />
           {result && !isBusy && (
             <ResultCard title="Flattened PDF ready" subtitle="Form fields are now static page content."
-              onDownload={() => downloadAll([{ blob: result.blob, name: result.name }])} downloadLabel={result.name} />
+              onDownload={() => downloadAll([{ blob: result.blob, name: result.name }])}
+              blob={result.blob}
+              filename={result.name} downloadLabel={result.name} />
           )}
         </>
       )}
@@ -504,8 +512,10 @@ export const PdfRepairTool: React.FC = () => {
           </Card>
           <ErrorBox message={err} />
           {result && !isBusy && (
-            <ResultCard title="Repair attempt succeeded" subtitle="Try opening the repaired file — always keep your original as backup."
-              onDownload={() => downloadAll([{ blob: result.blob, name: result.name }])} downloadLabel={result.name} />
+            <ResultCard title="Repair attempt succeeded" subtitle="Try opening the repaired file, always keep your original as backup."
+              onDownload={() => downloadAll([{ blob: result.blob, name: result.name }])}
+              blob={result.blob}
+              filename={result.name} downloadLabel={result.name} />
           )}
         </>
       )}
@@ -776,7 +786,7 @@ export const PdfToWordTool: React.FC = () => {
   return (
     <div className="space-y-4">
       {!file ? (
-        <PdfDropzone onFiles={handleFiles} label="Select a PDF to convert" hint="Text-only conversion — layout and images are not preserved" />
+        <PdfDropzone onFiles={handleFiles} label="Select a PDF to convert" hint="Text-only conversion, layout and images are not preserved" />
       ) : (
         <>
           <div className="flex items-center gap-3 p-3 rounded-xl border bg-muted border-border text-xs">
@@ -795,7 +805,9 @@ export const PdfToWordTool: React.FC = () => {
           <ErrorBox message={err} />
           {result && !isBusy && (
             <ResultCard title="DOCX ready" subtitle="Text extracted and formatted as paragraphs." downloadLabel={result.name}
-              onDownload={() => downloadAll([{ blob: result.blob, name: result.name }])} />
+              onDownload={() => downloadAll([{ blob: result.blob, name: result.name }])}
+              blob={result.blob}
+              filename={result.name} />
           )}
         </>
       )}
@@ -899,7 +911,9 @@ export const HtmlToPdfTool: React.FC = () => {
       <ErrorBox message={err} />
       {result && !isBusy && (
         <ResultCard title="PDF ready" subtitle="Rendered from your HTML and paginated to A4." downloadLabel={result.name}
-          onDownload={() => downloadAll([{ blob: result.blob, name: result.name }])} />
+          onDownload={() => downloadAll([{ blob: result.blob, name: result.name }])}
+              blob={result.blob}
+              filename={result.name} />
       )}
       <div ref={containerRef} className="hidden" />
       {overlay}

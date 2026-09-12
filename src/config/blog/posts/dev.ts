@@ -5,7 +5,7 @@ export const DEV_POSTS: BlogPost[] = [
     slug: 'unicode-utf8-and-mojibake',
     title: 'Why your text turns into Ã©: Unicode, UTF-8 and mojibake explained',
     description: 'Encoding bugs produce a small, recognisable set of symptoms. Learning to read them tells you exactly where the pipeline went wrong.',
-    excerpt: 'When "café" arrives as "cafÃ©", the bytes are fine — something decoded them with the wrong assumption. The garbled output tells you which assumption.',
+    excerpt: 'When "café" arrives as "cafÃ©", the bytes are fine, something decoded them with the wrong assumption. The garbled output tells you which assumption.',
     category: 'dev',
     tags: ['unicode', 'utf-8', 'encoding'],
     published: '2026-08-05',
@@ -14,7 +14,7 @@ export const DEV_POSTS: BlogPost[] = [
 
 ## Two separate things
 
-**Unicode** is a catalogue. It assigns every character a number called a code point: \`A\` is U+0041, \`é\` is U+00E9, \`अ\` is U+0905, \`🙂\` is U+1F642. That is all Unicode is — a very large numbered list.
+**Unicode** is a catalogue. It assigns every character a number called a code point: \`A\` is U+0041, \`é\` is U+00E9, \`अ\` is U+0905, \`🙂\` is U+1F642. That is all Unicode is, a very large numbered list.
 
 **An encoding** is a rule for turning those numbers into bytes. UTF-8, UTF-16 and UTF-32 are different rules for the same catalogue.
 
@@ -24,7 +24,7 @@ UTF-8 won, and deservedly. It uses one byte for the ASCII range, so every plain-
 
 **\`café\` → \`cafÃ©\`**: The text was encoded as UTF-8 and decoded as Latin-1 (or Windows-1252). In UTF-8, \`é\` is the two bytes \`C3 A9\`. Latin-1 has a character for every byte, so it renders them as two characters: \`Ã\` and \`©\`. This is the single most common encoding bug in existence.
 
-**\`café\` → \`caf?\` or \`caf□\`**: The opposite direction — the character could not be represented in the target encoding and was replaced. This is lossy. The information is gone, not merely displayed wrongly.
+**\`café\` → \`caf?\` or \`caf□\`**: The opposite direction, the character could not be represented in the target encoding and was replaced. This is lossy. The information is gone, not merely displayed wrongly.
 
 **\`café\` → \`caf\`**: Silent truncation at a byte that could not be decoded.
 
@@ -44,7 +44,7 @@ They look identical. They are not equal as strings. \`"café" === "café"\` can 
 
 This causes real problems: macOS traditionally stores filenames in decomposed form (NFD) while Linux and Windows use composed form (NFC), so the same filename can fail to match across systems. Database lookups miss. Deduplication misses.
 
-The fix is normalisation — convert to a canonical form before comparing. NFC (composed) is the right default for storage and comparison on the web.
+The fix is normalisation, convert to a canonical form before comparing. NFC (composed) is the right default for storage and comparison on the web.
 
 ## String length lies
 
@@ -52,7 +52,7 @@ The fix is normalisation — convert to a canonical form before comparing. NFC (
 
 It gets worse. A family emoji like 👨‍👩‍👧 is several code points joined by zero-width joiners. A flag is two regional indicator symbols. \`"👨‍👩‍👧".length\` is 8.
 
-If you are counting characters for a limit — a bio field, an SMS, a database column — decide which unit you actually mean:
+If you are counting characters for a limit, a bio field, an SMS, a database column, decide which unit you actually mean:
 
 - **Bytes** for storage limits.
 - **Code points** for most technical purposes.
@@ -67,11 +67,11 @@ Naively slicing a string at a byte or code-unit boundary will split a character 
 3. **Never guess an encoding** in your own code paths. Decide it and enforce it at the boundary.
 4. **Normalise to NFC** before comparing or storing user-supplied text.
 5. **Do not add a BOM** to UTF-8 files. It solves nothing and breaks parsers.
-6. **In MySQL, use \`utf8mb4\`, not \`utf8\`.** The latter is a three-byte subset that cannot store emoji — a famous and still-common footgun.
+6. **In MySQL, use \`utf8mb4\`, not \`utf8\`.** The latter is a three-byte subset that cannot store emoji, a famous and still-common footgun.
 
 ## Inspecting the bytes
 
-When text looks wrong, look at the actual bytes rather than guessing. NextTool's [Unicode converter](/tool/unicode-converter) shows code points for any string, and the [binary](/tool/binary-converter) and [ASCII](/tool/ascii-converter) converters show the byte-level view — usually enough to identify which of the failures above you are looking at.`,
+When text looks wrong, look at the actual bytes rather than guessing. NextTool's [Unicode converter](/tool/unicode-converter) shows code points for any string, and the [binary](/tool/binary-converter) and [ASCII](/tool/ascii-converter) converters show the byte-level view, usually enough to identify which of the failures above you are looking at.`,
   },
 
   {
@@ -83,7 +83,7 @@ When text looks wrong, look at the actual bytes rather than guessing. NextTool's
     tags: ['json', 'parsing', 'api'],
     published: '2026-08-08',
     relatedTools: ['json-formatter', 'json-to-csv', 'csv-to-json', 'yaml-formatter'],
-    body: `JSON's whole design goal was to be small enough to specify on a business card. That minimalism is why it won, and also why people constantly write things it does not allow — because those things are legal in JavaScript, which JSON only superficially resembles.
+    body: `JSON's whole design goal was to be small enough to specify on a business card. That minimalism is why it won, and also why people constantly write things it does not allow, because those things are legal in JavaScript, which JSON only superficially resembles.
 
 ## The five that account for most failures
 
@@ -93,13 +93,13 @@ When text looks wrong, look at the actual bytes rather than guessing. NextTool's
 { "a": 1, "b": 2, }
 \`\`\`
 
-Legal in modern JavaScript, illegal in JSON. The error message usually points at the closing brace, one position after the actual problem — which is why people stare at the wrong line.
+Legal in modern JavaScript, illegal in JSON. The error message usually points at the closing brace, one position after the actual problem, which is why people stare at the wrong line.
 
 **2. Single quotes.** JSON strings must use double quotes. \`{'name': 'value'}\` is a JavaScript object literal, not JSON.
 
 **3. Unquoted keys.** \`{name: "value"}\` is likewise JavaScript. Every key in JSON is a double-quoted string.
 
-**4. Comments.** There is no comment syntax in JSON. Not \`//\`, not \`/* */\`, not \`#\`. If you need commented configuration, use YAML, TOML, or JSON5 — but know that you are no longer writing JSON.
+**4. Comments.** There is no comment syntax in JSON. Not \`//\`, not \`/* */\`, not \`#\`. If you need commented configuration, use YAML, TOML, or JSON5, but know that you are no longer writing JSON.
 
 **5. Unescaped characters inside strings.** Literal newlines, tabs and unescaped double quotes inside a string value all break parsing. They must be written as \`\\n\`, \`\\t\` and \`\\"\`. This one shows up constantly when someone pastes multi-line text into a JSON field by hand.
 
@@ -124,7 +124,7 @@ Related: never store money as a JSON float. \`0.1 + 0.2\` is not \`0.3\` in bina
 
 ## Duplicate keys are undefined behaviour
 
-\`{"a": 1, "a": 2}\` is not an error by the letter of the spec, and different parsers do different things — most take the last occurrence, some take the first, some raise. Never rely on it.
+\`{"a": 1, "a": 2}\` is not an error by the letter of the spec, and different parsers do different things, most take the last occurrence, some take the first, some raise. Never rely on it.
 
 ## Reading a parse error efficiently
 
@@ -136,20 +136,20 @@ The fastest way to locate a structural error in a large document is to format it
 
 1. Format the document to see its structure.
 2. Check the ending: unbalanced braces or brackets are the most common structural fault.
-3. Search for \`'\` — single quotes should not appear outside string content.
+3. Search for \`'\`, single quotes should not appear outside string content.
 4. Search for \`,]\` and \`,}\` to find trailing commas.
 5. Look for large integers that might be silently truncated.
-6. Confirm the file is UTF-8 without a byte order mark — a BOM before the opening brace fails many parsers.
+6. Confirm the file is UTF-8 without a byte order mark, a BOM before the opening brace fails many parsers.
 
 ## JSON vs the alternatives
 
 **JSON5 / JSONC** allow comments, trailing commas and unquoted keys. Fine for config files you control; not something to send over an API.
 
-**YAML** is far more readable for configuration and far more dangerous — significant whitespace, and the classic surprise where an unquoted \`no\` becomes boolean false and \`3.10\` becomes the number 3.1.
+**YAML** is far more readable for configuration and far more dangerous, significant whitespace, and the classic surprise where an unquoted \`no\` becomes boolean false and \`3.10\` becomes the number 3.1.
 
 **NDJSON** (one JSON object per line) is the right choice for logs and streams, because a broken line does not invalidate the whole file.
 
-Formatting, validating and converting JSON is pure string work — no server needed. NextTool's [JSON formatter](/tool/json-formatter) validates and pretty-prints in the browser, which matters when the document is an API response containing real customer data.`,
+Formatting, validating and converting JSON is pure string work, no server needed. NextTool's [JSON formatter](/tool/json-formatter) validates and pretty-prints in the browser, which matters when the document is an API response containing real customer data.`,
   },
 
   {
@@ -163,11 +163,11 @@ Formatting, validating and converting JSON is pure string work — no server nee
     relatedTools: ['base64', 'image-to-base64', 'base64-to-image', 'jwt-decoder'],
     body: `Base64 solves one narrow problem: moving binary data through a channel that only reliably carries text.
 
-Email bodies, JSON string values, URLs, XML documents and HTML attributes all expect text. Hand them raw binary — a PNG, a zip file, an encryption key — and bytes get mangled: a \`0x00\` truncates a C string, \`0x0A\` becomes a line break, high bytes get reinterpreted by whatever encoding is in play. Base64 sidesteps all of it by re-expressing arbitrary bytes using 64 characters that survive any text pipeline.
+Email bodies, JSON string values, URLs, XML documents and HTML attributes all expect text. Hand them raw binary, a PNG, a zip file, an encryption key, and bytes get mangled: a \`0x00\` truncates a C string, \`0x0A\` becomes a line break, high bytes get reinterpreted by whatever encoding is in play. Base64 sidesteps all of it by re-expressing arbitrary bytes using 64 characters that survive any text pipeline.
 
 ## How it works
 
-Take three bytes — 24 bits. Split them into four groups of 6 bits. Each 6-bit group is a number from 0 to 63, which indexes into the alphabet \`A–Z\`, \`a–z\`, \`0–9\`, \`+\`, \`/\`.
+Take three bytes, 24 bits. Split them into four groups of 6 bits. Each 6-bit group is a number from 0 to 63, which indexes into the alphabet \`A–Z\`, \`a–z\`, \`0–9\`, \`+\`, \`/\`.
 
 So three input bytes always become four output characters. When the input length is not a multiple of three, the encoder pads with \`=\` to keep the output length a multiple of four. One \`=\` means the last group had two bytes; two \`=\` means it had one.
 
@@ -187,7 +187,7 @@ This is the single most important practical fact about it, and the reason for mo
 
 ## The URL-safe variant
 
-\`+\` and \`/\` are not safe in URLs or filenames — \`/\` is a path separator and \`+\` means a space in query strings. Base64url (RFC 4648 §5) replaces them with \`-\` and \`_\`, and usually drops the \`=\` padding.
+\`+\` and \`/\` are not safe in URLs or filenames, \`/\` is a path separator and \`+\` means a space in query strings. Base64url (RFC 4648 §5) replaces them with \`-\` and \`_\`, and usually drops the \`=\` padding.
 
 This is what JWTs use, and it is why a JWT never contains \`+\`, \`/\` or \`=\`. If you are decoding one by hand and it fails, check that your decoder handles the URL-safe alphabet.
 
@@ -197,7 +197,7 @@ This needs saying plainly, because it keeps appearing in real systems:
 
 **Base64 provides no confidentiality whatsoever.** It is a public, reversible transformation with no key. Anyone can decode it instantly. A password, an API key or a token stored "encoded in Base64" is stored in plaintext with an extra step.
 
-The recurring failure mode is HTTP Basic authentication, which sends \`base64(username:password)\` in a header. That is not protection — it is why Basic auth is only acceptable over TLS, which is what actually provides the confidentiality.
+The recurring failure mode is HTTP Basic authentication, which sends \`base64(username:password)\` in a header. That is not protection, it is why Basic auth is only acceptable over TLS, which is what actually provides the confidentiality.
 
 Related: a JWT payload is Base64url, not encrypted. Anyone holding the token can read every claim inside it. The signature prevents *modification*, not *reading*. Do not put anything private in a JWT payload.
 
@@ -223,7 +223,7 @@ If you need both compression and Base64, **compress first, then encode.** Base64
 
 ## Decoding safely
 
-Decoding is a pure transformation with no server involvement required, which matters because the things people decode — tokens, config blobs, API payloads — are frequently sensitive. NextTool's [Base64 tool](/tool/base64) and [JWT decoder](/tool/jwt-decoder) run entirely in the browser, so pasting a live session token into them does not transmit it anywhere.
+Decoding is a pure transformation with no server involvement required, which matters because the things people decode, tokens, config blobs, API payloads, are frequently sensitive. NextTool's [Base64 tool](/tool/base64) and [JWT decoder](/tool/jwt-decoder) run entirely in the browser, so pasting a live session token into them does not transmit it anywhere.
 
 Which is worth caring about, given that a leaked token is usable by whoever finds it until it expires.`,
   },
@@ -232,12 +232,12 @@ Which is worth caring about, given that a leaked token is usable by whoever find
     slug: 'how-diff-tools-find-changes',
     title: 'How diff tools work, and why they sometimes show the wrong change',
     description: 'Diff algorithms find the longest common subsequence between two texts. Knowing that explains misaligned hunks, and how to get a more useful comparison.',
-    excerpt: 'A diff tool has no idea what your code means. It is solving a sequence-matching problem — which is why moved blocks look like a delete plus an unrelated insert.',
+    excerpt: 'A diff tool has no idea what your code means. It is solving a sequence-matching problem, which is why moved blocks look like a delete plus an unrelated insert.',
     category: 'dev',
     tags: ['diff', 'git', 'algorithms'],
     published: '2026-08-16',
     relatedTools: ['diff-checker', 'diff-text', 'word-compare', 'pdf-compare'],
-    body: `A diff tool takes two versions of a text and reports what changed. That sounds like it needs to understand the content. It does not — it is solving a pure sequence problem, and every quirk in diff output follows from that.
+    body: `A diff tool takes two versions of a text and reports what changed. That sounds like it needs to understand the content. It does not, it is solving a pure sequence problem, and every quirk in diff output follows from that.
 
 ## The underlying problem
 
@@ -250,7 +250,7 @@ A: the quick brown fox
 B: the slow brown fox
 \`\`\`
 
-The LCS is \`the … brown fox\`. So \`quick\` was deleted and \`slow\` was inserted. The tool has no concept of "the word was replaced" — replacement is just a deletion adjacent to an insertion.
+The LCS is \`the … brown fox\`. So \`quick\` was deleted and \`slow\` was inserted. The tool has no concept of "the word was replaced", replacement is just a deletion adjacent to an insertion.
 
 ## The Myers algorithm
 
@@ -258,7 +258,7 @@ Computing an LCS naively is O(N×M), which is unworkable on large files. Eugene 
 
 The practical consequence is important: **diff is fast when files are similar and slow when they are not.** Comparing two versions of a file with three changed lines is nearly instantaneous. Comparing two unrelated files of the same size is much slower, because D is enormous.
 
-This is why diffing minified JavaScript — one long line, everything different — can hang a tool that handles a 10,000-line source file instantly.
+This is why diffing minified JavaScript, one long line, everything different, can hang a tool that handles a 10,000-line source file instantly.
 
 ## Granularity changes everything
 
@@ -276,9 +276,9 @@ Many tools do both: line-level to find the changed regions, then word-level with
 
 Move a function from the top of a file to the bottom. A standard diff shows a large deletion at the top and a large insertion at the bottom, with no indication that they are the same code.
 
-That is correct output for the algorithm — an LCS is by definition order-preserving, so a reordering cannot be expressed as anything else. Some tools add move detection as a separate post-processing pass, comparing deleted and inserted blocks for similarity. It is a heuristic layered on top, not part of the core algorithm.
+That is correct output for the algorithm, an LCS is by definition order-preserving, so a reordering cannot be expressed as anything else. Some tools add move detection as a separate post-processing pass, comparing deleted and inserted blocks for similarity. It is a heuristic layered on top, not part of the core algorithm.
 
-Similarly, reindenting a whole file produces a diff where every line changed. Most tools offer an "ignore whitespace" option that normalises before comparing — the first thing to reach for when a diff looks absurdly large.
+Similarly, reindenting a whole file produces a diff where every line changed. Most tools offer an "ignore whitespace" option that normalises before comparing, the first thing to reach for when a diff looks absurdly large.
 
 ## Making diffs more useful
 
@@ -290,13 +290,13 @@ Similarly, reindenting a whole file produces a diff where every line changed. Mo
 
 ## Comparing documents rather than code
 
-Diffing is also how you check whether a contract came back modified, or whether a supplier changed a clause in a specification. For those, [text comparison](/tool/diff-checker) and [document comparison](/tool/word-compare) are the relevant tools — and since the documents in question are often confidential, running the comparison locally rather than pasting both versions into a web service is the sensible default.`,
+Diffing is also how you check whether a contract came back modified, or whether a supplier changed a clause in a specification. For those, [text comparison](/tool/diff-checker) and [document comparison](/tool/word-compare) are the relevant tools, and since the documents in question are often confidential, running the comparison locally rather than pasting both versions into a web service is the sensible default.`,
   },
 
   {
     slug: 'jwt-structure-and-verification',
     title: 'JWTs: what is inside one, and why decoding is not verifying',
-    description: 'A JSON Web Token is three Base64url segments. Reading them is trivial and proves nothing — the signature is what carries the security.',
+    description: 'A JSON Web Token is three Base64url segments. Reading them is trivial and proves nothing, the signature is what carries the security.',
     excerpt: 'Anyone holding a JWT can read every claim in it. That is by design, and it is the single most misunderstood thing about the format.',
     category: 'dev',
     tags: ['jwt', 'auth', 'security'],
@@ -311,15 +311,15 @@ eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjMiLCJleHAiOjE3MzAwMDAwMDB9.dB
 
 ## The three parts
 
-**Header** — a small JSON object naming the signing algorithm, e.g. \`{"alg":"HS256","typ":"JWT"}\`.
+**Header**, a small JSON object naming the signing algorithm, e.g. \`{"alg":"HS256","typ":"JWT"}\`.
 
-**Payload** — the claims. Registered claim names are short by convention: \`sub\` (subject), \`iss\` (issuer), \`aud\` (audience), \`exp\` (expiry, as a Unix timestamp), \`iat\` (issued at), \`nbf\` (not before). You can add your own.
+**Payload**, the claims. Registered claim names are short by convention: \`sub\` (subject), \`iss\` (issuer), \`aud\` (audience), \`exp\` (expiry, as a Unix timestamp), \`iat\` (issued at), \`nbf\` (not before). You can add your own.
 
-**Signature** — computed over \`base64url(header) + "." + base64url(payload)\` using the algorithm from the header and a key.
+**Signature**, computed over \`base64url(header) + "." + base64url(payload)\` using the algorithm from the header and a key.
 
 ## The part people get wrong
 
-**Base64url is encoding, not encryption.** The payload is readable by anyone who has the token — paste it into any decoder, or run it through \`atob\` in a browser console.
+**Base64url is encoding, not encryption.** The payload is readable by anyone who has the token, paste it into any decoder, or run it through \`atob\` in a browser console.
 
 So:
 
@@ -334,13 +334,13 @@ Decoding splits on dots and Base64url-decodes. It requires no key and proves not
 
 Verifying recomputes the signature using the key and compares. Only that step establishes the token is authentic.
 
-A decoder — including [ours](/tool/jwt-decoder) — shows you what is inside a token. It cannot tell you the token is valid, because it does not have your signing key. That is expected behaviour, not a limitation to work around.
+A decoder, including [ours](/tool/jwt-decoder), shows you what is inside a token. It cannot tell you the token is valid, because it does not have your signing key. That is expected behaviour, not a limitation to work around.
 
 ## The \`alg: none\` problem
 
 Early JWT libraries trusted the \`alg\` field in the header. An attacker could set \`"alg":"none"\`, strip the signature, and some libraries would accept it as valid.
 
-A related attack: a server expecting RS256 (asymmetric) receives a token claiming HS256 (symmetric), and a naive library verifies the HMAC using the *public* key as the shared secret — a key the attacker also has.
+A related attack: a server expecting RS256 (asymmetric) receives a token claiming HS256 (symmetric), and a naive library verifies the HMAC using the *public* key as the shared secret, a key the attacker also has.
 
 Both are fixed in maintained libraries, and both are still worth knowing, because the underlying lesson generalises: **the server must decide which algorithm it accepts. Never take that instruction from the token itself.**
 
@@ -358,11 +358,11 @@ Skipping the expiry check is depressingly common and turns a short-lived token i
 
 ## The revocation problem
 
-JWTs are stateless — that is their appeal. The server validates the signature without a database lookup, which scales beautifully.
+JWTs are stateless, that is their appeal. The server validates the signature without a database lookup, which scales beautifully.
 
 It also means **you cannot revoke one.** A stolen token is valid until it expires, full stop. Logging out clears it from the client, and does nothing about a copy an attacker took.
 
-Practical mitigations: keep access tokens short-lived (minutes, not days), use refresh tokens that *are* stored server-side and can be revoked, and maintain a deny-list for emergencies — accepting that you have reintroduced the state you were trying to avoid.
+Practical mitigations: keep access tokens short-lived (minutes, not days), use refresh tokens that *are* stored server-side and can be revoked, and maintain a deny-list for emergencies, accepting that you have reintroduced the state you were trying to avoid.
 
 ## Where to store one
 
@@ -373,7 +373,7 @@ The general recommendation is an httpOnly, Secure, SameSite cookie.
 
 ## Inspecting tokens safely
 
-Session tokens end up pasted into online decoders during debugging all the time. A live token is a live credential — if the decoder's server logs it, that log is now a set of working keys to someone's account.
+Session tokens end up pasted into online decoders during debugging all the time. A live token is a live credential, if the decoder's server logs it, that log is now a set of working keys to someone's account.
 
 Decoding is pure string manipulation, so there is no reason for it to happen anywhere but your own browser. That is how the [JWT decoder](/tool/jwt-decoder) here works. Whatever tool you use, check that before pasting a production token into it.`,
   },
@@ -411,18 +411,18 @@ Match:   <b>bold</b> and <i>italic</i>     ← the whole thing
 
 \`+\` is **greedy**: it takes as much as possible, then backtracks only enough to let the rest of the pattern succeed. Since the string ends with \`>\`, the greedy match swallows everything.
 
-Adding \`?\` makes it **lazy** — take as little as possible:
+Adding \`?\` makes it **lazy**, take as little as possible:
 
 \`\`\`
 Pattern: <.+?>
 Matches: <b>, </b>, <i>, </i>
 \`\`\`
 
-A more precise approach avoids the question entirely: \`<[^>]+>\` — "angle bracket, then characters that are not a closing bracket". Negated character classes are usually clearer and faster than lazy quantifiers.
+A more precise approach avoids the question entirely: \`<[^>]+>\`, "angle bracket, then characters that are not a closing bracket". Negated character classes are usually clearer and faster than lazy quantifiers.
 
 ## Groups
 
-\`(...)\` captures — the matched text is available as \`$1\`, \`$2\` and so on, which is what makes find-and-replace powerful:
+\`(...)\` captures, the matched text is available as \`$1\`, \`$2\` and so on, which is what makes find-and-replace powerful:
 
 \`\`\`
 Find:    (\\w+)@(\\w+)\\.com
@@ -442,7 +442,7 @@ Pattern: (a+)+b
 Input:   aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
 \`\`\`
 
-There is no \`b\`, so the match must fail — but the engine tries every way of dividing those \`a\`s between the inner and outer quantifier before concluding that. The number of combinations grows exponentially, and a 30-character input can hang a thread.
+There is no \`b\`, so the match must fail, but the engine tries every way of dividing those \`a\`s between the inner and outer quantifier before concluding that. The number of combinations grows exponentially, and a 30-character input can hang a thread.
 
 This is a real denial-of-service vector, known as ReDoS, and it has taken down production systems. The pattern to watch for is **nested quantifiers with overlapping alternatives**: \`(a+)+\`, \`(a|a)*\`, \`(\\s*\\w+)*\`.
 
@@ -452,7 +452,7 @@ Avoid it by making sure each part of the pattern can only match in one way, and 
 
 The RFC 5322 grammar for a valid email address permits quoted strings, comments, and IP-literal domains. A regex that fully implements it is several thousand characters long and still cannot tell you whether the address exists.
 
-Use a sanity check — "has one \`@\`, has something before it, has a dot after it" — and then **send a confirmation email**. That is the only test that answers the question you actually care about.
+Use a sanity check, "has one \`@\`, has something before it, has a dot after it", and then **send a confirmation email**. That is the only test that answers the question you actually care about.
 
 The same reasoning applies to URLs, phone numbers and postal addresses. Regex validation on these rejects legitimate real-world input constantly.
 
@@ -467,13 +467,13 @@ The same reasoning applies to URLs, phone numbers and postal addresses. Regex va
 ^(?=.*[a-z])(?=.*\\d)   lookahead: contains a lowercase letter and a digit
 \`\`\`
 
-Lookahead \`(?=...)\` asserts something follows without consuming it — the standard tool for "must contain all of these" rules.
+Lookahead \`(?=...)\` asserts something follows without consuming it, the standard tool for "must contain all of these" rules.
 
 ## Test before you ship
 
 Regex is dense and easy to get subtly wrong in ways that only appear on real data. Build patterns against actual sample text, including the cases you expect to *fail*. A [regex tester](/tool/regex-tester) with live highlighting turns a guessing game into a two-minute job.
 
-For common extraction tasks — [emails](/tool/extract-emails), [URLs](/tool/extract-urls), [phone numbers](/tool/extract-phones) — a dedicated tool with a battle-tested pattern will do better than one you write in a hurry.`,
+For common extraction tasks, [emails](/tool/extract-emails), [URLs](/tool/extract-urls), [phone numbers](/tool/extract-phones), a dedicated tool with a battle-tested pattern will do better than one you write in a hurry.`,
   },
 
   {
@@ -489,15 +489,15 @@ For common extraction tasks — [emails](/tool/extract-emails), [URLs](/tool/ext
 
 ## The versions that matter
 
-**v1** — timestamp plus the machine's MAC address. Sortable, and it leaks both when and where it was created. The MAC address disclosure is why it fell out of favour; it was used to trace the author of the Melissa virus in 1999.
+**v1**, timestamp plus the machine's MAC address. Sortable, and it leaks both when and where it was created. The MAC address disclosure is why it fell out of favour; it was used to trace the author of the Melissa virus in 1999.
 
-**v4** — 122 random bits (6 are fixed for version and variant). The default nearly everywhere for two decades. No information leakage, no coordination needed.
+**v4**, 122 random bits (6 are fixed for version and variant). The default nearly everywhere for two decades. No information leakage, no coordination needed.
 
-**v7** — a 48-bit Unix millisecond timestamp followed by random bits. Standardised in RFC 9562, which replaced the old RFC 4122 in 2024. Time-ordered while still unpredictable.
+**v7**, a 48-bit Unix millisecond timestamp followed by random bits. Standardised in RFC 9562, which replaced the old RFC 4122 in 2024. Time-ordered while still unpredictable.
 
 ## Why v4 hurts as a primary key
 
-Most relational databases store rows in a B-tree ordered by primary key. Insert sequential keys and every new row goes at the right-hand edge of the tree — the same few pages stay hot in memory and writes are cheap.
+Most relational databases store rows in a B-tree ordered by primary key. Insert sequential keys and every new row goes at the right-hand edge of the tree, the same few pages stay hot in memory and writes are cheap.
 
 Insert random keys and each one lands in an arbitrary position. The database must read the target page from disk, split pages that are full, and keep effectively the entire index hot to avoid thrashing. Index fragmentation grows and write throughput degrades as the table gets large.
 
@@ -519,13 +519,13 @@ The cost is that a v7 UUID reveals roughly when it was created. For a database p
 |---|---|
 | Database primary key | v7 |
 | Public-facing resource ID | v4 or v7 |
-| Session token, reset token, API key | **Neither** — use a CSPRNG |
+| Session token, reset token, API key | **Neither**, use a CSPRNG |
 | Correlation / trace ID | v7 (sortable logs are useful) |
 | Existing system already on v4 | Stay on v4 unless you have measured a problem |
 
 ## Do not use UUIDs as secrets
 
-A v4 UUID has 122 bits of randomness, which is plenty of entropy — **if** it came from a cryptographically secure generator. Many older libraries used \`Math.random()\` or a similar non-cryptographic PRNG, whose internal state can be recovered from a handful of outputs, making subsequent values predictable.
+A v4 UUID has 122 bits of randomness, which is plenty of entropy, **if** it came from a cryptographically secure generator. Many older libraries used \`Math.random()\` or a similar non-cryptographic PRNG, whose internal state can be recovered from a handful of outputs, making subsequent values predictable.
 
 For anything security-sensitive, generate bytes from a CSPRNG directly (\`crypto.getRandomValues\` in the browser, \`crypto.randomBytes\` in Node) rather than relying on a UUID library's implementation choices.
 
@@ -539,7 +539,7 @@ Collisions are not the thing to worry about. Weak randomness sources are.
 
 ## Storage
 
-A UUID is 128 bits — 16 bytes. Stored as a hyphenated string it is 36 bytes, more than twice the size, and every index entry pays for it.
+A UUID is 128 bits, 16 bytes. Stored as a hyphenated string it is 36 bytes, more than twice the size, and every index entry pays for it.
 
 Use a native \`uuid\` type where the database has one (PostgreSQL does), or \`BINARY(16)\` where it does not. On a large table with several UUID columns and indexes, the difference is measured in gigabytes.
 
@@ -552,7 +552,7 @@ Both versions are cheap to generate client-side; there is no reason to ask a ser
     slug: 'colour-contrast-and-wcag',
     title: 'Colour contrast: what the WCAG numbers mean and how to hit them',
     description: 'The 4.5:1 ratio comes from a specific luminance formula. Understanding it explains why light grey on white fails and how to fix a palette without redesigning it.',
-    excerpt: 'Low-contrast text is the most common accessibility failure on the web, and one of the easiest to fix — once you know which number you are aiming at and why.',
+    excerpt: 'Low-contrast text is the most common accessibility failure on the web, and one of the easiest to fix, once you know which number you are aiming at and why.',
     category: 'dev',
     tags: ['accessibility', 'wcag', 'colour', 'css'],
     published: '2026-09-08',
@@ -561,7 +561,7 @@ Both versions are cheap to generate client-side; there is no reason to ask a ser
 
 ## What the ratio measures
 
-WCAG defines a contrast ratio between two colours based on their **relative luminance** — a measure of perceived brightness that weights the colour channels according to how sensitive human vision is to each:
+WCAG defines a contrast ratio between two colours based on their **relative luminance**, a measure of perceived brightness that weights the colour channels according to how sensitive human vision is to each:
 
 \`\`\`
 L = 0.2126 R + 0.7152 G + 0.0722 B
@@ -569,7 +569,7 @@ L = 0.2126 R + 0.7152 G + 0.0722 B
 
 (with each channel first linearised from its sRGB value)
 
-Green contributes over 70% of perceived brightness; blue contributes about 7%. This is why pure blue text on black is hard to read despite looking like a strong colour difference — there is almost no luminance difference.
+Green contributes over 70% of perceived brightness; blue contributes about 7%. This is why pure blue text on black is hard to read despite looking like a strong colour difference, there is almost no luminance difference.
 
 The ratio is then:
 
@@ -585,7 +585,7 @@ It ranges from **1:1** (identical colours) to **21:1** (pure black on pure white
 |---|---|---|
 | Normal text | 4.5:1 | 7:1 |
 | Large text (≥18.66px bold, or ≥24px) | 3:1 | 4.5:1 |
-| UI components, graphics, focus indicators | 3:1 | — |
+| UI components, graphics, focus indicators | 3:1 |, |
 
 AA is the level referenced by most accessibility legislation, including the European Accessibility Act and the standards used for public sector procurement in many countries. AAA is a goal, not usually a requirement.
 
@@ -600,15 +600,15 @@ Note the third row: it was added in WCAG 2.1 and is widely missed. Input borders
 
 ## Fixing a palette without redesigning it
 
-**Adjust lightness, not hue.** Contrast is a luminance relationship. Take your brand colour and darken it for text use while keeping the same hue and saturation — the palette still reads as the same brand, and the text passes. Working in HSL or LCH makes this a one-value change.
+**Adjust lightness, not hue.** Contrast is a luminance relationship. Take your brand colour and darken it for text use while keeping the same hue and saturation, the palette still reads as the same brand, and the text passes. Working in HSL or LCH makes this a one-value change.
 
-**Body text at #767676 or darker on white.** That is roughly the lightest neutral grey that reaches 4.5:1 against pure white. Anything lighter fails for body copy. \`#999999\` — a very popular choice for "secondary" text — comes in at about 2.8:1 and fails clearly.
+**Body text at #767676 or darker on white.** That is roughly the lightest neutral grey that reaches 4.5:1 against pure white. Anything lighter fails for body copy. \`#999999\`, a very popular choice for "secondary" text, comes in at about 2.8:1 and fails clearly.
 
 **Do not rely on colour alone.** A red border on an invalid field is invisible to a substantial number of users. Add an icon or text. This is a separate WCAG criterion from contrast and is failed just as often.
 
 **Check both themes.** A palette tuned for a light theme frequently fails in dark mode, where the relationship inverts and mid-greys that worked against white are now too close to a dark background.
 
-**Test text over images.** A caption over a photograph passes or fails depending on the pixels behind it. Use a scrim — a semi-transparent overlay — rather than hoping.
+**Test text over images.** A caption over a photograph passes or fails depending on the pixels behind it. Use a scrim, a semi-transparent overlay, rather than hoping.
 
 ## Where automated checking stops
 

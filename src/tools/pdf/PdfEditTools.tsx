@@ -121,6 +121,8 @@ export const PdfCompressTool: React.FC = () => {
                 title="Compressed PDF ready"
                 subtitle={`Saved ${formatBytes(saved)} (${savedPct}%) on your device.`}
                 onDownload={() => downloadAll([{ blob: result.blob, name: result.name }])}
+              blob={result.blob}
+              filename={result.name}
                 downloadLabel={result.name}
               />
             </>
@@ -269,6 +271,8 @@ export const PdfWatermarkTool: React.FC = () => {
               title="Watermarked PDF ready"
               subtitle="The watermark was stamped on every page."
               onDownload={() => downloadAll([{ blob: result.blob, name: result.name }])}
+              blob={result.blob}
+              filename={result.name}
               downloadLabel={result.name}
             />
           )}
@@ -410,6 +414,8 @@ export const PdfPageNumbersTool: React.FC = () => {
               title="Page numbers added"
               subtitle="Every page now carries a number."
               onDownload={() => downloadAll([{ blob: result.blob, name: result.name }])}
+              blob={result.blob}
+              filename={result.name}
               downloadLabel={result.name}
             />
           )}
@@ -513,7 +519,7 @@ export const PdfRedactTool: React.FC = () => {
   return (
     <div className="space-y-4">
       {!file ? (
-        <PdfDropzone onFiles={handleFiles} label="Select a PDF to redact" hint="Permanently black out sensitive text — never uploads your file" />
+        <PdfDropzone onFiles={handleFiles} label="Select a PDF to redact" hint="Permanently black out sensitive text, never uploads your file" />
       ) : (
         <>
           <SourceFileBar file={file} pageCount={pageCount} onReset={reset} />
@@ -528,7 +534,7 @@ export const PdfRedactTool: React.FC = () => {
               {matchCount !== null && (
                 <p className="text-[11px]  text-muted-foreground">
                   {matchCount === 0
-                    ? 'No matches found — try different keywords.'
+                    ? 'No matches found, try different keywords.'
                     : `Found ${matchCount} location${matchCount === 1 ? '' : 's'} to black out.`}
                 </p>
               )}
@@ -547,6 +553,8 @@ export const PdfRedactTool: React.FC = () => {
               title="Redacted PDF ready"
               subtitle={`${matchCount ?? 0} sensitive area${matchCount === 1 ? '' : 's'} were blacked out on your device.`}
               onDownload={() => downloadAll([{ blob: result.blob, name: result.name }])}
+              blob={result.blob}
+              filename={result.name}
               downloadLabel={result.name}
             />
           )}
@@ -718,7 +726,7 @@ export const PdfSignTool: React.FC = () => {
   return (
     <div className="space-y-4">
       {!file ? (
-        <PdfDropzone onFiles={handleFiles} label="Select a PDF to sign" hint="Add your signature to any page — draw, type or upload" />
+        <PdfDropzone onFiles={handleFiles} label="Select a PDF to sign" hint="Add your signature to any page, draw, type or upload" />
       ) : (
         <>
           <SourceFileBar file={file} pageCount={pageCount} onReset={reset} />
@@ -814,6 +822,8 @@ export const PdfSignTool: React.FC = () => {
               title="Signed PDF ready"
               subtitle={`Your signature was placed on page ${targetPage}.`}
               onDownload={() => downloadAll([{ blob: result.blob, name: result.name }])}
+              blob={result.blob}
+              filename={result.name}
               downloadLabel={result.name}
             />
           )}

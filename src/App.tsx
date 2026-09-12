@@ -4,6 +4,11 @@ import { CommandPalette }  from './components/CommandPalette';
 import { AdBanner }        from './components/AdBanner';
 import { Footer }          from './components/Footer';
 import { AllToolsView }    from './components/AllToolsView';
+import { Hero }            from './components/home/Hero';
+import { ToolGrid }        from './components/home/ToolGrid';
+import { PdfMergeFlow }    from './tools/pdf/PdfMergeFlow';
+import { MyFiles }         from './pages/MyFiles';
+import { Settings }        from './pages/Settings';
 import { StaticPageView }  from './pages/StaticPageView';
 import { Blog }            from './pages/Blog';
 import { BlogPostView }    from './pages/BlogPostView';
@@ -11,7 +16,6 @@ import { getPost }         from './config/blog';
 import { StaticPageId }    from './config/pages';
 import { ToolCategory }    from './types';
 import { TOOLS }           from './config/tools';
-import { workingToolCount } from './utils/toolStats';
 import { PLANNED_FEATURES } from './config/toolFeatures';
 import { TOOL_EXPLANATIONS } from './config/toolExplanations';
 import { TOOL_SEO_CONTENT } from './config/seoContent';
@@ -24,11 +28,9 @@ import {
 import { trackPageView } from './utils/analytics';
 import {
   FileText, Globe,
-  ChevronRight, ArrowLeft, Star,
+  ChevronRight, ArrowLeft, Star, Plus, Minus,
   ShieldCheck, Zap, Info,
   Lock, MonitorSmartphone, Infinity as InfinityIcon, ChevronDown,
-  Terminal, AlignLeft, Shrink,
-  Copy, Download, Sparkles,
   CheckCircle2, Lightbulb,
 } from 'lucide-react';
 import { ALL_CATEGORIES } from './config/categories';
@@ -39,7 +41,7 @@ const LIVE_DEV_TOOL_IDS = new Set([
   'json-formatter', 'base64', 'uuid-generator', 'password-generator', 'hash-generator', 'jwt-decoder', 'diff-checker',
 ]);
 
-// Tools whose own UI is a wide, dual-pane editor (input | output side by side) — these get a
+// Tools whose own UI is a wide, dual-pane editor (input | output side by side), these get a
 // "stacked" tool-page layout where the sidebar cards move below as a horizontal row instead of
 // a narrow sticky column, so the editor panes get the full page width to breathe.
 const WIDE_TOOL_IDS = new Set([
@@ -135,7 +137,7 @@ const lazyPdfAdvancedTools = <K extends
 ): React.FC =>
   lazyComponent(() => import('./tools/pdf/PdfAdvancedTools'), exportName);
 
-const lazyToolHeavy = <K extends 'QrGeneratorTool' | 'OcrImageTool' | 'AiUpscalerTool'>(
+const lazyToolHeavy = <K extends 'QrGeneratorTool' | 'OcrImageTool'>(
   exportName: K,
 ): React.FC =>
   lazyComponent(() => import('./tools/image/HeavyImageTools'), exportName);
@@ -216,7 +218,7 @@ const IMPLEMENTED_TOOLS: Record<string, React.ComponentType> = {
   'jwt-decoder':          JwtDecoder,
   'word-counter':         TextCounter,
   'color-converter':      ColorPicker,
-  'pdf-merge':            lazyTool('PdfMergeTool'),
+  'pdf-merge':            PdfMergeFlow,
   'pdf-split':            lazyPdfPageTools('PdfSplitTool'),
   'pdf-rotate':           lazyPdfPageTools('PdfRotateTool'),
   'pdf-delete-pages':     lazyPdfPageTools('PdfDeletePagesTool'),
@@ -344,7 +346,6 @@ const IMPLEMENTED_TOOLS: Record<string, React.ComponentType> = {
   'qr-generator':         lazyToolHeavy('QrGeneratorTool'),
   'qr-code-generator':    lazyToolHeavy('QrGeneratorTool'),
   'ocr-image':            lazyToolHeavy('OcrImageTool'),
-  'ai-upscaler':          lazyToolHeavy('AiUpscalerTool'),
 };
 
 // ─── Placeholder metadata per category (for un-built tools) ──
@@ -375,7 +376,7 @@ export const App: React.FC = () => {
 
   const [activeToolId,        setActiveToolId]        = useState(initRoute.toolId ?? '');
   const [isSearchOpen,        setIsSearchOpen]        = useState(false);
-  const [currentView,         setCurrentView]         = useState<'home'|'tool'|'category'|'page'|'all'|'blog'>(initRoute.view);
+  const [currentView,         setCurrentView]         = useState<'home'|'tool'|'category'|'page'|'all'|'blog'|'files'|'settings'>(initRoute.view);
   const [activeCategoryView,  setActiveCategoryView]  = useState<ToolCategory|null>(initRoute.category ?? null);
   const [activePageId,        setActivePageId]        = useState<StaticPageId>(initRoute.pageId ?? 'privacy');
   const [activeBlogSlug,      setActiveBlogSlug]      = useState(initRoute.blogSlug ?? '');
@@ -577,7 +578,11 @@ export const App: React.FC = () => {
           ? <CategoryView cat={activeCategoryView} onSelectTool={openTool} onBack={goHome} categories={ALL_CATEGORIES} />
           : currentView === 'all'
           ? <AllToolsView onSelectTool={openTool} onBack={goHome} categories={ALL_CATEGORIES} />
-          : <HomeView onSelectTool={openTool} onSelectCategory={openCategory} onOpenSearch={() => setIsSearchOpen(true)} />
+          : currentView === 'files'
+          ? <MyFiles onBrowseTools={openAllTools} onOpenTool={openTool} />
+          : currentView === 'settings'
+          ? <Settings theme={theme} onThemeChange={setTheme} />
+          : <HomeView onSelectTool={openTool} onSelectCategory={openCategory} />
         }
       </main>
 
@@ -590,12 +595,6 @@ export const App: React.FC = () => {
 };
 
 // ─── HOME VIEW ───────────────────────────────────────────────
-const TOOLCHAIN_CATEGORIES: { id: ToolCategory; tags: string[] }[] = [
-  { id: 'dev',      tags: ['JSON', 'JWT', 'Regex'] },
-  { id: 'security', tags: ['Password'] },
-  { id: 'image',    tags: ['Compress', 'Convert', 'Crop'] },
-  { id: 'text',     tags: ['Count', 'Case'] },
-];
 
 const WHY_FEATURES = [
   { icon: Zap,             title: 'Fast by design',       desc: 'Lightweight and code-split, every tool opens instantly without heavy downloads.' },
@@ -625,21 +624,86 @@ const SectionHeading: React.FC<{
   </div>
 );
 
+/** Toggle glyph shared by both FAQ components: a circular chip that
+ *  cross-fades between a plus (closed) and a minus (open), rather than a
+ *  chevron, since "add/remove this answer from view" is closer to what the
+ *  control actually does. */
+const FaqToggleChip: React.FC<{ open: boolean; size?: 'sm' | 'md' }> = ({ open, size = 'md' }) => {
+  const box = size === 'md' ? 'w-7 h-7' : 'w-6 h-6';
+  const glyph = size === 'md' ? 'w-3.5 h-3.5' : 'w-3 h-3';
+  return (
+    <span
+      className={`relative grid place-items-center ${box} shrink-0 rounded-full transition-colors
+                 duration-200 ${open ? 'bg-primary text-primary-foreground' : 'bg-surface-container text-muted-foreground'}`}
+    >
+      <Plus
+        className={`${glyph} absolute transition-all duration-200 ${open ? 'rotate-45 opacity-0' : 'rotate-0 opacity-100'}`}
+        aria-hidden="true"
+      />
+      <Minus
+        className={`${glyph} absolute transition-all duration-200 ${open ? 'rotate-0 opacity-100' : '-rotate-45 opacity-0'}`}
+        aria-hidden="true"
+      />
+    </span>
+  );
+};
+
 const FaqItem: React.FC<{ q: string; a: string }> = ({ q, a }) => {
   const [open, setOpen] = useState(false);
   return (
-    <div className="rounded-xl border border-border bg-card overflow-hidden">
+    <div
+      className={`rounded-2xl border bg-card overflow-hidden transition-colors duration-200
+                 ${open ? 'border-primary/30' : 'border-border'}`}
+    >
       <button
         onClick={() => setOpen(o => !o)}
         aria-expanded={open}
-        className="w-full flex items-center justify-between gap-3 px-4 py-3.5 text-left text-[13.5px] font-semibold text-foreground hover:bg-muted/50 transition-colors"
+        className="w-full flex items-center justify-between gap-4 px-5 py-4 text-left
+                   hover:bg-muted/40 transition-colors"
       >
-        <span>{q}</span>
-        <ChevronDown className={`w-4 h-4 shrink-0 text-muted-foreground transition-transform duration-150 ${open ? 'rotate-180' : ''}`} />
+        <span className="text-[15px] font-bold text-foreground">{q}</span>
+        <FaqToggleChip open={open} />
       </button>
-      {open && (
-        <p className="px-4 pb-4 text-[13px] text-muted-foreground leading-relaxed">{a}</p>
-      )}
+      {/* Grid-rows animates height without knowing the content's height up front. */}
+      <div
+        className="grid transition-[grid-template-rows] duration-[220ms] ease-out motion-reduce:transition-none"
+        style={{ gridTemplateRows: open ? '1fr' : '0fr' }}
+      >
+        <div className="overflow-hidden">
+          <p className="px-5 pb-5 text-[14px] text-muted-foreground leading-relaxed max-w-[62ch]">{a}</p>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+/** A single question in the per-tool "Learn more" FAQ list. Controlled state
+ *  (rather than native <details>) so the expand/collapse can animate. */
+const ToolFaqItem: React.FC<{ question: string; answer: string }> = ({ question, answer }) => {
+  const [open, setOpen] = useState(false);
+  return (
+    <div
+      className={`rounded-xl border bg-card overflow-hidden transition-colors duration-200
+                 ${open ? 'border-primary/30' : 'border-border'}`}
+    >
+      <button
+        type="button"
+        onClick={() => setOpen(o => !o)}
+        aria-expanded={open}
+        className="w-full flex items-center justify-between gap-3 px-4 py-3 text-left
+                   hover:bg-muted/40 transition-colors"
+      >
+        <span className="text-[13.5px] font-semibold text-foreground">{question}</span>
+        <FaqToggleChip open={open} size="sm" />
+      </button>
+      <div
+        className="grid transition-[grid-template-rows] duration-[220ms] ease-out motion-reduce:transition-none"
+        style={{ gridTemplateRows: open ? '1fr' : '0fr' }}
+      >
+        <div className="overflow-hidden">
+          <p className="px-4 pb-3 text-[13px] text-muted-foreground leading-relaxed">{answer}</p>
+        </div>
+      </div>
     </div>
   );
 };
@@ -647,9 +711,7 @@ const FaqItem: React.FC<{ q: string; a: string }> = ({ q, a }) => {
 const HomeView: React.FC<{
   onSelectTool: (id: string) => void;
   onSelectCategory: (cat: ToolCategory | 'all') => void;
-  onOpenSearch: () => void;
-}> = ({ onSelectTool, onSelectCategory, onOpenSearch }) => {
-  const popular = TOOLS.filter(t => t.isPopular).slice(0, 8);
+}> = ({ onSelectTool, onSelectCategory }) => {
   const newTools = TOOLS.filter(t => t.isNew).slice(0, 4);
 
   const [recentIds, setRecentIds] = useState<string[]>([]);
@@ -675,246 +737,17 @@ const HomeView: React.FC<{
   return (
     <div className="relative">
 
-      {/* ── HERO ─────────────────────────────────────────── */}
-      <section className="relative overflow-hidden">
-        <div className="max-w-4xl mx-auto px-5 sm:px-8 pt-16 pb-8 relative z-10 flex flex-col items-center justify-center text-center">
-
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-primary-container/60 text-on-primary-container text-[12.5px] font-semibold fade-up">
-            {workingToolCount()}+ tools · no upload · no account
-          </div>
-
-          <h1 className="font-heading text-[38px] sm:text-[56px] font-extrabold text-on-surface mt-5 mb-4 max-w-3xl tracking-[-0.035em] leading-[1.05] fade-up" style={{ animationDelay: '60ms' }}>
-            Every file tool you need, <br />
-            <span className="text-primary">in one tab.</span>
-          </h1>
-
-          <p className="text-[15px] sm:text-[17.5px] text-muted-foreground max-w-xl mb-7 leading-relaxed fade-up" style={{ animationDelay: '120ms' }}>
-            PDF, image, video, developer and AI utilities that do the work right in your browser — your files never leave your machine.
-          </p>
-
-          {/* Search pill */}
-          <button
-            onClick={onOpenSearch}
-            aria-label="Search all tools"
-            className="w-full max-w-xl bg-card border border-outline-variant rounded-2xl p-2 pl-4 flex items-center gap-2.5 shadow-card relative group mb-7 fade-up text-left"
-            style={{ animationDelay: '180ms' }}
-          >
-            <span className="text-muted-foreground shrink-0"><Terminal className="w-4 h-4" /></span>
-            <span className="flex-1 text-muted-foreground text-[14.5px] sm:text-[15.5px] truncate">Search {workingToolCount()}+ tools — try "compress"</span>
-            <span className="bg-primary text-primary-foreground text-[13px] font-semibold px-4 py-2.5 rounded-xl shrink-0 group-hover:brightness-110 transition-all">
-              Search
-            </span>
-          </button>
-
-          {/* Category filter pills */}
-          <div className="flex flex-wrap items-center justify-center gap-2 fade-up" style={{ animationDelay: '220ms' }}>
-            <AppLink
-              href="/all-tools"
-              onNavigate={() => onSelectCategory('all')}
-              className="px-4 py-2 rounded-full text-[13.5px] font-semibold bg-on-surface text-background hover:brightness-110 transition-all"
-            >
-              All tools
-            </AppLink>
-            {ALL_CATEGORIES.filter(cat => TOOLS.some(t => t.category === cat.id)).slice(0, 8).map(cat => (
-              <AppLink
-                key={cat.id}
-                href={`/category/${cat.id}`}
-                onNavigate={() => onSelectCategory(cat.id)}
-                className="px-4 py-2 rounded-full text-[13.5px] font-semibold bg-card border border-outline-variant text-muted-foreground hover:border-primary/50 hover:text-foreground transition-all"
-              >
-                {cat.name.replace(/ Tools$| & .*/,'')}
-              </AppLink>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ── CORE TOOLCHAIN ───────────────────────────────── */}
-      <section className="max-w-6xl mx-auto px-5 sm:px-8 pt-14 pb-4">
-        <div className="flex items-end justify-between gap-4 mb-6">
-          <div>
-            <span className="section-kicker mb-2">Toolchain</span>
-            <h2 className="text-[20px] sm:text-[22px] font-bold text-on-surface tracking-[-0.02em]">Core Toolchain</h2>
-          </div>
-          <AppLink href="/all-tools" onNavigate={() => onSelectCategory('all')} className="btn-ghost text-[13px] hidden sm:flex">
-            View all <ChevronRight className="w-4 h-4" />
-          </AppLink>
-        </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          {TOOLCHAIN_CATEGORIES.map((cat, idx) => {
-            const conf = catConf(cat.id);
-            const Icon = conf?.icon ?? FileText;
-            const count = TOOLS.filter(t => t.category === cat.id).length;
-            return (
-              <AppLink
-                key={cat.id}
-                href={`/category/${cat.id}`}
-                onNavigate={() => onSelectCategory(cat.id)}
-                className="glass-panel rounded-xl p-5 flex flex-col text-left transition-all duration-300 hover:-translate-y-1 hover:shadow-pop group fade-up"
-                style={{ animationDelay: `${idx * 40}ms` }}
-              >
-                <div className={`w-11 h-11 rounded-xl ${conf?.iconBg ?? 'bg-primary-container/25'} flex items-center justify-center mb-3 transition-transform duration-200 group-hover:scale-105`}>
-                  <Icon className={conf?.iconColor ?? 'text-primary'} style={{ width: 22, height: 22 }} />
-                </div>
-                <h3 className="text-[15px] font-semibold text-on-surface mb-1.5">{conf?.name ?? cat.id}</h3>
-                <p className="text-[12.5px] text-on-surface-variant mb-4 flex-grow leading-relaxed">{conf?.desc}</p>
-                <div className="flex flex-wrap gap-1.5">
-                  {cat.tags.map(tag => (
-                    <span key={tag} className="text-[10.5px] font-mono text-on-surface-variant bg-surface-container px-2 py-0.5 rounded">{tag}</span>
-                  ))}
-                  {count > cat.tags.length && (
-                    <span className="text-[10.5px] font-mono text-tertiary bg-surface-container px-2 py-0.5 rounded">+{count - cat.tags.length}</span>
-                  )}
-                </div>
-              </AppLink>
-            );
-          })}
-        </div>
-      </section>
-
-      {/* ── EDITOR PREVIEW ───────────────────────────────── */}
-      <section className="max-w-6xl mx-auto px-5 sm:px-8 py-14">
-        <div className="flex flex-col md:flex-row gap-4 items-center mb-6">
-          <div className="flex-1">
-            <span className="section-kicker mb-2">Workspace</span>
-            <h2 className="text-[20px] sm:text-[22px] font-bold text-on-surface tracking-[-0.02em]">High-Fidelity Editor</h2>
-            <p className="text-[13px] text-on-surface-variant mt-1">IDE-grade capabilities directly in your browser. Process large payloads with near-native performance.</p>
-          </div>
-          <button onClick={() => onSelectTool('json-formatter')} className="btn-secondary px-4 py-2 text-[13px] rounded-lg flex items-center gap-2 shrink-0">
-            <Sparkles className="w-3.5 h-3.5" /> Try Live
-          </button>
-        </div>
-
-        <div className="glass-panel rounded-xl overflow-hidden flex flex-col md:flex-row h-auto md:h-[440px]">
-          {/* Input Pane */}
-          <div className="flex-1 flex flex-col border-b md:border-b-0 md:border-r border-outline-variant inset-bg m-2 rounded-lg min-h-[220px] md:min-h-0">
-            <div className="h-9 border-b border-outline-variant flex items-center px-4 justify-between bg-surface-container/50 shrink-0">
-              <span className="text-[10px] font-semibold tracking-[0.12em] text-on-surface-variant">RAW INPUT</span>
-              <span className="text-[10px] font-semibold text-on-surface-variant bg-surface px-2 py-0.5 rounded">JSON</span>
-            </div>
-            <div className="p-4 font-mono text-[12.5px] text-on-surface-variant overflow-auto flex-1">
-              <pre className="leading-[1.7]"><code><span className="line-num">1</span>{'{'}<span className="key-hl">"user"</span>{': {'}<span className="key-hl">"id"</span>{':'}<span className="number-hl">8472</span>{','}<span className="key-hl">"name"</span>{':'}<span className="string-hl">"Developer"</span>{','}<span className="key-hl">"active"</span>{':'}<span className="number-hl">true</span>{','}<span className="key-hl">"roles"</span>{':['}<span className="string-hl">"admin"</span>{','}<span className="string-hl">"dev"</span>{']}}'}</code></pre>
-            </div>
-          </div>
-
-          {/* Action strip */}
-          <div className="flex md:flex-col items-center justify-center p-2 gap-2 bg-surface-container/20 shrink-0">
-            <button className="w-8 h-8 rounded-full bg-primary-container/20 border border-primary/30 flex items-center justify-center text-primary hover:bg-primary-container hover:text-on-primary-container transition-all" title="Beautify" type="button">
-              <AlignLeft className="w-4 h-4" />
-            </button>
-            <button className="w-8 h-8 rounded-full bg-surface-container-high border border-outline-variant flex items-center justify-center text-on-surface-variant hover:text-on-surface transition-all" title="Minify" type="button">
-              <Shrink className="w-4 h-4" />
-            </button>
-          </div>
-
-          {/* Output Pane */}
-          <div className="flex-1 flex flex-col inset-bg m-2 rounded-lg min-h-[260px] md:min-h-0">
-            <div className="h-9 border-b border-outline-variant flex items-center px-4 justify-between bg-surface-container/50 shrink-0">
-              <span className="text-[10px] font-semibold tracking-[0.12em] text-tertiary flex items-center gap-2">
-                <span className="w-1.5 h-1.5 rounded-full bg-success-green" />
-                FORMATTED OUTPUT
-              </span>
-              <div className="flex gap-2">
-                <button className="text-on-surface-variant hover:text-primary transition-colors" title="Copy" type="button"><Copy className="w-3.5 h-3.5" /></button>
-                <button className="text-on-surface-variant hover:text-primary transition-colors" title="Download" type="button"><Download className="w-3.5 h-3.5" /></button>
-              </div>
-            </div>
-            <div className="p-4 font-mono text-[12.5px] text-on-surface overflow-auto flex-1">
-              <pre className="leading-[1.7]"><code>
-                <span className="line-num">1</span>{'{'}
-                {'\n'}<span className="line-num">2</span>{'  '}<span className="key-hl">"user"</span>{': {'}
-                {'\n'}<span className="line-num">3</span>{'    '}<span className="key-hl">"id"</span>{': '}<span className="number-hl">8472</span>{','}
-                {'\n'}<span className="line-num">4</span>{'    '}<span className="key-hl">"name"</span>{': '}<span className="string-hl">"Developer"</span>{','}
-                {'\n'}<span className="line-num">5</span>{'    '}<span className="key-hl">"active"</span>{': '}<span className="number-hl">true</span>{','}
-                {'\n'}<span className="line-num">6</span>{'    '}<span className="key-hl">"roles"</span>{': ['}
-                {'\n'}<span className="line-num">7</span>{'      '}<span className="string-hl">"admin"</span>{','}
-                {'\n'}<span className="line-num">8</span>{'      '}<span className="string-hl">"dev"</span>
-                {'\n'}<span className="line-num">9</span>{'    ]'}
-                {'\n'}<span className="line-num">10</span>{'  }'}
-                {'\n'}<span className="line-num">11</span>{'}'}
-              </code></pre>
-            </div>
-          </div>
-        </div>
-      </section>
+      <Hero
+        onSelectTool={onSelectTool}
+        onSelectCategory={onSelectCategory}
+        onBrowseAll={() => onSelectCategory('all')}
+      />
 
       {/* ── BROWSE ───────────────────────────────────────── */}
       <div className="max-w-6xl mx-auto px-5 sm:px-8 py-12 space-y-16">
 
-        {/* ── Popular tools ──────────────────────────────── */}
-        <section aria-labelledby="popular-heading">
-          <SectionHeading
-            kicker="Popular"
-            title="Popular Tools"
-            desc="The most-used tools"
-            id="popular-heading"
-            action={
-              <span className="code-font text-[12.5px] text-muted-foreground hidden sm:inline">{popular.length} of {workingToolCount()}</span>
-            }
-          />
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-            {popular.map((tool, idx) => {
-              const conf = catConf(tool.category);
-              return (
-                <ToolCard
-                  key={tool.id}
-                  tool={tool}
-                  icon={conf?.icon ?? FileText}
-                  iconColor={conf?.iconColor}
-                  iconBg={conf?.iconBg}
-                  categoryLabel={conf?.name}
-                  onSelect={onSelectTool}
-                  showPopularBadge
-                  showLocalBadge
-                  className="fade-up"
-                  style={{ animationDelay: `${Math.min(idx, 12) * 30}ms` }}
-                />
-              );
-            })}
-          </div>
-        </section>
-
-        {/* ── Categories ─────────────────────────────────── */}
-        <section id="categories-section" aria-labelledby="categories-heading" className="scroll-mt-20">
-          <SectionHeading
-            kicker="Explore"
-            title="Browse by Category"
-            desc={`${workingToolCount()} tools across ${ALL_CATEGORIES.filter(c => TOOLS.some(t => t.category === c.id)).length} categories`}
-            id="categories-heading"
-            action={
-              <button onClick={onOpenSearch} className="btn-ghost text-[13px] hidden sm:flex">
-                Search tools <ChevronRight className="w-4 h-4" />
-              </button>
-            }
-          />
-
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
-            {ALL_CATEGORIES.filter(cat => TOOLS.some(t => t.category === cat.id)).map((cat, idx) => {
-              const Icon = cat.icon;
-              const count = TOOLS.filter(t => t.category === cat.id).length;
-              return (
-                <AppLink
-                  key={cat.id}
-                  href={`/category/${cat.id}`}
-                  onNavigate={() => onSelectCategory(cat.id)}
-                  className="cat-card group flex flex-col p-4 rounded-xl border border-border bg-card text-left transition-all duration-150 fade-up"
-                  style={{ animationDelay: `${idx * 25}ms` }}
-                >
-                  <div className={`cat-icon w-10 h-10 rounded-xl ${cat.iconBg} mb-3`}>
-                    <Icon style={{ width: 19, height: 19 }} className={cat.iconColor} />
-                  </div>
-                  <div className="text-[13px] font-semibold text-foreground mb-0.5 leading-tight group-hover:text-primary transition-colors">
-                    {cat.name}
-                  </div>
-                  <div className="mt-auto pt-2 flex items-center gap-1">
-                    <span className="text-[11px] text-muted-foreground font-medium">{count} tools</span>
-                    <ChevronRight className="w-3 h-3 text-primary opacity-0 -translate-x-1 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-150 ml-auto" />
-                  </div>
-                </AppLink>
-              );
-            })}
-          </div>
-        </section>
+        {/* Search, category filter and the full tool library. */}
+        <ToolGrid onSelectTool={onSelectTool} />
 
         {/* ── Recently used ──────────────────────────────── */}
         {recentTools.length > 0 && (
@@ -1039,13 +872,16 @@ const HomeView: React.FC<{
 
         {/* ── FAQ ────────────────────────────────────────── */}
         <section aria-labelledby="faq-heading" className="max-w-3xl mx-auto w-full">
-          <div className="text-center mb-8">
+          <div className="text-center mb-9">
             <span className="section-kicker mb-3">FAQ</span>
-            <h2 id="faq-heading" className="text-[24px] sm:text-[28px] font-bold text-foreground tracking-[-0.02em]">
+            <h2 id="faq-heading" className="text-[25px] sm:text-[29px] font-bold text-foreground tracking-[-0.02em]">
               Frequently asked questions
             </h2>
+            <p className="mt-2.5 text-[14.5px] text-muted-foreground">
+              Answers to what people ask most before trying a tool.
+            </p>
           </div>
-          <div className="space-y-2.5">
+          <div className="space-y-3">
             {FAQ_ITEMS.map(f => <FaqItem key={f.q} q={f.q} a={f.a} />)}
           </div>
         </section>
@@ -1087,7 +923,7 @@ const CategoryView: React.FC<{
             <Icon className="w-6 h-6 text-muted-foreground/50" />
           </div>
           <h3 className="text-[16px] font-semibold text-foreground mb-1">No tools in this category yet</h3>
-          <p className="text-[13px] text-muted-foreground max-w-xs mx-auto">Check back soon — new tools are added regularly.</p>
+          <p className="text-[13px] text-muted-foreground max-w-xs mx-auto">Check back soon, new tools are added regularly.</p>
         </div>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
@@ -1160,7 +996,7 @@ const ToolView: React.FC<{
             <span className="text-foreground font-medium truncate max-w-[240px]">{activeTool.name}</span>
           </nav>
 
-          {/* Tool header — sits directly on the page background, separated by a border */}
+          {/* Tool header, sits directly on the page background, separated by a border */}
           <div className="flex flex-wrap items-start justify-between gap-5 pb-6 border-b border-border">
             <div className="flex gap-4 items-start min-w-0">
               <div className={`cat-icon ${conf?.iconBg} w-[50px] h-[50px] rounded-[15px] shrink-0`}>
@@ -1222,7 +1058,7 @@ const ToolView: React.FC<{
           </div>
 
           <div className="flex flex-wrap items-start gap-4 sm:gap-6">
-            {/* Main column — tool body sits first, so the sidebar aligns beside it from the top */}
+            {/* Main column, tool body sits first, so the sidebar aligns beside it from the top */}
             <div className={stacked ? 'w-full flex flex-col gap-4 sm:gap-5' : 'flex-1 min-w-[300px] basis-[560px] flex flex-col gap-4 sm:gap-5'}>
               {renderTool()}
 
@@ -1248,7 +1084,7 @@ const ToolView: React.FC<{
                 </p>
               </div>
 
-              {/* Learn more / FAQs — lives in the main column so it fills the space below the
+              {/* Learn more / FAQs, lives in the main column so it fills the space below the
                   privacy note instead of leaving a gap when the sidebar runs taller. */}
               {!activeTool.isComingSoon && seo && (
                 <div className="rounded-2xl border bg-card border-border p-6 sm:p-7">
@@ -1267,20 +1103,14 @@ const ToolView: React.FC<{
 
                   {learnMoreOpen && (
                     <div className="mt-5">
-                      <p className="text-[13px] text-muted-foreground leading-relaxed mb-5">
+                      <p className="text-[13.5px] text-muted-foreground leading-relaxed mb-5">
                         {seo.intro}
                       </p>
 
                       {seo.faqs.length > 0 && (
                         <div className="space-y-2">
                           {seo.faqs.map((faq, i) => (
-                            <details key={i} className="group rounded-xl border border-border bg-muted/40 px-4 py-3">
-                              <summary className="text-[13px] font-semibold text-foreground cursor-pointer list-none flex items-center justify-between gap-3">
-                                {faq.question}
-                                <ChevronRight className="w-3.5 h-3.5 text-muted-foreground shrink-0 transition-transform group-open:rotate-90" />
-                              </summary>
-                              <p className="text-[12.5px] text-muted-foreground leading-relaxed mt-2">{faq.answer}</p>
-                            </details>
+                            <ToolFaqItem key={i} question={faq.question} answer={faq.answer} />
                           ))}
                         </div>
                       )}
