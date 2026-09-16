@@ -12,7 +12,7 @@ import { Settings }        from './pages/Settings';
 import { StaticPageView }  from './pages/StaticPageView';
 import { Blog }            from './pages/Blog';
 import { BlogPostView }    from './pages/BlogPostView';
-import { getPost }         from './config/blog';
+import { getPost, postsForTool, readingMinutes, BlogCategory } from './config/blog';
 import { StaticPageId }    from './config/pages';
 import { ToolCategory }    from './types';
 import { TOOLS }           from './config/tools';
@@ -22,8 +22,8 @@ import { TOOL_SEO_CONTENT } from './config/seoContent';
 import { HOME_FAQ }        from './config/faq';
 import {
   updateHomeMeta, updateToolMeta, updateCategoryMeta, updatePageMeta,
-  updateBlogIndexMeta, updateBlogPostMeta,
-  updateAllToolsMeta, parseRoute, buildPath,
+  updateBlogIndexMeta, updateBlogPostMeta, updateBlogTopicMeta,
+  updateAllToolsMeta, parseRoute, buildPath, blogTopicPath,
 } from './utils/seo';
 import { trackPageView } from './utils/analytics';
 import {
@@ -31,7 +31,7 @@ import {
   ChevronRight, ArrowLeft, Star, Plus, Minus,
   ShieldCheck, Zap, Info,
   Lock, MonitorSmartphone, Infinity as InfinityIcon, ChevronDown,
-  CheckCircle2, Lightbulb,
+  CheckCircle2, Lightbulb, BookOpen,
 } from 'lucide-react';
 import { ALL_CATEGORIES } from './config/categories';
 import { DevRunPill } from './components/DevToolChrome';
@@ -380,6 +380,7 @@ export const App: React.FC = () => {
   const [activeCategoryView,  setActiveCategoryView]  = useState<ToolCategory|null>(initRoute.category ?? null);
   const [activePageId,        setActivePageId]        = useState<StaticPageId>(initRoute.pageId ?? 'privacy');
   const [activeBlogSlug,      setActiveBlogSlug]      = useState(initRoute.blogSlug ?? '');
+  const [activeBlogTopic,     setActiveBlogTopic]     = useState<BlogCategory | null>(initRoute.blogTopic ?? null);
 
   const { preference: theme, resolvedDark, setTheme } = useTheme();
 
@@ -387,13 +388,14 @@ export const App: React.FC = () => {
     if (currentView === 'page') updatePageMeta(activePageId);
     else if (currentView === 'blog') {
       if (activeBlogSlug) updateBlogPostMeta(activeBlogSlug);
+      else if (activeBlogTopic) updateBlogTopicMeta(activeBlogTopic);
       else updateBlogIndexMeta();
     }
     else if (currentView === 'all') updateAllToolsMeta();
     else if (currentView === 'tool' && activeToolId) updateToolMeta(activeToolId);
     else if (currentView === 'category' && activeCategoryView) updateCategoryMeta(activeCategoryView);
     else updateHomeMeta();
-  }, [currentView, activeToolId, activeCategoryView, activePageId, activeBlogSlug]);
+  }, [currentView, activeToolId, activeCategoryView, activePageId, activeBlogSlug, activeBlogTopic]);
 
   useEffect(() => { syncMeta(); }, [syncMeta]);
 
@@ -404,7 +406,7 @@ export const App: React.FC = () => {
       return;
     }
     trackPageView(window.location.pathname, document.title);
-  }, [currentView, activeToolId, activeCategoryView, activePageId, activeBlogSlug]);
+  }, [currentView, activeToolId, activeCategoryView, activePageId, activeBlogSlug, activeBlogTopic]);
 
   useEffect(() => {
     const onPopState = () => {
@@ -414,6 +416,7 @@ export const App: React.FC = () => {
       setActiveCategoryView(route.category ?? null);
       if (route.pageId) setActivePageId(route.pageId);
       setActiveBlogSlug(route.blogSlug ?? '');
+      setActiveBlogTopic(route.blogTopic ?? null);
     };
     window.addEventListener('popstate', onPopState);
     return () => window.removeEventListener('popstate', onPopState);
@@ -465,10 +468,24 @@ export const App: React.FC = () => {
 
   const openBlog = (slug?: string) => {
     setActiveBlogSlug(slug ?? '');
+    setActiveBlogTopic(null);
     setCurrentView('blog');
     setActiveToolId('');
     setActiveCategoryView(null);
     navigate('blog', slug);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  // `null` is the "Everything" tab, which is the blog index itself rather than
+  // a seventh hub, so it navigates to /blog and not /blog/topic/all.
+  const openBlogTopic = (topic: BlogCategory | null) => {
+    if (!topic) { openBlog(); return; }
+    setActiveBlogSlug('');
+    setActiveBlogTopic(topic);
+    setCurrentView('blog');
+    setActiveToolId('');
+    setActiveCategoryView(null);
+    window.history.pushState(null, '', blogTopicPath(topic));
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -478,6 +495,7 @@ export const App: React.FC = () => {
     setActiveToolId('');
     setActiveCategoryView(null);
     setActiveBlogSlug('');
+    setActiveBlogTopic(null);
     navigate('page', id);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
@@ -568,8 +586,8 @@ export const App: React.FC = () => {
           ? (() => {
               const post = activeBlogSlug ? getPost(activeBlogSlug) : undefined;
               return post
-                ? <BlogPostView post={post} onBackToBlog={() => openBlog()} onOpenPost={openBlog} onSelectTool={openTool} />
-                : <Blog onBack={goHome} onOpenPost={openBlog} />;
+                ? <BlogPostView post={post} onBackToBlog={() => openBlog()} onOpenPost={openBlog} onSelectTool={openTool} onSelectTopic={openBlogTopic} />
+                : <Blog onBack={goHome} onOpenPost={openBlog} topic={activeBlogTopic} onSelectTopic={openBlogTopic} />;
             })()
           : currentView === 'tool'
           ? <ToolView activeTool={activeTool} onBack={goHome} renderTool={renderTool} categories={ALL_CATEGORIES}
@@ -968,6 +986,10 @@ const ToolView: React.FC<{
   const related = activeTool
     ? TOOLS.filter(t => t.category === activeTool.category && t.id !== activeTool.id).slice(0, 4)
     : [];
+  // Guides already point at tools through `relatedTools`; this is the return
+  // leg, so the two halves of the site link to each other instead of the blog
+  // being a one-way funnel that nothing links back into.
+  const guides = activeTool ? postsForTool(activeTool.id) : [];
   const [learnMoreOpen, setLearnMoreOpen] = useState(true);
 
   if (activeTool?.id === 'image-editor') return <>{renderTool()}</>;
@@ -1172,6 +1194,33 @@ const ToolView: React.FC<{
                       </AppLink>
                       );
                     })}
+                  </div>
+                </div>
+              )}
+
+              {/* Guides that cover this tool */}
+              {guides.length > 0 && (
+                <div className={sidebarCardCls}>
+                  <span className="section-kicker mb-3">
+                    <BookOpen className="w-3 h-3 shrink-0" />
+                    Read about this
+                  </span>
+                  <div className="space-y-0.5 mt-3">
+                    {guides.map(post => (
+                      <AppLink
+                        key={post.slug}
+                        href={`/blog/${post.slug}`}
+                        onNavigate={() => onOpenBlog(post.slug)}
+                        className="group grid grid-cols-[minmax(0,1fr)_auto] items-baseline gap-x-3 py-2.5 px-2 -mx-2 rounded-xl hover:bg-muted/60 transition-colors"
+                      >
+                        <span className="text-[12.5px] font-semibold leading-snug text-foreground group-hover:text-primary transition-colors">
+                          {post.title}
+                        </span>
+                        <span className="text-[11px] tabular-nums text-muted-foreground shrink-0">
+                          {readingMinutes(post.body)} min
+                        </span>
+                      </AppLink>
+                    ))}
                   </div>
                 </div>
               )}

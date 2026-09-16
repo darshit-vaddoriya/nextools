@@ -2075,9 +2075,13 @@ export const ImageEditorTool: React.FC<{ onExit?: () => void }> = ({ onExit }) =
               <div className="w-14 h-14 rounded-2xl bg-primary/10 border border-primary/20 mx-auto flex items-center justify-center mb-4">
                 <ImageIcon className="w-6 h-6 text-primary" />
               </div>
-              <h3 className="text-xl font-bold text-foreground">
+              {/* The page heading. This tool renders as a full-screen overlay
+                  and bypasses the usual tool chrome, so it has to supply its
+                  own <h1>; without one the route prerendered with no heading
+                  at all. */}
+              <h1 className="text-xl font-bold text-foreground">
                 Edit images privately in your browser
-              </h3>
+              </h1>
               <p className="text-[13px] text-muted-foreground mt-1.5 max-w-md mx-auto leading-relaxed">
                 Crop, resize, annotate, blur and export, your image never leaves your device.
               </p>
@@ -2163,7 +2167,7 @@ export const ImageEditorTool: React.FC<{ onExit?: () => void }> = ({ onExit }) =
             <ImageIcon className="w-3.5 h-3.5 text-primary" />
           </div>
           <div className="min-w-0">
-            <div className="text-xs font-semibold text-foreground truncate">Image Editor</div>
+            <h1 className="text-xs font-semibold text-foreground truncate">Image Editor</h1>
             <div className="text-[10px] font-mono text-muted-foreground truncate">
               {file.name} · {imgW || '…'} × {imgH || '…'} · {fileType.replace('image/', '')} · {formatBytes(file.size)} · {zoomPct}
             </div>

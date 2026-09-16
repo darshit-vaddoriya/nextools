@@ -1,9 +1,11 @@
-import { BlogPost, BlogCategory } from './types';
+import { BlogPost, BlogCategory, BLOG_CATEGORY_META } from './types';
 import { PDF_POSTS } from './posts/pdf';
+import { DOCS_POSTS } from './posts/docs';
 import { IMAGE_POSTS } from './posts/image';
 import { DEV_POSTS } from './posts/dev';
 import { SECURITY_POSTS } from './posts/security';
 import { DATA_POSTS } from './posts/data';
+import { NUMBERS_POSTS } from './posts/numbers';
 import { PRIVACY_POSTS } from './posts/privacy';
 
 export * from './types';
@@ -11,10 +13,12 @@ export * from './types';
 /** All posts, newest first. */
 export const BLOG_POSTS: BlogPost[] = [
   ...PDF_POSTS,
+  ...DOCS_POSTS,
   ...IMAGE_POSTS,
   ...DEV_POSTS,
   ...SECURITY_POSTS,
   ...DATA_POSTS,
+  ...NUMBERS_POSTS,
   ...PRIVACY_POSTS,
 ].sort((a, b) => b.published.localeCompare(a.published));
 
@@ -23,6 +27,30 @@ export const getPost = (slug: string): BlogPost | undefined =>
 
 export const postsInCategory = (cat: BlogCategory): BlogPost[] =>
   BLOG_POSTS.filter(p => p.category === cat);
+
+/**
+ * Categories that actually have something in them, in the order they are
+ * declared. A topic hub with no posts would be a thin page, so an empty
+ * category never gets a URL, a nav entry or a sitemap line.
+ */
+export const BLOG_CATEGORIES = (Object.keys(BLOG_CATEGORY_META) as BlogCategory[])
+  .filter(cat => BLOG_POSTS.some(post => post.category === cat));
+
+export const isBlogCategory = (value: string): value is BlogCategory =>
+  (BLOG_CATEGORIES as string[]).includes(value);
+
+/**
+ * The reverse of `post.relatedTools`: every guide that names a given tool.
+ * Built once, because tool pages ask this on every render and a linear scan of
+ * all posts per tool would be repeated work for a fixed answer.
+ */
+const POSTS_BY_TOOL = BLOG_POSTS.reduce<Record<string, BlogPost[]>>((acc, post) => {
+  for (const toolId of post.relatedTools) (acc[toolId] ??= []).push(post);
+  return acc;
+}, {});
+
+export const postsForTool = (toolId: string, limit = 3): BlogPost[] =>
+  (POSTS_BY_TOOL[toolId] ?? []).slice(0, limit);
 
 /**
  * Picks articles to show under a post: same category first, then whatever is

@@ -10,6 +10,12 @@ export const SECURITY_POSTS: BlogPost[] = [
     tags: ['passwords', 'entropy', 'authentication'],
     published: '2026-08-09',
     relatedTools: ['password-generator', 'passphrase-gen', 'password-strength', 'random-string'],
+    takeaways: [
+      'Entropy is length multiplied by the log of the alphabet size, so length dominates and complexity rules barely register.',
+      'The formula only holds if the password was chosen randomly. A human-chosen one with substitutions is near worthless.',
+      'Modern guidance drops forced rotation and composition rules, and checks against breach lists instead.',
+      'Uniqueness matters more than strength, because credential stuffing is the likeliest way an account is taken.',
+    ],
     body: `Password strength has a precise definition: how many guesses an attacker needs to try, on average, before finding yours. That number is usually expressed in bits of entropy, where each extra bit doubles the work.
 
 ## The formula
@@ -94,6 +100,12 @@ You can also check an existing password's entropy with the [strength checker](/t
     tags: ['hashing', 'encryption', 'bcrypt', 'sha-256'],
     published: '2026-08-17',
     relatedTools: ['hash-generator', 'file-checksum', 'base64', 'password-strength'],
+    takeaways: [
+      'Encoding is reversible by anyone, encryption is reversible with a key, and hashing is not reversible at all.',
+      'If a service can email you your existing password, it is not hashing them.',
+      'Password hashes should be deliberately slow. bcrypt, scrypt and Argon2 exist for that reason; SHA-256 alone does not.',
+      'MD5 and SHA-1 are broken for anything an attacker touches, and remain fine only as accident checks.',
+    ],
     body: `Three operations, constantly used as synonyms, with completely different guarantees.
 
 ## Encoding: reversible by anyone
@@ -179,6 +191,12 @@ Hashing a file means reading every byte of it, which is exactly the operation yo
     tags: ['checksum', 'sha-256', 'integrity'],
     published: '2026-08-24',
     relatedTools: ['file-checksum', 'hash-generator', 'zip-extractor'],
+    takeaways: [
+      'A matching checksum proves the bytes you have are the bytes that were published, and nothing more.',
+      'It catches truncated downloads, a compromised mirror and bit rot. It does not prove the publisher is honest.',
+      'If the checksum and the file come from the same place, whoever controls that place controls both.',
+      'Fetch the checksum over HTTPS from the canonical domain, ideally not the same host as the download.',
+    ],
     body: `Download an operating system image, a database installer or a signed PDF and you will often find a long hexadecimal string published next to the link. That is a checksum, and comparing it against your copy is a fast, worthwhile habit.
 
 ## What you are checking
@@ -254,6 +272,12 @@ Browsers implement SHA-256 natively through the Web Crypto API, so there is no r
     tags: ['2fa', 'password-manager', 'passkeys', 'totp'],
     published: '2026-08-30',
     relatedTools: ['password-generator', 'passphrase-gen', 'password-strength', 'secure-notes'],
+    takeaways: [
+      'A manager is the only practical way to have a unique high-entropy password on several hundred services.',
+      'Second factors are not equal: passkeys and hardware keys resist phishing, TOTP does not, and SMS is the weakest.',
+      'Set it up in order: manager first, then its own 2FA, then email, then everything that can be reset through email.',
+      'Recovery codes belong on paper somewhere else, because a manager on a dead laptop is not available.',
+    ],
     body: `Most account compromises do not involve anyone attacking you personally. They involve a password leaked from some unrelated service being tried, automatically, against every other service you use. Two changes address the bulk of that.
 
 ## Why a password manager is not optional
@@ -317,6 +341,12 @@ Password generation is arithmetic on random bytes and needs no server. The [pass
     tags: ['web-crypto', 'aes', 'browsers', 'encryption'],
     published: '2026-09-06',
     relatedTools: ['secure-notes', 'hash-generator', 'password-generator', 'file-checksum'],
+    takeaways: [
+      'getRandomValues is the cryptographically secure random source; crypto.subtle is everything else.',
+      'It is called subtle because the details are where it goes wrong, not because the API is clever.',
+      'MD5 and SHA-1 are deliberately not offered, and reusing an initialisation vector with AES-GCM breaks the encryption entirely.',
+      'It removes the need to trust a server with your plaintext. It does not remove the need to trust the code you are running.',
+    ],
     body: `A decade ago, "do the crypto in the browser" was a warning sign, because it meant a hand-rolled JavaScript implementation of AES with unpredictable side channels and a random number generator based on \`Math.random()\`. That objection no longer holds. Browsers now ship a native cryptographic library, and the JavaScript is only calling into it.
 
 ## What is available
@@ -376,5 +406,495 @@ Client-side crypto protects data in transit and at rest. It does not protect you
 The mitigations are the ordinary web ones: HTTPS, a strict Content Security Policy, subresource integrity, and a small dependency surface. Nothing removes the requirement to trust the code you run.
 
 What client-side crypto *does* remove is the need to trust a server with your plaintext, which is the larger and more commonly abused trust. NextTool's [secure notes](/tool/secure-notes), [hash generator](/tool/hash-generator) and [checksum tool](/tool/file-checksum) all build on these primitives, which is why none of them need an upload endpoint.`,
+  },
+
+  {
+    slug: 'signing-a-pdf-what-it-proves',
+    title: 'Signing a PDF: what a signature image proves, and what it does not',
+    description: 'Pasting a picture of your signature onto a PDF and applying a digital signature are unrelated operations. One is a drawing; the other is cryptography.',
+    excerpt: 'Most documents people call "signed" contain a JPEG of a name. That is often fine, and it is worth knowing exactly what it is, because it proves almost nothing on its own.',
+    category: 'security',
+    tags: ['pdf', 'signatures', 'verification'],
+    published: '2026-09-10',
+    relatedTools: ['pdf-sign', 'pdf-flatten', 'file-checksum', 'pdf-redact'],
+    takeaways: [
+      'A signature image is a picture. It proves nothing about who placed it or whether the text above it changed afterwards.',
+      'A digital signature proves the bytes have not changed and that a specific key signed them, and nothing about intent or authority.',
+      'Editing a signed PDF invalidates the signature. That is the mechanism working, not a defect.',
+      'Sign last: compress, merge, redact and flatten first, because all of them change the bytes.',
+    ],
+    body: `You are sent a contract, you draw your name with a trackpad, you place it above the line, you send it back. The document is now signed in the sense everyone means in day-to-day work. It is also, technically, a PDF with a small picture of some handwriting in it, and nothing about the file itself resists anyone moving that picture to a different page of a different document.
+
+Whether that matters depends on what you are signing. Knowing the difference is what lets you decide.
+
+## Three different things, all called signing
+
+**A signature image.** A drawn, typed or photographed likeness of your name, placed on the page as an image. It changes how the document looks. It carries no information about who put it there or whether the text above it changed afterwards.
+
+**An electronic signature with an audit trail.** What DocuSign, Adobe Sign and similar services provide. The visible mark is still a picture, but the service records who accessed the document, from which IP address, at what time, with what email verification, and keeps that record. The evidence lives in the service's logs, not in the file.
+
+**A digital signature.** A cryptographic operation. The signing software hashes the exact byte range of the document, encrypts that hash with a private key held by the signer, and embeds the result along with a certificate identifying the key holder. A viewer can recompute the hash and check it against the signature.
+
+Only the third one is verifiable from the file alone, with no third party to ask.
+
+## What a digital signature actually proves
+
+Two things, and it is worth being precise about both.
+
+**Integrity.** The bytes covered by the signature have not changed since it was applied. Change one character and the recomputed hash no longer matches, so the viewer reports the signature as invalid. This is the same mechanism behind [checksums](/tool/file-checksum), applied to a byte range inside a document rather than a whole file.
+
+**Authenticity, conditionally.** The signature was produced by whoever holds the private key matching the certificate. Whether that person is who the certificate claims depends entirely on the certificate authority that issued it and on the key not having leaked. A self-signed certificate proves the same key signed twice; it proves nothing about identity.
+
+Note what is missing from both. Neither proves the signer read the document, agreed with it, or had authority to commit anyone to it. Those are legal questions and cryptography does not touch them.
+
+## Why editing invalidates a signature
+
+People report this as a bug. It is the feature working.
+
+The signature covers a byte range. Rotating a page, adding a page number, [merging](/tool/pdf-merge) the file with another, or running it through a compressor all rewrite the file's objects and cross-reference table. The bytes change, the hash changes, the check fails. A signature that survived editing would tell you nothing, because anyone could edit the document and keep the signature attached.
+
+PDF does allow legitimate additions through **incremental updates**, where new content is appended and the original byte range is left untouched. That is how a second person signs a document the first person already signed, and how form fields get filled after signing if the signer permitted it. Whether such changes are allowed is recorded at signing time. This is also why signing should be the last operation: compress, merge, add page numbers and redact first, then sign the finished article.
+
+## The redaction trap
+
+This one causes real harm, so it is worth stating plainly.
+
+Drawing a black rectangle over text in a PDF is the same category of action as pasting a signature image: you have added a graphic on top. The text is still in the content stream underneath. Select it, copy it, paste it into a text editor, and there it is. The same applies to hidden layers and to cropping, which only changes the visible box, not the content outside it.
+
+Proper [redaction](/tool/pdf-redact) removes the underlying characters, not just the view of them, and the [full explanation](/blog/how-to-redact-a-pdf-properly) is worth reading if you do this often. If you are signing a document you have also redacted, get the redaction right first, because signing a file whose secrets are still in it simply certifies that the secrets are unchanged.
+
+## Flatten before you send
+
+If you filled in form fields, the values live in interactive field objects rather than in the page content. They can be edited by the recipient, they can be cleared by a viewer that mishandles forms, and they can collide with field names if the document is merged into another.
+
+[Flattening](/tool/pdf-flatten) converts those values into ordinary page content. After flattening, what the recipient sees is what the file contains, with no separate layer that can disagree with it. Flatten, then sign, in that order, because flattening after signing changes the bytes and breaks the signature.
+
+## Choosing what you actually need
+
+| Situation | What is appropriate |
+|---|---|
+| Internal approval, delivery note, permission slip | A signature image is fine |
+| Freelance contract, NDA, rental agreement | Image plus an emailed audit trail is the norm |
+| Anything a regulator, court or bank will examine | A digital signature from a recognised CA |
+| A document you will send onward or merge | Flatten first, then decide |
+
+Most of daily life sits in the first two rows. The mistake is not using a signature image, it is believing a signature image is doing something it is not, and skipping the audit trail because the document "is signed".
+
+## Doing it without handing the document over
+
+The awkward part of signing online is that the documents involved are the sensitive ones by definition. Offer letters, tenancy agreements, medical consent forms and anything with a bank detail on it are exactly the files people drop into whichever free signing site is top of the results.
+
+Placing a signature on a page is drawing an image at coordinates, and flattening is rewriting content streams. Neither needs a server. NextTool's [PDF signing](/tool/pdf-sign) and [flatten](/tool/pdf-flatten) tools do both in the browser tab, so the contract stays on your machine.
+
+What that cannot give you is the audit trail, because there is no third party observing. If you need a record that a specific person opened and signed at a specific time, you need a service that keeps one, and you are choosing to trade the document's privacy for that evidence. That is a reasonable trade when the evidence is the point. It is worth making it knowingly rather than by default.`,
+  },
+
+  {
+    slug: 'random-strings-and-tokens',
+    title: 'Generating a random string that is actually random',
+    description: 'Math.random is not a source of secrets. The difference between a pseudo-random generator and a cryptographic one decides whether a token is guessable.',
+    excerpt: 'Two generators produce strings that look equally random. One of them lets an attacker predict every future value after seeing a few.',
+    category: 'security',
+    tags: ['randomness', 'tokens', 'entropy'],
+    published: '2026-09-12',
+    relatedTools: ['random-string', 'password-generator', 'uuid-generator', 'hash-generator'],
+    takeaways: [
+      'Math.random is a predictable algorithm. Observing enough output reveals its state and every value it will produce next.',
+      'Anything acting as a secret needs crypto.getRandomValues or an equivalent CSPRNG.',
+      'Entropy is log2(alphabet size) x length. A shorter string from a bigger alphabet is often weaker than it looks.',
+      'Taking a random value modulo the alphabet size introduces bias unless the sampling is rejected and retried.',
+    ],
+    body: `You need a token: an API key, a password reset link, a share URL, a filename that nobody should be able to guess. You generate a random string, it looks like nonsense, and you ship it.
+
+Whether that was safe depends entirely on which generator produced it, and the two kinds are indistinguishable by eye.
+
+## Two different meanings of random
+
+**A pseudo-random number generator** is a deterministic algorithm. It holds an internal state, and each call transforms that state and returns part of it. The output passes statistical tests for randomness, which is what it was designed for: simulations, shuffling a playlist, jittering an animation.
+
+It is not designed to be unpredictable to an adversary. Given enough consecutive outputs, the internal state can be recovered, and once it is, every future value is known. This has been demonstrated against \`Math.random\` in every major JavaScript engine.
+
+**A cryptographically secure PRNG** is built so that observing output tells you nothing useful about the state or about future output. It draws from the operating system's entropy pool, which collects unpredictable physical signals: interrupt timings, device noise, hardware random instructions.
+
+In a browser that is \`crypto.getRandomValues()\`. On a server it is \`/dev/urandom\` or the platform equivalent.
+
+> [!WARNING]
+> The rule is short: if a value is a secret, or if guessing it grants access to anything, it must come from a CSPRNG. Session tokens, password reset links, API keys, unguessable URLs, salts and initialisation vectors are all in this category. A shuffled quiz order is not.
+
+## Entropy is the number that matters
+
+Entropy measures how many guesses an attacker needs. For a random string:
+
+\`\`\`
+bits = length x log2(alphabet size)
+\`\`\`
+
+| Alphabet | Bits per character | Length for 128 bits |
+|---|---|---|
+| Digits (10) | 3.32 | 39 |
+| Lowercase (26) | 4.70 | 28 |
+| Alphanumeric (62) | 5.95 | 22 |
+| Base64url (64) | 6.00 | 22 |
+| Full ASCII printable (94) | 6.55 | 20 |
+
+The useful thresholds: 128 bits is the standard target for anything security-relevant, and is far beyond brute force. Around 64 bits is adequate for a short-lived value that also has rate limiting behind it. Below about 40 bits is guessable by anyone motivated.
+
+Note what this says about length versus alphabet. A 16-character alphanumeric token is 95 bits. A 22-character one is 131. Adding six characters did more than any amount of adding exotic symbols would, which is the same lesson as [what makes a password strong](/blog/what-makes-a-password-strong).
+
+## The modulo bias
+
+There is a subtle failure in how random bytes get turned into characters.
+
+The obvious approach is to take a random byte, 0 to 255, and take it modulo the alphabet size. With a 62-character alphabet, 256 is not divisible by 62: values 0 to 61 can be produced by five different bytes, while 62 to 65 can be produced by only four. The first few characters of your alphabet come up about 25% more often than the rest.
+
+For a shuffled list this is invisible. For a token it reduces entropy, and a generator that is systematically biased is a generator an attacker can exploit.
+
+The correct approach is rejection sampling: discard bytes that fall in the uneven tail and draw again. A [random string generator](/tool/random-string) that gets this right produces a uniform distribution; one that does not produces something subtly weaker than its length suggests.
+
+## Choosing what to generate
+
+**A [random string](/tool/random-string)** when you control both ends and want a specific length and alphabet. Avoid ambiguous characters (\`0\`/\`O\`, \`1\`/\`l\`/\`I\`) if a human will ever retype it.
+
+**A [UUID](/tool/uuid-generator)** when you want a standard format other systems will recognise. A v4 UUID has 122 random bits, which is plenty. Note that it is 36 characters to carry 122 bits, which is less dense than base64url, and that a v7 UUID deliberately embeds a timestamp and is therefore partly predictable by design.
+
+**A [passphrase](/tool/passphrase-gen)** when a human has to remember or read it aloud.
+
+**A [password](/tool/password-generator)** when it goes into a password manager and nobody types it.
+
+## Two things a random string is not
+
+It is not a hash. A [hash](/tool/hash-generator) is deterministic: the same input always gives the same output. That is the point of a checksum and the opposite of the point of a token.
+
+And it is not secret once it is in a URL. Values in a URL end up in browser history, server access logs, Referer headers and anything that scans links in messages. An unguessable URL is a reasonable pattern for a share link with an expiry; it is not a substitute for authentication on anything that matters.
+
+Generating random values is one of the few things a browser does better than a server for your purposes, because \`crypto.getRandomValues()\` runs locally and the value never crosses a network. A token generated on someone else's server has, by definition, been seen by someone else before it reached you.`,
+  },
+
+  {
+    slug: 'spotting-a-dangerous-link',
+    title: 'Reading a link before you click it',
+    description: 'Almost every malicious link gives itself away in the hostname. Knowing where to look takes a couple of seconds.',
+    excerpt: 'The dangerous part of a URL is not the long random string. It is the handful of characters immediately before the first single slash.',
+    category: 'security',
+    tags: ['phishing', 'urls', 'verification'],
+    published: '2026-09-09',
+    relatedTools: ['url-parser', 'url-encoder', 'file-checksum', 'mime-checker'],
+    takeaways: [
+      'Read right to left from the first single slash. The two labels before it are the real domain; everything earlier is decoration.',
+      'A padlock means the connection is encrypted, not that the site is honest. Phishing sites have certificates too.',
+      'Punycode domains render as familiar letters, so paypaI.com with a capital i is indistinguishable at a glance.',
+      'If you did not initiate the interaction, do not use the link at all. Navigate to the site yourself.',
+    ],
+    body: `A message says your account is on hold and gives you a link. The link says \`https://secure.paypal.com.account-verify.co/login\`. It has a padlock, it starts with the right words, and it is not PayPal.
+
+## Read right to left
+
+The only part of a URL that decides where you actually go is the hostname, and within it the important piece is at the **end**, not the beginning.
+
+\`\`\`
+https://secure.paypal.com.account-verify.co/login
+        |___________________________| |________|
+             all decoration            real domain
+\`\`\`
+
+The rule: find the first single slash after the scheme, then read backwards. The last two labels before that slash are the registered domain. Everything to the left is a subdomain, and **a subdomain can say anything**, because whoever owns \`account-verify.co\` controls every name under it.
+
+So \`paypal.com.account-verify.co\` is \`account-verify.co\`, and \`google.com.evil.net\` is \`evil.net\`. The familiar brand is there precisely because it is the part people read first and the part that means nothing.
+
+Three variations on the same trick:
+
+- **Hyphenated.** \`paypal-secure-login.com\` is not PayPal. Hyphens do not link a name to a brand.
+- **Different suffix.** \`paypal.co\` is a completely different registration from \`paypal.com\`.
+- **Path pretending to be a host.** \`https://evil.net/paypal.com/login\` puts the brand after the slash, where it is just a folder name.
+
+A [URL parser](/tool/url-parser) that splits a link into scheme, host, path and query is the fastest way to settle this, because it shows you the host as its own field instead of a string you have to read carefully under time pressure.
+
+## The padlock does not mean safe
+
+This is the misconception that does the most damage, and it is partly the industry's fault for two decades of "look for the padlock" advice.
+
+HTTPS means **the connection to that server is encrypted and nobody in between can read it.** It says nothing about who runs the server or what they intend. Certificates are free and issued automatically, so the overwhelming majority of phishing sites have valid ones.
+
+An encrypted connection to a criminal is still a connection to a criminal.
+
+## Characters that are not what they look like
+
+Domains can contain non-Latin characters, encoded as punycode and displayed as the real letters. That allows homograph attacks, where Cyrillic \`а\` stands in for Latin \`a\` and the two are visually identical in most fonts.
+
+Even without other alphabets, a capital \`I\` and a lowercase \`l\` are indistinguishable in many sans-serif fonts, so \`paypaI.com\` passes a glance.
+
+> [!TIP]
+> Browsers defend against this by showing the punycode form, \`xn--pypal-4ve.com\`, when a domain mixes scripts. If you ever see a hostname beginning \`xn--\`, that is your browser telling you the name contains characters that are not what they appear to be. Treat it as a stop sign.
+
+## The shortened-link problem
+
+A shortener hides the destination completely, which is the entire point of it and also the problem. There is no way to read \`bit.ly/3xK9mQ\` because the information is not there.
+
+Most shorteners will show you the target if you append \`+\` to the URL, and various expander services do the same. The more useful habit is simply to distrust a shortened link in any message you were not expecting, because there is no legitimate reason to obscure a destination in a security email.
+
+## What the query string gives away
+
+Everything after \`?\` is parameters. Two things worth noticing:
+
+**Your email address in the link.** A parameter like \`?u=you@example.com\` means the sender already knows who you are and will know you clicked, which confirms a live address to a spammer.
+
+**A pre-filled redirect.** A parameter such as \`?next=https://elsewhere.tld\` on a legitimate-looking domain is an open-redirect attempt: the real domain is genuine and it forwards you somewhere else. Worth checking with a [URL parser](/tool/url-parser) rather than assuming the visible host settles it.
+
+## Downloads
+
+If a link produces a file rather than a page, two checks apply.
+
+The extension is not the file type. A [MIME checker](/tool/mime-checker) reads the magic bytes and will tell you the \`invoice.pdf\` you just received is actually an executable or an HTML page. Double extensions like \`invoice.pdf.exe\` exploit the fact that many systems hide the known extension by default, so the user sees only \`invoice.pdf\`.
+
+And if the publisher gives a checksum, verify it. Comparing a [file checksum](/tool/file-checksum) against the published one proves you received the same bytes the author released. What it cannot prove is that the author is trustworthy, or that the page listing the checksum was not itself tampered with, which is why the checksum should come from a different source than the download where possible.
+
+## The rule that removes most of the risk
+
+> [!WARNING]
+> If you did not initiate the interaction, do not use the link at all. Open a new tab, type the address yourself, and log in there. A genuine notice will be waiting in your account; a fraudulent one will not exist.
+
+This costs ten seconds and defeats essentially every variation above, including the ones that are too well made to spot by reading. The link inspection is useful for the times you are curious or need to explain to somebody else why something is wrong, but navigating yourself is what actually protects the account.`,
+  },
+
+  {
+    slug: 'keeping-secrets-out-of-git',
+    title: 'Keeping API keys out of your repository, and what to do when one leaks',
+    description: 'A key committed once is in the history forever. Deleting the line does not remove it, and rotation is the only real fix.',
+    excerpt: 'Scanners find public keys within minutes of a push. Deleting the line in the next commit changes nothing, because the old commit still has it.',
+    category: 'security',
+    tags: ['secrets', 'api-keys', 'git', 'environment'],
+    published: '2026-09-13',
+    relatedTools: ['random-string', 'secure-notes', 'hash-generator', 'password-generator'],
+    takeaways: [
+      'Git stores every commit, so removing a key in a later commit leaves it fully readable in history.',
+      'Once a key has been pushed anywhere public, assume it is compromised and rotate it. Nothing else fixes it.',
+      'Environment variables keep secrets out of source, but they are visible to the process and often to logs.',
+      'Commit an example config with placeholder values so nobody has to guess what to set.',
+    ],
+    body: `A developer commits a config file with a live API key, notices within the hour, deletes the line and pushes again. The repository now looks clean.
+
+The key is still there, in the previous commit, readable by anyone who clones the repository and runs one command.
+
+## Git does not forget
+
+Git stores a complete snapshot of every commit. A later commit that removes a line does not alter the earlier one, it adds a new state in which that line is absent. Both remain.
+
+So \`git log -p\`, or the web interface history view, shows the key perfectly. So does any fork, any clone taken in between, and any CI cache.
+
+> [!WARNING]
+> Once a secret has been pushed to anywhere public, it is compromised. Automated scanners watch public repositories continuously and act within minutes, not days. Rewriting history with filter-repo or BFG removes it from your copy and does nothing about the clones already taken. **Rotate the key. That is the only fix that works.**
+
+Rewriting history is still worth doing afterwards, to stop the value spreading further. It is a cleanup, not a remedy.
+
+## What to do in order
+
+1. **Revoke or rotate the key at the provider.** Immediately, before anything else.
+2. **Check the provider's access logs** for use you do not recognise.
+3. **Work out the blast radius.** What did that key have access to, and does anything else share it?
+4. **Rewrite history** to remove the value, and force-push.
+5. **Tell anyone with a clone** to re-clone rather than pull.
+6. **Add a scanner** so the next one is caught before it is pushed.
+
+Step one is the whole thing. Steps four and five feel like the fix and are the least important.
+
+## Keeping them out in the first place
+
+**Environment variables** are the baseline. The secret lives outside source control, and the application reads it at run time.
+
+They are not a security boundary, which is worth being clear about. Any process running as the same user can read them, they show up in crash dumps and process listings, and they end up in logs whenever something prints its environment while debugging. They solve the source-control problem specifically.
+
+**A .env file, ignored by git.** Convenient locally. Two conditions: \`.env\` must be in \`.gitignore\` **before** the first commit, and you should commit a \`.env.example\` alongside it with the keys present and the values replaced by placeholders, so the next person knows what to set without asking.
+
+Adding \`.env\` to \`.gitignore\` after it has been committed does nothing, because git is already tracking it.
+
+**A secrets manager** for anything production. Access is authenticated and audited, rotation is supported, and the value never sits in a file.
+
+## Generating keys properly
+
+When you are producing the secret rather than consuming one, the source of randomness is what decides its strength.
+
+A token needs to come from a cryptographically secure generator, not from \`Math.random\`, for the reasons set out in [random strings and tokens](/blog/random-strings-and-tokens). Aim for 128 bits, which is 22 characters of base64url or 32 hex characters, and generate it with a [random string generator](/tool/random-string) using rejection sampling rather than a modulo.
+
+For anything a human has to type or remember, a [password generator](/tool/password-generator) or a passphrase is the right shape instead.
+
+## Storing what cannot be in a manager
+
+Some things genuinely have to be written down: a recovery code, a root credential, a break-glass password. These are the ones that need to survive the loss of the systems that would normally hold them.
+
+Paper, somewhere physically secure, is the right answer for the small number of credentials in that category. [Encrypted notes](/tool/secure-notes) that stay in your own browser are reasonable for working notes, with the caveat noted in [a backup that actually works](/blog/a-backup-that-actually-works): anything stored on the machine you are recovering is unavailable during the recovery.
+
+## Checking before you commit
+
+**A pre-commit hook** that scans staged changes for key-shaped strings. It costs one second per commit and catches the accident before it becomes history.
+
+**Server-side push protection**, which several hosting providers now offer, blocking a push that contains a recognised credential format.
+
+**Search your own history once.** Most repositories that have existed for a few years contain something. Finding it while you are calm is better than finding it during an incident.
+
+And one habit that removes a whole category of this: **never paste a key into a web page to check it.** A [hash generator](/tool/hash-generator) or decoder running locally never transmits what you paste, which is not true of most online equivalents, and a JWT or API key pasted into an unknown site has been disclosed by the act of checking it.`,
+  },
+
+  {
+    slug: 'public-wifi-and-vpns',
+    title: 'Public Wi-Fi: what HTTPS already protects, and what a VPN adds',
+    description: 'The coffee shop threat model is not what it was in 2010. Knowing what changed tells you what a VPN is actually buying you.',
+    excerpt: 'Most of the danger of public Wi-Fi was fixed by HTTPS becoming universal. A VPN moves who can watch you, rather than removing them.',
+    category: 'security',
+    tags: ['wifi', 'vpn', 'https', 'network'],
+    published: '2026-09-14',
+    relatedTools: ['url-parser', 'password-manager', 'file-checksum', 'user-agent-parser'],
+    takeaways: [
+      'HTTPS encrypts the content of your traffic, so someone on the same network cannot read what you send.',
+      'They can still see which domains you connect to, because DNS and the certificate name are visible.',
+      'A VPN moves that visibility from the local network to the VPN provider. It does not remove it.',
+      'A VPN does nothing about tracking, cookies or fingerprinting, whatever the advertising says.',
+    ],
+    body: `The advice to avoid public Wi-Fi comes from an era when most websites were unencrypted and anyone on the same network could read your session cookie with a browser extension. That era ended when HTTPS became the default rather than the exception.
+
+What is left is narrower and worth stating precisely, because it determines whether a VPN helps.
+
+## What HTTPS already handles
+
+When you connect to an HTTPS site, the connection is encrypted end to end. Somebody on the same network sees ciphertext.
+
+They **cannot** read the page contents, your form submissions, your passwords, or your session cookies. They cannot modify the page in transit, because the integrity check would fail.
+
+That covers the classic coffee-shop attack entirely. It is why the old advice is largely obsolete.
+
+## What they can still see
+
+Encryption hides content, not the fact of the connection.
+
+**The domain you are visiting.** DNS lookups are plaintext unless you have enabled encrypted DNS, and the server name appears in the TLS handshake unless Encrypted Client Hello is in use, which is still not universal.
+
+**Traffic patterns.** Timing and volume can suggest what you are doing even without content.
+
+**Anything not using HTTPS.** Rare on the web now, and still common for some apps and update checks.
+
+So an observer on the network knows you visited a particular bank, not what you did there. Whether that matters depends on the domain.
+
+## What a VPN actually changes
+
+A VPN encrypts everything from your device to the VPN server, and your traffic emerges from there.
+
+That means the local network and its operator now see only an encrypted tunnel to one address. It also means **the VPN provider sees everything the local network used to see.**
+
+> [!NOTE]
+> A VPN does not remove the observer. It replaces the coffee shop and your internet provider with a company you are paying, whose logging policy you cannot verify and whose jurisdiction may differ from yours. That is sometimes a good trade and it is a trade.
+
+The cases where it is clearly worth it: a genuinely untrusted network, a network that inspects or blocks traffic, hiding your IP address from the sites you visit, and accessing a corporate network remotely.
+
+The case where it is oversold is privacy from tracking. A VPN changes your IP address and nothing else. Cookies still work, logins still identify you, and fingerprinting is unaffected because it measures your device rather than your network, as covered in [what your browser announces](/blog/what-your-browser-announces). A logged-in session is still a logged-in session on the other side of a tunnel.
+
+## The threat that did not go away
+
+Not the eavesdropper. The fake network.
+
+An access point named \`Airport_Free_WiFi\` is trivial to create, and a device that has connected to that name before may join it automatically. Once you are on it, the operator controls DNS and can redirect you.
+
+HTTPS still protects the content, and the failure mode is a certificate warning rather than silent interception. Which leads to the single most important habit on any unfamiliar network:
+
+> [!WARNING]
+> Never click through a certificate warning. On a normal network it is usually a misconfiguration. On an unfamiliar one it is the only signal you get that something is intercepting the connection.
+
+The related trap is the captive portal, the login page a hotel or airport shows before granting access. It is a legitimate mechanism and it is also exactly what a hostile network would imitate. Do not enter an email password into one, and do not install any certificate or profile it offers.
+
+## What is worth doing
+
+**Verify the network name** with staff rather than guessing. \`Starbucks\` and \`Starbucks WiFi\` are different networks and one of them may not be theirs.
+
+**Turn off auto-connect** for open networks, which removes the automatic-join problem entirely.
+
+**Enable encrypted DNS** in your browser or operating system, which closes the most visible remaining leak.
+
+**Keep two-factor authentication on**, because it is what protects the account even if a credential is exposed. The ranking in [password managers and 2FA](/blog/password-manager-and-2fa-setup) applies.
+
+**Check a link before clicking it** if anything about the page seems off, using the right-to-left reading described in [reading a link before you click it](/blog/spotting-a-dangerous-link). A [URL parser](/tool/url-parser) settles what host you are actually on.
+
+**Verify downloads** with a [checksum](/tool/file-checksum) when the network is one you do not control, since an intercepted download is one of the few remaining ways a hostile network causes real damage.
+
+The honest summary: public Wi-Fi is much safer than its reputation, a VPN is a reasonable tool for a specific set of problems, and neither has anything to do with the tracking most of the advertising implies it solves.`,
+  },
+
+  {
+    slug: 'after-a-data-breach',
+    title: 'Your details were in a breach: what actually helps, in order',
+    description: 'A breach notification is vague by design. The useful response depends on what was taken, and password reuse is the real exposure.',
+    excerpt: 'The risk is rarely the breached site. It is every other account where you used the same password.',
+    category: 'security',
+    tags: ['breach', 'credential-stuffing', 'passwords', '2fa'],
+    published: '2026-09-14',
+    relatedTools: ['password-generator', 'password-strength', 'passphrase-gen', 'hash-generator'],
+    takeaways: [
+      'Change the breached password everywhere you reused it, not just on the site that was breached.',
+      'Credential stuffing is the actual mechanism: attackers replay your email and password against hundreds of other services.',
+      'Hashed passwords are not automatically safe. Unsalted MD5 or SHA-1 is cracked in bulk.',
+      'Turn on two-factor authentication on email first, because every other account can be reset through it.',
+    ],
+    body: `An email says your details "may have been involved in a security incident". It does not say what was taken, and it recommends changing your password on that service.
+
+That advice is incomplete in a way that matters, because the breached service is usually not where the damage happens.
+
+## Credential stuffing is the mechanism
+
+Attackers do not hand-target your account on the breached site. They take the whole list of email and password pairs and replay it automatically against hundreds of other services.
+
+The reason it works is reuse. A password from a breached forum is tried against your email provider, your bank, your shopping accounts. Anywhere the pair matches, they are in, and no security flaw was needed at the second site.
+
+Which means **the important question is not what the breached site does next. It is where else that password was used.** This is the same argument as in [what makes a password strong](/blog/what-makes-a-password-strong), where uniqueness matters more than strength for exactly this reason.
+
+## What was actually taken
+
+Breach notifications are deliberately vague, and the categories differ enormously in consequence.
+
+| Taken | What it means |
+|---|---|
+| Email addresses only | Expect targeted phishing referencing that service |
+| Passwords, properly hashed | Lower risk, still rotate |
+| Passwords, weakly hashed or plaintext | Treat as fully exposed |
+| Payment card numbers | Bank will usually reissue; watch statements |
+| Identity documents | The serious one, and not resettable |
+
+"Hashed" is doing a lot of work in that table, and it is worth knowing why.
+
+> [!NOTE]
+> Unsalted MD5 or SHA-1 hashes are cracked in bulk, because they are fast to compute and rainbow tables exist. Properly salted bcrypt, scrypt or Argon2 is genuinely slow to attack. Those are different situations described by the same word, which is the distinction drawn in [hashing, encryption and encoding](/blog/hashing-vs-encryption-vs-encoding).
+
+Identity documents are the category with no remedy. A password is rotatable; a passport scan is not. This is the concrete reason for the caution about where identity documents get uploaded in [what happens to a file you upload](/blog/what-happens-when-you-upload-a-file).
+
+## The order that matters
+
+**1. Change the password on the breached service.** Obvious, and the least important step.
+
+**2. Change it everywhere you reused it.** This is the actual fix. If you cannot remember where, start with email, banking, cloud storage and anything holding payment details.
+
+**3. Turn on two-factor authentication, email first.** Email is the master key: everything else can be reset through it. The ranking of second factors is in [password managers and 2FA](/blog/password-manager-and-2fa-setup), and the short version is that passkeys and hardware keys resist phishing while SMS does not.
+
+**4. Check active sessions.** Most services list logged-in devices. Sign out everything you do not recognise, which invalidates a stolen session even if the password was already changed.
+
+**5. Check your recovery settings.** Attackers add a recovery email or phone number so they can return later. A changed password does not remove one.
+
+**6. Watch for the phishing that follows.** Breach lists are sold, and a convincing message referencing the real service arrives within weeks. The reading in [reading a link before you click it](/blog/spotting-a-dangerous-link) applies, and the standing rule holds: if you did not initiate it, navigate to the site yourself rather than using the link.
+
+Step five is the one almost everyone skips, and it is how accounts get retaken a month later.
+
+## Generating the replacements
+
+A unique password per service is only practical with a manager, which is why that is the recommendation rather than a suggestion.
+
+For the ones you have to type or remember, a [passphrase](/tool/passphrase-gen) of five or six randomly selected words is both stronger and more usable than a short complex string. For everything else, a [generated password](/tool/password-generator) of 16 characters or more, stored in the manager, is the right shape.
+
+Before reusing anything you already have, run it through a [strength checker](/tool/password-strength). It reports entropy without transmitting the password anywhere, which is a requirement that online equivalents do not universally meet.
+
+## What to do beforehand
+
+The response is much shorter when the preparation is done, and it is the same short list every time:
+
+- A unique password on every account, which contains the damage to one service.
+- 2FA on email, banking and the password manager itself.
+- Recovery codes on paper somewhere other than your desk.
+- A card with a spending limit for online purchases.
+
+None of that prevents a breach, because the breach happens at their end. It changes a breach from an afternoon of work into changing one password.`,
   },
 ];

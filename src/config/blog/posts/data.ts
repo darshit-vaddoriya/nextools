@@ -9,7 +9,13 @@ export const DATA_POSTS: BlogPost[] = [
     category: 'data',
     tags: ['csv', 'excel', 'data-quality'],
     published: '2026-08-10',
-    relatedTools: ['csv-viewer', 'csv-editor', 'csv-cleaner', 'excel-to-csv'],
+    relatedTools: ['csv-viewer', 'csv-editor', 'csv-cleaner', 'delimiter-converter'],
+    takeaways: [
+      'Excel guesses a type for every cell it opens, and the guesses are destructive: leading zeros vanish and 16-digit numbers lose their last digits permanently.',
+      'Use Data then From Text/CSV rather than double-clicking, and set identifier columns to Text.',
+      'Excel splits on the operating system list separator, not always a comma, which is why the same file opens differently on two machines.',
+      'A UTF-8 byte order mark fixes accented characters for Excel and breaks the first column name for most other parsers.',
+    ],
     body: `A CSV file is plain text. It has no types, no formatting and no metadata, just characters separated by commas. When Excel opens one, it must *guess* what each value is meant to be, and its guesses are aggressive and irreversible.
 
 ## The four classic corruptions
@@ -67,6 +73,12 @@ The fastest way to find out what a file actually contains is to look at it in so
     tags: ['csv', 'json', 'conversion'],
     published: '2026-08-18',
     relatedTools: ['csv-to-json', 'json-to-csv', 'json-formatter', 'csv-cleaner'],
+    takeaways: [
+      'Every CSV value is a string, so any type inference is a guess. Keeping everything as a string and casting deliberately is the safe default.',
+      'Losing a number type is recoverable; losing the leading zeros on an identifier is not.',
+      'An empty CSV field could mean empty string, missing or null, and CSV cannot tell you which. Pick a convention and document it.',
+      'Numbers beyond 2^53 are silently rounded by JavaScript, so long IDs must stay strings.',
+    ],
     body: `CSV and JSON describe data differently enough that converting between them requires choices. Making those choices deliberately avoids a set of failures that are easy to miss until much later.
 
 ## The shape mismatch
@@ -165,6 +177,12 @@ Steps 1 and 6 catch most problems. A [CSV to JSON converter](/tool/csv-to-json) 
     tags: ['data-cleaning', 'csv', 'duplicates'],
     published: '2026-08-25',
     relatedTools: ['csv-cleaner', 'remove-duplicates', 'find-replace', 'text-cleaner', 'csv-editor'],
+    takeaways: [
+      'Trim whitespace before anything else, because every later step compares strings and trailing spaces defeat all of them.',
+      'Deduplicate after normalising, not before, or near-identical rows survive as distinct.',
+      'Define what counts as a duplicate first. Same email, same name and date, and same whole row are three different answers.',
+      'Merged cells, multiple header rows and totals at the bottom are structural problems no cell-level cleaning will fix.',
+    ],
     body: `Data arriving from a form, an export or a colleague's spreadsheet is rarely clean. The defects are predictable, and there is a sensible order for fixing them, because doing it out of order hides problems rather than solving them.
 
 ## Step 1: whitespace, before anything else
@@ -240,7 +258,13 @@ For one-off work, a [CSV cleaner](/tool/csv-cleaner) that handles trimming, casi
     category: 'data',
     tags: ['csv', 'excel', 'xlsx', 'formats'],
     published: '2026-09-01',
-    relatedTools: ['excel-to-csv', 'csv-to-excel', 'spreadsheet-viewer', 'csv-viewer'],
+    relatedTools: ['csv-viewer', 'csv-editor', 'delimiter-converter', 'remove-duplicates'],
+    takeaways: [
+      'CSV is interoperable, streamable, diffable and durable. XLSX keeps types, formulas, multiple sheets and formatting.',
+      'If the content is data, CSV is the better record. If the content is a presentation of data, XLSX is the better view.',
+      'Keep the source as CSV and generate the spreadsheet from it, rather than treating the spreadsheet as the master copy.',
+      'Every round trip through a spreadsheet is a chance for a silent type conversion to damage identifiers.',
+    ],
     body: `Both hold tabular data and both open in a spreadsheet, which is where the similarity ends.
 
 ## What each one actually is
@@ -305,7 +329,7 @@ Either way: check identifier columns in the output before sending it anywhere.
 
 For a recurring report, keep the source data as CSV and generate the XLSX presentation layer from it. The CSV is the record, diffable, streamable, durable, and the spreadsheet is a view.
 
-For one-off conversions, [Excel to CSV](/tool/excel-to-csv), [CSV to Excel](/tool/csv-to-excel) and a [spreadsheet viewer](/tool/spreadsheet-viewer) all run in the browser, so a payroll or customer file is not uploaded to a converter service on its way between two formats.`,
+For one-off work, the [CSV viewer](/tool/csv-viewer) opens a file without Excel touching it, the [CSV editor](/tool/csv-editor) gives you a grid to fix cells in, and the [delimiter converter](/tool/delimiter-converter) handles the semicolon and tab variants. All three run in the browser, so a payroll or customer file is not uploaded to a converter service on its way between two formats.`,
   },
 
   {
@@ -317,6 +341,12 @@ For one-off conversions, [Excel to CSV](/tool/excel-to-csv), [CSV to Excel](/too
     tags: ['csv', 'rfc-4180', 'encoding', 'parsing'],
     published: '2026-09-07',
     relatedTools: ['delimiter-converter', 'csv-cleaner', 'tsv-converter', 'csv-viewer'],
+    takeaways: [
+      'The delimiter is not always a comma. Semicolons are standard across much of Europe, and nothing in the file declares which was used.',
+      'A quoted field escapes an internal quote by doubling it, and a single record can legally span several physical lines.',
+      'Write UTF-8, and add a byte order mark only when Excel is the intended consumer.',
+      'When a file looks wrong, check the delimiter, the quoting and the encoding in that order, because each one masks the next.',
+    ],
     body: `There is a specification for CSV, RFC 4180, published in 2005, and it is barely two pages. It is also descriptive rather than authoritative: it documented common practice years after the format was in universal use. Real files depart from it constantly, in three specific dimensions.
 
 ## 1. The delimiter
@@ -394,5 +424,432 @@ Not required by the specification, and universally expected in practice. Problem
 - Document the delimiter and encoding alongside the file.
 
 For files you receive, a [delimiter converter](/tool/delimiter-converter) and [CSV cleaner](/tool/csv-cleaner) will normalise most of this in one pass, locally, which matters given how often these files contain personal data.`,
+  },
+
+  {
+    slug: 'what-actually-compresses-in-a-zip',
+    title: 'Why zipping your photos saves nothing, and what to do instead',
+    description: 'ZIP finds repetition. JPEGs have none left, which is why a folder of 200 photos zips to 199 MB. Here is what zipping is actually for.',
+    excerpt: 'Zipping a folder of holiday photos and watching it shrink by 0.4% is not a broken tool. It is the correct answer to the wrong question.',
+    category: 'data',
+    tags: ['zip', 'compression', 'archives'],
+    published: '2026-09-14',
+    relatedTools: ['zip-creator', 'zip-extractor', 'batch-zip', 'merge-csv'],
+    takeaways: [
+      'ZIP removes repetition. Already-compressed formats like JPEG, PNG, MP4 and DOCX have none left, so they barely shrink.',
+      'Text, CSV, logs and source code compress enormously, often to a tenth of their size.',
+      'Zipping is still worth it for photos: one attachment instead of two hundred, with filenames and folders preserved.',
+      'ZIP encryption comes in two kinds. The old one is broken; only AES-256 is worth trusting, and the filenames stay visible either way.',
+    ],
+    body: `You select 200 holiday photos totalling 800 MB, compress them, and get a 797 MB zip. Nothing malfunctioned. ZIP did exactly what it does, and there was nothing there for it to do.
+
+## What compression actually removes
+
+Lossless compression works by finding **repetition**. The Deflate algorithm that ZIP uses does two things: it replaces repeated byte sequences with a reference to the earlier occurrence, and it gives the most frequent bytes shorter codes.
+
+Both need patterns. Feed it English text, where \`the\` appears constantly and only a few dozen byte values are ever used, and it has enormous room to work. Feed it data that has already had its patterns removed, and there is nothing to find.
+
+That is the whole explanation, and it predicts everything:
+
+| File type | Typical saving | Why |
+|---|---|---|
+| Text, CSV, logs, code | 70-90% | Hugely repetitive |
+| XML, JSON, SVG | 70-85% | Repeated tags and keys |
+| BMP, WAV, uncompressed TIFF | 50-80% | Raw, no compression yet |
+| PDF with text | 5-20% | Streams already deflated |
+| DOCX, XLSX, PPTX | 0-3% | Already zip files |
+| JPEG, PNG, GIF, WebP | 0-3% | Already compressed |
+| MP3, MP4, AAC | 0-2% | Already compressed |
+
+A \`.docx\` compressing by nothing surprises people until you remember it already is a zip archive. Zipping it is asking Deflate to compress its own output.
+
+## So why zip photos at all
+
+Because size is not the only reason, and for photos it is not the reason at all.
+
+**One thing instead of many.** A single 200 MB attachment is manageable. Two hundred separate files is not, for you or the recipient.
+
+**Structure survives.** Folder hierarchy and filenames are preserved. Email attachments and many upload forms flatten everything otherwise.
+
+**Integrity checking.** Every entry carries a CRC-32 checksum, so extraction fails loudly if the archive was damaged in transit rather than producing quietly corrupt files.
+
+**Encoding is preserved.** Text files keep their bytes exactly, instead of being helpfully converted by something in the middle.
+
+So [creating a zip](/tool/zip-creator) of a photo set is still the right move. Just do not expect the size to change, and do not waste time trying "maximum" compression on it.
+
+> [!TIP]
+> If the actual goal is smaller photos, compression is the wrong lever entirely. [Resize and re-encode the images](/tool/image-compressor) first. Reducing 4000px photos to 2000px and saving at quality 80 typically takes 800 MB to under 100 MB, which is a real reduction rather than a repackaging.
+
+## When you want many archives, not one
+
+The default assumption is one archive containing everything. Sometimes the requirement is the opposite: one archive per file, because a portal accepts submissions individually, or because each recipient should get only their own document.
+
+That is what [batch zipping](/tool/batch-zip) does, producing a separate archive per input and handing you all of them together. It is a small thing that saves a genuinely tedious afternoon when there are forty of them.
+
+## The encryption is two different things
+
+ZIP supports encryption, and the format has two schemes with very different properties.
+
+**ZipCrypto**, the original, is cryptographically broken. It is vulnerable to a known-plaintext attack, which is easy to mount because archives often contain predictable content. Treat it as no protection at all.
+
+**AES-256**, added later, is genuinely strong. But support is inconsistent: Windows Explorer's built-in zip handling cannot open AES-encrypted archives, so your recipient may need a separate tool.
+
+> [!WARNING]
+> Neither scheme encrypts the file list. Filenames, sizes and timestamps stay readable without the password. An archive called \`redundancies-march.zip\` containing \`smith-j-termination.pdf\` has told the story before anyone tries the password.
+
+If the contents are sensitive, name the files neutrally, use AES-256, and send the password through a different channel than the archive.
+
+## A sensible default
+
+1. **Ask what you are optimising.** Fewer files, or fewer bytes? They need different actions.
+2. **If it is bytes and the content is media,** resize and re-encode rather than zip.
+3. **If it is bytes and the content is text,** zip it and enjoy the 80%.
+4. **If it is convenience,** zip it regardless of what happens to the size.
+5. **If the folder is mostly CSV exports,** consider whether [merging them into one file](/tool/merge-csv) is what the recipient actually wants. Twelve monthly exports in an archive is usually a worse answer than one file with a month column.
+
+Point five is the one worth pausing on, because sending an archive is frequently a way of passing an unfinished job along.
+
+Both [zipping](/tool/zip-creator) and [unzipping](/tool/zip-extractor) here happen in the browser, which is the useful property when the archive is a set of client documents, HR records or ID scans. Those are exactly the files people zip in order to send somewhere, and exactly the ones you would rather not upload to a converter first.`,
+  },
+
+  {
+    slug: 'email-attachment-size-limits',
+    title: 'Email attachment limits: why 25MB is not 25MB',
+    description: 'Attachments are encoded before sending, which inflates them by a third. That is why a 24MB file bounces off a 25MB limit.',
+    excerpt: 'Your file is under the limit and the email still bounces. Attachments are base64 encoded in transit, and the limit applies after that.',
+    category: 'data',
+    tags: ['email', 'attachments', 'compression'],
+    published: '2026-09-09',
+    relatedTools: ['pdf-compress', 'image-compressor', 'zip-creator', 'batch-zip'],
+    takeaways: [
+      'Attachments are base64 encoded for transport, adding about 33%, so a 25MB limit is really about 18MB of file.',
+      'The receiving server has its own limit, and the smaller of the two wins whatever your provider allows.',
+      'Zipping photos saves nothing. Resizing and re-encoding them is what actually reduces the size.',
+      'Above about 15MB a link is more reliable than an attachment, for reasons unrelated to your file.',
+    ],
+    body: `You have a 24MB PDF and a 25MB limit. The email bounces. The number in the error does not match the number on your file, and both are correct.
+
+## The 33% nobody mentions
+
+Email was designed to carry text, specifically seven-bit ASCII. Binary files, which is every PDF, image and spreadsheet, cannot travel through it unchanged.
+
+So attachments are encoded, almost always with base64, which represents three bytes of binary as four characters of text. That is a fixed 33% expansion, the same arithmetic as [inlining an image as a data URI](/blog/data-uris-when-to-inline-an-image).
+
+The limit applies to the encoded message:
+
+| Your file | After encoding | Fits a 25MB limit |
+|---|---|---|
+| 10 MB | ~13.3 MB | Yes |
+| 18 MB | ~24 MB | Just |
+| 20 MB | ~26.6 MB | No |
+| 24 MB | ~32 MB | No |
+
+**A 25MB limit is roughly an 18MB file limit.** Add the message body, an inline signature image and the headers, and the working figure is nearer 17MB.
+
+## The limit that applies is not yours
+
+Gmail allows 25MB. Outlook allows 20MB by default. Plenty of corporate servers are set to 10MB, and some healthcare and government systems to 5MB.
+
+The message has to be accepted at every hop, so **the smallest limit anywhere on the path wins.** Your provider accepting a 24MB message tells you nothing about the recipient's server.
+
+This is why a file that reached one colleague bounces for another at the same company, if the two are on different mail systems.
+
+## Making it smaller, in order of what works
+
+**PDFs.** [Compress it](/tool/pdf-compress), but know in advance whether that will help. A scanned document is mostly images and often drops 60 to 90 percent. A text-only contract is already deflated and will barely move. If the recipient needs three pages of a long report, [extract those pages](/tool/pdf-page-extractor) instead, which is lossless and far more effective than degrading the whole file.
+
+**Photographs.** This is usually where the size actually is. Twelve phone photos at 4MB each is 48MB before encoding. [Resizing](/tool/image-resize) to 2000px on the long edge and [compressing](/tool/image-compressor) at quality 80 typically takes that under 5MB with no visible difference on screen.
+
+**Do not reach for zip first.**
+
+> [!WARNING]
+> Zipping a folder of JPEGs, PNGs, MP4s or Office documents saves essentially nothing, because all of those are already compressed. A 48MB folder of photos zips to about 47MB. Zipping is for tidiness and structure, not size. The full explanation is in [what actually compresses in a zip](/blog/what-actually-compresses-in-a-zip).
+
+Where [zipping](/tool/zip-creator) does pay is text: CSV exports, logs, code and XML routinely drop by 80 percent or more.
+
+## Splitting, and why it backfires
+
+Sending five emails labelled part 1 of 5 seems reasonable and tends to go wrong. Spam filters dislike bursts of near-identical messages with attachments, one part arrives out of order or not at all, and the recipient now has a reassembly job. Multi-part archives are worse, because a single missing part makes the rest unopenable.
+
+If you genuinely must split, [batch zipping](/tool/batch-zip) into independent archives, one per document, at least means a missing one does not destroy the others.
+
+## When to stop fighting it
+
+Above roughly 15MB a link is simply more reliable, and not because of your file:
+
+- No encoding overhead and no per-hop limit.
+- The recipient's mailbox quota is not consumed.
+- You can replace the file after sending.
+- Large attachments are themselves a spam signal.
+
+The trade is that a link is a different privacy decision. The file now sits on a third party's storage, usually readable by anyone who has the URL, often for longer than you expect. For a marketing deck that is fine. For medical records or identity documents, compressing properly and attaching is the better answer, which is the whole reason the steps above are worth doing on your own machine rather than on whichever converter is top of the results.
+
+## The order that works
+
+1. Work out what is actually heavy. Photos and scans, nearly always.
+2. Resize and re-encode images before anything else.
+3. Compress the PDF, or extract only the pages needed.
+4. Zip only if it is text, or if you want one attachment instead of twenty.
+5. Assume the real ceiling is about 70 percent of the stated limit.
+6. Above 15MB, send a link and think about who else can read it.`,
+  },
+
+  {
+    slug: 'naming-files-that-survive',
+    title: 'File names that survive being moved, zipped and emailed',
+    description: 'Spaces, accents, colons and emoji in filenames break in predictable places. A few rules avoid all of them.',
+    excerpt: 'A file called "Q3 Report (final) 50%.xlsx" will break something. Not today, and not visibly, but it will.',
+    category: 'data',
+    tags: ['filenames', 'encoding', 'workflow'],
+    published: '2026-09-11',
+    relatedTools: ['slug-generator', 'case-converter', 'text-cleaner', 'mime-checker'],
+    takeaways: [
+      'Windows forbids nine characters outright, and a colon is the usual cause of a failed cross-platform copy.',
+      'Dates belong at the front in ISO form, because that is the only format that sorts correctly as text.',
+      'macOS and Linux disagree on how accented characters are stored, so the same name can fail to match across systems.',
+      'The extension is a convention, not the file type. What a program acts on is the magic bytes.',
+    ],
+    body: `Someone sends you \`Q3 Report (final) 50% v2.xlsx\`. It opens fine. Then it goes into a zip, onto a shared drive, through a script, and somewhere in there it becomes \`Q3%20Report%20(final)%2050%25%20v2.xlsx\`, or it fails to extract, or a command line eats half of it.
+
+Filenames look like free text and are not. Several systems have to agree about them.
+
+## The characters that are genuinely forbidden
+
+Windows rejects nine outright: \`< > : " / \\ | ? *\`
+
+The colon catches people, because \`Report: Final.pdf\` is a natural thing to type on a Mac and cannot exist on Windows. A zip made on macOS containing such a file fails to extract cleanly there.
+
+Windows also reserves a set of device names inherited from DOS, which still cannot be filenames even with an extension: \`CON\`, \`PRN\`, \`AUX\`, \`NUL\`, \`COM1\` to \`COM9\`, \`LPT1\` to \`LPT9\`. A file called \`con.txt\` cannot be created. And a name cannot end in a space or a full stop, because Windows silently strips them, so \`report .pdf\` quietly stops matching what you asked for.
+
+Linux and macOS only forbid \`/\` and the null byte. That asymmetry is the problem: files created on Unix systems routinely cannot exist on Windows.
+
+## The ones that are allowed and still cause trouble
+
+**Spaces.** Legal everywhere, and they require quoting in every shell. \`rm my file.txt\` tries to delete two files. In a URL a space becomes \`%20\`, which is why filenames come back full of percent signs after a round trip through a web server.
+
+**Accented and non-Latin characters.** These work, with one real hazard. macOS traditionally stores filenames in Unicode's decomposed form, where \`é\` is \`e\` plus a combining accent, while Linux and Windows use the composed form where it is a single character. They look identical and are different strings, so a lookup, a sync or a deduplication can miss. It is the same [normalisation problem](/blog/unicode-utf8-and-mojibake) surfacing where you least expect it.
+
+**Ampersands, percent signs, hashes and plus signs.** All legal, all meaningful in a URL or a shell. A \`#\` truncates a URL at that point, so \`notes#2.pdf\` served over the web resolves to \`notes\`.
+
+**Emoji.** Fine on modern systems, broken in older archive tools and many corporate document systems.
+
+**Case.** Windows and macOS are usually case-insensitive; Linux is not. \`Report.pdf\` and \`report.pdf\` are one file on a laptop and two on the server, which is a genuinely confusing bug to chase.
+
+> [!TIP]
+> A [slug generator](/tool/slug-generator) does exactly the transformation you want: lowercase, accents folded to ASCII, spaces to hyphens, punctuation dropped. It is built for URLs, and URLs and filenames have almost the same constraints.
+
+## Dates at the front, in ISO form
+
+\`\`\`
+2026-09-11-quarterly-report-v2.pdf
+\`\`\`
+
+The reason is narrow and decisive: **ISO dates are the only format that sorts correctly as plain text.** \`11-09-2026\` sorts by day, \`Sept 11 2026\` sorts alphabetically by month name, and both scatter a chronological set into a meaningless order in every file browser there is.
+
+Date first means the default sort is chronological, everywhere, with no configuration.
+
+## Rules that avoid all of it
+
+1. **Lowercase.** Removes the case-sensitivity mismatch entirely.
+2. **Hyphens, not spaces or underscores.** No quoting needed, and they read as word separators everywhere.
+3. **ASCII letters, digits and hyphens only.** No accents, no emoji, no punctuation.
+4. **ISO date first** when the file is one of a series.
+5. **Zero-pad numbers.** \`part-02\` sorts before \`part-10\`; \`part-2\` does not.
+6. **Under about 100 characters.** Path length limits are still real, and a deep folder tree plus a long name still hits them.
+7. **Never rely on the extension to mean anything.**
+
+That last one is worth stating plainly. The extension is a naming convention anyone can change. What determines how a program treats a file is its magic bytes, which is why a [MIME checker](/tool/mime-checker) will tell you the \`.xlsx\` your system produced is really an HTML error page, a surprisingly common outcome of a failed export.
+
+## Fixing a folder you inherited
+
+For a batch of badly named files the sequence is the one that applies to any messy text: normalise whitespace with a [text cleaner](/tool/text-cleaner), settle on a consistent [case](/tool/case-converter), then convert each name to a [slug](/tool/slug-generator).
+
+> [!WARNING]
+> Renaming breaks anything pointing at the old name: links inside documents, scripts, bookmarks and sync histories. Rename early, while a set of files is still yours, rather than after it has been shared.
+
+All three run on text you paste in, in your own browser, which matters more than it sounds given that a list of filenames is frequently a list of client names, case numbers and internal project codes.`,
+  },
+
+  {
+    slug: 'aggregating-without-a-pivot-table',
+    title: 'Summarising a spreadsheet: grouping, counting and the totals trap',
+    description: 'Most reporting questions are a group-by plus a count or a sum. Knowing that makes the tool you use almost irrelevant.',
+    excerpt: 'Before you group anything, the values have to be identical. "London", "london " and "LONDON" are three groups.',
+    category: 'data',
+    tags: ['aggregation', 'pivot', 'grouping', 'reporting'],
+    published: '2026-09-13',
+    relatedTools: ['csv-editor', 'csv-cleaner', 'remove-duplicates', 'merge-csv'],
+    takeaways: [
+      'Grouping compares strings exactly, so clean whitespace and casing before you summarise or you get several groups per value.',
+      'Count, count distinct and sum answer different questions and are easy to confuse.',
+      'A totals row inside the data gets counted as data. Remove it before aggregating.',
+      'Averages hide distribution. Check the median and the count alongside any mean.',
+    ],
+    body: `You group a sales export by city and the report shows London three times with different totals. Nothing is broken. The column contains \`London\`, \`london\` and \`London \` with a trailing space, and those are three distinct strings.
+
+Almost every aggregation problem is a data problem that only becomes visible when you group.
+
+## Clean before you group
+
+Grouping compares values exactly. Every difference that a human ignores creates a separate group:
+
+- **Trailing and leading whitespace**, the most common and the most invisible.
+- **Casing**, unless the tool folds it.
+- **Non-breaking spaces**, which arrive from copied web content and are not the space character.
+- **Alternative spellings**, like \`UK\` against \`U.K.\` against \`United Kingdom\`.
+
+So the order is: [clean](/tool/csv-cleaner) first, then group. That is the same sequence as in [cleaning messy spreadsheet data](/blog/cleaning-messy-spreadsheet-data), and it exists because every later step compares strings.
+
+A quick diagnostic before trusting any summary: count the distinct values in the column you are grouping by. If you expected 20 cities and there are 34, you have a cleaning problem rather than a reporting one.
+
+## The three questions people confuse
+
+| Question | Operation |
+|---|---|
+| How many rows in this group | COUNT |
+| How many different values appear | COUNT DISTINCT |
+| What do these numbers add up to | SUM |
+
+"How many customers do we have in London" is usually count distinct on customer ID, not count of rows, because one customer can have several orders. Getting this wrong inflates the figure by the number of repeat purchases, and the result looks entirely plausible.
+
+## The rows that are not data
+
+Spreadsheets accumulate things that look like data and are not.
+
+> [!WARNING]
+> A totals row at the bottom gets included in your aggregation, which doubles every figure. So does a repeated header in the middle of a file that was assembled by pasting several exports together.
+
+Both are structural problems, and neither is visible once the data is grouped, because the result is simply larger than it should be.
+
+The check that catches them: the sum of your group totals should equal the sum of the whole column. If it does not, something is being counted twice or not at all.
+
+The same applies to duplicate rows. Whether a duplicate is a genuine repeat transaction or an import artefact is a judgement about the data, not something [deduplication](/tool/remove-duplicates) can decide for you, which is why the question of what counts as a duplicate has to be answered first.
+
+## Combining files before summarising
+
+Monthly exports are the usual case: twelve files with the same columns, and a question that spans the year.
+
+[Merging CSV files](/tool/merge-csv) appends them into one, with two things to watch. The header row from files two onwards must not become data, and if the files do not carry a period column you should add one before merging, or every row becomes indistinguishable from every other month.
+
+That second point is the one people discover after the merge, when they can no longer tell March from November.
+
+## Averages hide things
+
+A mean is one number standing in for a distribution, and it conceals whatever shape that distribution has.
+
+The classic case is a support response time with a mean of four hours, where most tickets are answered in twenty minutes and a handful took three days. The mean describes neither group. The median, as covered in [mean, median and percentiles](/blog/mean-median-and-percentiles), describes the typical case, and a percentile describes the bad one.
+
+Two habits that make a summary honest:
+
+**Always show the count next to the average.** An average of 4.8 from six responses is not the same claim as 4.8 from six hundred, and presented without the count they look identical.
+
+**Check the minimum and maximum.** A maximum that is impossible, like a 400% completion rate, tells you there is bad data upstream before anyone acts on the report.
+
+## Doing it without a pivot table
+
+A pivot table is a user interface over group-by plus aggregate. The same result comes from sorting by the grouping column and summing the runs, which is what a [CSV editor](/tool/csv-editor) with sorting makes straightforward for a one-off question.
+
+For something you will run every month, the pivot is worth building. For a question you have once, sorting and summing is faster than configuring anything.
+
+Either way the preparation is the same, and it is where the correctness lives:
+
+1. [Clean](/tool/csv-cleaner) whitespace, casing and encoding.
+2. Remove totals rows, repeated headers and blank rows.
+3. Decide what a duplicate is, then [remove them](/tool/remove-duplicates).
+4. [Merge](/tool/merge-csv) the periods you need, with a period column.
+5. Group, and reconcile the total against the whole column.
+
+Step five is the one that catches the mistakes in steps one to four, and it takes a few seconds.`,
+  },
+
+  {
+    slug: 'validating-data-on-the-way-in',
+    title: 'Validating data at the point of entry, not after it has spread',
+    description: 'A bad value caught at the form costs seconds. The same value caught in a report costs a reconciliation across every system it reached.',
+    excerpt: 'Validation rejects what is definitely wrong. It cannot confirm what is right, and treating it as though it can is the mistake.',
+    category: 'data',
+    tags: ['validation', 'data-quality', 'regex', 'forms'],
+    published: '2026-09-13',
+    relatedTools: ['regex-tester', 'csv-cleaner', 'extract-emails', 'csv-editor'],
+    takeaways: [
+      'Validation proves a value is plausible, never that it is correct. Only a confirmation step proves an email address works.',
+      'Normalise before validating, so a trailing space is not treated as an invalid value.',
+      'Be strict about format and permissive about content: names, addresses and phone numbers vary more than most rules assume.',
+      'Client-side validation is a convenience. The server has to check again, because the client can be bypassed.',
+    ],
+    body: `A customer record has the email \`jane@exmaple.com\`. It passed validation, because it is a perfectly well-formed address. It is also undeliverable, and nothing about its shape says so.
+
+That gap is the thing to understand about validation: it can reject what is definitely wrong and it cannot confirm what is right.
+
+## Normalise first, then validate
+
+Running validation on raw input produces false rejections, because most invalid-looking input is a formatting artefact rather than a wrong value.
+
+\`\`\`
+"  Jane@Example.COM  "   -> fails a strict pattern
+"jane@example.com"       -> passes, and is the same address
+\`\`\`
+
+So trim whitespace, fold case where the field is case-insensitive, strip formatting characters from numbers, and normalise Unicode to NFC before any pattern runs. That last one matters because, as covered in [Unicode and mojibake](/blog/unicode-utf8-and-mojibake), the same visible character has more than one valid encoding and two of them will not compare equal.
+
+The same order applies to a file arriving in bulk: [clean it](/tool/csv-cleaner) first, then check it, or you will be investigating problems that were only trailing spaces.
+
+## Strict about format, permissive about content
+
+Most validation bugs are rules that were written from one person's assumptions about their own data.
+
+**Names.** No minimum length, because people are called Ng and O. No alphabet restriction. Apostrophes and hyphens are ordinary. There is no reliable split into first and last.
+
+**Addresses.** Postcodes are not all numeric and not all the same length. Not every country has states. House numbers contain letters.
+
+**Phone numbers.** Store the digits and the country code; display them formatted. A regex that assumes ten digits fails most of the world.
+
+**Email.** The specification permits far more than anyone uses, and every attempt to match it exactly ends up accepting nonsense. A loose check for one \`@\` with something either side is the honest approach, which is the same conclusion reached in [regex without the mystique](/blog/regex-patterns-that-actually-come-up).
+
+> [!NOTE]
+> The only real validation of an email address is sending a message to it and having someone act on the link. Everything before that is a plausibility check. The same is true of a phone number and a postal address.
+
+## Where to check
+
+**At the form**, for the user's benefit. Fast, specific and next to the field. This is a convenience and nothing more, because anything running in a browser can be bypassed.
+
+**At the server**, because this is the check that counts. Every field, every time, regardless of what the client already said.
+
+**At the database**, as the last line: types, not-null constraints, uniqueness, foreign keys. These catch the path nobody thought about, which is usually a migration or an admin script rather than the application.
+
+**At import**, for files. This is the one most often skipped, and a bulk import is exactly where a thousand bad rows enter at once.
+
+## Building a pattern that works
+
+Where a regex is the right tool, a [regex tester](/tool/regex-tester) with live highlighting beats reasoning about it, for two reasons.
+
+The first is anchors. Without \`^\` and \`$\` a pattern matches anywhere in the string, so a check for a five-digit postcode will happily accept \`abc12345xyz\`. This is the most common validation bug there is.
+
+The second is catastrophic backtracking. Nested quantifiers over overlapping alternatives can take exponential time on an input that nearly matches, which turns a validation rule into a denial of service. Test any pattern against a long string that almost matches, not just against valid and obviously invalid ones.
+
+## Checking a file before you import it
+
+For a CSV arriving from elsewhere, a few minutes of checking prevents a reconciliation later.
+
+1. **Row count.** Does it match what the sender said?
+2. **Column count per row.** A row with the wrong number of fields means a quoting problem, which is where [delimiters and quoting](/blog/csv-delimiters-quoting-and-encoding) go wrong.
+3. **Distinct values in categorical columns.** Twelve statuses where you expected four means something upstream changed.
+4. **Ranges on numbers and dates.** A date in 1900 or 2087 is a parsing failure.
+5. **Identifier formats.** Leading zeros intact, no scientific notation, which is the damage described in [why CSVs break in Excel](/blog/why-csv-files-break-in-excel).
+6. **Pull the emails out** with [extraction](/tool/extract-emails) and look at the domains. A cluster of typos in one domain usually means a form with no confirmation step.
+
+A [CSV editor](/tool/csv-editor) is the fastest way to do most of this, because sorting a column immediately surfaces the extremes at both ends.
+
+## Reject, warn, or accept
+
+Not everything invalid should be rejected, and this is worth deciding deliberately.
+
+**Reject** what makes the record meaningless: a missing required field, an unparseable date.
+
+**Warn** on what is suspicious but possible: an unusual domain, an age of 105, an order value ten times the median.
+
+**Accept** what is merely unusual. A name with three characters and no vowels is a name.
+
+The cost of rejecting valid data is a customer who cannot complete a form and does not tell you. That failure is silent, which makes it easy to under-weight against the visible cost of a bad record.`,
   },
 ];

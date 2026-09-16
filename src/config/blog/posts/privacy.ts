@@ -10,6 +10,12 @@ export const PRIVACY_POSTS: BlogPost[] = [
     tags: ['privacy', 'client-side', 'wasm'],
     published: '2026-08-11',
     relatedTools: ['pdf-merge', 'image-compressor', 'ai-bg-remover', 'json-formatter'],
+    takeaways: [
+      'An upload touches a CDN, a load balancer, application servers, object storage, logs and backups before anyone deletes anything.',
+      'Most exposure happens without malice: a misconfigured bucket, a retained log line, a backup snapshot nobody thought about.',
+      'Browsers can now do the work locally, so the upload is a choice rather than a technical necessity.',
+      'You can tell which kind you are using: a local tool works with the network disconnected.',
+    ],
     body: `Search for any file conversion task and you will find a dozen sites offering it. Nearly all of them work the same way: you upload the file, a server processes it, you download the result. Somewhere in the footer, a line promises the file is deleted after an hour.
 
 There is a category of tool that does not work that way, and the difference is structural rather than a matter of policy.
@@ -77,7 +83,7 @@ Not everything needs this level of care. A meme does not.
 
 A lease, a medical report, a passport scan, an unreleased product photo, a customer export, a production API token, these do. For that category, the question "is a copy of this on someone else's hardware?" has a much better answer than "for how long?".
 
-Every tool on NextTool is built the second way, which is why there are no size limits, no accounts, and no upload progress bars.`,
+Every tool on NextTool is built the second way, which is why there are no size limits, no accounts, and no upload progress bars. Whether it is [compressing a PDF](/tool/pdf-compress), [stripping image metadata](/tool/image-metadata) or [generating a password](/tool/password-generator), the file and the secret stay on your machine.`,
   },
 
   {
@@ -89,6 +95,12 @@ Every tool on NextTool is built the second way, which is why there are no size l
     tags: ['exif', 'metadata', 'photos', 'gps'],
     published: '2026-08-19',
     relatedTools: ['image-metadata', 'image-convert', 'image-compressor', 'pdf-metadata'],
+    takeaways: [
+      'A photo can carry GPS coordinates, a timestamp, the device model and even the camera body serial number.',
+      'The embedded thumbnail is not always regenerated when the main image is edited, so a cropped photo can still contain the original.',
+      'Platforms strip metadata inconsistently, and stripping on upload does not help a file you send directly.',
+      'Documents carry the same problem in a different place: author names, revision counts and editing time.',
+    ],
     body: `Every photo your phone or camera takes is accompanied by a block of metadata called EXIF, written into the file alongside the pixels. It is invisible in normal viewing and often more revealing than the image.
 
 ## What is in there
@@ -161,6 +173,12 @@ Take a photo with your phone right now and inspect it. Most people are surprised
     tags: ['privacy', 'uploads', 'data-retention'],
     published: '2026-08-26',
     relatedTools: ['pdf-compress', 'pdf-merge', 'image-compressor', 'pdf-redact'],
+    takeaways: [
+      'A single upload is written in several places: the application server, object storage, log files at several layers, and backups.',
+      'Deleted after one hour normally means the primary copy. Backup snapshots and log entries outlive it.',
+      'Terms of service frequently grant a licence to process the file and name subprocessors you have never heard of.',
+      'Match the care to the document. A meme and a medical record do not deserve the same default.',
+    ],
     body: `Free online converters are useful and enormously popular. It is worth understanding what happens after you click upload, not because these services are malicious, but because the ordinary architecture of a web service creates more copies than most people picture.
 
 ## The journey
@@ -239,6 +257,12 @@ That is the whole test, and it is worth doing once for any tool you use regularl
     tags: ['cookies', 'tracking', 'fingerprinting', 'gdpr'],
     published: '2026-09-02',
     relatedTools: ['user-agent-parser', 'url-parser', 'secure-notes'],
+    takeaways: [
+      'First-party cookies keep you logged in. Third-party cookies were what followed you between sites.',
+      'As third-party cookies decline, tracking has moved to server-side tagging and first-party identifiers, which are harder to see.',
+      'Fingerprinting uses properties of your device, so clearing cookies does not reset it.',
+      'Blocking third-party cookies, using a content blocker and turning on tracking protection are what actually help.',
+    ],
     body: `Cookies are small pieces of text a site asks your browser to store and send back on later requests. HTTP is stateless, so without them a site could not keep you logged in between two clicks. They are infrastructure, not surveillance, the surveillance comes from how some of them are used.
 
 ## First-party and third-party
@@ -301,6 +325,511 @@ Total avoidance of tracking on the web is not achievable without giving up most 
 
 Blocking third-party cookies and running a content blocker takes five minutes and removes the large majority of routine cross-site tracking. That is a good return.
 
-And for the narrower question of what a *tool* does with your data, the strongest answer is not a policy but an architecture: if a tool never receives your file, there is no retention question to ask. That is the standard the rest of this site is built to.`,
+And for the narrower question of what a *tool* does with your data, the strongest answer is not a policy but an architecture: if a tool never receives your file, there is no retention question to ask. That is the standard the rest of this site is built to. For the narrower thing you can do today, a [URL parser](/tool/url-parser) shows you which tracking parameters a link is carrying before you share it, and [secure notes](/tool/secure-notes) keep their contents in your own browser rather than in an account.`,
+  },
+
+  {
+    slug: 'what-your-browser-announces',
+    title: 'What your browser announces before you click anything',
+    description: 'The user agent string, the headers and the capability list your browser sends on every request, and how little of it you can change.',
+    excerpt: 'Chrome on Windows identifies itself as Mozilla, Safari and Gecko all at once. The reason is thirty years of websites guessing wrong.',
+    category: 'privacy',
+    tags: ['user-agent', 'fingerprinting', 'headers'],
+    published: '2026-09-13',
+    relatedTools: ['user-agent-parser', 'url-parser', 'mime-checker'],
+    takeaways: [
+      'Every user agent string claims to be Mozilla, because sites used to sniff for it and serve worse pages to anything else.',
+      'The user agent alone is weak identification, but combined with screen size, fonts and timezone it becomes a near-unique fingerprint.',
+      'Browsers are freezing and reducing the user agent string precisely because it became a tracking vector.',
+      'Feature detection is both more reliable and less privacy-invasive than parsing the user agent.',
+    ],
+    body: `Here is what Chrome on Windows sends on every single request:
+
+\`\`\`
+Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36
+(KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36
+\`\`\`
+
+It claims to be Mozilla, and AppleWebKit, and like Gecko, and Safari. Only one of those words is accurate, and the string is a fossil record of thirty years of browsers lying to websites that were checking the wrong thing.
+
+## Why it is nonsense
+
+Netscape shipped as Mozilla/2.0 and supported frames. Sites started checking for "Mozilla" before serving framed pages. When Internet Explorer arrived supporting frames too, sites served it the degraded version, so IE added "Mozilla" to its own string.
+
+The same thing happened repeatedly. Safari claimed KHTML compatibility. Chrome claimed both WebKit and Safari. Every browser accumulated the tokens of its predecessors, because sniffing code kept excluding anything it did not recognise.
+
+The lesson generalises: **detecting a browser by name has always been a bad idea, and the string is unreliable precisely because so many people did it.**
+
+A [user agent parser](/tool/user-agent-parser) is genuinely useful for reading a log entry and working out what a visitor was running. It is the wrong basis for deciding what code to serve them. For that, test for the feature you actually need, because the answer is then correct by construction and does not need updating when a new browser appears.
+
+## It is also a fingerprint
+
+The user agent on its own is weak identification. Millions of people share the exact same string.
+
+The problem is that it does not travel alone. Every request carries headers, and every page can query dozens of properties: screen resolution, colour depth, timezone, installed fonts, language preferences, hardware concurrency, the precise way your GPU renders a test image, the way your audio stack processes a waveform.
+
+None of these identifies you. Combined, they very often do. The Electronic Frontier Foundation's Panopticlick work demonstrated years ago that a browser configuration is frequently unique across very large populations.
+
+> [!WARNING]
+> This is why fingerprinting is harder to escape than cookies. There is nothing to delete. The identifiers are emergent properties of your device, and clearing your browsing data changes none of them.
+
+There is a genuine irony here: a rare browser configuration, or a heavily customised privacy setup, can make you *more* identifiable than a default one, because uniqueness is the thing being measured.
+
+## What browsers are doing about it
+
+Because the user agent became a tracking vector with little legitimate use, vendors are actively reducing it.
+
+Chrome has frozen most of the string: the operating system version is reported as a fixed value, and the minor version digits are always zeros. Safari has reported an essentially static string for years. Firefox rounds and freezes several values, and in stricter modes reports a generic platform.
+
+The replacement is User-Agent Client Hints, where the browser sends only low-entropy basics by default and a site must explicitly request more. That request is visible and can be refused, which is the meaningful difference.
+
+The practical consequence for anyone parsing these: **the precise OS version you see in a log is increasingly fictional.** Analytics broken down by minor browser version is measuring an artefact.
+
+## The other things a request carries
+
+Beyond the user agent, every request includes headers worth knowing about.
+
+\`Accept-Language\` sends your language preferences in order, which is a surprisingly strong signal. A preference list of English, Gujarati, Hindi narrows a population considerably.
+
+\`Referer\` tells the destination which page you came from, including the full URL unless a referrer policy limits it. This is why putting a secret in a URL leaks it: the next site you click through to receives that URL in a header.
+
+\`Accept\` lists the content types the browser will take, which is where [MIME types](/tool/mime-checker) come back in. The server uses it to decide what to send, and it differs enough between browsers to be another fingerprint component.
+
+And the URL itself carries more than people expect. Tracking parameters like \`utm_source\`, \`fbclid\` and \`gclid\` are appended by the sites you came from and travel with the link when you share it. A [URL parser](/tool/url-parser) that breaks a link into components is the quickest way to see what you would actually be forwarding, and most of those parameters can be deleted without breaking the link.
+
+## What actually helps
+
+Given that fingerprinting resists the usual countermeasures, the honest list is short.
+
+**Use a mainstream browser in a mainstream configuration.** Blending in beats standing out.
+
+**Use a browser that actively resists fingerprinting.** Firefox with resist-fingerprinting, Safari, or Tor Browser, all of which deliberately return generic values so that many users look identical.
+
+**Reduce the number of parties asking.** A content blocker does not change your fingerprint, and it does cut how many third parties get to collect it.
+
+**Strip tracking parameters before sharing a link.** This one is entirely within your control and takes seconds.
+
+What does not help is randomising values with an extension, which usually makes you more distinctive rather than less, in the same way that a disguise nobody else is wearing is not camouflage.
+
+Parsing a user agent or a URL is string manipulation, so the [parser](/tool/user-agent-parser) and [URL parser](/tool/url-parser) here run in your own browser. Given that the strings people paste into online parsers come from their own server logs, complete with visitor IPs and session identifiers, that is not a trivial distinction.`,
+  },
+
+  {
+    slug: 'a-backup-that-actually-works',
+    title: 'A backup that works when you need it',
+    description: 'Most backup plans fail in the same three ways: one copy, same building, never tested. The 3-2-1 rule exists because of each.',
+    excerpt: 'Sync is not backup. If a file is deleted or encrypted on your laptop, the service faithfully deletes or encrypts it everywhere else too.',
+    category: 'privacy',
+    tags: ['backup', 'storage', 'ransomware'],
+    published: '2026-09-12',
+    relatedTools: ['zip-creator', 'file-checksum', 'batch-zip', 'secure-notes'],
+    takeaways: [
+      'Sync replicates mistakes. A deletion or an encryption propagates to every synced device within seconds.',
+      '3-2-1 means three copies, on two kinds of media, with one off-site, and each number fixes a specific failure.',
+      'A backup you have never restored from is a hypothesis, not a backup.',
+      'Checksums are what let you prove a restored file is identical to the original rather than assuming it.',
+    ],
+    body: `Someone deletes a folder on Monday. On Tuesday they discover it, open their cloud drive, and find the folder deleted there too. The sync worked perfectly. That was the problem.
+
+## Sync is not backup
+
+This is the misunderstanding that costs the most data, and it is easy to hold because the two look identical day to day.
+
+**Sync** makes every device match. It is a mirror. Delete a file, corrupt a file, or have ransomware encrypt a file, and that change is faithfully propagated everywhere within seconds. The mirror is doing its job.
+
+**Backup** keeps a copy of how things were at a point in the past, independent of what happens to the original.
+
+Most consumer sync services do keep version history, typically 30 days, which covers accidental deletion if you notice quickly. It does not cover the folder you deleted eight months ago, the corruption you did not spot, or an account you lose access to.
+
+## What 3-2-1 is actually for
+
+**Three copies.** The original plus two backups. Two copies means one failure away from one copy, and drives fail in pairs more often than intuition suggests, especially if they were bought together and have run the same hours.
+
+**Two different media.** An external drive and cloud storage, or a drive and a NAS. The point is uncorrelated failure modes: a power surge, a bad firmware update or a filesystem bug will not hit two unlike systems the same way.
+
+**One off-site.** This is the one people skip, and it is the one that covers fire, flood and theft. An external drive sitting next to the laptop is in the same building as the thing it is protecting against.
+
+Each number answers a distinct failure. Dropping any one leaves that failure uncovered.
+
+## Ransomware changes one rule
+
+Ransomware encrypts everything it can reach, including attached drives and mapped network shares. A backup drive that is permanently plugged in is not a backup against it.
+
+So the useful addition is **one copy that is offline or immutable**: a drive that is unplugged between backups, or cloud storage with object-lock or versioning that the client credentials cannot override.
+
+> [!WARNING]
+> If your backup is reachable and writable from the machine being backed up, at all times, it shares that machine's fate. Rotation between two drives, with one always disconnected, costs nothing and solves it.
+
+## Archiving before you copy
+
+For a set of files going into cold storage, bundling them is worth doing for reasons that are not about size.
+
+A [zip archive](/tool/zip-creator) preserves the folder structure, keeps filenames and text encodings intact, and gives every entry a CRC-32 checksum so a damaged archive fails loudly on extraction instead of yielding quietly corrupt files.
+
+Just do not expect it to save space. Photographs, video and Office documents are already compressed and will not shrink; [text, CSV and logs](/blog/what-actually-compresses-in-a-zip) genuinely will.
+
+If you would rather keep files individually restorable, [batch zipping](/tool/batch-zip) produces one archive per item, which means a single corrupt archive costs you one document rather than the set.
+
+## Verifying, which is the part that gets skipped
+
+A copy that completed without an error message is not the same as a copy that is correct. Media degrades, transfers truncate, and filesystems occasionally lie.
+
+A [checksum](/tool/file-checksum) settles it. Hash the original, hash the restored copy, compare. Identical hashes mean identical bytes, with certainty rather than optimism. This is the same mechanism as [verifying a download](/blog/verify-a-download-with-checksums), applied to your own files.
+
+> [!TIP]
+> Store a plain text file of checksums alongside the archive. Years later that file is what tells you whether the data is still intact, and it costs a few kilobytes.
+
+## Restore, or it is not a backup
+
+The single most common discovery during a real incident is that the backup has been silently failing for months, or that nobody knows the passphrase, or that the archive needs software no longer installed.
+
+A restore test is not elaborate. Twice a year, pick a few files at random, restore them somewhere else, open them, and checksum them against the originals. That is the entire exercise, and it converts a backup from an assumption into a fact.
+
+While you are there, check that you can still get in. Encryption passphrases, recovery codes and account credentials all need to be recoverable **without** access to the machine you are restoring. A password manager on the dead laptop is not available; [encrypted notes](/tool/secure-notes) stored in your browser are on that machine too. Recovery codes belong on paper, somewhere else.
+
+## A plan that fits an evening
+
+1. Decide what genuinely matters. Documents, photos, tax records, keys. Not the operating system, which is reinstallable.
+2. Turn on version history in whatever cloud storage you already use. That is copy one.
+3. Get an external drive, copy everything, unplug it. That is copy two, offline.
+4. Archive anything historical with [zip](/tool/zip-creator) and write a [checksum](/tool/file-checksum) list next to it.
+5. Put recovery codes and passphrases on paper, somewhere other than your desk.
+6. Diary a restore test for six months from now.
+
+Step six is the one that decides whether any of the rest was worth doing.`,
+  },
+
+  {
+    slug: 'browser-permissions-and-extensions',
+    title: 'What you agree to when you install a browser extension',
+    description: 'An extension asking to read and change all your data on all websites is asking for exactly that, including your banking session.',
+    excerpt: 'Extensions run inside every page you open. A popular one changing hands is a supply-chain event, and it happens regularly.',
+    category: 'privacy',
+    tags: ['extensions', 'permissions', 'browser'],
+    published: '2026-09-13',
+    relatedTools: ['image-metadata', 'user-agent-parser', 'secure-notes', 'url-parser'],
+    takeaways: [
+      'Read and change all your data on all websites means the extension can read any page you are logged into.',
+      'Extensions update silently, so the code you audited is not necessarily the code running tomorrow.',
+      'Popular extensions get bought, and the buyer inherits the install base and the permissions.',
+      'Site access can be narrowed to on click or specific sites, which removes most of the exposure.',
+    ],
+    body: `You install an extension and a dialog says it can "read and change all your data on all websites". You click Add, because everything says that.
+
+It is not boilerplate. It is an accurate description, and it includes the tab where you are logged into your bank.
+
+## Where extension code runs
+
+An extension with broad host permissions injects content scripts into pages as they load. That script sits inside the page, with the page's DOM and the page's session.
+
+Concretely, it can read anything rendered on screen, including account balances, message contents and personal details; read form fields as you type, including passwords before submission; see every URL you visit, which is a complete browsing history; and modify the page, which means inserting or altering links and content.
+
+The session cookie does not need to be stolen for any of this. The extension is already inside a page you have authenticated.
+
+## Permissions, roughly ranked
+
+| Permission | What it allows |
+|---|---|
+| \`<all_urls>\` / all sites | Everything above, everywhere |
+| \`tabs\` | URLs and titles of every open tab |
+| \`webRequest\` | Observe and modify network traffic |
+| \`cookies\` | Read cookies, including session tokens |
+| \`downloads\` | See and initiate downloads |
+| \`storage\` | Local storage only, low risk |
+| \`activeTab\` | The current tab, only after you click the icon |
+
+\`activeTab\` is the one worth knowing about, because it is what a well-built extension asks for. It grants access only to the tab you are on, only when you have explicitly invoked the extension. An extension that needs to act on demand does not need standing access to everything.
+
+## The part that makes it a supply-chain problem
+
+An extension you audited on the day you installed it is not the code running now.
+
+**Updates are silent and automatic.** A new version ships with the same permissions and no prompt.
+
+**Extensions get sold.** A developer with a few hundred thousand users receives an offer; the buyer inherits the install base, the permissions and the update channel. This has repeatedly produced extensions that were genuinely useful for years and then began injecting affiliate links, or exfiltrating browsing history, or worse.
+
+**Developer accounts get phished.** A compromised account pushes a malicious update through the legitimate channel.
+
+> [!WARNING]
+> The install decision is not a one-time judgement about today's code. It is standing trust in whoever controls that extension for as long as it stays installed. Treat a large install count as a reason for more caution rather than less, because it is what makes an extension worth buying or attacking.
+
+## Reducing the exposure without giving up extensions
+
+**Narrow the site access.** Both Chrome and Firefox let you change an extension from "on all sites" to "on click" or to a specific list, in the extension's own settings. A grammar checker does not need access to your bank. This one change removes most of the risk and usually costs nothing in functionality.
+
+**Audit what is installed, twice a year.** Remove anything you have not deliberately used. Every installed extension is a standing permission grant, whether you use it or not.
+
+**Check before installing.** When it was last updated, whether the developer is identifiable, whether the permissions match what it claims to do. A "dark mode" extension requesting \`webRequest\` and \`cookies\` is asking for things dark mode does not need.
+
+**Prefer a page you visit over code that watches every page.** This is the honest argument for doing one-off jobs on a site rather than installing a utility extension for them: a page you open has no access to anything except itself, and none when you close the tab.
+
+## The page permissions, separately
+
+Beyond extensions, individual sites request camera, microphone, location, notifications and clipboard access. These are per-site, revocable, and worth reviewing occasionally in your browser's site settings, where you will usually find a handful of grants you made once and forgot.
+
+Location is the one to look at hardest. Precise location is rarely needed by anything that is not a map, and browsers will let you deny it permanently per site rather than being asked each visit.
+
+## What files still give away
+
+None of the above changes what is inside the files you share, which is a separate and often larger leak. Photographs carry [EXIF metadata](/blog/exif-metadata-in-your-photos) including GPS coordinates and device identifiers; documents carry author names and revision history. [Stripping image metadata](/tool/image-metadata) before posting is a habit worth having regardless of how locked down your browser is, because that information travels with the file rather than with the session.
+
+And when you are checking where a link actually goes before granting it anything, a [URL parser](/tool/url-parser) shows you the real host rather than the one the text claims.`,
+  },
+
+  {
+    slug: 'what-incognito-mode-does-not-do',
+    title: 'Private browsing: what it hides, and from whom',
+    description: 'Incognito mode hides your activity from other people using your device. It hides nothing from the sites, your employer or your provider.',
+    excerpt: 'Private browsing is local amnesia, not invisibility. The confusion is common enough that Chrome had to rewrite its own warning screen.',
+    category: 'privacy',
+    tags: ['incognito', 'private-browsing', 'tracking'],
+    published: '2026-09-12',
+    relatedTools: ['url-parser', 'image-metadata', 'secure-notes', 'user-agent-parser'],
+    takeaways: [
+      'Private mode stops history, cookies and form data being written to your device. That is the whole feature.',
+      'Your employer, your network and every site you visit see exactly the same as they would normally.',
+      'Logging into an account in private mode identifies you completely, which defeats the point.',
+      'Downloads and bookmarks you save during the session survive it.',
+    ],
+    body: `Private browsing is one of the most misunderstood features in any browser, to the point that Google was sued over the wording of Chrome's own disclaimer and changed it.
+
+The feature itself is simple and narrow. The misunderstanding is about who it protects you from.
+
+## What it actually does
+
+Open a private window and the browser stops writing certain things to disk for that session:
+
+- **Browsing history**, not recorded.
+- **Cookies and site data**, kept in memory and discarded when the window closes.
+- **Form entries and search bar suggestions**, not saved.
+- **Cached files**, not retained.
+
+You also start logged out of everything, because the session begins with an empty cookie jar.
+
+That is the entire feature. It is **local amnesia**: your device forgets. Nothing about the network changes.
+
+## Who still sees everything
+
+| Who | Sees what |
+|---|---|
+| The websites you visit | Everything, exactly as normal |
+| Your internet provider | Every domain you connect to |
+| Your employer or school on their network | The same |
+| A network administrator | The same |
+| Anyone with a device management profile | Potentially everything |
+
+The point is worth repeating because it is the whole misconception: **private browsing hides your activity from other people using the same device, and from nobody else.**
+
+Which makes it genuinely useful for buying a present on a shared laptop, testing whether a site behaves differently for a logged-out visitor, or signing into a second account without disturbing the first. Those are real uses and they are all local.
+
+## The self-defeating part
+
+The moment you log into an account in a private window, you have identified yourself to that service completely. The session is anonymous to your browser history and not to the site.
+
+Searching while signed into a search account, or visiting a site where you then log in, associates the entire session with you. People frequently do this and believe the mode is still protecting something.
+
+## Fingerprinting is unaffected
+
+Private mode gives you a fresh cookie jar. It does not give you a fresh device.
+
+Screen resolution, installed fonts, time zone, language preferences, graphics rendering behaviour and hardware details are all the same in a private window as in a normal one, and the combination is frequently unique. This is the mechanism described in [what your browser announces](/blog/what-your-browser-announces), and clearing cookies does nothing about it.
+
+So a site that fingerprints can often recognise a private-window visitor as the same device that visited yesterday.
+
+> [!NOTE]
+> A VPN does not fix this either, for the same reason. It changes your IP address and leaves every device property intact, which is the trade-off set out in [public Wi-Fi and VPNs](/blog/public-wifi-and-vpns).
+
+## Things that survive the session
+
+Two categories persist and surprise people.
+
+**Downloads.** The file stays on your device. The download entry may not appear in the browser's list, but the file is in your downloads folder.
+
+**Bookmarks.** Anything you bookmark during a private session is saved normally.
+
+And a third, less obvious one: if the machine is managed by an employer or school, a device management profile or a monitoring agent can record activity regardless of what mode the browser is in. Private mode is a browser feature and cannot override software sitting underneath it.
+
+## What actually helps, by threat
+
+**Hiding activity from others on your device.** Private mode is exactly right for this.
+
+**Reducing tracking across sites.** A content blocker plus blocking third-party cookies, per [cookies, tracking and what you can control](/blog/cookies-tracking-and-what-you-can-control). Private mode helps only within a single session.
+
+**Hiding which sites you visit from your network.** Encrypted DNS, or a VPN if you accept moving the visibility to the provider.
+
+**Keeping what you send private.** HTTPS already does this, in every mode.
+
+**Not being identified by a file you send.** Nothing about browsing mode touches this. A photograph still carries [its metadata](/blog/exif-metadata-in-your-photos), which is why [stripping it](/tool/image-metadata) is a separate habit worth having.
+
+**Checking where a link goes before clicking.** A [URL parser](/tool/url-parser) reads the real host, which is unaffected by browsing mode either way.
+
+The honest summary: private browsing does one thing well, that thing is local, and almost every privacy concern people open it for is somewhere else entirely.`,
+  },
+
+  {
+    slug: 'email-tracking-pixels',
+    title: 'How an email knows you opened it',
+    description: 'A one-pixel image and a rewritten link are enough to record when you read a message, where you were and what you clicked.',
+    excerpt: 'Every link in a marketing email usually points at the sender, not the destination. That redirect is what records the click.',
+    category: 'privacy',
+    tags: ['email', 'tracking', 'pixels', 'links'],
+    published: '2026-09-13',
+    relatedTools: ['extract-urls', 'url-parser', 'html-markdown', 'text-cleaner'],
+    takeaways: [
+      'A tracking pixel is a unique image URL, so loading it tells the sender you opened the message and roughly where you were.',
+      'Blocking remote images stops open tracking almost entirely, and most mail clients now do it by default.',
+      'Links are usually rewritten to route through the sender, so the click is recorded even with images off.',
+      'Apple Mail Privacy Protection preloads images for everyone, which makes open rates largely meaningless now.',
+    ],
+    body: `You open an email and do nothing else. The sender now knows you opened it, approximately when, roughly where you were, and what you read it on.
+
+There was no script involved. Email clients do not run JavaScript. It was an image.
+
+## The pixel
+
+Buried in the message is an image tag like this:
+
+\`\`\`html
+<img src="https://track.example.com/o/a8f3d2c1b9.gif" width="1" height="1">
+\`\`\`
+
+The image is a transparent 1x1 pixel, invisible in the message. The interesting part is the filename, which is unique to you and this campaign.
+
+When your client fetches that image, the sender's server records the request. From it they learn that recipient \`a8f3d2c1b9\` opened the message, the timestamp, the IP address which gives approximate location, and the user agent, which gives client and platform, as parsed in [what your browser announces](/blog/what-your-browser-announces).
+
+Some senders go further and fire the pixel on every open, which gives them a re-read count, and some embed it in a CSS background rather than an image tag to survive naive blocking.
+
+## Link tracking is separate and harder to avoid
+
+Blocking images stops the pixel. It does not stop the other half.
+
+Almost every link in a commercial email is rewritten to point at the sender's own domain first:
+
+\`\`\`
+You see:  Read the article
+It is:    https://click.example.com/r/a8f3d2c1b9?u=https%3A%2F%2Freal-site.com%2Farticle
+\`\`\`
+
+Clicking hits the sender's server, which records the click against your identifier and then redirects you to the real destination. It happens in a fraction of a second and you land where you expected.
+
+The destination URL is usually sitting right there in the query string, percent-encoded. A [URL parser](/tool/url-parser) will show you both the tracking host and the real target, which is the same reading exercise as in [what you are actually sharing when you paste a link](/blog/cleaning-a-url-before-sharing).
+
+And the URL you arrive at typically carries campaign parameters, often including one that identifies you individually, such as Mailchimp's \`mc_eid\`. Forwarding that link passes your identity along with it.
+
+## What blocks what
+
+| Defence | Stops pixels | Stops link tracking |
+|---|---|---|
+| Block remote images | Yes | No |
+| Apple Mail Privacy Protection | Effectively | No |
+| Plain text view | Yes | No |
+| Copy the link and strip parameters | n/a | Yes |
+| A content blocker in a webmail tab | Partly | Partly |
+
+Blocking remote images is the single most effective setting, and most clients now default to it. The cost is that legitimate images do not load until you allow them, which is a small and visible cost.
+
+> [!NOTE]
+> Apple's Mail Privacy Protection takes a different approach: it preloads **every** image through a proxy for **every** message, whether you open it or not. The sender sees an open from a generic Apple address either way, which makes the signal worthless rather than hidden. Since Apple Mail is a large share of the market, reported open rates across the industry are now substantially fiction.
+
+## Checking a message yourself
+
+If you want to know what a particular email is doing, the answer is in its source. Most clients offer "view source" or "show original".
+
+Two things to look for. Any \`<img>\` with a width and height of 1, or with a long random string in the filename, is a pixel. And every link whose host is not the host you would expect is a redirect.
+
+Pulling all of them out at once is what [URL extraction](/tool/extract-urls) is for, and converting the HTML to [Markdown](/tool/html-markdown) is a quick way to see the link targets as plain text rather than reading raw markup.
+
+## Read receipts are a different thing
+
+A read receipt is a formal request, defined in the mail standards, asking your client to send a confirmation. Your client asks you first, and you can say no.
+
+The distinction is consent. A read receipt requests permission. A tracking pixel takes the measurement without asking, and there is no prompt because there is nothing to prompt about: from your client's point of view it is loading an image.
+
+## A proportionate response
+
+- **Turn off automatic image loading.** One setting, most of the benefit.
+- **Use the web version of a newsletter** when you actually want the images, rather than allowing them in the message.
+- **Copy and clean links** before sharing them onward, so you do not pass your own identifier to other people.
+- **Unsubscribe rather than delete.** A sender who knows you never open anything is a sender who eventually stops, and the unsubscribe link in a legitimate email is genuine.
+
+None of this is worth being anxious about for a newsletter you signed up for. It is worth knowing about for the message you were not expecting, because in that case the open itself confirms a live address, which is the same reasoning as in [reading a link before you click it](/blog/spotting-a-dangerous-link).`,
+  },
+
+  {
+    slug: 'saving-a-web-page-properly',
+    title: 'Saving a web page so it is still readable later',
+    description: 'Bookmarks break, screenshots are not searchable and Save As often produces a folder that no longer renders. Each has a fix.',
+    excerpt: 'A bookmark saves an address, not a page. When the page changes or disappears, the bookmark points at nothing.',
+    category: 'privacy',
+    tags: ['archiving', 'bookmarks', 'pdf', 'offline'],
+    published: '2026-09-14',
+    relatedTools: ['html-to-pdf', 'html-markdown', 'text-to-pdf', 'pdf-ocr'],
+    takeaways: [
+      'A bookmark stores a URL. If the page is edited or removed, the bookmark preserves nothing.',
+      'PDF keeps the appearance and stays searchable, which makes it the right default for evidence.',
+      'Markdown keeps the words and structure in a tiny, durable, diffable file.',
+      'A screenshot keeps neither searchable text nor structure, so use it only alongside something else.',
+    ],
+    body: `You bookmark a page with terms you will need later. Eight months on the link resolves to a redesigned page with different terms, or to a 404.
+
+A bookmark stores an address. If you needed the content, you did not save it.
+
+## Four ways to keep a page, and what each preserves
+
+| Method | Appearance | Searchable text | Survives redesign | Size |
+|---|---|---|---|---|
+| Bookmark | No | No | No | Nothing |
+| Screenshot | Yes, partially | No | Yes | Large |
+| PDF | Yes | Yes | Yes | Moderate |
+| Markdown | No | Yes | Yes | Tiny |
+
+The two that are actually worth using are PDF and Markdown, and which one depends on whether you need the page to look like itself.
+
+## PDF, when the appearance is part of the point
+
+Printing to PDF captures layout, images and text in one file that opens anywhere and stays searchable. For a receipt, a price, a policy or anything you might need to show somebody, this is the right choice.
+
+Converting a web page to PDF has a few known rough edges, covered in [making a PDF out of HTML](/blog/making-a-pdf-from-something-else). The short version: a web page has no page breaks, so they get invented, and tables and headings land badly across the boundaries. Backgrounds are usually dropped, and sticky headers either repeat on every page or appear once.
+
+Two things that help. Use the reader view before converting, if the browser has one, because fewer elements means fewer things to break across a page boundary. And set the page size deliberately, since A4 and Letter differ enough to move every break.
+
+For a page you have as HTML rather than as a live URL, [HTML to PDF](/tool/html-to-pdf) does the same conversion locally.
+
+> [!TIP]
+> If the archive is a screenshot or a photograph of a screen rather than a real page, it contains no text at all. [Running OCR](/tool/pdf-ocr) adds a searchable layer underneath, which is the difference between a file you can find again and one you have to remember the existence of.
+
+## Markdown, when you want the words to last
+
+Converting a page to [Markdown](/tool/html-markdown) throws away the design and keeps the headings, lists, links and emphasis as plain text.
+
+The result is a few kilobytes, opens in any editor, and will still open in thirty years. It is also diffable, so you can compare the version you saved against the page as it stands now and see exactly what changed, which is the argument made in [writing in Markdown](/blog/markdown-as-a-document-source).
+
+That is the right format for reference material, documentation and anything going into a notes system. It is the wrong format for a receipt, because a receipt is partly its appearance.
+
+For something already in plain text, such as a terms document you copied, [text to PDF](/tool/text-to-pdf) produces a paginated file that prints predictably.
+
+## What the browser's own Save As does
+
+Complete Web Page saves an HTML file plus a folder of assets. It is fragile: the folder and the file must stay together, absolute URLs still point outward, and a page that builds itself with JavaScript saves as an empty shell.
+
+MHTML bundles everything into one file, which solves the folder problem and is not portable across browsers.
+
+Neither is a good archive format. Both are fine for reading something offline tomorrow.
+
+## The habit that matters more than the format
+
+**Save the content at the moment you decide it matters**, not later.
+
+Pages are edited without notice, paywalls appear, domains lapse, and an address that resolves today may not next year. The cost of saving is a few seconds; the cost of not saving is that the thing you needed is gone and you have a bookmark proving you once had it.
+
+A file naming convention makes the archive usable rather than a folder of \`document (3).pdf\`. As set out in [file names that survive](/blog/naming-files-that-survive), an ISO date at the front plus a hyphenated description sorts chronologically everywhere:
+
+\`\`\`
+2026-09-14-supplier-terms-and-conditions.pdf
+\`\`\`
+
+And for anything you may need to rely on, record the URL and the date you captured it inside the document itself. A PDF of a page with no address and no date proves very little about where it came from.
+
+For genuinely important pages, a public web archive gives you a third-party timestamped copy, which is worth more as evidence than your own file. Doing both costs nothing: theirs for the timestamp, yours for the certainty that it still exists.`,
   },
 ];

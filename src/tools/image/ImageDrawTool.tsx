@@ -3,12 +3,11 @@ import {
   PenLine, Eraser, Undo2, Redo2, Trash2, Download, X, Image as ImageIcon,
   MousePointer2, Square, Circle, Star, Minus, MoveRight, Type, Delete,
   ZoomIn, ZoomOut, Maximize2, Copy, ArrowUp, ArrowDown, SlidersHorizontal, RefreshCw,
-  CheckCircle2, Shapes,
+  CheckCircle2, Shapes, Upload, ClipboardPaste, Lock, Settings2, Paintbrush, MoveUpRight,
 } from 'lucide-react';
-import { DropZone, ErrorNotice } from './ImageShared';
-import { Select } from '../../components/Select';
+import { ErrorNotice } from './ImageShared';
 import {
-  loadImage, canvasExport, downloadBlob, baseNameFrom,
+  loadImage, canvasExport, downloadBlob, baseNameFrom, formatBytes,
 } from './ImageUtils';
 import { errorMessage } from '../../utils/errorMessage';
 
@@ -17,18 +16,12 @@ const HISTORY_LIMIT = 30;
 const ZOOM_MIN = 0.05;
 const ZOOM_MAX = 4;
 
-const EXPORT_FORMATS = [
-  { value: 'image/png', label: 'PNG (lossless, keeps transparency)' },
-  { value: 'image/jpeg', label: 'JPG (smaller, no transparency)' },
-  { value: 'image/webp', label: 'WebP (smallest)' },
-];
-
 const TOOL_ORDER: { id: ToolId; label: string; shortcut: string; Icon: React.ElementType }[] = [
-  { id: 'select', label: 'Select', shortcut: 'V', Icon: MousePointer2 },
-  { id: 'brush', label: 'Brush', shortcut: 'B', Icon: PenLine },
+  { id: 'select', label: 'Pointer', shortcut: 'V', Icon: MousePointer2 },
+  { id: 'brush', label: 'Brush', shortcut: 'B', Icon: Paintbrush },
   { id: 'eraser', label: 'Eraser', shortcut: 'E', Icon: Eraser },
   { id: 'shapes', label: 'Shapes', shortcut: 'S', Icon: Shapes },
-  { id: 'arrow', label: 'Arrow', shortcut: 'A', Icon: MoveRight },
+  { id: 'arrow', label: 'Arrow', shortcut: 'A', Icon: MoveUpRight },
   { id: 'text', label: 'Text', shortcut: 'T', Icon: Type },
 ];
 
@@ -43,7 +36,7 @@ const TYPE_META: Record<DrawObject['type'], { label: string; Icon: React.Element
 };
 
 const HINT_BY_TOOL: Record<ToolId, string> = {
-  select: 'Click an object to select it, then drag to move. Del removes the selection.',
+  select: 'Click an object to select it, drag to move, or drag a handle to resize (Shift keeps the ratio).',
   brush: 'Click and drag to draw a freehand brush stroke.',
   eraser: 'Click or drag over objects to erase them. Objects are removed as a whole.',
   shapes: 'Pick a shape on the right, then drag on the image to draw it.',
@@ -63,6 +56,15 @@ const TOOL_KEYS: Record<string, ToolId> = {
 };
 
 type ToolId = 'select' | 'brush' | 'eraser' | 'shapes' | 'arrow' | 'text';
+
+type ShapeKind = 'rect' | 'ellipse' | 'star' | 'line';
+
+const SHAPE_KINDS: { id: ShapeKind; label: string; Icon: React.ElementType }[] = [
+  { id: 'rect', label: 'Rectangle', Icon: Square },
+  { id: 'ellipse', label: 'Ellipse', Icon: Circle },
+  { id: 'star', label: 'Star', Icon: Star },
+  { id: 'line', label: 'Line', Icon: Minus },
+];
 
 interface Point { x: number; y: number; }
 
@@ -148,27 +150,55 @@ const HdrBtn: React.FC<{
   </button>
 );
 
+const MenuItem: React.FC<{
+  onClick: () => void;
+  shortcut?: string;
+  disabled?: boolean;
+  danger?: boolean;
+  Icon: React.ElementType;
+  children: React.ReactNode;
+}> = ({ onClick, shortcut, disabled, danger, Icon, children }) => (
+  <button
+    type="button"
+    disabled={disabled}
+    onClick={onClick}
+    className={`w-full h-8 px-2.5 rounded-lg flex items-center gap-2.5 text-left text-xs transition-colors
+      ${danger
+        ? 'text-rose-500 dark:text-rose-400 hover:bg-rose-500/10'
+        : 'text-muted-foreground hover:bg-muted dark:hover:bg-white/[0.06]'}
+      disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-transparent`}
+  >
+    <Icon className="w-3.5 h-3.5 shrink-0" />
+    <span className="flex-1 truncate">{children}</span>
+    {shortcut && <kbd className="font-mono text-[10px] opacity-60 shrink-0">{shortcut}</kbd>}
+  </button>
+);
+
+const MenuSep: React.FC = () => <div className="my-1 h-px bg-border dark:bg-white/[0.08]" />;
+
 const RailBtn: React.FC<{
   active: boolean;
   onClick: () => void;
   title: string;
   shortcut?: string;
   disabled?: boolean;
+  label?: string;
   children: React.ReactNode;
-}> = ({ active, onClick, title, shortcut, disabled, children }) => (
+}> = ({ active, onClick, title, shortcut, disabled, label, children }) => (
   <button
     type="button"
     onClick={onClick}
     title={title}
     aria-label={title}
     disabled={disabled}
-    className={`relative group w-10 h-10 shrink-0 rounded-xl flex items-center justify-center transition-colors border
+    className={`relative group w-11 lg:w-full h-11 lg:h-auto shrink-0 rounded-xl flex flex-col items-center justify-center gap-0.5 lg:py-1.5 transition-colors border
       ${active
-        ? 'dark:bg-primary/20 dark:border-primary/40 dark:text-primary/40 bg-primary-container border-primary/40 text-on-primary-container'
+        ? 'dark:bg-primary/20 dark:border-primary/40 dark:text-primary bg-primary-container border-primary/40 text-on-primary-container'
         : ' dark:hover:bg-white/[0.06] dark:border-transparent text-muted-foreground hover:bg-muted border-transparent'}
       disabled:opacity-40 disabled:cursor-not-allowed`}
   >
     {children}
+    {label && <span className="hidden lg:block text-[9px] font-medium leading-none">{label}</span>}
     {shortcut && (
       <span className="pointer-events-none absolute z-50 whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-150
         left-1/2 -translate-x-1/2 top-full mt-1.5 px-2 py-1 rounded-md text-[10px] font-medium
@@ -293,6 +323,16 @@ function drawObject(ctx: CanvasRenderingContext2D, o: DrawObject, offsetX = 0, o
   ctx.restore();
 }
 
+let measureCtx: CanvasRenderingContext2D | null = null;
+
+/** Real glyph width, so the selection box and handles hug the text. */
+function measureTextWidth(text: string, size: number): number {
+  if (!measureCtx) measureCtx = document.createElement('canvas').getContext('2d');
+  if (!measureCtx) return Math.max(20, text.length * size * 0.62);
+  measureCtx.font = `bold ${size}px Arial, Helvetica, sans-serif`;
+  return Math.max(8, measureCtx.measureText(text).width);
+}
+
 function objectBounds(o: DrawObject): { x: number; y: number; w: number; h: number } {
   switch (o.type) {
     case 'stroke': {
@@ -312,7 +352,7 @@ function objectBounds(o: DrawObject): { x: number; y: number; w: number; h: numb
     case 'arrow':
       return { x: Math.min(o.x1, o.x2), y: Math.min(o.y1, o.y2), w: Math.abs(o.x2 - o.x1), h: Math.abs(o.y2 - o.y1) };
     case 'text':
-      return { x: o.x, y: o.y - o.size, w: Math.max(20, o.text.length * o.size * 0.62), h: o.size * 1.3 };
+      return { x: o.x, y: o.y - o.size, w: measureTextWidth(o.text, o.size), h: o.size * 1.3 };
   }
 }
 
@@ -323,6 +363,75 @@ function distToSegment(px: number, py: number, x1: number, y1: number, x2: numbe
   let t = ((px - x1) * dx + (py - y1) * dy) / lenSq;
   t = Math.max(0, Math.min(1, t));
   return Math.hypot(px - (x1 + t * dx), py - (y1 + t * dy));
+}
+
+type HandleId = 'nw' | 'n' | 'ne' | 'e' | 'se' | 's' | 'sw' | 'w' | 'p1' | 'p2';
+
+const HANDLE_CURSOR: Record<HandleId, string> = {
+  nw: 'nwse-resize', se: 'nwse-resize', ne: 'nesw-resize', sw: 'nesw-resize',
+  n: 'ns-resize', s: 'ns-resize', e: 'ew-resize', w: 'ew-resize',
+  p1: 'crosshair', p2: 'crosshair',
+};
+
+/** Selection handles, in canvas coordinates. Lines/arrows get their two endpoints. */
+function handlesFor(o: DrawObject): { id: HandleId; x: number; y: number }[] {
+  if (o.type === 'line' || o.type === 'arrow') {
+    return [{ id: 'p1', x: o.x1, y: o.y1 }, { id: 'p2', x: o.x2, y: o.y2 }];
+  }
+  const b = objectBounds(o);
+  const x1 = b.x - 4, y1 = b.y - 4, x2 = b.x + b.w + 4, y2 = b.y + b.h + 4;
+  const mx = (x1 + x2) / 2, my = (y1 + y2) / 2;
+  return [
+    { id: 'nw', x: x1, y: y1 }, { id: 'n', x: mx, y: y1 }, { id: 'ne', x: x2, y: y1 },
+    { id: 'e', x: x2, y: my }, { id: 'se', x: x2, y: y2 }, { id: 's', x: mx, y: y2 },
+    { id: 'sw', x: x1, y: y2 }, { id: 'w', x: x1, y: my },
+  ];
+}
+
+/** Rebuild `orig` so the dragged handle sits at `p`. Shift keeps a corner drag proportional. */
+function resizeObject(orig: DrawObject, handle: HandleId, p: Point, shift: boolean): DrawObject {
+  if (orig.type === 'line' || orig.type === 'arrow') {
+    return handle === 'p1' ? { ...orig, x1: p.x, y1: p.y } : { ...orig, x2: p.x, y2: p.y };
+  }
+  const MIN = 4;
+  const b = objectBounds(orig);
+  let x1 = b.x, y1 = b.y, x2 = b.x + b.w, y2 = b.y + b.h;
+  if (handle.includes('w')) x1 = p.x;
+  if (handle.includes('e')) x2 = p.x;
+  if (handle.includes('n')) y1 = p.y;
+  if (handle.includes('s')) y2 = p.y;
+  if (x2 - x1 < MIN) { if (handle.includes('w')) x1 = x2 - MIN; else x2 = x1 + MIN; }
+  if (y2 - y1 < MIN) { if (handle.includes('n')) y1 = y2 - MIN; else y2 = y1 + MIN; }
+  const isCorner = handle.length === 2;
+  if ((shift || orig.type === 'text') && isCorner && b.w > 0 && b.h > 0) {
+    const nh = (x2 - x1) * (b.h / b.w);
+    if (handle.includes('n')) y1 = y2 - nh; else y2 = y1 + nh;
+  }
+  const nw = x2 - x1;
+  const nh = y2 - y1;
+
+  switch (orig.type) {
+    case 'rect':
+    case 'ellipse':
+    case 'star':
+      return { ...orig, x: x1, y: y1, w: nw, h: nh };
+    case 'text': {
+      const factor = b.h > 0 ? nh / b.h : 1;
+      const size = Math.max(6, orig.size * factor);
+      return { ...orig, size, x: x1, y: y1 + size };
+    }
+    case 'stroke': {
+      const sx = b.w > 0 ? nw / b.w : 1;
+      const sy = b.h > 0 ? nh / b.h : 1;
+      return {
+        ...orig,
+        points: orig.points.map(pt => ({ x: x1 + (pt.x - b.x) * sx, y: y1 + (pt.y - b.y) * sy })),
+        size: Math.max(1, orig.size * ((Math.abs(sx) + Math.abs(sy)) / 2)),
+      };
+    }
+    default:
+      return orig;
+  }
 }
 
 function hitObject(o: DrawObject, px: number, py: number): boolean {
@@ -365,12 +474,12 @@ export const ImageDrawTool: React.FC = () => {
   const [tool, setTool] = useState<ToolId>('brush');
   const [color, setColor] = useState('#ef4444');
   const [fillColor] = useState('#6366f1');
+  const [shapeKind, setShapeKind] = useState<ShapeKind>('rect');
   const [size, setSize] = useState(6);
   const [fill, setFill] = useState(false);
   const [opacity, setOpacity] = useState(1);
   const [fontSize, setFontSize] = useState(36);
   const [textValue, setTextValue] = useState('Your text here');
-  const [format, setFormat] = useState('image/png');
   const [objects, setObjects] = useState<DrawObject[]>([]);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [canUndo, setCanUndo] = useState(false);
@@ -385,18 +494,38 @@ export const ImageDrawTool: React.FC = () => {
   const [isPanning, setIsPanning] = useState(false);
   const [spaceHeld, setSpaceHeld] = useState(false);
   const [confirmClear, setConfirmClear] = useState(false);
-  const [saved, setSaved] = useState(false);
+  const [toast, setToast] = useState<string | null>(null);
+  const [isDragging, setIsDragging] = useState(false);
+  const [menu, setMenu] = useState<{ x: number; y: number; targetId: string | null } | null>(null);
+
+  // ── Export options ────────────────────────────────────────────
+  const [exportOpen, setExportOpen] = useState(false);
+  const [exportFormat, setExportFormat] = useState('image/png');
+  const [exportQuality, setExportQuality] = useState(90);
+  const [exportBg, setExportBg] = useState<'transparent' | 'white' | 'custom'>('transparent');
+  const [exportBgColor, setExportBgColor] = useState('#ffffff');
+  const [exportDims, setExportDims] = useState<'current' | 'original' | 'custom'>('current');
+  const [exportW, setExportW] = useState(0);
+  const [exportH, setExportH] = useState(0);
+  const [exportName, setExportName] = useState('drawing');
+  const [exportResult, setExportResult] = useState<{ url: string; blob: Blob; w: number; h: number } | null>(null);
 
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const landingInputRef = useRef<HTMLInputElement>(null);
+  const cameraInputRef = useRef<HTMLInputElement>(null);
+  const originalRef = useRef<{ w: number; h: number } | null>(null);
+  const objectsRef = useRef<DrawObject[]>([]);
   const baseRef = useRef<string | null>(null);
   const bgLayerRef = useRef<HTMLCanvasElement | null>(null);
   const undoRef = useRef<DrawObject[][]>([]);
   const redoRef = useRef<DrawObject[][]>([]);
   const penRef = useRef<{ points: Point[]; color: string; size: number; opacity: number } | null>(null);
-  const previewRef = useRef<{ tool: 'rect' | 'ellipse' | 'line' | 'arrow'; color: string; fillColor: string; size: number; fill: boolean; opacity: number; start: Point; cur: Point } | null>(null);
-  const moveRef = useRef<{ id: string; start: Point; origin: Point } | null>(null);
+  const previewRef = useRef<{ tool: 'rect' | 'ellipse' | 'star' | 'line' | 'arrow'; color: string; fillColor: string; size: number; fill: boolean; opacity: number; start: Point; cur: Point } | null>(null);
+  const moveRef = useRef<{ id: string; last: Point; totalX: number; totalY: number } | null>(null);
+  const resizeRef = useRef<{ id: string; handle: HandleId; orig: DrawObject } | null>(null);
+  const resizeCommittedRef = useRef(false);
   const erasingRef = useRef(false);
   const moveCommittedRef = useRef(false);
   const eraseCommittedRef = useRef(false);
@@ -408,7 +537,15 @@ export const ImageDrawTool: React.FC = () => {
   const panRef = useRef<{ startX: number; startY: number; scrollLeft: number; scrollTop: number } | null>(null);
   const spaceDownRef = useRef(false);
   const cursorRingRef = useRef<HTMLDivElement>(null);
-  const savedTimerRef = useRef<number | null>(null);
+  const toastTimerRef = useRef<number | null>(null);
+
+  useEffect(() => { objectsRef.current = objects; }, [objects]);
+
+  const pushToast = useCallback((msg: string) => {
+    setToast(msg);
+    if (toastTimerRef.current) window.clearTimeout(toastTimerRef.current);
+    toastTimerRef.current = window.setTimeout(() => setToast(null), 2600);
+  }, []);
 
   const pushHistory = useCallback((snapshot: DrawObject[]) => {
     undoRef.current.push(snapshot);
@@ -463,16 +600,37 @@ export const ImageDrawTool: React.FC = () => {
       } as DrawObject);
     }
     const sel = objects.find(o => o.id === selectedId);
-    if (sel && !moveRef.current && !penRef.current && !previewRef.current) {
+    if (sel && !penRef.current && !previewRef.current) {
       const b = objectBounds(sel);
+      const z = Math.max(zoom, 0.01);
       ctx.save();
       ctx.strokeStyle = '#6366f1';
-      ctx.lineWidth = 1.5;
-      ctx.setLineDash([5, 4]);
+      ctx.lineWidth = 1.5 / z;
+      ctx.setLineDash([5 / z, 4 / z]);
       ctx.strokeRect(b.x - 4, b.y - 4, b.w + 8, b.h + 8);
       ctx.restore();
+      if (tool === 'select') {
+        // Handles are drawn at a constant on-screen size, whatever the zoom is.
+        const hs = 9 / z;
+        ctx.save();
+        ctx.lineWidth = 1.5 / z;
+        ctx.strokeStyle = '#6366f1';
+        ctx.fillStyle = '#ffffff';
+        for (const h of handlesFor(sel)) {
+          if (h.id === 'p1' || h.id === 'p2') {
+            ctx.beginPath();
+            ctx.arc(h.x, h.y, hs / 2, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.stroke();
+          } else {
+            ctx.fillRect(h.x - hs / 2, h.y - hs / 2, hs, hs);
+            ctx.strokeRect(h.x - hs / 2, h.y - hs / 2, hs, hs);
+          }
+        }
+        ctx.restore();
+      }
     }
-  }, [objects, selectedId]);
+  }, [objects, selectedId, zoom, tool]);
 
   useEffect(() => { redraw(); }, [redraw]);
 
@@ -519,6 +677,7 @@ export const ImageDrawTool: React.FC = () => {
         break;
       case 'rect':
       case 'ellipse':
+      case 'star':
         copy.x = copy.x + 14;
         copy.y = copy.y + 14;
         break;
@@ -566,6 +725,7 @@ export const ImageDrawTool: React.FC = () => {
     if (!f) return;
     try {
       const loaded = await loadImage(f);
+      originalRef.current = { w: loaded.naturalWidth, h: loaded.naturalHeight };
       let w = loaded.naturalWidth;
       let h = loaded.naturalHeight;
       if (w > MAX_DIM || h > MAX_DIM) {
@@ -592,10 +752,34 @@ export const ImageDrawTool: React.FC = () => {
       setFile(f);
       setLoadTick(t => t + 1);
       setConfirmClear(false);
+      setExportW(w);
+      setExportH(h);
+      setExportDims('current');
+      setExportResult(prev => { if (prev) URL.revokeObjectURL(prev.url); return null; });
+      setExportOpen(false);
+      setExportName(`${baseNameFrom(f.name || 'drawing')}_drawing`);
     } catch (e) {
       setError(errorMessage(e, 'Could not load that image.'));
     }
   }, []);
+
+  // ── Paste an image from the clipboard (Ctrl/Cmd + V) ──────────
+  useEffect(() => {
+    const onPaste = (e: ClipboardEvent) => {
+      const target = e.target as HTMLElement | null;
+      if (target && (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.isContentEditable)) return;
+      const item = Array.from(e.clipboardData?.items ?? []).find(i => i.type.startsWith('image/'));
+      if (!item) return;
+      const blob = item.getAsFile();
+      if (!blob) return;
+      e.preventDefault();
+      const ext = blob.type.split('/')[1] || 'png';
+      handleFiles([new File([blob], `pasted-image.${ext}`, { type: blob.type })]);
+      pushToast('Image pasted from clipboard');
+    };
+    document.addEventListener('paste', onPaste);
+    return () => document.removeEventListener('paste', onPaste);
+  }, [handleFiles, pushToast]);
 
   useEffect(() => {
     if (loadTickRef.current === loadTick) return;
@@ -738,6 +922,53 @@ export const ImageDrawTool: React.FC = () => {
     return () => document.removeEventListener('keydown', onKey);
   }, [undo, redo, duplicate, selectedId, objects, pushHistory]);
 
+  // ── Right-click menu ────────────────────────────────────────
+  const openMenu = (e: React.MouseEvent<HTMLCanvasElement>) => {
+    e.preventDefault();
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const rect = canvas.getBoundingClientRect();
+    const px = (e.clientX - rect.left) * (canvas.width / rect.width);
+    const py = (e.clientY - rect.top) * (canvas.height / rect.height);
+    const hit = [...objects].reverse().find(o => hitObject(o, px, py)) ?? null;
+    if (hit) setSelectedId(hit.id);
+    setMenu({ x: e.clientX, y: e.clientY, targetId: hit?.id ?? null });
+  };
+
+  useEffect(() => {
+    if (!menu) return;
+    const close = () => setMenu(null);
+    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') setMenu(null); };
+    window.addEventListener('pointerdown', close);
+    window.addEventListener('resize', close);
+    window.addEventListener('scroll', close, true);
+    document.addEventListener('keydown', onKey);
+    return () => {
+      window.removeEventListener('pointerdown', close);
+      window.removeEventListener('resize', close);
+      window.removeEventListener('scroll', close, true);
+      document.removeEventListener('keydown', onKey);
+    };
+  }, [menu]);
+
+  const pasteFromClipboard = useCallback(async () => {
+    try {
+      const items = await navigator.clipboard.read();
+      for (const item of items) {
+        const imgType = item.types.find(t => t.startsWith('image/'));
+        if (imgType) {
+          const blob = await item.getType(imgType);
+          await handleFiles([new File([blob], `pasted-image.${imgType.split('/')[1] || 'png'}`, { type: imgType })]);
+          pushToast('Image pasted from clipboard');
+          return;
+        }
+      }
+      setError('No image found in the clipboard.');
+    } catch {
+      setError('Clipboard access was denied. Use Ctrl/Cmd + V instead.');
+    }
+  }, [handleFiles, pushToast]);
+
   const applyFit = useCallback(() => {
     const c = containerRef.current;
     if (!c || !imgW || !imgH) return;
@@ -760,7 +991,9 @@ export const ImageDrawTool: React.FC = () => {
     const ctx = canvas?.getContext('2d');
     const p = getPos(e);
     if (!canvas || !ctx || !p) return;
+    if (e.button === 2) return; // right-click opens the context menu instead
     e.preventDefault();
+    setMenu(null);
     canvas.setPointerCapture(e.pointerId);
 
     const el = containerRef.current;
@@ -772,11 +1005,21 @@ export const ImageDrawTool: React.FC = () => {
 
     if (tool === 'select') {
       moveCommittedRef.current = false;
+      // A handle on the current selection wins over picking a new object.
+      const sel = objects.find(o => o.id === selectedId);
+      if (sel) {
+        const tol = 9 / Math.max(zoomRef.current, 0.01);
+        const h = handlesFor(sel).find(hh => Math.abs(p.x - hh.x) <= tol && Math.abs(p.y - hh.y) <= tol);
+        if (h) {
+          resizeRef.current = { id: sel.id, handle: h.id, orig: JSON.parse(JSON.stringify(sel)) as DrawObject };
+          resizeCommittedRef.current = false;
+          return;
+        }
+      }
       const hit = [...objects].reverse().find(o => hitObject(o, p.x, p.y));
       if (hit) {
         setSelectedId(hit.id);
-        const b = objectBounds(hit);
-        moveRef.current = { id: hit.id, start: p, origin: { x: b.x, y: b.y } };
+        moveRef.current = { id: hit.id, last: p, totalX: 0, totalY: 0 };
       } else {
         setSelectedId(null);
       }
@@ -802,7 +1045,7 @@ export const ImageDrawTool: React.FC = () => {
     }
 
     if (shapeTools.includes(tool)) {
-      previewRef.current = { tool: tool as 'rect' | 'ellipse' | 'line' | 'arrow', color, fillColor, size, fill, opacity, start: p, cur: p };
+      previewRef.current = { tool: tool === 'arrow' ? 'arrow' : shapeKind, color, fillColor, size, fill, opacity, start: p, cur: p };
       return;
     }
 
@@ -845,11 +1088,39 @@ export const ImageDrawTool: React.FC = () => {
       }
     }
 
+    const resize = resizeRef.current;
+    if (resize) {
+      if (!resizeCommittedRef.current) {
+        resizeCommittedRef.current = true;
+        pushHistory(objects);
+      }
+      setObjects(prev => prev.map(o => o.id === resize.id ? resizeObject(resize.orig, resize.handle, p, e.shiftKey) : o));
+      return;
+    }
+
+    // Hover feedback on the selection handles.
+    if (tool === 'select' && !moveRef.current && canvas) {
+      const sel = objects.find(o => o.id === selectedId);
+      let cursor = '';
+      if (sel) {
+        const tol = 9 / Math.max(zoomRef.current, 0.01);
+        const h = handlesFor(sel).find(hh => Math.abs(p.x - hh.x) <= tol && Math.abs(p.y - hh.y) <= tol);
+        if (h) cursor = HANDLE_CURSOR[h.id];
+      }
+      canvas.style.cursor = cursor;
+    }
+
     const move = moveRef.current;
     if (move) {
-      const dx = p.x - move.start.x;
-      const dy = p.y - move.start.y;
-      if (!moveCommittedRef.current && (Math.abs(dx) > 2 || Math.abs(dy) > 2)) {
+      // Incremental delta: each move applies only the distance travelled since
+      // the previous event, so the object tracks the pointer exactly.
+      const dx = p.x - move.last.x;
+      const dy = p.y - move.last.y;
+      if (dx === 0 && dy === 0) return;
+      move.last = p;
+      move.totalX += dx;
+      move.totalY += dy;
+      if (!moveCommittedRef.current && (Math.abs(move.totalX) > 2 || Math.abs(move.totalY) > 2)) {
         moveCommittedRef.current = true;
         pushHistory(objects);
       }
@@ -858,7 +1129,8 @@ export const ImageDrawTool: React.FC = () => {
         switch (o.type) {
           case 'stroke': return { ...o, points: o.points.map(pt => ({ x: pt.x + dx, y: pt.y + dy })) };
           case 'rect':
-          case 'ellipse': return { ...o, x: o.x + dx, y: o.y + dy };
+          case 'ellipse':
+          case 'star': return { ...o, x: o.x + dx, y: o.y + dy };
           case 'line':
           case 'arrow': return { ...o, x1: o.x1 + dx, y1: o.y1 + dy, x2: o.x2 + dx, y2: o.y2 + dy };
           case 'text': return { ...o, x: o.x + dx, y: o.y + dy };
@@ -900,6 +1172,10 @@ export const ImageDrawTool: React.FC = () => {
       setIsPanning(false);
       return;
     }
+    if (resizeRef.current) {
+      resizeRef.current = null;
+      return;
+    }
     if (moveRef.current) {
       moveRef.current = null;
       return;
@@ -936,37 +1212,114 @@ export const ImageDrawTool: React.FC = () => {
     }
   };
 
-  const download = async () => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    try {
-      const out = document.createElement('canvas');
-      out.width = canvas.width;
-      out.height = canvas.height;
-      const octx = out.getContext('2d')!;
-      const bg = bgLayerRef.current;
-      if (bg) octx.drawImage(bg, 0, 0);
-      for (const o of objects) drawObject(octx, o);
-      let source = out;
-      if (format === 'image/jpeg') {
-        const white = document.createElement('canvas');
-        white.width = out.width;
-        white.height = out.height;
-        const wctx = white.getContext('2d')!;
-        wctx.fillStyle = '#ffffff';
-        wctx.fillRect(0, 0, white.width, white.height);
-        wctx.drawImage(out, 0, 0);
-        source = white;
+  // ── Export / copy / drag-out ────────────────────────────────
+  const composeExport = useCallback((w: number, h: number, bg: 'transparent' | 'white' | 'custom', bgColor: string): HTMLCanvasElement => {
+    const base = bgLayerRef.current;
+    if (!base) throw new Error('No image to export');
+    const out = document.createElement('canvas');
+    out.width = Math.max(1, Math.round(w));
+    out.height = Math.max(1, Math.round(h));
+    const ctx = out.getContext('2d')!;
+    if (bg === 'white') { ctx.fillStyle = '#ffffff'; ctx.fillRect(0, 0, out.width, out.height); }
+    if (bg === 'custom') { ctx.fillStyle = bgColor; ctx.fillRect(0, 0, out.width, out.height); }
+    ctx.imageSmoothingEnabled = true;
+    ctx.imageSmoothingQuality = 'high';
+    ctx.drawImage(base, 0, 0, out.width, out.height);
+    const sx = out.width / base.width;
+    const sy = out.height / base.height;
+    ctx.save();
+    ctx.scale(sx, sy);
+    for (const o of objectsRef.current) drawObject(ctx, o);
+    ctx.restore();
+    return out;
+  }, []);
+
+  const currentExportDims = useCallback((): { w: number; h: number } => {
+    const base = bgLayerRef.current;
+    if (!base) return { w: 0, h: 0 };
+    switch (exportDims) {
+      case 'original': {
+        const orig = originalRef.current;
+        return orig ? { w: orig.w, h: orig.h } : { w: base.width, h: base.height };
       }
-      const { blob, ext } = await canvasExport(source, format);
-      downloadBlob(blob, `${baseNameFrom(file?.name ?? 'drawing')}_drawing.${ext}`);
-      setSaved(true);
-      if (savedTimerRef.current) window.clearTimeout(savedTimerRef.current);
-      savedTimerRef.current = window.setTimeout(() => setSaved(false), 2600);
+      case 'custom':
+        return { w: Math.max(1, exportW) || base.width, h: Math.max(1, exportH) || base.height };
+      default:
+        return { w: base.width, h: base.height };
+    }
+  }, [exportDims, exportW, exportH]);
+
+  const renderExport = useCallback(async (): Promise<{ blob: Blob; ext: string; w: number; h: number }> => {
+    const { w, h } = currentExportDims();
+    // JPG has no alpha, so always flatten it onto a solid background.
+    const bg = exportFormat === 'image/png' ? exportBg : (exportBg === 'transparent' ? 'white' : exportBg);
+    const canvas = composeExport(w, h, bg, exportBgColor);
+    const quality = exportFormat === 'image/png' ? undefined : exportQuality / 100;
+    const { blob, ext } = await canvasExport(canvas, exportFormat, quality);
+    return { blob, ext, w, h };
+  }, [currentExportDims, composeExport, exportBg, exportBgColor, exportFormat, exportQuality]);
+
+  const downloadExport = useCallback(async () => {
+    try {
+      const { blob, ext } = await renderExport();
+      downloadBlob(blob, `${exportName || 'drawing'}.${ext}`);
+      pushToast('Image downloaded');
     } catch (e) {
       setError(errorMessage(e, 'Could not export the image.'));
     }
-  };
+  }, [renderExport, exportName, pushToast]);
+
+  const copyImage = useCallback(async () => {
+    try {
+      const { blob } = await renderExport();
+      if (!navigator.clipboard || typeof ClipboardItem === 'undefined') {
+        setError('Copy isn\'t supported by this browser. Use Download instead.');
+        return;
+      }
+      await navigator.clipboard.write([new ClipboardItem({ [blob.type]: blob })]);
+      pushToast('Image copied to clipboard');
+    } catch {
+      setError('Clipboard access is unavailable. Use Download instead.');
+    }
+  }, [renderExport, pushToast]);
+
+  const makeExportResult = useCallback(async (): Promise<{ url: string; blob: Blob; w: number; h: number } | null> => {
+    try {
+      const { blob, w, h } = await renderExport();
+      const url = URL.createObjectURL(blob);
+      return { url, blob, w, h };
+    } catch (e) {
+      setError(errorMessage(e, 'Could not export the image.'));
+      return null;
+    }
+  }, [renderExport]);
+
+  const openExport = useCallback(async () => {
+    setExportOpen(true);
+    setShowOptions(false);
+    const res = await makeExportResult();
+    if (res) setExportResult(prev => { if (prev) URL.revokeObjectURL(prev.url); return res; });
+  }, [makeExportResult]);
+
+  useEffect(() => {
+    if (!exportOpen) return;
+    const t = window.setTimeout(() => {
+      makeExportResult().then(r => { if (r) setExportResult(prev => { if (prev) URL.revokeObjectURL(prev.url); return r; }); });
+    }, 300);
+    return () => window.clearTimeout(t);
+  }, [exportOpen, exportFormat, exportQuality, exportDims, exportW, exportH, exportBg, exportBgColor, objects, makeExportResult]);
+
+  const onDragStart = useCallback((e: React.DragEvent<HTMLImageElement>, result: { url: string; blob: Blob; w: number; h: number }) => {
+    const ext = exportFormat === 'image/jpeg' ? 'jpg' : exportFormat === 'image/webp' ? 'webp' : 'png';
+    e.dataTransfer.setData('text/uri-list', result.url);
+    e.dataTransfer.setData('text/plain', result.url);
+    try {
+      e.dataTransfer.setData('DownloadURL', `image/${ext.replace('jpg', 'jpeg')}:${exportName || 'drawing'}.${ext}:${result.url}`);
+    } catch { /* not supported */ }
+    try {
+      e.dataTransfer.setDragImage(e.currentTarget, 0, 0);
+    } catch { /* not supported */ }
+  }, [exportFormat, exportName]);
 
   const selectedObj = objects.find(o => o.id === selectedId) ?? null;
   const isShapeTool = shapeTools.includes(tool);
@@ -982,13 +1335,82 @@ export const ImageDrawTool: React.FC = () => {
 
   if (!file) {
     return (
-      <div className="space-y-4">
-        <DropZone
-          onFiles={handleFiles}
-          label="Select or drag & drop an image to draw on"
-          hint="Draw shapes, add text and move things around, all on your device"
+      <div className="w-full max-w-2xl mx-auto">
+        <div
+          onDragOver={(e) => { e.preventDefault(); setIsDragging(true); }}
+          onDragLeave={() => setIsDragging(false)}
+          onDrop={(e) => {
+            e.preventDefault();
+            setIsDragging(false);
+            const files = Array.from(e.dataTransfer.files);
+            if (files.length) handleFiles(files);
+          }}
+          className={`relative rounded-2xl border-2 border-dashed bg-card p-6 sm:p-10 text-center transition-colors ${isDragging ? 'border-primary bg-primary/[0.06]' : 'border-border'}`}
+        >
+          <div className="w-14 h-14 rounded-2xl bg-primary/10 border border-primary/20 mx-auto flex items-center justify-center mb-4">
+            <PenLine className="w-6 h-6 text-primary" />
+          </div>
+          <h3 className="text-xl font-bold text-foreground">
+            Draw on images privately in your browser
+          </h3>
+          <p className="text-[13px] text-muted-foreground mt-1.5 max-w-md mx-auto leading-relaxed">
+            Annotate with brush, shapes, arrows and text, then export, your image never leaves your device.
+          </p>
+
+          <div className="mt-7 mx-auto max-w-md rounded-2xl border-2 border-dashed border-border bg-muted/40 px-6 py-10 text-center transition-colors">
+            <div className="w-12 h-12 rounded-xl bg-muted border border-border mx-auto flex items-center justify-center">
+              <Upload className="w-5 h-5 text-muted-foreground" />
+            </div>
+            <p className="text-sm font-semibold text-muted-foreground mt-3">
+              {isDragging ? 'Drop it to open' : 'Drop an image here'}
+            </p>
+            <p className="text-[11px] text-muted-foreground mt-1">or use the buttons below to browse your files</p>
+          </div>
+
+          <div className="mt-5 flex items-center justify-center gap-3 flex-wrap">
+            <button type="button" onClick={() => landingInputRef.current?.click()} className="btn-primary px-5 py-2.5 text-[13px] rounded-lg">
+              <Upload className="w-4 h-4" /> Upload Image
+            </button>
+            <button type="button" onClick={() => pushToast('Press Ctrl/Cmd + V to paste an image')} className="btn-secondary px-5 py-2.5 text-[13px] rounded-lg">
+              <ClipboardPaste className="w-4 h-4" /> Paste Image
+            </button>
+          </div>
+
+          <p className="text-[11px] text-muted-foreground mt-5 font-medium tracking-wide">
+            JPG • PNG • WebP
+          </p>
+          <p className="text-[11px] text-success font-medium mt-4 inline-flex items-center gap-1.5">
+            <Lock className="w-3.5 h-3.5" /> Processed locally in your browser, nothing is uploaded
+          </p>
+        </div>
+        <input
+          ref={landingInputRef}
+          type="file"
+          accept="image/*"
+          className="hidden"
+          onChange={(e) => {
+            if (e.target.files?.length) handleFiles(Array.from(e.target.files));
+            e.target.value = '';
+          }}
         />
-        <ErrorNotice message={error} />
+        <input
+          ref={cameraInputRef}
+          type="file"
+          accept="image/*"
+          capture="environment"
+          className="hidden"
+          onChange={(e) => {
+            if (e.target.files?.length) handleFiles(Array.from(e.target.files));
+            e.target.value = '';
+          }}
+        />
+        {error && <div className="mt-3"><ErrorNotice message={error} /></div>}
+        {toast && (
+          <div className="mt-3 flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl border bg-card border-emerald-200 dark:border-emerald-500/30 fade-in">
+            <CheckCircle2 className="w-4 h-4 text-emerald-500" />
+            <span className="text-xs font-medium text-muted-foreground">{toast}</span>
+          </div>
+        )}
       </div>
     );
   }
@@ -1063,19 +1485,25 @@ export const ImageDrawTool: React.FC = () => {
           </button>
         </div>
 
-        <div className="hidden md:block w-44 shrink-0">
-          <Select value={format} options={EXPORT_FORMATS} onChange={setFormat} />
+        <HdrBtn onClick={copyImage} title="Copy image to clipboard">
+          <Copy className="w-4 h-4" /> <span className="hidden md:inline">Copy</span>
+        </HdrBtn>
+        <div className="flex items-center shrink-0 rounded-lg overflow-hidden">
+          <button onClick={downloadExport} className="h-9 px-3.5 inline-flex items-center gap-1.5 text-xs font-semibold bg-primary hover:brightness-110 text-primary-foreground transition-all">
+            <Download className="w-4 h-4" /> Export
+          </button>
+          <button onClick={openExport} title="Export options" aria-label="Export options"
+            className="h-9 px-2 inline-flex items-center bg-primary hover:brightness-110 text-primary-foreground transition-all border-l border-primary-foreground/20">
+            <Settings2 className="w-3.5 h-3.5" />
+          </button>
         </div>
-        <button onClick={download} className="h-9 px-3.5 rounded-lg inline-flex items-center gap-1.5 text-xs font-semibold bg-primary hover:opacity-90 text-primary-foreground transition-colors shrink-0">
-          <Download className="w-4 h-4" /> Export
-        </button>
       </header>
 
       <div className="flex-1 min-h-0 flex">
-        <nav className="shrink-0 flex lg:flex-col gap-1 p-2 border-r dark:bg-[#12121a] dark:border-white/[0.08] bg-card border-border overflow-x-auto lg:overflow-y-auto lg:w-14">
+        <nav className="shrink-0 flex lg:flex-col gap-1 p-2 border-r dark:bg-[#12121a] dark:border-white/[0.08] bg-card border-border overflow-x-auto lg:overflow-y-auto lg:w-[68px] lg:p-1.5">
           {TOOL_ORDER.map(t => (
-            <RailBtn key={t.id} active={tool === t.id} onClick={() => setTool(t.id)} title={t.label} shortcut={t.shortcut}>
-              <t.Icon className="w-4 h-4" />
+            <RailBtn key={t.id} active={tool === t.id} onClick={() => setTool(t.id)} title={t.label} shortcut={t.shortcut} label={t.label}>
+              <t.Icon className="w-[18px] h-[18px]" />
             </RailBtn>
           ))}
         </nav>
@@ -1094,7 +1522,9 @@ export const ImageDrawTool: React.FC = () => {
                     onPointerDown={onPointerDown}
                     onPointerMove={onPointerMove}
                     onPointerUp={onPointerUp}
-                    onPointerLeave={() => {
+                    onContextMenu={openMenu}
+                    onPointerLeave={(ev) => {
+                      ev.currentTarget.style.cursor = '';
                       onPointerUp();
                       if (cursorRingRef.current) cursorRingRef.current.style.visibility = 'hidden';
                     }}
@@ -1115,7 +1545,7 @@ export const ImageDrawTool: React.FC = () => {
             <p className=" text-muted-foreground truncate flex-1">
               {isPanning ? 'Dragging to pan…' : HINT_BY_TOOL[tool]}{' '}
               <span className="hidden md:inline  text-muted-foreground">· Ctrl+Z undo · Ctrl+Shift+Z redo · Ctrl+D duplicate · Del delete</span>
-              <span className="hidden sm:inline  text-muted-foreground"> · Hold Space to pan</span>
+              <span className="hidden sm:inline  text-muted-foreground"> · Hold Space to pan · Right-click for quick actions</span>
             </p>
             <span className=" text-muted-foreground font-mono shrink-0">{objects.length} object{objects.length === 1 ? '' : 's'} · {zoomPct}</span>
           </div>
@@ -1178,7 +1608,28 @@ export const ImageDrawTool: React.FC = () => {
                 </div>
               </div>
             )}
-            {isShapeTool && (
+            {tool === 'shapes' && (
+              <div className="mt-3">
+                <FieldLabel>Shape</FieldLabel>
+                <div className="grid grid-cols-4 gap-1.5">
+                  {SHAPE_KINDS.map(s => (
+                    <button
+                      key={s.id}
+                      type="button"
+                      onClick={() => setShapeKind(s.id)}
+                      title={s.label}
+                      aria-label={s.label}
+                      className={`h-10 rounded-lg flex items-center justify-center border transition-colors ${shapeKind === s.id
+                        ? 'dark:border-primary/50 dark:bg-primary/15 dark:text-primary bg-primary-container border-primary/40 text-on-primary-container'
+                        : 'dark:border-white/[0.1] dark:hover:bg-white/[0.06] border-border hover:bg-muted text-muted-foreground'}`}
+                    >
+                      <s.Icon className="w-4 h-4" />
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+            {isShapeTool && shapeKind !== 'line' && tool !== 'arrow' && (
               <label className="flex items-center gap-2.5 text-xs  text-muted-foreground cursor-pointer select-none mt-3">
                 <input type="checkbox" checked={fill} onChange={(e) => setFill(e.target.checked)} className="w-4 h-4 accent-primary" />
                 <span>Fill shape</span>
@@ -1243,6 +1694,42 @@ export const ImageDrawTool: React.FC = () => {
             </div>
           )}
 
+          <div className="shrink-0 rounded-xl border border-border dark:border-white/[0.08] p-3">
+            <h3 className="section-kicker mb-2.5 flex items-center gap-1.5">
+              <Download className="w-3.5 h-3.5" /> Export
+            </h3>
+            <FieldLabel>Format</FieldLabel>
+            <div className="flex gap-1.5">
+              {[['image/png', 'PNG'], ['image/jpeg', 'JPG'], ['image/webp', 'WebP']].map(([v, l]) => (
+                <button key={v} type="button" onClick={() => setExportFormat(v)}
+                  className={`flex-1 h-8 rounded-lg text-[11px] font-semibold border transition-colors ${exportFormat === v
+                    ? 'bg-primary/10 border-primary text-primary'
+                    : 'border-border dark:border-white/[0.1] text-muted-foreground hover:bg-muted dark:hover:bg-white/[0.06]'}`}>
+                  {l}
+                </button>
+              ))}
+            </div>
+            {exportFormat !== 'image/png' && (
+              <div className="mt-3">
+                <RangeField label="Quality" value={exportQuality} min={50} max={100} step={5} suffix="%" onChange={setExportQuality} />
+              </div>
+            )}
+            <div className="grid grid-cols-2 gap-2 mt-3">
+              <button type="button" onClick={copyImage}
+                className="h-9 rounded-lg text-[11px] font-semibold border border-border dark:border-white/[0.1] text-muted-foreground hover:bg-muted dark:hover:bg-white/[0.06] transition-colors inline-flex items-center justify-center gap-1.5">
+                <Copy className="w-3.5 h-3.5" /> Copy image
+              </button>
+              <button type="button" onClick={downloadExport}
+                className="h-9 rounded-lg text-[11px] font-semibold bg-primary hover:brightness-110 text-primary-foreground transition-colors inline-flex items-center justify-center gap-1.5">
+                <Download className="w-3.5 h-3.5" /> Download
+              </button>
+            </div>
+            <button type="button" onClick={openExport}
+              className="mt-2 w-full h-8 rounded-lg text-[11px] font-medium text-muted-foreground hover:bg-muted dark:hover:bg-white/[0.06] transition-colors inline-flex items-center justify-center gap-1.5">
+              <Settings2 className="w-3.5 h-3.5" /> More export options…
+            </button>
+          </div>
+
           <div className="flex-1 min-h-0">
             <div className="flex items-center justify-between mb-3">
               <h3 className="section-kicker">Layers</h3>
@@ -1286,6 +1773,113 @@ export const ImageDrawTool: React.FC = () => {
           </div>
         </aside>
 
+        {exportOpen && (
+          <>
+            <div className="absolute inset-0 z-[45] lg:hidden bg-black/50" onClick={() => setExportOpen(false)} />
+            <div className="absolute top-14 right-0 bottom-0 z-[46] w-80 max-w-[92vw] flex flex-col border-l bg-card dark:bg-[#12121a] border-border dark:border-white/[0.08] shadow-2xl fade-in">
+              <div className="flex items-center justify-between px-4 pt-4 pb-3 shrink-0">
+                <h3 className="section-kicker flex items-center gap-1.5"><Download className="w-3.5 h-3.5" /> Export Image</h3>
+                <button type="button" onClick={() => setExportOpen(false)} title="Close export panel" aria-label="Close export panel"
+                  className="w-8 h-8 rounded-lg flex items-center justify-center hover:bg-muted dark:hover:bg-white/[0.06] text-muted-foreground shrink-0">
+                  <X className="w-4 h-4" />
+                </button>
+              </div>
+              <div className="flex-1 overflow-y-auto px-4 pb-5 flex flex-col gap-4">
+                {exportResult ? (
+                  <div className="rounded-xl border border-border dark:border-white/[0.08] bg-muted dark:bg-white/[0.03] p-2.5">
+                    <img
+                      src={exportResult.url}
+                      alt="Export preview"
+                      draggable
+                      onDragStart={(e) => onDragStart(e, exportResult)}
+                      className="w-full max-h-56 object-contain cursor-grab mx-auto"
+                    />
+                    <div className="flex items-center justify-between mt-2 px-0.5">
+                      <span className="text-[10px] font-mono text-muted-foreground">{exportResult.w} × {exportResult.h} · {formatBytes(exportResult.blob.size)}</span>
+                      <span className="text-[10px] font-medium text-muted-foreground">drag to drop</span>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="h-44 rounded-xl border border-border dark:border-white/[0.08] flex items-center justify-center">
+                    <span className="w-4 h-4 rounded-full border-2 border-primary border-t-transparent animate-spin" />
+                  </div>
+                )}
+                <div>
+                  <FieldLabel>Format</FieldLabel>
+                  <div className="flex gap-1.5">
+                    {[['image/png', 'PNG'], ['image/jpeg', 'JPG'], ['image/webp', 'WebP']].map(([v, l]) => (
+                      <button key={v} type="button" onClick={() => setExportFormat(v)}
+                        className={`flex-1 h-9 rounded-lg text-[11px] font-semibold border transition-colors ${exportFormat === v ? 'bg-primary/10 border-primary text-primary' : 'border-border dark:border-white/[0.1] text-muted-foreground hover:bg-muted dark:hover:bg-white/[0.06]'}`}>
+                        {l}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+                {exportFormat !== 'image/png' && (
+                  <div>
+                    <RangeField label="Quality" value={exportQuality} min={50} max={100} step={5} suffix="%" onChange={setExportQuality} />
+                  </div>
+                )}
+                {exportFormat === 'image/png' && (
+                  <div>
+                    <FieldLabel>Background</FieldLabel>
+                    <div className="flex gap-1.5">
+                      {([['transparent', 'Transparent'], ['white', 'White'], ['custom', 'Custom']] as ['transparent' | 'white' | 'custom', string][]).map(([v, l]) => (
+                        <button key={v} type="button" onClick={() => setExportBg(v)}
+                          className={`flex-1 h-9 rounded-lg text-[11px] font-semibold border transition-colors ${exportBg === v ? 'bg-primary/10 border-primary text-primary' : 'border-border dark:border-white/[0.1] text-muted-foreground hover:bg-muted dark:hover:bg-white/[0.06]'}`}>
+                          {l}
+                        </button>
+                      ))}
+                    </div>
+                    {exportBg === 'custom' && (
+                      <div className="flex items-center gap-2.5 mt-3">
+                        <input type="color" value={exportBgColor} onChange={(e) => setExportBgColor(e.target.value)}
+                          className="w-11 h-10 rounded-lg border border-border dark:border-white/[0.14] cursor-pointer" aria-label="Background color" />
+                        <span className="font-mono text-[11px] text-muted-foreground">{exportBgColor}</span>
+                      </div>
+                    )}
+                  </div>
+                )}
+                <div>
+                  <FieldLabel>Dimensions</FieldLabel>
+                  <div className="flex gap-1.5">
+                    {([['current', 'Current'], ['original', 'Original'], ['custom', 'Custom']] as ['current' | 'original' | 'custom', string][]).map(([v, l]) => (
+                      <button key={v} type="button" onClick={() => setExportDims(v)}
+                        className={`flex-1 h-9 rounded-lg text-[11px] font-semibold border transition-colors ${exportDims === v ? 'bg-primary/10 border-primary text-primary' : 'border-border dark:border-white/[0.1] text-muted-foreground hover:bg-muted dark:hover:bg-white/[0.06]'}`}>
+                        {l}
+                      </button>
+                    ))}
+                  </div>
+                  {exportDims === 'custom' && (
+                    <div className="grid grid-cols-2 gap-3 mt-3">
+                      <input type="number" value={exportW} min={1} max={MAX_DIM} onChange={(e) => setExportW(Number(e.target.value))}
+                        className="w-full rounded-lg border px-3 py-2 text-xs focus:outline-none focus:ring-2 focus:ring-primary/25 bg-card dark:bg-white/[0.07] border-border dark:border-white/[0.14] text-foreground" placeholder="Width" aria-label="Export width" />
+                      <input type="number" value={exportH} min={1} max={MAX_DIM} onChange={(e) => setExportH(Number(e.target.value))}
+                        className="w-full rounded-lg border px-3 py-2 text-xs focus:outline-none focus:ring-2 focus:ring-primary/25 bg-card dark:bg-white/[0.07] border-border dark:border-white/[0.14] text-foreground" placeholder="Height" aria-label="Export height" />
+                    </div>
+                  )}
+                </div>
+                <div>
+                  <FieldLabel>Filename</FieldLabel>
+                  <input value={exportName} onChange={(e) => setExportName(e.target.value)}
+                    className="w-full rounded-lg border px-3 py-2 text-xs focus:outline-none focus:ring-2 focus:ring-primary/25 bg-card dark:bg-white/[0.07] border-border dark:border-white/[0.14] text-foreground" />
+                </div>
+                <div className="grid grid-cols-2 gap-2">
+                  <button type="button" onClick={copyImage} className="h-10 rounded-lg text-xs font-semibold bg-primary hover:brightness-110 text-primary-foreground transition-colors inline-flex items-center justify-center gap-1.5">
+                    <Copy className="w-4 h-4" /> Copy Image
+                  </button>
+                  <button type="button" onClick={() => downloadExport()} className="h-10 rounded-lg text-xs font-semibold border border-border dark:border-white/[0.1] text-muted-foreground hover:bg-muted dark:hover:bg-white/[0.06] transition-colors inline-flex items-center justify-center gap-1.5">
+                    <Download className="w-4 h-4" /> Download
+                  </button>
+                </div>
+                <p className="text-[10px] text-muted-foreground leading-relaxed">
+                  Drag the preview to another app. Drag-out isn't supported everywhere, use <span className="text-muted-foreground font-medium">Copy Image</span> or <span className="text-muted-foreground font-medium">Download</span> as a fallback.
+                </p>
+              </div>
+            </div>
+          </>
+        )}
+
         <div className="absolute bottom-16 right-3 sm:hidden z-40 flex items-center gap-0.5 rounded-xl border dark:bg-[#12121a] dark:border-white/[0.12] bg-card border-border shadow-lg p-1">
           <button onClick={() => setZoom(Math.max(ZOOM_MIN, zoom / 1.25))} title="Zoom out" aria-label="Zoom out"
             className="w-8 h-8 rounded-lg flex items-center justify-center dark:hover:bg-white/[0.06] hover:bg-muted  text-muted-foreground">
@@ -1316,10 +1910,82 @@ export const ImageDrawTool: React.FC = () => {
           <ErrorNotice message={error} />
         </div>
       )}
-      {saved && (
+      {menu && (
+        <div
+          role="menu"
+          onPointerDown={(e) => e.stopPropagation()}
+          onContextMenu={(e) => e.preventDefault()}
+          className="fixed z-[80] w-56 p-1.5 rounded-xl border shadow-2xl fade-in bg-card border-border dark:bg-[#12121a] dark:border-white/[0.1]"
+          style={{
+            left: Math.max(8, Math.min(menu.x, (typeof window !== 'undefined' ? window.innerWidth : 0) - 240)),
+            top: Math.max(8, Math.min(menu.y, (typeof window !== 'undefined' ? window.innerHeight : 0) - (menu.targetId ? 400 : 470))),
+          }}
+        >
+          <div className="px-1 pt-0.5 pb-1">
+            <div className="px-1.5 pb-1.5 text-[10px] font-semibold uppercase tracking-wide text-muted-foreground">Tools</div>
+            <div className="grid grid-cols-6 gap-0.5">
+              {TOOL_ORDER.map(t => (
+                <button
+                  key={t.id}
+                  type="button"
+                  title={`${t.label} (${t.shortcut})`}
+                  aria-label={`Switch to ${t.label}`}
+                  onClick={() => { setTool(t.id); setMenu(null); }}
+                  className={`h-8 rounded-lg flex items-center justify-center border transition-colors ${tool === t.id
+                    ? 'dark:bg-primary/20 dark:border-primary/40 dark:text-primary bg-primary-container border-primary/40 text-on-primary-container'
+                    : 'border-transparent text-muted-foreground hover:bg-muted dark:hover:bg-white/[0.06]'}`}
+                >
+                  <t.Icon className="w-3.5 h-3.5" />
+                </button>
+              ))}
+            </div>
+          </div>
+          <MenuSep />
+          {menu.targetId ? (
+            <>
+              <div className="px-2.5 pt-1 pb-1.5 text-[10px] font-semibold uppercase tracking-wide text-muted-foreground">
+                {TYPE_META[(objects.find(o => o.id === menu.targetId)?.type) ?? 'stroke'].label}
+              </div>
+              <MenuItem Icon={MousePointer2} shortcut="V" onClick={() => { setTool('select'); setMenu(null); }}>Pointer (move objects)</MenuItem>
+              <MenuItem Icon={Copy} shortcut="Ctrl+D" onClick={() => { duplicate(); setMenu(null); }}>Duplicate</MenuItem>
+              <MenuItem Icon={ArrowUp} onClick={() => { moveLayer(menu.targetId!, 1); setMenu(null); }}>Bring forward</MenuItem>
+              <MenuItem Icon={ArrowDown} onClick={() => { moveLayer(menu.targetId!, -1); setMenu(null); }}>Send backward</MenuItem>
+              <MenuSep />
+              <MenuItem Icon={Undo2} shortcut="Ctrl+Z" disabled={!canUndo} onClick={() => { undo(); setMenu(null); }}>Undo</MenuItem>
+              <MenuItem Icon={Redo2} shortcut="Ctrl+⇧+Z" disabled={!canRedo} onClick={() => { redo(); setMenu(null); }}>Redo</MenuItem>
+              <MenuSep />
+              <MenuItem Icon={ImageIcon} onClick={() => { copyImage(); setMenu(null); }}>Copy image</MenuItem>
+              <MenuItem Icon={Download} onClick={() => { downloadExport(); setMenu(null); }}>Export image</MenuItem>
+              <MenuSep />
+              <MenuItem Icon={Delete} shortcut="Del" danger onClick={() => { deleteSelected(); setMenu(null); }}>Delete</MenuItem>
+            </>
+          ) : (
+            <>
+              <MenuItem Icon={MousePointer2} shortcut="V" onClick={() => { setTool('select'); setMenu(null); }}>Pointer (move objects)</MenuItem>
+              <MenuSep />
+              <MenuItem Icon={Undo2} shortcut="Ctrl+Z" disabled={!canUndo} onClick={() => { undo(); setMenu(null); }}>Undo</MenuItem>
+              <MenuItem Icon={Redo2} shortcut="Ctrl+⇧+Z" disabled={!canRedo} onClick={() => { redo(); setMenu(null); }}>Redo</MenuItem>
+              <MenuSep />
+              <MenuItem Icon={ImageIcon} onClick={() => { copyImage(); setMenu(null); }}>Copy image</MenuItem>
+              <MenuItem Icon={Download} onClick={() => { downloadExport(); setMenu(null); }}>Export image</MenuItem>
+              <MenuItem Icon={Settings2} onClick={() => { openExport(); setMenu(null); }}>Export options…</MenuItem>
+              <MenuSep />
+              <MenuItem Icon={Maximize2} onClick={() => { applyFit(); setMenu(null); }}>Fit to screen</MenuItem>
+              <MenuItem Icon={ZoomIn} onClick={() => { setZoom(1); setMenu(null); }}>Actual size (100%)</MenuItem>
+              <MenuSep />
+              <MenuItem Icon={ClipboardPaste} shortcut="Ctrl+V" onClick={() => { pasteFromClipboard(); setMenu(null); }}>Paste image</MenuItem>
+              <MenuItem Icon={RefreshCw} onClick={() => { fileInputRef.current?.click(); setMenu(null); }}>Replace image</MenuItem>
+              <MenuSep />
+              <MenuItem Icon={Trash2} danger disabled={!objects.length} onClick={() => { clear(); setMenu(null); }}>Clear all drawings</MenuItem>
+            </>
+          )}
+        </div>
+      )}
+
+      {toast && (
         <div className="absolute bottom-12 left-1/2 -translate-x-1/2 z-50 flex items-center gap-2 px-4 py-2.5 rounded-xl border dark:bg-[#12121a] dark:border-emerald-500/30 bg-card border-emerald-200 shadow-lg fade-in">
           <CheckCircle2 className="w-4 h-4 text-emerald-500" />
-          <span className="text-xs font-medium  text-muted-foreground">Image exported successfully</span>
+          <span className="text-xs font-medium  text-muted-foreground">{toast}</span>
         </div>
       )}
     </div>

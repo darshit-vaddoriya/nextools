@@ -9,6 +9,14 @@
    Tailwind via rgb(var(--x) / <alpha-value>).
 ══════════════════════════════════════════════════════════ */
 :root {
+  /* Blog post layout. The article column takes whatever is left between the
+     contents rail and the aside, so the page uses the full container width.
+     That leaves the body size as the thing that controls line length: at the
+     ~696px this yields on a 1440 screen, 18px lands at 74 characters a line,
+     just inside the 45-75 range where reading stays comfortable. Dropping to
+     16px there would push it to 84. */
+  --aside: 264px;
+
   --background:          247 248 250;
   --foreground:          16 20 34;
   --muted:               238 240 244;
@@ -606,35 +614,52 @@ input[type="range"].range-progress:focus-visible {
    BLOG PROSE — styles the HTML that marked generates from the
    post bodies in src/config/blog/posts/
 ══════════════════════════════════════════════════════════ */
+/* Long-form reading settings.
+   The measure is NOT set here. It comes from the article column in
+   BlogPostView, so the prose, the takeaways box, the callouts, the tables and
+   the closing call to action all share one left and one right edge. Setting a
+   max-width on this element as well is what produced three different ragged
+   edges down the page. */
 .blog-prose {
-  color: rgb(var(--foreground) / 0.85);
-  font-size: 15.5px;
-  line-height: 1.78;
+  color: rgb(var(--foreground) / 0.88);
+  font-size: 18px;
+  line-height: 1.7;
+  text-wrap: pretty;
 }
-.blog-prose > * + * { margin-top: 1.15em; }
+.blog-prose > * + * { margin-top: 1.2em; }
+
+/* The opening paragraph carries the reader in, so it gets a larger size and a
+   little more air than the body that follows. */
+.blog-prose > p:first-child {
+  font-size: 20px;
+  line-height: 1.55;
+  color: rgb(var(--foreground));
+  margin-bottom: 0.3em;
+}
 
 .blog-prose h2 {
   font-family: 'Plus Jakarta Sans Variable', system-ui, sans-serif;
-  font-size: 22px;
+  font-size: 26px;
   font-weight: 800;
-  letter-spacing: -0.02em;
-  line-height: 1.3;
+  letter-spacing: -0.025em;
+  line-height: 1.24;
   color: rgb(var(--foreground));
-  margin-top: 2.4em;
-  margin-bottom: 0.7em;
+  margin-top: 2.1em;
+  margin-bottom: 0.55em;
   scroll-margin-top: 88px;
 }
 .blog-prose h2:first-child { margin-top: 0; }
 
 .blog-prose h3 {
-  font-size: 17px;
+  font-size: 19px;
   font-weight: 700;
   color: rgb(var(--foreground));
-  margin-top: 1.9em;
-  margin-bottom: 0.5em;
+  margin-top: 1.8em;
+  margin-bottom: 0.45em;
 }
 
 .blog-prose p { margin-bottom: 0; }
+
 
 .blog-prose a {
   color: rgb(var(--primary));
@@ -698,26 +723,82 @@ input[type="range"].range-progress:focus-visible {
   margin-bottom: 2.2em;
 }
 
+/* Tables carry the comparisons these articles are built on, so they are framed
+   as their own object rather than left as ruled text. The scroll container is
+   injected by renderMarkdown() so a wide table swipes on its own, instead of
+   the horizontal overflow escaping to the page. */
+.blog-prose .table-scroll {
+  overflow-x: auto;
+  border: 1px solid rgb(var(--border));
+  border-radius: 14px;
+  background: rgb(var(--card));
+  box-shadow: 0 1px 2px rgb(0 0 0 / 0.04);
+  -webkit-overflow-scrolling: touch;
+}
 .blog-prose table {
   width: 100%;
+  min-width: 420px;
   border-collapse: collapse;
   font-size: 13.5px;
-  display: block;
-  overflow-x: auto;
 }
 .blog-prose th,
 .blog-prose td {
-  border: 1px solid rgb(var(--border));
-  padding: 9px 12px;
+  padding: 11px 14px;
   text-align: left;
   vertical-align: top;
+  border-bottom: 1px solid rgb(var(--border) / 0.7);
 }
 .blog-prose th {
-  background: rgb(var(--muted) / 0.6);
-  font-weight: 650;
-  color: rgb(var(--foreground));
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background: rgb(var(--muted));
+  font-weight: 700;
+  font-size: 12px;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: rgb(var(--foreground) / 0.75);
   white-space: nowrap;
 }
+/* Zebra striping reads down the column, which is how a comparison table is
+   actually scanned. Kept subtle so it does not compete with the text. */
+.blog-prose tbody tr:nth-child(even) { background: rgb(var(--muted) / 0.35); }
+.blog-prose tbody tr:last-child td { border-bottom: 0; }
+.blog-prose td:first-child { font-weight: 600; color: rgb(var(--foreground)); }
+
+/* ── Callouts ──────────────────────────────────────────────
+   Authored as `> [!WARNING]` blockquotes and rewritten by
+   renderCallouts(). Three kinds only, so a warning still means
+   something when a reader meets the fourth one. */
+.blog-prose .callout {
+  border: 1px solid rgb(var(--border));
+  border-left-width: 3px;
+  border-radius: 0 14px 14px 0;
+  padding: 14px 18px;
+  font-size: 14.5px;
+}
+.blog-prose .callout > * + * { margin-top: 0.5em; }
+.blog-prose .callout-label {
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.blog-prose .callout-note {
+  border-left-color: rgb(var(--primary));
+  background: rgb(var(--primary) / 0.06);
+}
+.blog-prose .callout-note .callout-label { color: rgb(var(--primary)); }
+.blog-prose .callout-tip {
+  border-left-color: rgb(var(--success));
+  background: rgb(var(--success) / 0.07);
+}
+.blog-prose .callout-tip .callout-label { color: rgb(var(--success)); }
+.blog-prose .callout-warning {
+  border-left-color: rgb(var(--warning));
+  background: rgb(var(--warning) / 0.09);
+}
+.blog-prose .callout-warning .callout-label { color: rgb(var(--warning)); }
 
 /* ══════════════════════════════════════════════════════════
    RICH TEXT EDITOR

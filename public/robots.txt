@@ -3,5 +3,11 @@ Allow: /
 
 Sitemap: https://nexttool.click/sitemap.xml
 
-# Block build artifacts
+# Build artifacts, nothing here is a page
 Disallow: /assets/
+
+# Per-visitor views. Both read from this browser's own local storage, so a
+# crawler always sees the empty state, which is thin duplicate content on
+# two URLs that no one would ever search for.
+Disallow: /my-files
+Disallow: /settings

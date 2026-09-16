@@ -1,262 +1,245 @@
 import React, { useMemo, useState } from 'react';
-import { ArrowLeft, ArrowRight, Clock, Newspaper, Search, Sparkles, X } from 'lucide-react';
-import {
-  BLOG_POSTS, BLOG_CATEGORY_META, BlogCategory, BlogPost,
-  readingMinutes, formatPostDate,
-} from '../config/blog';
+import { ArrowLeft, ArrowUpRight, Search, X } from 'lucide-react';
+import { BLOG_POSTS, BLOG_CATEGORIES, BLOG_CATEGORY_META, BlogCategory, BlogPost, readingMinutes, formatPostDate } from '../config/blog';
+import { TOOLS } from '../config/tools';
 import { AppLink } from '../components/AppLink';
+import { blogTopicPath } from '../utils/seo';
 
 interface BlogProps {
   onBack: () => void;
   onOpenPost: (slug: string) => void;
+  /** The topic hub being viewed, or null for the full index at /blog. */
+  topic: BlogCategory | null;
+  onSelectTopic: (topic: BlogCategory | null) => void;
 }
 
-const CATEGORIES = Object.keys(BLOG_CATEGORY_META) as BlogCategory[];
+const CATEGORIES = BLOG_CATEGORIES;
 
-/** Small icon + label chip identifying the post's category. */
-const CategoryChip: React.FC<{ category: BlogCategory; size?: 'sm' | 'md' }> = ({ category, size = 'sm' }) => {
-  const meta = BLOG_CATEGORY_META[category];
-  const Icon = meta.icon;
-  const box = size === 'md' ? 'w-8 h-8 rounded-[10px]' : 'w-6 h-6 rounded-lg';
-  const glyph = size === 'md' ? 15 : 12;
-  return (
-    <span className="inline-flex items-center gap-2 min-w-0">
-      <span className={`cat-icon ${meta.bg} ${box} shrink-0`}>
-        <Icon className={meta.color} style={{ width: glyph, height: glyph }} />
-      </span>
-      <span className={`font-semibold text-foreground truncate ${size === 'md' ? 'text-[12.5px]' : 'text-[11.5px]'}`}>
-        {meta.label}
-      </span>
+/** How many guides each subject shows on the index before deferring to its hub. */
+const INDEX_PREVIEW_COUNT = 4;
+
+const countIn = (category: BlogCategory) => BLOG_POSTS.filter(post => post.category === category).length;
+
+const SUBJECT_TABS: { value: BlogCategory | null; label: string; count: number; href: string }[] = [
+  { value: null, label: 'Everything', count: BLOG_POSTS.length, href: '/blog' },
+  ...CATEGORIES.map(category => ({
+    value: category,
+    label: BLOG_CATEGORY_META[category].label,
+    count: countIn(category),
+    href: blogTopicPath(category),
+  })),
+];
+
+/**
+ * A guide in the list. The whole row is the target and it lifts on hover, so a
+ * long column of them reads as a stack of things to open rather than as a
+ * table of contents to scan past. `showSubject` is off inside a topic hub,
+ * where labelling every row "PDF" on the PDF page is just noise.
+ */
+const PostRow: React.FC<{ post: BlogPost; onOpen: (slug: string) => void; showSubject?: boolean }> = ({ post, onOpen, showSubject }) => {
+  const meta = BLOG_CATEGORY_META[post.category];
+  return <AppLink
+    href={`/blog/${post.slug}`}
+    onNavigate={() => onOpen(post.slug)}
+    className="group relative grid grid-cols-[minmax(0,1fr)_auto] items-baseline gap-x-6 gap-y-2 rounded-2xl border border-transparent px-4 -mx-4 py-5 transition-[background-color,border-color] hover:bg-card hover:border-border"
+  >
+    <h3 className="flex items-start gap-2 text-[17px] sm:text-[19px] font-bold leading-[1.3] tracking-[-.02em] text-foreground group-hover:text-primary transition-colors">
+      <span>{post.title}</span>
+      <ArrowUpRight className="mt-1 w-4 h-4 shrink-0 opacity-0 -translate-x-1 text-primary transition-all duration-150 group-hover:opacity-100 group-hover:translate-x-0" />
+    </h3>
+    <span className="text-[12px] tabular-nums text-muted-foreground whitespace-nowrap">{readingMinutes(post.body)} min</span>
+    <p className="col-span-2 sm:col-span-1 max-w-[58ch] text-[14.5px] leading-[1.6] text-muted-foreground">
+      {post.excerpt}
+    </p>
+    <span className="col-span-2 sm:col-span-1 sm:col-start-1 flex flex-wrap items-center gap-x-2.5 text-[11.5px] text-muted-foreground">
+      {showSubject && <><span className={`font-bold ${meta.color}`}>{meta.label}</span><span aria-hidden className="h-1 w-1 rounded-full bg-border" /></>}
+      <time dateTime={post.published}>{formatPostDate(post.published)}</time>
     </span>
-  );
+  </AppLink>;
 };
 
-const ReadTime: React.FC<{ post: BlogPost }> = ({ post }) => (
-  <span className="inline-flex items-center gap-1 text-[11.5px] text-muted-foreground shrink-0">
-    <Clock className="w-3 h-3" /> {readingMinutes(post.body)} min
-  </span>
-);
-
-export const Blog: React.FC<BlogProps> = ({ onBack, onOpenPost }) => {
-  const [filter, setFilter] = useState<BlogCategory | 'all'>('all');
+export const Blog: React.FC<BlogProps> = ({ onBack, onOpenPost, topic, onSelectTopic }) => {
   const [query, setQuery] = useState('');
+  const topicMeta = topic ? BLOG_CATEGORY_META[topic] : undefined;
 
+  // The subject the reader is on lives in the URL, not in component state, so
+  // that every filtered view is a page that can be linked to and indexed.
   const posts = useMemo(() => {
     const q = query.trim().toLowerCase();
-    return BLOG_POSTS.filter(p => {
-      if (filter !== 'all' && p.category !== filter) return false;
-      if (!q) return true;
-      const hay = `${p.title} ${p.excerpt} ${p.tags.join(' ')} ${BLOG_CATEGORY_META[p.category].label}`.toLowerCase();
-      return q.split(/\s+/).every(word => hay.includes(word));
+    return BLOG_POSTS.filter(post => {
+      if (topic && post.category !== topic) return false;
+      const haystack = `${post.title} ${post.excerpt} ${post.tags.join(' ')} ${BLOG_CATEGORY_META[post.category].label}`.toLowerCase();
+      return !q || q.split(/\s+/).every(word => haystack.includes(word));
     });
-  }, [filter, query]);
+  }, [topic, query]);
 
-  // The newest post only earns the big treatment on the unfiltered, unsearched index.
-  const showFeatured = filter === 'all' && !query.trim();
-  const featured = showFeatured ? posts[0] : undefined;
-  const rest = featured ? posts.slice(1) : posts;
+  const browsing = !topic && !query.trim();
+  const featured = browsing ? posts[0] : undefined;
+  const listed = featured ? posts.slice(1) : posts;
+  const featuredTools = featured
+    ? featured.relatedTools.map(id => TOOLS.find(tool => tool.id === id)).filter((tool): tool is typeof TOOLS[number] => Boolean(tool)).slice(0, 3)
+    : [];
 
-  const featuredMeta = featured ? BLOG_CATEGORY_META[featured.category] : undefined;
-  const FeaturedIcon = featuredMeta?.icon;
+  // On the index each subject shows only its newest few and points at its hub
+  // for the rest. Listing all of them made the page thousands of pixels of
+  // identical rows, and left the six hub pages with nothing sending readers to
+  // them. Inside a hub there is no truncation, because the full list is the
+  // reason you are there.
+  const grouped = CATEGORIES
+    .map(category => {
+      const items = listed.filter(post => post.category === category);
+      return {
+        category,
+        items: topic ? items : items.slice(0, INDEX_PREVIEW_COUNT),
+        total: countIn(category),
+      };
+    })
+    .filter(group => group.items.length > 0);
 
-  const resetFilters = () => { setFilter('all'); setQuery(''); };
+  const reset = () => { setQuery(''); onSelectTopic(null); };
 
-  return (
-    <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8 fade-in">
-      <AppLink href="/" onNavigate={onBack} className="btn-ghost mb-7">
-        <ArrowLeft className="w-4 h-4" />
-        <span>Back to Tools</span>
-      </AppLink>
+  return <main className="max-w-[1180px] mx-auto px-4 sm:px-6 py-7 sm:py-10 fade-in">
+    {topicMeta
+      ? <AppLink href="/blog" onNavigate={() => onSelectTopic(null)} className="btn-ghost mb-7 -ml-2"><ArrowLeft className="w-4 h-4" /> All guides</AppLink>
+      : <AppLink href="/" onNavigate={onBack} className="btn-ghost mb-7 -ml-2"><ArrowLeft className="w-4 h-4" /> Back to tools</AppLink>}
 
-      {/* Hero */}
-      <header className="pb-7 border-b border-border">
-        <span className="section-kicker mb-3">
-          <Newspaper className="w-3 h-3 shrink-0" /> Blog
-        </span>
-        <h1 className="font-heading text-[32px] sm:text-[42px] font-extrabold text-foreground tracking-[-0.03em] leading-[1.08] max-w-3xl">
-          Guides for working with files, safely
+    {/* Masthead: the claim on the left, the way in on the right. On a topic hub
+        the claim is replaced by that topic's own heading, so each of the six
+        URLs has a heading and a standfirst that belong only to it. */}
+    <header className="grid gap-7 lg:grid-cols-[minmax(0,1fr)_300px] lg:items-end pb-7 border-b border-border">
+      <div>
+        <h1 className="font-heading text-[38px] sm:text-[52px] font-extrabold tracking-[-.05em] leading-[0.98] text-foreground">
+          {topicMeta
+            ? topicMeta.heading
+            : <>Read it while the<br className="hidden sm:block" /> file is still open.</>}
         </h1>
-        <p className="text-[15px] text-muted-foreground mt-3.5 leading-relaxed max-w-2xl">
-          Practical write-ups on file formats, compression, encoding and privacy, the reasoning
-          behind the tools on this site, explained so you can make better choices whichever
-          software you end up using.
+        <p className="mt-5 max-w-[54ch] text-[15px] sm:text-[16px] leading-relaxed text-muted-foreground">
+          {topicMeta
+            ? topicMeta.description
+            : 'Short guides on the decisions behind PDFs, images, spreadsheets and privacy. Every one of them ends somewhere you can actually do the job.'}
         </p>
-        <div className="flex flex-wrap items-center gap-x-2.5 gap-y-1 mt-5 text-[12px] text-muted-foreground">
-          <span className="font-semibold text-foreground">{BLOG_POSTS.length} articles</span>
-          <span aria-hidden="true">·</span>
-          <span>{CATEGORIES.length} topics</span>
-          <span aria-hidden="true">·</span>
-          <span>Updated {formatPostDate(BLOG_POSTS[0].published)}</span>
-        </div>
-      </header>
-
-      {/* Search + category filter */}
-      <div className="flex flex-col lg:flex-row lg:items-center gap-3 mt-6">
-        <label className="relative w-full lg:max-w-xs shrink-0">
-          <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-primary" />
+      </div>
+      <div className="lg:pb-1">
+        <label className="relative block">
+          <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
           <input
             value={query}
             onChange={e => setQuery(e.target.value)}
-            placeholder={`Search ${BLOG_POSTS.length} articles…`}
-            className="input-base w-full h-10 pl-10 pr-9 rounded-xl text-[13.5px]"
+            placeholder="Search the journal"
+            aria-label="Search the journal"
+            className="input-base h-11 w-full pl-10 pr-9 rounded-xl text-[13.5px]"
           />
-          {query && (
-            <button
-              onClick={() => setQuery('')}
-              aria-label="Clear search"
-              className="absolute right-2.5 top-1/2 -translate-y-1/2 w-6 h-6 flex items-center justify-center rounded-full
-                text-muted-foreground hover:bg-muted hover:text-foreground transition-colors"
-            >
-              <X className="w-3.5 h-3.5" />
-            </button>
-          )}
+          {query && <button onClick={() => setQuery('')} aria-label="Clear search" className="absolute right-2.5 top-1/2 -translate-y-1/2 p-1 text-muted-foreground hover:text-foreground"><X className="w-3.5 h-3.5" /></button>}
         </label>
+        <p className="mt-3 text-[12.5px] text-muted-foreground">
+          {topic
+            ? <>{posts.length} guide{posts.length === 1 ? '' : 's'} in {topicMeta?.label}</>
+            : <>{BLOG_POSTS.length} guides, last updated {formatPostDate(BLOG_POSTS[0].published)}</>}
+        </p>
+      </div>
+    </header>
 
-        <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar -mx-1 px-1 pb-1 lg:pb-0">
-          <button
-            onClick={() => setFilter('all')}
-            className={`shrink-0 whitespace-nowrap px-3.5 py-1.5 rounded-full border text-[12.5px] font-semibold transition-all duration-150 ${
-              filter === 'all'
-                ? 'bg-primary border-primary text-primary-foreground'
-                : 'bg-card border-border text-muted-foreground hover:border-primary/50 hover:text-foreground'
+    <div className="mt-8 grid gap-8 lg:grid-cols-[188px_minmax(0,1fr)] lg:gap-14 lg:items-start">
+      {/* Subject rail — navigation on the leading edge, counts carried as data */}
+      <nav
+        aria-label="Filter by subject"
+        className="flex lg:flex-col gap-x-5 gap-y-0 overflow-x-auto no-scrollbar -mx-4 px-4 lg:mx-0 lg:px-0 lg:sticky lg:top-[86px]"
+      >
+        {SUBJECT_TABS.map(({ value, label, count, href }) => {
+          const active = topic === value;
+          return <AppLink
+            key={value ?? 'all'}
+            href={href}
+            onNavigate={() => onSelectTopic(value)}
+            aria-current={active ? 'page' : undefined}
+            className={`shrink-0 flex items-center justify-between gap-3 whitespace-nowrap py-2 text-[13.5px] transition-colors lg:border-l-2 lg:pl-3 ${
+              active
+                ? 'font-bold text-foreground lg:border-primary'
+                : 'text-muted-foreground hover:text-foreground lg:border-transparent'
             }`}
           >
-            All
-            <span className={`ml-1.5 text-[10.5px] font-mono ${filter === 'all' ? 'text-primary-foreground/70' : 'text-muted-foreground'}`}>
-              {BLOG_POSTS.length}
-            </span>
-          </button>
-          {CATEGORIES.map(cat => {
-            const count = BLOG_POSTS.filter(p => p.category === cat).length;
-            if (count === 0) return null;
-            const meta = BLOG_CATEGORY_META[cat];
-            const Icon = meta.icon;
-            const active = filter === cat;
-            return (
-              <button
-                key={cat}
-                onClick={() => setFilter(cat)}
-                className={`shrink-0 whitespace-nowrap inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full border text-[12.5px] font-semibold transition-all duration-150 ${
-                  active
-                    ? 'bg-primary border-primary text-primary-foreground'
-                    : 'bg-card border-border text-muted-foreground hover:border-primary/50 hover:text-foreground'
-                }`}
-              >
-                <Icon className={`w-3.5 h-3.5 shrink-0 ${active ? '' : meta.color}`} />
-                {meta.label}
-                <span className={`text-[10.5px] font-mono ${active ? 'text-primary-foreground/70' : 'text-muted-foreground'}`}>
-                  {count}
-                </span>
-              </button>
-            );
-          })}
-        </div>
-      </div>
+            {label}
+            <span className="text-[11.5px] tabular-nums text-muted-foreground">{count}</span>
+          </AppLink>;
+        })}
+      </nav>
 
-      {/* Featured */}
-      {featured && featuredMeta && FeaturedIcon && (
-        <AppLink
+      <div className="min-w-0">
+        {/* Featured guide — the one loud element, and the only place that names
+            the tools a guide hands you off to */}
+        {featured && <AppLink
           href={`/blog/${featured.slug}`}
           onNavigate={() => onOpenPost(featured.slug)}
-          className="block w-full text-left rounded-2xl border border-border bg-card shadow-card overflow-hidden mt-6
-            grid grid-cols-1 lg:grid-cols-[1.55fr_1fr] group hover:border-primary/40 hover:shadow-pop transition-all duration-200"
+          className="group block rounded-[20px] border border-border bg-card p-6 sm:p-8 shadow-card hover:border-primary/40 hover:shadow-pop transition-[box-shadow,border-color] duration-200"
         >
-          <div className="p-6 sm:p-8 min-w-0 order-2 lg:order-1">
-            <span className="badge badge-primary mb-4">
-              <Sparkles className="w-3 h-3 shrink-0" /> Latest
-            </span>
-            <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5">
-              <CategoryChip category={featured.category} size="md" />
-              <span className="text-[11.5px] text-muted-foreground" aria-hidden="true">·</span>
-              <time dateTime={featured.published} className="text-[11.5px] text-muted-foreground">
-                {formatPostDate(featured.published)}
-              </time>
-              <span className="text-[11.5px] text-muted-foreground" aria-hidden="true">·</span>
-              <ReadTime post={featured} />
+          <span className={`text-[11.5px] font-bold ${BLOG_CATEGORY_META[featured.category].color}`}>
+            Newest in {BLOG_CATEGORY_META[featured.category].label}
+          </span>
+          <h2 className="font-heading text-[24px] sm:text-[31px] font-extrabold tracking-[-.035em] leading-[1.12] text-foreground mt-3 max-w-[20ch] group-hover:text-primary transition-colors">
+            {featured.title}
+          </h2>
+          <p className="mt-4 max-w-[58ch] text-[14.5px] leading-relaxed text-muted-foreground">{featured.excerpt}</p>
+          <div className="mt-6 flex flex-wrap items-center gap-x-4 gap-y-2 text-[12px] text-muted-foreground">
+            <time dateTime={featured.published}>{formatPostDate(featured.published)}</time>
+            <span className="tabular-nums">{readingMinutes(featured.body)} min read</span>
+          </div>
+          {featuredTools.length > 0 && <p className="mt-5 pt-5 border-t border-border text-[12.5px] text-muted-foreground">
+            Ends at <span className="font-bold text-foreground">{featuredTools.map(tool => tool.name).join(', ')}</span>
+          </p>}
+        </AppLink>}
+
+        {/* Results: grouped by subject while browsing, flat once narrowed */}
+        {grouped.length > 0 && (browsing
+          ? <div className="mt-12 space-y-12">
+              {grouped.map(group => {
+                const meta = BLOG_CATEGORY_META[group.category];
+                const Icon = meta.icon;
+                const hidden = group.total - group.items.length;
+                return <section key={group.category} aria-labelledby={`subject-${group.category}`}>
+                  <div className="flex items-baseline justify-between gap-4 pb-3 border-b-2 border-foreground/15">
+                    <h2 id={`subject-${group.category}`} className="flex items-center gap-2">
+                      <span className={`cat-icon ${meta.bg} w-6 h-6 rounded-lg shrink-0 self-center`}>
+                        <Icon className={meta.color} size={13} />
+                      </span>
+                      <AppLink
+                        href={blogTopicPath(group.category)}
+                        onNavigate={() => onSelectTopic(group.category)}
+                        className={`text-[15px] font-extrabold tracking-[-.01em] hover:underline ${meta.color}`}
+                      >
+                        {meta.label}
+                      </AppLink>
+                    </h2>
+                    <span className="text-[12px] tabular-nums text-muted-foreground">{group.total} guides</span>
+                  </div>
+                  {group.items.map(post => <PostRow key={post.slug} post={post} onOpen={onOpenPost} />)}
+                  {hidden > 0 && <AppLink
+                    href={blogTopicPath(group.category)}
+                    onNavigate={() => onSelectTopic(group.category)}
+                    className="group inline-flex items-center gap-1.5 border-t border-border pt-4 w-full text-[12.5px] font-bold text-primary hover:underline"
+                  >
+                    {hidden} more in {meta.label}
+                    <ArrowUpRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+                  </AppLink>}
+                </section>;
+              })}
             </div>
-            <h2 className="font-heading text-[22px] sm:text-[28px] font-extrabold text-foreground tracking-[-0.02em] leading-tight mt-3.5 group-hover:text-primary transition-colors">
-              {featured.title}
-            </h2>
-            <p className="text-[14px] text-muted-foreground mt-3 leading-relaxed">
-              {featured.excerpt}
-            </p>
-            <span className="inline-flex items-center gap-1.5 text-[13px] font-bold text-primary mt-5">
-              Read article
-              <ArrowRight className="w-3.5 h-3.5 transition-transform duration-200 group-hover:translate-x-1" />
-            </span>
-          </div>
-
-          {/* Decorative panel, carries the category colour so the card reads at a glance */}
-          <div className={`relative order-1 lg:order-2 min-h-[120px] lg:min-h-full ${featuredMeta.bg} flex items-center justify-center overflow-hidden`}>
-            <FeaturedIcon
-              className={`${featuredMeta.color} opacity-90 transition-transform duration-300 group-hover:scale-105`}
-              style={{ width: 56, height: 56 }}
-            />
-            <div className="absolute inset-0 bg-grid opacity-[0.35] pointer-events-none" />
-          </div>
-        </AppLink>
-      )}
-
-      {/* Grid */}
-      {rest.length > 0 && (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-6">
-          {rest.map((post, idx) => (
-            <AppLink
-              key={post.slug}
-              href={`/blog/${post.slug}`}
-              onNavigate={() => onOpenPost(post.slug)}
-              className="text-left rounded-2xl border border-border bg-card p-5 flex flex-col group
-                hover:border-primary/40 hover:shadow-card hover:-translate-y-0.5 transition-all duration-150 fade-up"
-              style={{ animationDelay: `${Math.min(idx, 12) * 30}ms` }}
-            >
-              <div className="flex items-center justify-between gap-2">
-                <CategoryChip category={post.category} />
-                <ReadTime post={post} />
-              </div>
-
-              <h2 className="text-[15.5px] font-bold text-foreground leading-snug mt-3.5 group-hover:text-primary transition-colors">
-                {post.title}
-              </h2>
-              <p className="text-[12.5px] text-muted-foreground mt-2 leading-relaxed flex-1">
-                {post.excerpt}
+          : <div>
+              <p className="pb-3 border-b-2 border-foreground/15 text-[13px] text-muted-foreground">
+                {posts.length} guide{posts.length === 1 ? '' : 's'}
+                {query.trim() && <> matching “<span className="text-foreground font-bold">{query.trim()}</span>”</>}
               </p>
+              {listed.map(post => <PostRow key={post.slug} post={post} onOpen={onOpenPost} showSubject />)}
+            </div>
+        )}
 
-              <div className="flex flex-wrap gap-1.5 mt-4">
-                {post.tags.slice(0, 3).map(tag => (
-                  <span key={tag} className="text-[10.5px] font-mono text-muted-foreground bg-muted px-2 py-0.5 rounded">
-                    {tag}
-                  </span>
-                ))}
-              </div>
-
-              <div className="flex items-center justify-between gap-2 mt-4 pt-3.5 border-t border-border">
-                <time dateTime={post.published} className="text-[11px] text-muted-foreground">
-                  {formatPostDate(post.published)}
-                </time>
-                <span className="inline-flex items-center gap-1 text-[11.5px] font-bold text-primary">
-                  Read
-                  <ArrowRight className="w-3 h-3 transition-transform duration-200 group-hover:translate-x-0.5" />
-                </span>
-              </div>
-            </AppLink>
-          ))}
-        </div>
-      )}
-
-      {posts.length === 0 && (
-        <div className="text-center py-16">
-          <div className="w-14 h-14 mx-auto rounded-2xl bg-muted flex items-center justify-center mb-4">
-            <Search className="w-6 h-6 text-muted-foreground/50" />
-          </div>
-          <h2 className="text-[16px] font-semibold text-foreground mb-1">No articles found</h2>
-          <p className="text-[13px] text-muted-foreground max-w-xs mx-auto">
-            Try a different keyword, or switch to another topic.
-          </p>
-          <button onClick={resetFilters} className="btn-ghost mt-4">
-            Show all articles
+        {!posts.length && <div className="rounded-2xl border border-dashed border-border px-6 py-16 text-center">
+          <h2 className="text-[16px] font-extrabold text-foreground">Nothing here matches that</h2>
+          <p className="mt-2 text-[13.5px] text-muted-foreground">Try a broader word, or pick a subject from the list.</p>
+          <button onClick={reset} className="mt-5 inline-flex items-center gap-1.5 text-[13px] font-bold text-primary hover:underline">
+            Show all {BLOG_POSTS.length} guides <ArrowUpRight className="w-3.5 h-3.5" />
           </button>
-        </div>
-      )}
+        </div>}
+      </div>
     </div>
-  );
+  </main>;
 };

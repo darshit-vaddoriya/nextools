@@ -2,13 +2,21 @@ import { TOOLS } from '../config/tools';
 import { ToolCategory } from '../types';
 import { TOOL_SEO_CONTENT } from '../config/seoContent';
 import { StaticPageId, getStaticPage, getStaticPageByPath } from '../config/pages';
-import { BLOG_POSTS, getPost, BLOG_CATEGORY_LABELS, readingMinutes } from '../config/blog';
+import {
+  BLOG_POSTS, getPost, BLOG_CATEGORY_LABELS, BLOG_CATEGORY_META,
+  BlogCategory, isBlogCategory, postsInCategory, readingMinutes,
+} from '../config/blog';
 import { HOME_FAQ } from '../config/faq';
 
 const SITE = 'https://nexttool.click';
 const DEFAULT_TITLE = 'NextTool - Free Online Tools';
 const DEFAULT_DESC =
   'Free browser tools for PDF, image, developer and AI tasks. Files are processed on your own device, so nothing is uploaded.';
+// Mirrors the static tag in index.html, so navigating home from a tool page
+// restores it rather than leaving that tool's keywords behind.
+const DEFAULT_KEYWORDS =
+  'free online tools, pdf tools, image compressor, background remover, json formatter, '
+  + 'password generator, base64 encoder, csv to json, browser tools, no upload';
 
 const CATEGORY_NAMES: Record<ToolCategory, string> = {
   pdf: 'PDF Tools',
@@ -37,6 +45,49 @@ function setMeta(name: string, content: string, isProperty = false) {
     document.head.appendChild(el);
   }
   el.content = content;
+}
+
+/**
+ * Builds a page title that carries the modifiers people actually type.
+ *
+ * "Compress PDF" is the head term, but the searches are "compress pdf online"
+ * and "compress pdf free", so the qualifiers earn their place. Titles are
+ * truncated in results at roughly 60 characters, so the suffix is dropped
+ * rather than the tool name when a long name would push it past that.
+ */
+const TITLE_LIMIT = 60;
+function toolTitle(name: string): string {
+  const full = `${name} Online - Free, No Upload | NextTool`;
+  if (full.length <= TITLE_LIMIT) return full;
+  const shorter = `${name} Online - Free | NextTool`;
+  return shorter.length <= TITLE_LIMIT ? shorter : `${name} | NextTool`;
+}
+
+/** Meta descriptions are cut off around 155 characters, so cut at a word. */
+function truncateDescription(text: string, limit = 155): string {
+  if (text.length <= limit) return text;
+  const cut = text.slice(0, limit);
+  return `${cut.slice(0, cut.lastIndexOf(' '))}...`;
+}
+
+/**
+ * De-duplicated, comma-separated keyword list.
+ *
+ * Worth being clear about what this is for: Google has ignored the keywords
+ * meta tag since 2009 and it is not a ranking signal there. It is kept short
+ * and honest because a few smaller engines still read it, and because a
+ * stuffed list is treated as a spam signal by the ones that do.
+ */
+function keywordList(words: string[]): string {
+  const seen = new Set<string>();
+  const out: string[] = [];
+  for (const word of words) {
+    const key = word.toLowerCase().trim();
+    if (!key || seen.has(key)) continue;
+    seen.add(key);
+    out.push(key);
+  }
+  return out.slice(0, 12).join(', ');
 }
 
 function setCanonical(url: string) {
@@ -72,7 +123,27 @@ function breadcrumbList(items: { name: string; url: string }[]) {
   };
 }
 
+function removeMeta(name: string, isProperty = false) {
+  const el = document.querySelector(`meta[${isProperty ? 'property' : 'name'}="${name}"]`);
+  if (el) el.remove();
+}
+
+/**
+ * Undoes what updateBlogPostMeta() adds. Navigation inside the SPA only ever
+ * adds tags, so without this a visitor who reads a post and then opens a tool
+ * is on a page still claiming og:type=article with the post's publish date,
+ * and that is what a share to Facebook or LinkedIn would pick up.
+ */
+function clearArticleMeta() {
+  setMeta('og:type', 'website', true);
+  removeMeta('article:published_time', true);
+  removeMeta('article:modified_time', true);
+  removeMeta('article:section', true);
+  removeMeta('article:tag', true);
+}
+
 function clearPageSchema() {
+  clearArticleMeta();
   const el = document.getElementById('breadcrumb-jsonld');
   if (el) el.remove();
   const faqEl = document.getElementById('faq-jsonld');
@@ -83,6 +154,7 @@ export function updateHomeMeta() {
   clearPageSchema();
   document.title = DEFAULT_TITLE;
   setMeta('description', DEFAULT_DESC);
+  setMeta('keywords', DEFAULT_KEYWORDS);
   setMeta('og:title', DEFAULT_TITLE, true);
   setMeta('og:description', DEFAULT_DESC, true);
   setMeta('og:url', `${SITE}/`, true);
@@ -122,12 +194,17 @@ export function updateToolMeta(toolId: string) {
   const tool = TOOLS.find(t => t.id === toolId);
   if (!tool) return updateHomeMeta();
 
-  const title = `${tool.name} | NextTool`;
-  const desc = `${tool.description}. Files stay on your device, nothing is uploaded.`;
+  // Not clearPageSchema(), this route sets its own breadcrumb and FAQ below.
+  clearArticleMeta();
+  const title = toolTitle(tool.name);
+  const desc = truncateDescription(
+    `${tool.description}. Free, runs in your browser, no upload and no sign-up.`,
+  );
   const url = `${SITE}/tool/${tool.id}`;
 
   document.title = title;
   setMeta('description', desc);
+  setMeta('keywords', keywordList([tool.name, ...tool.keywords, 'free', 'online', 'no upload']));
   setMeta('og:title', title, true);
   setMeta('og:description', desc, true);
   setMeta('og:url', url, true);
@@ -180,6 +257,9 @@ export function updateCategoryMeta(cat: ToolCategory) {
 
   document.title = title;
   setMeta('description', desc);
+  setMeta('keywords', keywordList([
+    name, ...TOOLS.filter(t => t.category === cat).flatMap(t => t.keywords), 'free', 'online',
+  ]));
   setMeta('og:title', title, true);
   setMeta('og:description', desc, true);
   setMeta('og:url', url, true);
@@ -215,6 +295,7 @@ export function updatePageMeta(pageId: StaticPageId) {
 
   document.title = title;
   setMeta('description', page.description);
+  removeMeta('keywords');
   setMeta('og:title', title, true);
   setMeta('og:description', page.description, true);
   setMeta('og:url', url, true);
@@ -246,6 +327,7 @@ export function updateAllToolsMeta() {
 
   document.title = title;
   setMeta('description', desc);
+  setMeta('keywords', DEFAULT_KEYWORDS);
   setMeta('og:title', title, true);
   setMeta('og:description', desc, true);
   setMeta('og:url', url, true);
@@ -271,6 +353,7 @@ export function updateBlogIndexMeta() {
 
   document.title = title;
   setMeta('description', desc);
+  setMeta('keywords', keywordList(BLOG_POSTS.flatMap(p => p.tags)));
   setMeta('og:title', title, true);
   setMeta('og:description', desc, true);
   setMeta('og:url', url, true);
@@ -300,22 +383,76 @@ export function updateBlogIndexMeta() {
   ]));
 }
 
+/**
+ * A topic hub, /blog/topic/pdf and friends. These exist so the subject filter
+ * on the blog index is a real, linkable, indexable page rather than component
+ * state, which is the difference between six landing pages and none.
+ */
+export function updateBlogTopicMeta(category: BlogCategory) {
+  clearPageSchema();
+  const meta = BLOG_CATEGORY_META[category];
+  const posts = postsInCategory(category);
+  const title = `${meta.heading} | NextTool`;
+  const url = `${SITE}/blog/topic/${category}`;
+
+  document.title = title;
+  setMeta('description', meta.description);
+  setMeta('keywords', keywordList([meta.label, ...posts.flatMap(p => p.tags), 'guides']));
+  setMeta('og:title', meta.heading, true);
+  setMeta('og:description', meta.description, true);
+  setMeta('og:url', url, true);
+  setMeta('twitter:title', meta.heading);
+  setMeta('twitter:description', meta.description);
+  setCanonical(url);
+
+  setJsonLd('page-jsonld', {
+    '@context': 'https://schema.org',
+    '@type': 'CollectionPage',
+    name: meta.heading,
+    url,
+    description: meta.description,
+    isPartOf: { '@type': 'Blog', name: 'NextTool Blog', url: `${SITE}/blog` },
+    mainEntity: {
+      '@type': 'ItemList',
+      numberOfItems: posts.length,
+      itemListElement: posts.map((post, i) => ({
+        '@type': 'ListItem',
+        position: i + 1,
+        url: `${SITE}/blog/${post.slug}`,
+        name: post.title,
+      })),
+    },
+  });
+
+  setJsonLd('breadcrumb-jsonld', breadcrumbList([
+    { name: 'Home', url: `${SITE}/` },
+    { name: 'Blog', url: `${SITE}/blog` },
+    { name: meta.label, url },
+  ]));
+}
+
 export function updateBlogPostMeta(slug: string) {
   const post = getPost(slug);
   if (!post) return updateBlogIndexMeta();
 
   clearPageSchema();
-  const title = `${post.title} | NextTool`;
+  // Article headlines are already the keyword-bearing part, so when adding the
+  // site suffix would push the title past where results truncate, the suffix
+  // is what goes rather than the end of the headline.
+  const title = post.title.length + 11 <= TITLE_LIMIT ? `${post.title} | NextTool` : post.title;
   const url = `${SITE}/blog/${post.slug}`;
 
   document.title = title;
   setMeta('description', post.description);
+  setMeta('keywords', keywordList([...post.tags, BLOG_CATEGORY_LABELS[post.category], 'guide', 'nexttool']));
   setMeta('og:title', post.title, true);
   setMeta('og:description', post.description, true);
   setMeta('og:url', url, true);
   setMeta('og:type', 'article', true);
   setMeta('article:published_time', post.published, true);
+  setMeta('article:modified_time', post.updated ?? post.published, true);
   setMeta('article:section', BLOG_CATEGORY_LABELS[post.category], true);
+  setMeta('article:tag', post.tags.join(', '), true);
   setMeta('twitter:title', post.title);
   setMeta('twitter:description', post.description);
   setCanonical(url);
@@ -356,12 +493,17 @@ export function parseRoute(pathname: string): {
   category?: ToolCategory;
   pageId?: StaticPageId;
   blogSlug?: string;
+  blogTopic?: BlogCategory;
 } {
   const page = getStaticPageByPath(pathname);
   if (page) return { view: 'page', pageId: page.id };
   if (pathname === '/my-files') return { view: 'files' };
   if (pathname === '/settings') return { view: 'settings' };
   if (pathname === '/blog') return { view: 'blog' };
+  // Checked before the post pattern, otherwise /blog/topic/pdf reads as a post
+  // with the slug "topic" and 404s into the index.
+  const topicMatch = pathname.match(/^\/blog\/topic\/([a-z]+)$/);
+  if (topicMatch && isBlogCategory(topicMatch[1])) return { view: 'blog', blogTopic: topicMatch[1] };
   const postMatch = pathname.match(/^\/blog\/([a-z0-9-]+)$/);
   if (postMatch) return { view: 'blog', blogSlug: postMatch[1] };
   if (pathname === '/all-tools') return { view: 'all' };
@@ -371,6 +513,8 @@ export function parseRoute(pathname: string): {
   if (catMatch) return { view: 'category', category: catMatch[1] as ToolCategory };
   return { view: 'home' };
 }
+
+export const blogTopicPath = (category: BlogCategory): string => `/blog/topic/${category}`;
 
 export function buildPath(view: string, id?: string): string {
   if (view === 'files') return '/my-files';
