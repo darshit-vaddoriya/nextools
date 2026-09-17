@@ -46,7 +46,7 @@ export const Header: React.FC<HeaderProps> = ({
 
   // Full-height items so the active underline lands exactly on the header's bottom border.
   const navLink = (active: boolean) =>
-    `relative inline-flex items-center h-16 px-3 text-[13px] font-semibold tracking-[-0.01em]
+    `relative inline-flex items-center h-[52px] px-3 text-[13px] font-semibold tracking-[-0.01em]
      border-b-2 transition-colors duration-150 focus-visible:outline-none
      focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:rounded-md ${
       active
@@ -61,7 +61,7 @@ export const Header: React.FC<HeaderProps> = ({
       <div className={`border-b transition-colors duration-300 ${
         scrolled ? 'border-outline-variant' : 'border-outline-variant/50'
       } glass`}>
-        <div className="max-w-[1440px] mx-auto px-4 sm:px-8 h-16 flex items-center gap-2 sm:gap-4">
+        <div className="max-w-[1560px] mx-auto px-4 sm:px-8 h-[52px] flex items-center gap-2 sm:gap-4">
 
           {/* ── LOGO + BRAND NAME ──────────────────────────────── */}
           <AppLink
@@ -71,7 +71,7 @@ export const Header: React.FC<HeaderProps> = ({
               focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40"
             aria-label="NextTool Home"
           >
-            <div className="relative w-9 h-9 rounded-xl flex items-center justify-center shrink-0
+            <div className="relative w-8 h-8 rounded-xl flex items-center justify-center shrink-0
               bg-gradient-to-br from-primary to-tertiary text-white ring-1 ring-inset ring-white/20
               shadow-[0_2px_8px_-2px_rgb(var(--primary)/0.5)]
               transition-all duration-200 group-hover:shadow-[0_4px_14px_-2px_rgb(var(--primary)/0.65)]
@@ -81,7 +81,7 @@ export const Header: React.FC<HeaderProps> = ({
             </div>
 
             <div className="leading-tight text-left min-w-0">
-              <div className="text-[18px] sm:text-[19px] font-extrabold tracking-[-0.025em] whitespace-nowrap font-heading">
+              <div className="text-[17px] sm:text-[18px] font-extrabold tracking-[-0.025em] whitespace-nowrap font-heading">
                 <span className="text-on-surface">Next</span><span className="text-primary">Tool</span>
               </div>
             </div>
@@ -139,7 +139,7 @@ export const Header: React.FC<HeaderProps> = ({
                 rel="noopener noreferrer"
                 aria-label="Support NextTool"
                 title="Support NextTool"
-                className="group inline-flex items-center gap-1.5 h-9 px-3.5 rounded-xl text-[12.5px] font-semibold
+                className="group inline-flex items-center gap-1.5 h-8 px-3 rounded-xl text-[12.5px] font-semibold
                   bg-gradient-to-b from-rose-500 to-rose-600 text-white
                   ring-1 ring-inset ring-white/15 shadow-[0_2px_8px_-2px_rgba(244,63,94,0.5)]
                   hover:shadow-[0_4px_14px_-2px_rgba(244,63,94,0.6)] hover:-translate-y-px
@@ -158,7 +158,7 @@ export const Header: React.FC<HeaderProps> = ({
             <button
               onClick={() => setIsDrawerOpen(true)}
               aria-label="Open menu"
-              className="lg:hidden w-10 h-10 flex items-center justify-center rounded-xl
+              className="lg:hidden w-9 h-9 flex items-center justify-center rounded-xl
                 border border-outline-variant text-on-surface-variant
                 hover:bg-surface-container hover:text-on-surface hover:border-primary/40
                 active:scale-95 transition-all duration-150

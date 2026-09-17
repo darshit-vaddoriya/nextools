@@ -461,4 +461,194 @@ It is an approximation and it is accurate enough for mental arithmetic in the 4%
 
 For anything where the answer matters, use the actual formula, with a [scientific calculator](/tool/scientific-calc) if you are checking someone else's figure by hand. And whenever you are comparing two products, convert both to an effective annual rate first, because that is the only comparison that means anything.`,
   },
+  {
+    slug: 'unit-conversion-and-its-assumptions',
+    title: 'Unit conversion is not one multiplication',
+    description: 'Some conversions are a factor, some need an offset, and some depend on what you are measuring. Mixing them up is how spacecraft get lost.',
+    excerpt: 'Twice the temperature in Celsius is not twice the temperature. Half the conversions people treat as multiplication are not multiplication.',
+    category: 'numbers',
+    tags: ['units', 'conversion', 'measurement'],
+    published: '2026-09-15',
+    relatedTools: ['unit-converter', 'scientific-calc', 'percentage-calc'],
+    takeaways: [
+      'Ratio scales (length, mass, time) convert by multiplication. Interval scales (Celsius, Fahrenheit) need an offset, so doubling them is meaningless.',
+      'A US gallon and an imperial gallon differ by about 20%, and both are called "gallon". The same trap applies to tons, pints and fluid ounces.',
+      'Converting mass to volume requires a density, which is a property of the substance. A cup of flour and a cup of water are not the same weight.',
+      'Round only at the end. Rounding mid-chain compounds the error through every later step.',
+    ],
+    body: `Unit conversion looks like the most solved problem in arithmetic. It is also the cause of one of the most expensive software failures on record — the Mars Climate Orbiter, lost because one system produced pound-force seconds and another consumed newton-seconds — and of a steady stream of smaller errors in recipes, invoices and engineering spreadsheets.
+
+The reason is that "convert units" covers several genuinely different operations.
+
+## Ratio scales: a single factor
+
+Length, mass, duration, energy and data have a true zero. Zero metres is no length, and two metres is twice one metre. Conversion is one multiplication and the ratios compose:
+
+\`\`\`
+1 inch  = 25.4 mm       (exact, by definition)
+1 mile  = 1,609.344 m   (exact)
+1 kg    = 2.20462262 lb
+\`\`\`
+
+The first two are exact because the inch and the yard were redefined in terms of the metre in 1959. That is worth knowing: many imperial units are now *defined* metrically, so the conversion is not an approximation.
+
+## Interval scales: a factor and an offset
+
+Celsius and Fahrenheit have arbitrary zeros. Zero degrees is not the absence of temperature, so ratios are meaningless — 20 °C is not twice as hot as 10 °C in any physical sense.
+
+\`\`\`
+°F = °C × 9/5 + 32
+°C = (°F − 32) × 5/9
+\`\`\`
+
+The offset also means differences convert differently from values. A rise of 10 °C is a rise of 18 °F, not 50 °F. Applying the value formula to a difference is a standard bug in weather and process-control code.
+
+Kelvin is the exception: it has a true zero, so it is a ratio scale and 200 K really is twice 100 K.
+
+## The same name, different sizes
+
+Several unit names mean different quantities depending on where you are:
+
+- **Gallon.** US 3.785 L, imperial 4.546 L — about 20% apart.
+- **Fluid ounce.** US 29.57 mL, imperial 28.41 mL.
+- **Ton.** Short 907 kg, long 1,016 kg, metric 1,000 kg.
+- **Pint.** US 473 mL, imperial 568 mL.
+- **Billion.** Now 10⁹ almost everywhere, but older European documents use 10¹².
+
+None of these is signalled by the unit name, so a fuel-economy or shipping-weight figure copied between two documents can be 10–20% wrong with nothing to flag it. A [unit converter](/tool/unit-converter) that names the system explicitly — US liquid gallon, not "gallon" — is not being pedantic; it is the only way the answer is defined.
+
+> [!NOTE]
+> Fuel economy is a double trap: miles per gallon is distance ÷ volume, litres per 100 km is volume ÷ distance. They are reciprocals, so converting is not a factor at all, and a higher number is better in one and worse in the other.
+
+## Conversions that need a property
+
+Some "conversions" are not unit conversions:
+
+**Mass to volume** requires density. 1 kg of water is 1 L; 1 kg of flour is about 1.9 L; 1 kg of honey is about 0.7 L. This is why cup measurements in recipes are unreliable across ingredients, and why professional baking uses mass.
+
+**Currency** requires a rate, which changes every second and differs between mid-market, card and cash. There is no intrinsic factor between two currencies; a [currency converter](/tool/currency-converter) reports a rate at a moment, not a fact.
+
+**Data rate to transfer time** requires the actual throughput, not the advertised one. And bits versus bytes is a factor of eight that connection speeds and file sizes deliberately state differently.
+
+**KB versus KiB.** 1 kB is 1,000 bytes; 1 KiB is 1,024. Storage manufacturers use the first, operating systems historically used the second, and the gap grows with scale — about 7% at the terabyte level, which is exactly why a "2 TB" drive shows as 1.81 TB.
+
+> [!WARNING]
+> Round once, at the end. Converting inches to centimetres, rounding to a whole number, then converting to metres and rounding again produces an error several times larger than doing the full chain at full precision and rounding the final figure. In spreadsheets, be sure you are rounding the value rather than only its display — the two behave very differently downstream.
+
+## Practical rules
+
+1. Write the unit next to every number, in cells, variables and API fields.
+2. Name the system, not just the unit: \`us_gallons\`, not \`gallons\`.
+3. Convert at the boundary, store one canonical unit internally.
+4. Treat temperature differences separately from temperature values.
+5. Round at the end, once.
+
+The [unit converter](/tool/unit-converter) and [scientific calculator](/tool/scientific-calc) here run locally, so checking a figure is instant and the numbers you are checking stay on your machine.`,
+  },
+  {
+    slug: 'gst-invoices-and-rounding',
+    title: 'GST on an invoice: inclusive, exclusive and where the rounding goes',
+    description: 'Tax arithmetic is simple until rounding, line items and reverse calculations meet. Most invoice disputes are one paise of rounding order.',
+    excerpt: 'Adding 18% and then removing 18% does not return the original number. That single fact explains most tax-inclusive pricing confusion.',
+    category: 'numbers',
+    tags: ['gst', 'tax', 'invoices', 'rounding'],
+    published: '2026-09-15',
+    relatedTools: ['gst-calculator', 'percentage-calc', 'number-to-words'],
+    takeaways: [
+      'To remove tax from an inclusive amount, divide by (1 + rate). Subtracting the rate percentage gives a different and wrong answer.',
+      'Round per line item, then total — rounding the total after summing unrounded lines produces figures that do not reconcile.',
+      'A 100 discounted by 10% then taxed at 18% differs from one taxed then discounted. Order is a policy decision, not arithmetic.',
+      'Amounts in words on an invoice exist to make tampering obvious, which is why the words and the figures must be generated from the same number.',
+    ],
+    body: `An invoice is arithmetic anyone can do and a surprising number of systems get wrong. Not because the percentages are hard, but because rounding, ordering and inclusive pricing interact.
+
+## Adding and removing are not symmetric
+
+Adding tax at rate r to a base amount:
+
+\`\`\`
+total = base × (1 + r)
+100 × 1.18 = 118
+\`\`\`
+
+Removing it from a tax-inclusive amount:
+
+\`\`\`
+base = total ÷ (1 + r)
+118 ÷ 1.18 = 100
+\`\`\`
+
+The mistake is to subtract 18% from the inclusive figure: 118 − 18% = 96.76, which is wrong by 3.24. The percentage is of the base, and once tax is included the base is no longer the number you are looking at.
+
+The general reverse formulas:
+
+\`\`\`
+base       = inclusive ÷ (1 + r)
+tax amount = inclusive × r ÷ (1 + r)
+\`\`\`
+
+At 18%, the tax portion of an inclusive amount is \`× 0.18/1.18\`, about 15.25% — not 18%. This is the single most common tax arithmetic error in spreadsheets.
+
+> [!NOTE]
+> A [GST calculator](/tool/gst-calculator) with an explicit inclusive/exclusive switch exists because the two directions genuinely differ. If a tool only asks for "amount" and "rate", it has assumed a direction for you.
+
+## Where the rounding happens
+
+Three lines, 18% GST:
+
+\`\`\`
+Line 1  1,234.56  → tax 222.2208
+Line 2    987.65  → tax 177.7770
+Line 3     45.99  → tax   8.2782
+\`\`\`
+
+**Round per line, then sum:** 222.22 + 177.78 + 8.28 = 408.28
+**Sum, then round:** 408.2760 → 408.28
+
+Here they agree. Change the numbers slightly and they will not, by a paise or two — and a discrepancy of a paise is enough for a reconciliation to fail or a tax filing to be rejected.
+
+The rule most jurisdictions settle on is: round at the line level, then sum the rounded values, so every printed number on the invoice adds up to every other printed number. An invoice where the visible lines do not sum to the visible total is wrong even when the underlying maths is right.
+
+Pick one rule and apply it everywhere — invoice generation, accounting export and any report that recomputes totals. Two systems with different rounding rules produce endless one-paise differences that cost more time than the amounts involved.
+
+## Discount before or after
+
+A 1,000 item with a 10% discount at 18% GST:
+
+**Discount first:** 1,000 − 100 = 900, tax 162, total 1,062.
+**Tax first:** 1,000 + 180 = 1,180, less 10% = 1,062.
+
+Identical, because both are multiplications and multiplication commutes. But add rounding at each step, or a flat-amount discount rather than a percentage, and they diverge. Tax is normally charged on the discounted value — you are taxed on what you actually pay — so discount first is both the usual rule and the one that survives an audit.
+
+## Splitting the tax
+
+Where GST is split into components, the split is of the same total, not an extra charge:
+
+\`\`\`
+Intra-state:  18% = 9% CGST + 9% SGST
+Inter-state:  18% IGST
+\`\`\`
+
+Each component is computed on the base and rounded on its own line, which is another place a per-line rounding rule matters: two 9% halves rounded independently may not sum to the 18% figure rounded once.
+
+> [!WARNING]
+> Never store money as a floating point number. 0.1 + 0.2 is not 0.3 in binary floating point, and the error accumulates across thousands of lines. Store paise as integers, or use a decimal type. This is not theoretical — it is the source of totals that are off by a few paise with no identifiable line responsible.
+
+## Amounts in words
+
+Invoices print the total in words because words are hard to alter convincingly: a figure can have a digit added, a sentence cannot.
+
+That only works if the words and the figures come from the same value, after rounding, in the same pass. Generating words from a pre-rounding value produces an invoice that contradicts itself, which is exactly the discrepancy the convention exists to catch. A [number-to-words converter](/tool/number-to-words) handles the Indian lakh/crore grouping, which differs from the international thousand/million grouping and is a common error in templates built from foreign examples.
+
+## A checklist for an invoice
+
+1. Decide inclusive or exclusive and label it on the document.
+2. Apply discounts before tax.
+3. Compute and round tax per line.
+4. Sum the rounded lines for the total.
+5. Split components from the base, not from the rounded tax.
+6. Generate the words from the final rounded total.
+
+The [GST](/tool/gst-calculator) and [percentage](/tool/percentage-calc) calculators here run in the tab, which is worth having when the figures you are checking are a client's and not yet public.`,
+  },
 ];

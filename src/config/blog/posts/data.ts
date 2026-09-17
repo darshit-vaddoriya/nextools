@@ -852,4 +852,81 @@ Not everything invalid should be rejected, and this is worth deciding deliberate
 
 The cost of rejecting valid data is a customer who cannot complete a form and does not tell you. That failure is silent, which makes it easy to under-weight against the visible cost of a bad record.`,
   },
+  {
+    slug: 'merging-csv-files-that-do-not-line-up',
+    title: 'Merging CSV files whose columns do not line up',
+    description: 'Combining exports is easy when the headers match and a data-loss trap when they do not. The failure is silent, which is the problem.',
+    excerpt: 'Twelve monthly exports, one combined file. Two of the months added a column, one renamed another, and a naive concatenation hides all of it.',
+    category: 'data',
+    tags: ['csv', 'merge', 'data-cleaning'],
+    published: '2026-09-16',
+    relatedTools: ['merge-csv', 'csv-cleaner', 'remove-duplicates', 'csv-viewer'],
+    takeaways: [
+      'Compare header sets before merging. Same names in a different order, renamed columns and extra columns all produce different kinds of damage.',
+      'Stacking rows and joining on a key are different operations. Stacking adds rows; joining adds columns and can multiply rows.',
+      'Record which file each row came from. Without a source column, a wrong total is untraceable once the files are combined.',
+      'Deduplicate on a real key, not on whole-row equality, or you will keep two copies of the same record that differ by a trailing space.',
+    ],
+    body: `You have twelve monthly exports and you need one file. It looks like a job for concatenation, and for about eight of the twelve it is. The other four are why combined datasets quietly go wrong.
+
+## Check the headers first
+
+Before merging anything, list the header row of every file and compare the sets. Four situations, four different consequences:
+
+**Identical headers, same order.** Safe. Stack the rows.
+
+**Identical headers, different order.** Safe only if the merge is header-aware. A tool that concatenates lines positionally will put July's email addresses into the phone column, and nothing about the result looks wrong until someone reads a row.
+
+**Extra columns in some files.** The merged file needs the union of columns, with blanks where a file did not have that field. What you must not do is drop the column, which is what "keep only common columns" silently does.
+
+**Renamed columns.** \`customer_id\` in one export and \`CustomerID\` in the next produce two separate columns, each half empty. This one is easy to spot in the merged header and very hard to spot in a summary figure later.
+
+> [!NOTE]
+> A [CSV merger](/tool/merge-csv) that matches on header names rather than position handles the first three correctly. The renamed-column case cannot be solved automatically — only you know that those two names mean the same thing.
+
+## Stacking is not joining
+
+These get conflated and they are different shapes of operation.
+
+**Stacking (union / append).** Files have the same kind of rows. January's orders plus February's orders. The result has the rows of both and the columns of the union.
+
+**Joining (lookup).** Files have different kinds of rows related by a key. Orders plus a customer table, matched on customer ID. The result has the columns of both and — critically — a row count that depends on the matching.
+
+A join against a key that is not unique multiplies rows. Two customer records with the same ID and 500 orders gives you 1,000 rows and every total doubles. Before joining, confirm the key is unique on at least one side; if it is not, deduplicate that side first.
+
+## Add a source column
+
+Before merging, add a column to each file holding its filename or period. It costs nothing and it is the difference between "the total is 4% too high" being a five-minute check and a two-hour one.
+
+It also catches the most common merge error of all — including the same file twice, which is easy when the exports are named \`export.csv\`, \`export (1).csv\` and \`export (2).csv\`.
+
+## Deduplicate deliberately
+
+After merging, duplicates fall into three categories:
+
+**Exact duplicates.** The same row twice, usually from merging a file twice. Safe to remove on whole-row equality.
+
+**Key duplicates with identical data.** Same record exported in two overlapping periods. Remove on the key.
+
+**Key duplicates with different data.** The record changed between exports. This is not a duplicate; it is two versions, and only you can decide whether you want the latest, the earliest, or both. Removing them automatically destroys information.
+
+The trap is whitespace. \`"Acme Ltd "\` and \`"Acme Ltd"\` are different strings, so whole-row deduplication keeps both. [Trim and normalise](/tool/csv-cleaner) before [removing duplicates](/tool/remove-duplicates), in that order, or the deduplication will do almost nothing.
+
+> [!WARNING]
+> Watch encodings across files. If eleven exports are UTF-8 and one is Windows-1252, the merged file has two encodings in it and every accented name in that twelfth file is broken — often only visible in a handful of rows. Convert everything to UTF-8 before merging, not after.
+
+## An order that works
+
+1. Open each file and compare headers. Resolve renames by hand.
+2. Normalise encoding to UTF-8 across all files.
+3. Add a source column to each.
+4. Stack header-aware, taking the union of columns.
+5. Trim whitespace and normalise case in key fields.
+6. Deduplicate on the real key, deciding explicitly what to do with changed records.
+7. Check the row count against the sum of the inputs and account for any difference.
+
+Step seven is the one that catches everything else. If 12 files totalling 48,210 rows produce 47,980, something dropped rows, and finding out what before you build a report on it is considerably cheaper than afterwards.
+
+The [merge](/tool/merge-csv), [clean](/tool/csv-cleaner) and [deduplicate](/tool/remove-duplicates) tools here work on the files in the browser, which is the right property for exports that contain customer records.`,
+  },
 ];

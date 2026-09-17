@@ -1,9 +1,10 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { CopyButton } from '../components/CopyButton';
 import { errorMessage } from '../utils/errorMessage';
 import {
   Play, Minimize2, Trash2, AlertTriangle, Sparkles,
-  Download, FileJson, ListTree,
+  Download, FileJson, ListTree, Maximize2, X,
 } from 'lucide-react';
 import { DarkPanel, WhitePanel, Segmented, SegmentedButton, StatusPill } from '../components/DevToolChrome';
 
@@ -51,6 +52,18 @@ export const JsonFormatter: React.FC = () => {
   const [indent, setIndent] = useState<number>(2);
   const [error, setError] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<'formatted' | 'tree'>('formatted');
+  const [fullscreen, setFullscreen] = useState(false);
+
+  useEffect(() => {
+    if (!fullscreen) return;
+    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') setFullscreen(false); };
+    window.addEventListener('keydown', onKey);
+    document.body.style.overflow = 'hidden';
+    return () => {
+      window.removeEventListener('keydown', onKey);
+      document.body.style.overflow = '';
+    };
+  }, [fullscreen]);
 
   const runFormat = (value: string, indentSize: number) => {
     if (!value.trim()) {
@@ -135,10 +148,24 @@ export const JsonFormatter: React.FC = () => {
   const inputLines = input ? input.split('\n').length : 0;
   const isValid = !error && output.length > 0;
 
-  return (
-    <div className="space-y-3">
-      {/* ── Toolbar ─────────────────────────────────────────── */}
-      <div className="flex flex-wrap items-center justify-between gap-3">
+  /** Panel heights: fixed in the page, stretched to the viewport in full view. */
+  const inputHeight = fullscreen ? 'h-full min-h-0' : 'h-[360px] lg:h-[620px]';
+  const outputHeight = fullscreen ? 'h-full min-h-0' : 'h-[460px] lg:h-[620px]';
+
+  const fullViewButton = (
+    <button
+      onClick={() => setFullscreen(true)}
+      title="Open full view"
+      aria-label="Open full view"
+      className="inline-flex items-center gap-1.5 px-2.5 py-2 text-[12.5px] font-medium text-muted-foreground hover:text-foreground border border-border rounded-lg hover:bg-muted transition-colors duration-150"
+    >
+      <Maximize2 className="w-3.5 h-3.5" />
+      Full view
+    </button>
+  );
+
+  const toolbar = (
+    <div className="flex flex-wrap items-center justify-between gap-3">
         <div className="flex flex-wrap items-center gap-2">
           <button
             onClick={handleFormat}
@@ -177,85 +204,130 @@ export const JsonFormatter: React.FC = () => {
           </button>
         </div>
 
-        <StatusPill valid={isValid} validLabel={`Valid · ${output.length} chars`} invalidLabel={error ? 'Invalid JSON' : 'Empty'} />
-      </div>
-
-      {error && (
-        <div className="flex items-center gap-2 p-3 bg-rose-500/10 border border-rose-500/30 rounded-xl text-rose-500 dark:text-rose-400 text-xs">
-          <AlertTriangle className="w-4 h-4 shrink-0" />
-          <span>{error}</span>
+        <div className="flex items-center gap-2">
+          <StatusPill valid={isValid} validLabel={`Valid · ${output.length} chars`} invalidLabel={error ? 'Invalid JSON' : 'Empty'} />
+          {!fullscreen && fullViewButton}
         </div>
-      )}
+      </div>
+  );
 
-      {/* ── Editor grid ─────────────────────────────────────── */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-3.5">
-        {/* Input pane */}
-        <DarkPanel
-          label="Input"
-          headerRight={<span className="font-mono text-[11px] text-[color:var(--devpanel-label)]">{input.length} chars · {inputLines} lines</span>}
-          className="h-[360px] lg:h-[520px]"
-        >
-          <textarea
-            value={input}
-            onChange={(e) => {
-              setInput(e.target.value);
-              runFormat(e.target.value, indent);
-            }}
-            spellCheck={false}
-            placeholder="Paste your unformatted JSON here... (live format)"
-            className="flex-1 w-full bg-transparent p-4 text-[13.5px] font-mono text-[color:var(--devpanel-text)] placeholder:text-[color:var(--devpanel-label)] resize-none focus:outline-none leading-relaxed outline-none"
-          />
-        </DarkPanel>
+  const errorBanner = error ? (
+    <div className="flex items-center gap-2 p-3 bg-rose-500/10 border border-rose-500/30 rounded-xl text-rose-500 dark:text-rose-400 text-xs">
+      <AlertTriangle className="w-4 h-4 shrink-0" />
+      <span>{error}</span>
+    </div>
+  ) : null;
 
-        {/* Output pane */}
-        <WhitePanel
-          label="Output"
-          headerRight={
-            <div className="flex items-center gap-1">
-              <button
-                onClick={() => setActiveTab('formatted')}
-                className={`inline-flex items-center gap-1.5 px-2.5 py-1.5 text-[11.5px] font-bold rounded-md transition-colors duration-150 ${
-                  activeTab === 'formatted' ? 'text-primary' : 'text-muted-foreground hover:text-foreground'
-                }`}
-              >
-                <FileJson className="w-3.5 h-3.5" /> Formatted
-              </button>
-              <button
-                onClick={() => setActiveTab('tree')}
-                className={`inline-flex items-center gap-1.5 px-2.5 py-1.5 text-[11.5px] font-bold rounded-md transition-colors duration-150 ${
-                  activeTab === 'tree' ? 'text-primary' : 'text-muted-foreground hover:text-foreground'
-                }`}
-              >
-                <ListTree className="w-3.5 h-3.5" /> Tree
-              </button>
-              <CopyButton text={output} label="Copy" />
-              <button
-                onClick={() => downloadText(output, 'formatted.json')}
-                disabled={!output}
-                className="inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-medium rounded-md border border-border bg-muted text-foreground/80 hover:bg-muted hover:border-input hover:text-foreground transition-all duration-150 disabled:opacity-40 disabled:cursor-not-allowed"
-              >
-                <Download className="w-3.5 h-3.5" />
-              </button>
-            </div>
-          }
-          className="h-[440px] lg:h-[520px]"
-        >
-          <div className="flex-1 p-4 overflow-auto font-mono text-[13.5px]">
-            {activeTab === 'formatted' ? (
-              <pre className="text-foreground whitespace-pre-wrap leading-relaxed select-text">
-                {output || <span className="text-muted-foreground font-sans">Formatted output will appear here...</span>}
-              </pre>
+  const inputPane = (
+    <DarkPanel
+      label="Input"
+      headerRight={<span className="font-mono text-[11px] text-[color:var(--devpanel-label)]">{input.length} chars · {inputLines} lines</span>}
+      className={inputHeight}
+    >
+      <textarea
+        value={input}
+        onChange={(e) => {
+          setInput(e.target.value);
+          runFormat(e.target.value, indent);
+        }}
+        spellCheck={false}
+        placeholder="Paste your unformatted JSON here... (live format)"
+        className="flex-1 w-full bg-transparent p-4 text-[13.5px] font-mono text-[color:var(--devpanel-text)] placeholder:text-[color:var(--devpanel-label)] resize-none focus:outline-none leading-relaxed outline-none"
+      />
+    </DarkPanel>
+  );
+
+  const outputPane = (
+    <WhitePanel
+      label="Output"
+      headerRight={
+        <div className="flex items-center gap-1">
+          <button
+            onClick={() => setActiveTab('formatted')}
+            className={`inline-flex items-center gap-1.5 px-2.5 py-1.5 text-[11.5px] font-bold rounded-md transition-colors duration-150 ${
+              activeTab === 'formatted' ? 'text-primary' : 'text-muted-foreground hover:text-foreground'
+            }`}
+          >
+            <FileJson className="w-3.5 h-3.5" /> Formatted
+          </button>
+          <button
+            onClick={() => setActiveTab('tree')}
+            className={`inline-flex items-center gap-1.5 px-2.5 py-1.5 text-[11.5px] font-bold rounded-md transition-colors duration-150 ${
+              activeTab === 'tree' ? 'text-primary' : 'text-muted-foreground hover:text-foreground'
+            }`}
+          >
+            <ListTree className="w-3.5 h-3.5" /> Tree
+          </button>
+          <CopyButton text={output} label="Copy" />
+          <button
+            onClick={() => downloadText(output, 'formatted.json')}
+            disabled={!output}
+            title="Download JSON"
+            aria-label="Download JSON"
+            className="inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-medium rounded-md border border-border bg-muted text-foreground/80 hover:bg-muted hover:border-input hover:text-foreground transition-all duration-150 disabled:opacity-40 disabled:cursor-not-allowed"
+          >
+            <Download className="w-3.5 h-3.5" />
+          </button>
+        </div>
+      }
+      className={outputHeight}
+    >
+      <div className="flex-1 p-4 overflow-auto font-mono text-[13.5px]">
+        {activeTab === 'formatted' ? (
+          <pre className="text-foreground whitespace-pre-wrap leading-relaxed select-text">
+            {output || <span className="text-muted-foreground font-sans">Formatted output will appear here...</span>}
+          </pre>
+        ) : (
+          <div>
+            {parsedTree ? (
+              renderJsonTree(parsedTree)
             ) : (
-              <div>
-                {parsedTree ? (
-                  renderJsonTree(parsedTree)
-                ) : (
-                  <span className="text-muted-foreground font-sans">Valid JSON required for tree view.</span>
-                )}
-              </div>
+              <span className="text-muted-foreground font-sans">Valid JSON required for tree view.</span>
             )}
           </div>
-        </WhitePanel>
+        )}
+      </div>
+    </WhitePanel>
+  );
+
+  if (fullscreen) {
+    // Portalled to <body>: rendered in place it would sit under the sticky site header
+    // (also z-50) and its own Close button would be hidden.
+    return createPortal(
+      <div className="fixed inset-0 z-[90] bg-background flex flex-col p-4 gap-3">
+        <div className="flex items-center justify-between gap-3 shrink-0">
+          <div className="flex items-center gap-2 text-[13px] font-bold text-foreground">
+            <FileJson className="w-4 h-4 text-primary" />
+            JSON Formatter · full view
+          </div>
+          <button
+            onClick={() => setFullscreen(false)}
+            aria-label="Close full view"
+            className="inline-flex items-center gap-1.5 pl-2.5 pr-3 py-1.5 rounded-lg text-[12.5px] font-bold bg-muted text-foreground hover:bg-border transition-colors"
+          >
+            <X className="w-4 h-4" />
+            Close
+            <kbd className="ml-0.5 px-1.5 py-0.5 rounded border border-border bg-card text-[10px] font-mono font-semibold text-muted-foreground">Esc</kbd>
+          </button>
+        </div>
+        <div className="shrink-0">{toolbar}</div>
+        {errorBanner}
+        <div className="flex-1 min-h-0 grid grid-cols-1 lg:grid-cols-2 gap-3.5">
+          {inputPane}
+          {outputPane}
+        </div>
+      </div>,
+      document.body,
+    );
+  }
+
+  return (
+    <div className="space-y-3">
+      {toolbar}
+      {errorBanner}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-3.5">
+        {inputPane}
+        {outputPane}
       </div>
     </div>
   );

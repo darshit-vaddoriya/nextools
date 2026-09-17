@@ -495,6 +495,11 @@ export function parseRoute(pathname: string): {
   blogSlug?: string;
   blogTopic?: BlogCategory;
 } {
+  // Netlify's pretty-URL handling 301s /blog to /blog/, so every hard refresh
+  // and every shared link arrives here with a trailing slash. Without this the
+  // patterns below all miss and the app drops the reader on the home page.
+  if (pathname.length > 1 && pathname.endsWith('/')) pathname = pathname.replace(/\/+$/, '') || '/';
+
   const page = getStaticPageByPath(pathname);
   if (page) return { view: 'page', pageId: page.id };
   if (pathname === '/my-files') return { view: 'files' };

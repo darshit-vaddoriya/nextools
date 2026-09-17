@@ -1580,4 +1580,156 @@ And encode parameter values properly. A value containing an ampersand silently s
 
 Pulling every link out of a block of text, which is the usual first step when auditing an email template or a page of content, is what [URL extraction](/tool/extract-urls) is for. All of these run in the tab, which matters because the links people paste into online parsers are frequently the ones carrying a token.`,
   },
+  {
+    slug: 'mime-types-and-file-signatures',
+    title: 'MIME types, magic bytes and why a file opens as the wrong thing',
+    description: 'The extension, the declared MIME type and the actual bytes are three separate claims about a file, and any of them can be wrong.',
+    excerpt: 'An upload rejects your PNG for not being a PNG. The extension says one thing, the first eight bytes say another, and the server believes the bytes.',
+    category: 'dev',
+    tags: ['mime', 'file-formats', 'uploads'],
+    published: '2026-09-16',
+    relatedTools: ['mime-checker', 'image-convert', 'zip-extractor'],
+    takeaways: [
+      'A file extension is a naming convention, not a fact about the contents. Renaming .webp to .png converts nothing.',
+      'Most formats start with a signature — magic bytes — that identifies them regardless of name. That is what strict uploaders check.',
+      'Browsers decide what to do with a response from the Content-Type header, not the URL, which is why a served file can download instead of displaying.',
+      'Never trust a client-supplied MIME type on the server. It is chosen by whoever uploaded the file.',
+    ],
+    body: `You rename a photo from \`.webp\` to \`.png\` and the upload still refuses it. Or a download that should open in the browser saves to disk instead. Or a CSV opens in a text editor as gibberish. All three are the same confusion: there are several independent claims about what a file is, and they disagree.
+
+## Three claims, not one
+
+**The extension.** Characters after the last dot in the name. It is a hint for the operating system about which program to launch, and it is trivially wrong because anyone can rename anything.
+
+**The MIME type.** A label like \`image/png\` or \`text/csv\` transmitted alongside the file — in an HTTP \`Content-Type\` header, in a multipart upload, in an email part. It describes intent and it is also just a claim.
+
+**The magic bytes.** The first few bytes of the file itself, which most formats define as a fixed signature. This is the only one of the three derived from the actual contents.
+
+When they conflict, different systems believe different ones, which is exactly why the same file behaves differently in three places.
+
+## Signatures worth recognising
+
+\`\`\`
+PNG    89 50 4E 47 0D 0A 1A 0A      .PNG....
+JPEG   FF D8 FF                     ....
+GIF    47 49 46 38                  GIF8
+PDF    25 50 44 46 2D               %PDF-
+ZIP    50 4B 03 04                  PK..
+RIFF   52 49 46 46 .... 57 45 42 50 RIFF....WEBP
+\`\`\`
+
+Two of those explain a lot of everyday confusion.
+
+\`PK\` at the start of a ZIP is the initials of Phil Katz, and it appears at the start of DOCX, XLSX, PPTX, ODT, EPUB, JAR and APK files — because all of those *are* ZIP archives with a prescribed internal structure. That is why [a ZIP extractor can open a DOCX](/tool/zip-extractor) and show you the XML inside, and why a corrupt Office file is often a corrupt ZIP.
+
+\`%PDF-\` is ASCII, which is why a PDF header is readable in a text editor and why a truncated PDF can sometimes be diagnosed by eye.
+
+> [!NOTE]
+> Checking the signature is how you find out what a file really is. A [MIME checker](/tool/mime-checker) reads the leading bytes and reports the format, which settles the "but it is a PNG" argument in one step — and confirms that renaming changed nothing.
+
+## Why the browser downloads instead of displaying
+
+When a browser fetches a URL, what it does with the response is decided by the \`Content-Type\` header, not by the path. A PDF served as \`application/octet-stream\` downloads. The same file served as \`application/pdf\` opens in the viewer.
+
+Two related headers finish the story. \`Content-Disposition: attachment\` forces a download regardless of type, and \`X-Content-Type-Options: nosniff\` tells the browser not to second-guess the declared type by inspecting the bytes.
+
+That sniffing is the historical behaviour: browsers used to examine content when the declared type looked wrong, which was convenient and also a security hole, because a file uploaded as text and sniffed as HTML could execute script on the site's own origin. Hence \`nosniff\` on anything user-supplied.
+
+> [!WARNING]
+> On a server, the MIME type in an upload is supplied by the client and can say anything. Validate by reading the signature yourself, re-encode images rather than storing them as received, and serve user content from a separate origin with \`nosniff\`. A file named \`avatar.png\` with a \`PK\` header is not an image.
+
+## Text files have no signature
+
+Plain text formats — CSV, JSON, Markdown, YAML, SQL — have no magic bytes, which is why detection for them is guesswork and why a CSV can be opened as anything.
+
+The one marker that does appear is a byte order mark: \`EF BB BF\` for UTF-8. It is invisible in most editors and is a recurring cause of a first column header arriving with three strange characters in front of it, or a JSON parser rejecting a file that looks perfectly valid. See [mojibake and UTF-8](/blog/unicode-utf8-and-mojibake) for why that happens and what to do about it.
+
+## Converting versus renaming
+
+The distinction that started this: renaming changes the label, converting rewrites the bytes.
+
+To make a WebP into a real PNG you have to decode the image and re-encode it in PNG, which an [image converter](/tool/image-convert) does. The file that comes out has \`89 50 4E 47\` at the front and will pass any check. The renamed one never will, and the failure message will usually be unhelpful about why.
+
+## A short diagnostic
+
+1. Read the signature. That tells you what the file is.
+2. Compare it to the extension. Mismatch → rename or convert, depending on which one is wrong.
+3. Behaving oddly over HTTP → check \`Content-Type\` and \`Content-Disposition\`.
+4. Rejected by an upload → the server almost certainly checked the bytes, not the name.
+
+Checking a file's type is pure local inspection, so the [MIME checker](/tool/mime-checker) here reads it in the tab without the file going anywhere.`,
+  },
+  {
+    slug: 'what-a-user-agent-string-says',
+    title: 'What a user agent string actually says about you',
+    description: 'The user agent is a browser identifying itself in a format shaped by decades of compatibility hacks, and it is losing detail on purpose.',
+    excerpt: 'Every browser claims to be Mozilla. The string is part identification, part historical fiction, and it is a weaker signal every year.',
+    category: 'dev',
+    tags: ['user-agent', 'browsers', 'privacy'],
+    published: '2026-09-15',
+    relatedTools: ['user-agent-parser', 'url-parser'],
+    takeaways: [
+      'Every mainstream browser begins its user agent with "Mozilla/5.0" for compatibility with 1990s server sniffing. It carries no information.',
+      'Browsers are freezing and reducing the string on purpose, so version and platform detail is deliberately less precise than it used to be.',
+      'Detect capabilities, not browsers. Feature detection stays correct when the string changes; version comparisons do not.',
+      'A user agent is trivially spoofed, so it is never a security control — but combined with other signals it still contributes to fingerprinting.',
+    ],
+    body: `Every HTTP request your browser makes carries a \`User-Agent\` header. It looks like a specification and reads like an archaeology site:
+
+\`\`\`
+Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36
+(KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36
+\`\`\`
+
+That is Chrome on Windows. It claims to be Mozilla, mentions Apple's rendering engine, claims to be like Gecko, and ends by claiming to be Safari. Only one token in it is true in the obvious sense.
+
+## Why it reads like that
+
+In the 1990s, servers checked the user agent to decide whether to send frames-capable HTML. Netscape ("Mozilla") supported frames, so servers looked for that token. Internet Explorer supported frames too, and to avoid being served the stripped-down page it claimed to be "Mozilla (compatible; MSIE …)".
+
+Every browser since has inherited the problem. Safari added \`AppleWebKit\` and also claimed \`like Gecko\` so that Gecko-targeting code would work. Chrome added \`Chrome/\` and kept \`Safari/\` so WebKit-targeting code would work. Edge added \`Edg/\` and kept everything else.
+
+The string is therefore a stack of compatibility claims in rough historical order, and the only reliable way to read it is to look for the most specific token present — \`Edg/\` before \`Chrome/\`, \`Chrome/\` before \`Safari/\` — which is exactly what a [user agent parser](/tool/user-agent-parser) does.
+
+## What it is legitimately used for
+
+**Analytics.** Aggregate browser and platform share, to decide what to test and what to stop supporting.
+
+**Serving the right asset.** Offering an APK to Android and an IPA to iOS from the same download page.
+
+**Bug reproduction.** A bug report is much more actionable with the exact browser and version attached.
+
+**Crawler identification.** Bots identify themselves in the user agent, which is how a server distinguishes a search crawler from a person.
+
+## What it should not be used for
+
+**Feature detection.** "Is this Safari 14" is a proxy for "does this support the API I want", and a bad one. Ask about the API directly; the answer stays correct across versions, forks and embedded webviews you have never heard of.
+
+**Security decisions.** The header is set by the client. Anyone can change it in a devtools panel or a one-line curl flag. Nothing that matters should depend on its value.
+
+**Blocking.** Blocking by user agent blocks polite bots and courteous users, and does nothing to anything hostile, which will send whatever string gets through.
+
+> [!NOTE]
+> Parsing a user agent is a string-matching exercise, so a [parser](/tool/user-agent-parser) that runs in the tab is enough — there is nothing to look up remotely. That also means you can paste a string from a production log without it travelling anywhere.
+
+## The string is shrinking on purpose
+
+The user agent is a fingerprinting surface: precise OS version, exact browser build and device model combine with other signals to identify a specific person across sites without any cookie.
+
+So browsers have been reducing it. Chrome freezes parts of the string and reports minor versions as zeros. Safari has reported a near-static string for years. Platform detail on mobile has been generalised — many Android devices now report a single generic model rather than their own.
+
+The replacement is Client Hints: the browser sends a low-entropy set by default (rough platform, rough browser) and a site must explicitly request more detail, which makes the request visible rather than automatic.
+
+The practical consequence is that user-agent-derived analytics get vaguer every year, and code that compares version numbers gets more fragile. Both arguments point the same way: detect capabilities.
+
+> [!WARNING]
+> Changing your user agent does not make you anonymous. An unusual string is *more* identifying, not less, because very few people have it. Fingerprinting works on the combination of signals — fonts, screen size, timezone, GPU — and a mismatched user agent adds one more distinguishing feature. See [what your browser announces](/blog/what-your-browser-announces) for the rest of the surface.
+
+## Reading one quickly
+
+1. Ignore \`Mozilla/5.0\`. Every browser says it.
+2. Find the most specific browser token: \`Edg/\`, \`OPR/\`, \`SamsungBrowser/\`, then \`Chrome/\`, then \`Firefox/\`, then \`Safari/\`.
+3. Read the platform from the parenthesised section.
+4. Treat the numbers as approximate, because increasingly they are.`,
+  },
 ];

@@ -45,7 +45,7 @@ export const AllToolsView: React.FC<AllToolsViewProps> = ({ onSelectTool, onBack
       : categories.find(c => c.id === activeCat)?.name ?? '';
 
   return (
-    <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8 fade-in">
+    <div className="max-w-[1560px] mx-auto px-4 sm:px-6 py-8 fade-in">
       {/* ── Breadcrumb + title ─────────────────────────────── */}
       <div className="flex items-center gap-1.5 text-[12.5px] mb-4">
         <button onClick={onBack} className="text-primary hover:underline font-medium">Home</button>
@@ -72,7 +72,7 @@ export const AllToolsView: React.FC<AllToolsViewProps> = ({ onSelectTool, onBack
       </div>
 
       {/* ── Search + filter bar ────────────────────────────── */}
-      <div className="sticky top-[66px] z-30 -mx-4 sm:-mx-6 px-4 sm:px-6 py-3 -mt-1 mb-6
+      <div className="sticky top-[53px] z-30 -mx-4 sm:-mx-6 px-4 sm:px-6 py-3 -mt-1 mb-6
         bg-background/90 backdrop-blur-md border-b border-border">
         <div className="flex flex-col sm:flex-row sm:items-center gap-3">
           <label className="relative flex-1 max-w-md">
@@ -100,7 +100,9 @@ export const AllToolsView: React.FC<AllToolsViewProps> = ({ onSelectTool, onBack
           </div>
         </div>
 
-        <div className="flex items-center gap-1.5 mt-3 overflow-x-auto no-scrollbar -mx-1 px-1 pb-1">
+        {/* Scrolls on phones, wraps from sm up so no pill is ever clipped off-screen. */}
+        <div className="relative mt-3">
+          <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar sm:overflow-visible sm:flex-wrap sm:gap-y-2 -mx-1 px-1 pb-1 pr-8 sm:pr-1">
           <button
             onClick={() => setActiveCat('all')}
             className={`shrink-0 whitespace-nowrap px-3 py-1.5 rounded-full border text-[12px] font-medium transition-all duration-150 ${
@@ -121,7 +123,7 @@ export const AllToolsView: React.FC<AllToolsViewProps> = ({ onSelectTool, onBack
           >
             <Star className={`w-3 h-3 ${activeCat === 'fav' ? 'fill-current' : ''}`} />
             Favorites
-            <span className={`text-[10px] font-mono ${activeCat === 'fav' ? 'text-primary-foreground/70' : 'text-muted-foreground'}`}>{favIds.length}</span>
+            <span className={`px-1.5 py-px rounded-full text-[10px] font-mono font-bold ${activeCat === 'fav' ? 'bg-white/20 text-primary-foreground' : 'bg-muted text-muted-foreground'}`}>{favIds.length}</span>
           </button>
           {categories.filter(cat => TOOLS.some(t => t.category === cat.id)).map(cat => {
             const count = TOOLS.filter(t => t.category === cat.id).length;
@@ -136,10 +138,13 @@ export const AllToolsView: React.FC<AllToolsViewProps> = ({ onSelectTool, onBack
                 }`}
               >
                 {cat.name}
-                <span className={`ml-1 text-[10px] font-mono ${activeCat === cat.id ? 'text-primary-foreground/70' : 'text-muted-foreground'}`}>{count}</span>
+                <span className={`ml-1.5 px-1.5 py-px rounded-full text-[10px] font-mono font-bold ${activeCat === cat.id ? 'bg-white/20 text-primary-foreground' : 'bg-muted text-muted-foreground'}`}>{count}</span>
               </button>
             );
           })}
+          </div>
+          {/* Fade hint that the row keeps scrolling; only meaningful in the mobile scroll mode. */}
+          <div className="sm:hidden pointer-events-none absolute right-0 top-0 bottom-1 w-8 bg-gradient-to-l from-background to-transparent" />
         </div>
       </div>
 

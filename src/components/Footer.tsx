@@ -48,7 +48,7 @@ export const Footer: React.FC<FooterProps> = ({
 
   return (
     <footer className="border-t border-border bg-card mt-auto">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 py-10 sm:py-14">
+      <div className="max-w-[1560px] mx-auto px-4 sm:px-6 py-10 sm:py-14">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-x-6 gap-y-9">
 
           {/* Brand */}

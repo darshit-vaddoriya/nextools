@@ -48,6 +48,8 @@ const WIDE_TOOL_IDS = new Set([
   'json-formatter', 'base64', 'jwt-decoder', 'xml-formatter', 'yaml-formatter',
   'sql-formatter', 'html-formatter', 'css-formatter', 'js-formatter',
   'diff-checker', 'markdown-preview',
+  'json-to-types', 'curl-to-code', 'string-escaper', 'env-json',
+  'jsonpath-tester', 'mock-json', 'cron-parser', 'http-status-codes',
 ]);
 
 import { JsonFormatter }          from './tools/JsonFormatter';
@@ -166,6 +168,13 @@ const lazyExtraDevTools = <K extends
 ): React.FC =>
   lazyComponent(() => import('./tools/dev/ExtraDevTools'), exportName);
 
+const lazyDevToolsPro = <K extends
+  'JsonToTypesTool' | 'CronParserTool' | 'CurlConverterTool' | 'StringEscaperTool'
+  | 'EnvJsonTool' | 'HttpStatusTool' | 'JsonPathTool' | 'MockJsonTool'>(
+  exportName: K,
+): React.FC =>
+  lazyComponent(() => import('./tools/dev/DevToolsPro'), exportName);
+
 const lazyUtilityTools = <K extends
   'UnitConverterTool' | 'TimezoneConverterTool' | 'TimestampConverterTool' | 'AgeCalculatorTool'
   | 'PercentageCalcTool' | 'BmiCalculatorTool' | 'EmiCalculatorTool' | 'ScientificCalculatorTool'
@@ -278,6 +287,14 @@ const IMPLEMENTED_TOOLS: Record<string, React.ComponentType> = {
   'diff-checker':         lazyExtraDevTools('DiffCheckerTool'),
   'markdown-preview':     lazyExtraDevTools('MarkdownPreviewTool'),
   'html-markdown':        lazyExtraDevTools('HtmlMarkdownTool'),
+  'json-to-types':        lazyDevToolsPro('JsonToTypesTool'),
+  'cron-parser':          lazyDevToolsPro('CronParserTool'),
+  'curl-to-code':         lazyDevToolsPro('CurlConverterTool'),
+  'string-escaper':       lazyDevToolsPro('StringEscaperTool'),
+  'env-json':             lazyDevToolsPro('EnvJsonTool'),
+  'http-status-codes':    lazyDevToolsPro('HttpStatusTool'),
+  'jsonpath-tester':      lazyDevToolsPro('JsonPathTool'),
+  'mock-json':            lazyDevToolsPro('MockJsonTool'),
   // Utility / calculator tools
   'unit-converter':       lazyUtilityTools('UnitConverterTool'),
   'timezone-converter':   lazyUtilityTools('TimezoneConverterTool'),
@@ -762,7 +779,7 @@ const HomeView: React.FC<{
       />
 
       {/* ── BROWSE ───────────────────────────────────────── */}
-      <div className="max-w-6xl mx-auto px-5 sm:px-8 py-12 space-y-16">
+      <div className="max-w-[1560px] mx-auto px-5 sm:px-8 py-12 space-y-16">
 
         {/* Search, category filter and the full tool library. */}
         <ToolGrid onSelectTool={onSelectTool} />
@@ -920,7 +937,7 @@ const CategoryView: React.FC<{
   const Icon  = conf?.icon ?? FileText;
 
   return (
-    <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8 fade-in">
+    <div className="max-w-[1560px] mx-auto px-4 sm:px-6 py-8 fade-in">
       <button onClick={onBack} className="btn-ghost mb-6 text-[13px]">
         <ArrowLeft className="w-4 h-4" /> Back
       </button>
@@ -999,7 +1016,7 @@ const ToolView: React.FC<{
   const sidebarCardCls = `rounded-2xl border bg-card border-border p-5 shadow-card${stacked ? ' flex-1 min-w-[240px]' : ''}`;
 
   return (
-    <div className="max-w-[1360px] w-full mx-auto px-3 sm:px-6 md:px-8 py-4 sm:py-6 space-y-5 sm:space-y-6 fade-in">
+    <div className="max-w-[1560px] w-full mx-auto px-3 sm:px-6 md:px-8 py-4 sm:py-6 space-y-5 sm:space-y-6 fade-in">
       <AdBanner type="leaderboard" />
 
       {activeTool && (
@@ -1068,9 +1085,6 @@ const ToolView: React.FC<{
                     Local only
                   </span>
                 </div>
-                <p className="text-[13.5px] text-muted-foreground mt-2.5 leading-relaxed max-w-2xl">
-                  {activeTool.description}
-                </p>
               </div>
             </div>
             <div className="shrink-0 flex items-center gap-2">

@@ -893,4 +893,68 @@ Extraction is the right tool when the PDF genuinely is the only copy, which is c
 
 [Text extraction](/tool/pdf-extract-text), [OCR](/tool/pdf-ocr) and the [CSV tools](/tool/csv-editor) here all run in the browser, which is the relevant property given that the tables people most often need out of a PDF are financial statements and payroll reports.`,
   },
+  {
+    slug: 'password-protecting-a-pdf',
+    title: 'Password-protecting a PDF, and what the password actually stops',
+    description: 'PDF has two passwords doing two different jobs, and only one of them is real encryption. The other is a request that viewers may ignore.',
+    excerpt: 'A PDF can be locked so it cannot be opened, or locked so it cannot be printed. Only the first is enforced by mathematics.',
+    category: 'pdf',
+    tags: ['pdf', 'encryption', 'permissions', 'security'],
+    published: '2026-09-15',
+    relatedTools: ['pdf-protect', 'pdf-unlock', 'pdf-flatten', 'pdf-redact'],
+    takeaways: [
+      'A user password encrypts the content: without it there is nothing to read. An owner password only sets permission flags that viewers are asked to respect.',
+      'Permissions like "no printing" and "no copying" are honoured by well-behaved viewers and ignored by others. They are not a security control.',
+      'Modern PDFs use AES-256; the strength then depends entirely on the password, because the file can be attacked offline forever.',
+      'Encryption does not hide metadata, does not remove content under a black box, and is undone the moment the recipient saves a decrypted copy.',
+    ],
+    body: `"Password protect this PDF" describes two different operations in the PDF specification, and the gap between them explains why a protected file sometimes opens without any prompt at all.
+
+## Two passwords, two jobs
+
+**The user password (open password).** Encrypts the document's content. Without it, the bytes are ciphertext and there is nothing to display. This is real cryptography and it holds.
+
+**The owner password (permissions password).** The document is still encrypted, but with a key derivable without a password, so any viewer can open it. What the owner password guards is a set of permission flags: may print, may copy text, may modify, may extract for accessibility.
+
+So a file with only an owner password opens instantly for everybody. The permissions are a request to the viewer, and the specification is explicit that conforming readers *should* honour them. A reader that chooses not to is not breaking any encryption; it is ignoring a flag.
+
+> [!NOTE]
+> This is why "the PDF was locked but the text copied fine" is not a bug report. If you need content to be genuinely unavailable, the user password is the only mechanism with mathematics behind it. A [PDF protection tool](/tool/pdf-protect) should let you set them separately, because they answer different questions.
+
+## The strength depends on the password
+
+The encryption itself has improved: RC4 40-bit in the 1990s, RC4 128-bit, AES-128, and AES-256 in PDF 2.0. Anything modern uses AES-256, which is not the weak point.
+
+The weak point is that a PDF is an offline target. An attacker with the file can try passwords as fast as their hardware allows, forever, with no rate limit and nobody to notice. Encryption strength sets the cost per guess; the password sets how many guesses are needed.
+
+Which means a 2.0 file with AES-256 and the password \`Invoice2026\` is not protected. See [what makes a password strong](/blog/what-makes-a-password-strong) for what actually raises the cost, and send the password through a different channel from the document — a password in the same email as the attachment protects against nothing.
+
+## What encryption does not do
+
+**It does not redact.** A black rectangle drawn over text is a drawing on top of text that is still there. Encrypt the file and you have encrypted a document that still contains the text; whoever has the password can select it. [Proper redaction](/blog/how-to-redact-a-pdf-properly) removes the content, and it is a separate operation from protection.
+
+**It does not clean metadata.** Author, producer, creation date and any leftover XMP travel with the document and are readable once it is open.
+
+**It does not survive the recipient.** Anyone who can open the file can save a decrypted copy, print to a new PDF, or screenshot every page. Encryption controls access to the file you sent, not to the information after it arrives.
+
+**It does not stop forwarding.** There is no recall, no expiry and no audit. If those are required, the document needs to be behind a system that does access control, not a file with a password on it.
+
+> [!WARNING]
+> Losing a user password means losing the document. There is no recovery path, no reset and no authority to appeal to. Before protecting a file that only you hold, put the password somewhere you will still have it — a password manager, not a note in the same folder as the PDF.
+
+## Removing protection
+
+A tool that removes a password can only do so with the password. Given it, decrypting is mechanical: the content is decrypted and rewritten without encryption. [Unlocking](/tool/pdf-unlock) is the right operation when you hold a file you can open but every edit prompts, or when a scanner-applied owner password is blocking an ordinary print.
+
+Restrictions that are only permission flags can be cleared without knowing anything, because nothing secret protects them — which is a plain statement of what those flags were worth.
+
+## Choosing what to use
+
+- **Must not be readable by the wrong person** → user password, strong, delivered separately.
+- **Must not be edited after signing** → [flatten the file](/tool/pdf-flatten) so form fields and annotations become page content, then sign it.
+- **Must not be printed** → owner password permissions, understanding this is a convention, not a control.
+- **Must not contain the confidential paragraph at all** → [redact](/tool/pdf-redact) it, then consider whether it needs a password at all.
+
+Protecting and unlocking are both operations on the file itself, and the [PDF protect](/tool/pdf-protect) and [unlock](/tool/pdf-unlock) tools here do them in the browser — which is the only sensible arrangement, since uploading a confidential document to a server in order to encrypt it defeats the point of encrypting it.`,
+  },
 ];

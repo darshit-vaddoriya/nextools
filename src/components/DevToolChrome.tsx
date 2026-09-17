@@ -1,4 +1,6 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { createPortal } from 'react-dom';
+import { Maximize2, X, Wand2 } from 'lucide-react';
 
 /* ══════════════════════════════════════════════════════════
    Shared visual chrome for the "developer tool" pages
@@ -93,6 +95,50 @@ export const WhitePanel: React.FC<{
   </div>
 );
 
+/**
+ * "Try a sample" button. A visitor who lands without data to hand can fill the
+ * tool in one click and see what it does — the cheapest way to prove value
+ * before asking anyone to paste or upload anything.
+ */
+export const SampleButton: React.FC<{ onClick: () => void; children?: React.ReactNode }> = ({
+  onClick,
+  children = 'Try a sample',
+}) => (
+  <button
+    type="button"
+    onClick={onClick}
+    className="inline-flex items-center gap-1.5 pl-2 pr-2.5 py-1.5 rounded-lg text-[12px] font-bold
+      text-muted-foreground hover:text-foreground hover:bg-muted transition-colors shrink-0"
+  >
+    <Wand2 className="w-4 h-4" />
+    {children}
+  </button>
+);
+
+/** Row of one-click starting points (common regex patterns, cron expressions, …). */
+export const PresetChips: React.FC<{
+  label?: string;
+  presets: { label: string; title?: string }[];
+  onPick: (index: number) => void;
+}> = ({ label, presets, onPick }) => (
+  <div className="flex flex-wrap items-center gap-1.5">
+    {label && <span className="text-[11.5px] font-semibold text-muted-foreground mr-0.5">{label}</span>}
+    {presets.map((p, i) => (
+      <button
+        key={p.label}
+        type="button"
+        title={p.title}
+        onClick={() => onPick(i)}
+        className="px-2.5 py-1 rounded-full text-[11.5px] font-semibold border border-border
+          bg-muted text-muted-foreground hover:text-foreground hover:border-primary/40
+          active:scale-95 transition-all"
+      >
+        {p.label}
+      </button>
+    ))}
+  </div>
+);
+
 /** Violet text-button used for "Copy" affordances inside dev-tool panels. */
 export const CopyTextButton: React.FC<{ onClick: () => void; children?: React.ReactNode }> = ({
   onClick,
@@ -106,3 +152,91 @@ export const CopyTextButton: React.FC<{ onClick: () => void; children?: React.Re
     {children}
   </button>
 );
+
+/* ══════════════════════════════════════════════════════════
+   Full view: an escape hatch from the page layout for tools
+   whose editor panes want the whole screen.
+══════════════════════════════════════════════════════════ */
+
+/** Owns the open flag plus the Esc-to-close and background-scroll-lock behaviour. */
+export const useFullView = (): [boolean, (open: boolean) => void] => {
+  const [open, setOpen] = useState(false);
+
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') setOpen(false); };
+    window.addEventListener('keydown', onKey);
+    document.body.style.overflow = 'hidden';
+    return () => {
+      window.removeEventListener('keydown', onKey);
+      document.body.style.overflow = '';
+    };
+  }, [open]);
+
+  return [open, setOpen];
+};
+
+export const FullViewButton: React.FC<{ onClick: () => void }> = ({ onClick }) => (
+  <button
+    type="button"
+    onClick={onClick}
+    aria-label="Open full view"
+    className="inline-flex items-center gap-1.5 pl-2 pr-2.5 py-1.5 rounded-lg text-[12px] font-bold text-muted-foreground hover:text-foreground hover:bg-muted transition-colors shrink-0"
+  >
+    <Maximize2 className="w-4 h-4" />
+    Full view
+  </button>
+);
+
+/**
+ * Wraps a tool body so it renders either inline on the page or as a full-screen
+ * overlay. The overlay is portalled to <body> because, rendered in place, it would
+ * sit under the sticky site header (also z-50) and its Close button would be
+ * unreachable.
+ */
+export const ToolShell: React.FC<{
+  title: string;
+  hint?: React.ReactNode;
+  controls?: React.ReactNode;
+  full: boolean;
+  onFullChange: (open: boolean) => void;
+  children: React.ReactNode;
+}> = ({ title, hint, controls, full, onFullChange, children }) => {
+  if (full) {
+    return createPortal(
+      <div className="fixed inset-0 z-[90] bg-background flex flex-col p-4 gap-3">
+        <div className="flex flex-wrap items-center justify-between gap-3 shrink-0">
+          <span className="text-[13px] font-bold text-foreground">{title} · full view</span>
+          <div className="flex flex-wrap items-center gap-2">
+            {controls}
+            <button
+              type="button"
+              onClick={() => onFullChange(false)}
+              aria-label="Close full view"
+              className="inline-flex items-center gap-1.5 pl-2.5 pr-3 py-1.5 rounded-lg text-[12.5px] font-bold bg-muted text-foreground hover:bg-border transition-colors"
+            >
+              <X className="w-4 h-4" />
+              Close
+              <kbd className="ml-0.5 px-1.5 py-0.5 rounded border border-border bg-card text-[10px] font-mono font-semibold text-muted-foreground">Esc</kbd>
+            </button>
+          </div>
+        </div>
+        <div className="flex-1 min-h-0 flex flex-col gap-3">{children}</div>
+      </div>,
+      document.body,
+    );
+  }
+
+  return (
+    <div className="space-y-3.5">
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        {hint}
+        <div className="flex flex-wrap items-center gap-2">
+          {controls}
+          <FullViewButton onClick={() => onFullChange(true)} />
+        </div>
+      </div>
+      {children}
+    </div>
+  );
+};

@@ -646,7 +646,7 @@ input[type="range"].range-progress:focus-visible {
   color: rgb(var(--foreground));
   margin-top: 2.1em;
   margin-bottom: 0.55em;
-  scroll-margin-top: 88px;
+  scroll-margin-top: 76px;
 }
 .blog-prose h2:first-child { margin-top: 0; }
 
@@ -836,3 +836,151 @@ input[type="range"].range-progress:focus-visible {
 .rich-text-surface b,
 .rich-text-surface strong { font-weight: 700; }
 .rich-text-surface u { text-decoration: underline; }
+
+/* ── Markdown Preview tool ─────────────────────────────────────────────
+   The preview reuses .blog-prose so headings, lists, tables, code and
+   blockquotes match the rest of the site. These overrides scale it down
+   from article size to tool-panel size and add the GFM task-list bits
+   that articles never use. */
+.md-preview {
+  font-size: 15px;
+  line-height: 1.65;
+}
+.md-preview > p:first-child {
+  font-size: 15px;
+  line-height: 1.65;
+  color: rgb(var(--foreground) / 0.88);
+}
+.md-preview h2 { font-size: 21px; margin-top: 1.5em; }
+.md-preview h3 { font-size: 17px; margin-top: 1.3em; }
+.md-preview h4 { font-size: 15px; font-weight: 700; margin-top: 1.2em; color: rgb(var(--foreground)); }
+.md-preview h1 {
+  font-family: 'Plus Jakarta Sans Variable', system-ui, sans-serif;
+  font-size: 25px;
+  font-weight: 800;
+  letter-spacing: -0.025em;
+  color: rgb(var(--foreground));
+  margin-top: 1.4em;
+  margin-bottom: 0.5em;
+}
+.md-preview > :first-child { margin-top: 0; }
+.md-preview table { min-width: 0; font-size: 13px; }
+.md-preview pre { font-size: 12.5px; border-radius: 10px; padding: 12px 14px; }
+
+/* Task lists: marked emits a disabled checkbox inside the <li>. */
+.md-preview li:has(> input[type='checkbox']) { list-style: none; margin-left: -1.1rem; }
+.md-preview input[type='checkbox'] {
+  accent-color: rgb(var(--primary));
+  margin-right: 0.5em;
+  vertical-align: middle;
+}
+
+.md-preview img { max-width: 100%; border-radius: 10px; }
+
+/* ── Preview polish ───────────────────────────────────────────────────
+   The preview is the product here, so it is styled like a finished
+   document rather than raw rendered markup. */
+
+/* h2 carries the section rhythm, so it gets a hairline rule under it. */
+.md-preview h2 {
+  padding-bottom: 0.3em;
+  border-bottom: 1px solid rgb(var(--border) / 0.8);
+}
+.md-preview h3 { letter-spacing: -0.01em; }
+
+.md-preview a {
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+  transition: color 0.15s var(--ease, ease);
+}
+.md-preview a:hover { color: rgb(var(--primary)); filter: none; }
+
+/* Zebra striping and row hover make wide comparison tables scannable. */
+.md-preview tbody tr:nth-child(even) { background: rgb(var(--muted) / 0.45); }
+.md-preview tbody tr { transition: background 0.12s ease; }
+.md-preview tbody tr:hover { background: rgb(var(--primary) / 0.06); }
+.md-preview tbody tr:last-child td { border-bottom: 0; }
+.md-preview th { letter-spacing: 0.04em; }
+
+/* Code blocks read as a panel, with a language chip where marked gave us one. */
+.md-preview pre {
+  position: relative;
+  background: rgb(var(--muted) / 0.75);
+}
+.md-preview pre code[class*='language-']::before {
+  position: absolute;
+  top: 7px;
+  right: 10px;
+  font-size: 9.5px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgb(var(--muted-foreground) / 0.75);
+  pointer-events: none;
+}
+.md-preview pre code.language-ts::before,
+.md-preview pre code.language-typescript::before { content: 'TS'; }
+.md-preview pre code.language-js::before,
+.md-preview pre code.language-javascript::before { content: 'JS'; }
+.md-preview pre code.language-json::before { content: 'JSON'; }
+.md-preview pre code.language-html::before { content: 'HTML'; }
+.md-preview pre code.language-css::before { content: 'CSS'; }
+.md-preview pre code.language-bash::before,
+.md-preview pre code.language-sh::before { content: 'SHELL'; }
+.md-preview pre code.language-python::before,
+.md-preview pre code.language-py::before { content: 'PYTHON'; }
+.md-preview pre code.language-sql::before { content: 'SQL'; }
+.md-preview pre code.language-go::before { content: 'GO'; }
+.md-preview pre code.language-yaml::before,
+.md-preview pre code.language-yml::before { content: 'YAML'; }
+
+/* Blockquote gets an opening quote mark instead of only a coloured bar. */
+.md-preview blockquote {
+  position: relative;
+  padding-left: 2.4em;
+  font-style: italic;
+}
+.md-preview blockquote::before {
+  content: '\201C';
+  position: absolute;
+  left: 0.5rem;
+  top: -0.05em;
+  font-size: 2.1em;
+  line-height: 1;
+  font-style: normal;
+  color: rgb(var(--primary) / 0.45);
+}
+
+/* Task lists: a checked item is visibly done, an open one clearly pending. */
+.md-preview li:has(> input[type='checkbox']) {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.15em;
+}
+.md-preview input[type='checkbox'] {
+  width: 15px;
+  height: 15px;
+  margin-top: 0.22em;
+  border-radius: 4px;
+  flex-shrink: 0;
+  opacity: 1;
+}
+.md-preview li:has(> input[type='checkbox']:checked) {
+  color: rgb(var(--muted-foreground));
+}
+
+.md-preview hr {
+  border-top: 1px solid rgb(var(--border));
+  margin-top: 1.8em;
+  margin-bottom: 1.8em;
+}
+
+.md-preview kbd {
+  font-family: 'JetBrains Mono Variable', 'JetBrains Mono', monospace;
+  font-size: 0.8em;
+  padding: 0.1em 0.4em;
+  border: 1px solid rgb(var(--border));
+  border-bottom-width: 2px;
+  border-radius: 5px;
+  background: rgb(var(--card));
+}

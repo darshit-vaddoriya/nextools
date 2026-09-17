@@ -2,6 +2,7 @@ import { BlogPost, BlogCategory, BLOG_CATEGORY_META } from './types';
 import { PDF_POSTS } from './posts/pdf';
 import { DOCS_POSTS } from './posts/docs';
 import { IMAGE_POSTS } from './posts/image';
+import { MEDIA_POSTS } from './posts/media';
 import { DEV_POSTS } from './posts/dev';
 import { SECURITY_POSTS } from './posts/security';
 import { DATA_POSTS } from './posts/data';
@@ -15,6 +16,7 @@ export const BLOG_POSTS: BlogPost[] = [
   ...PDF_POSTS,
   ...DOCS_POSTS,
   ...IMAGE_POSTS,
+  ...MEDIA_POSTS,
   ...DEV_POSTS,
   ...SECURITY_POSTS,
   ...DATA_POSTS,

@@ -10,6 +10,9 @@ export const CaseConverter: React.FC = () => {
   const toKebabCase  = (s: string) => s.replace(/([a-z])([A-Z])/g, '$1-$2').replace(/[^a-zA-Z0-9]+/g, '-').toLowerCase();
   const toPascalCase = (s: string) => s.toLowerCase().replace(/(?:^|[^a-zA-Z0-9]+)(.)/g, (_, c) => c.toUpperCase());
   const toTitleCase  = (s: string) => s.toLowerCase().replace(/\b\w/g, c => c.toUpperCase());
+  const toDotCase    = (s: string) => s.replace(/([a-z])([A-Z])/g, '$1.$2').replace(/[^a-zA-Z0-9]+/g, '.').toLowerCase();
+  // Sentence case: first letter of each sentence, leaving the rest lowercase.
+  const toSentence   = (s: string) => s.toLowerCase().replace(/(^\s*\w|[.!?]\s+\w)/g, c => c.toUpperCase());
 
   const cases = [
     { name: 'camelCase',  value: toCamelCase(text),      color: 'text-primary' },
@@ -19,6 +22,9 @@ export const CaseConverter: React.FC = () => {
     { name: 'Title Case', value: toTitleCase(text),       color: 'text-pink-500 dark:text-pink-400' },
     { name: 'UPPERCASE',  value: text.toUpperCase(),      color: 'text-amber-500 dark:text-amber-400' },
     { name: 'lowercase',  value: text.toLowerCase(),      color: 'text-teal-500 dark:text-teal-400' },
+    { name: 'CONSTANT_CASE', value: toSnakeCase(text).toUpperCase(), color: 'text-orange-500 dark:text-orange-400' },
+    { name: 'dot.case',   value: toDotCase(text),         color: 'text-indigo-500 dark:text-indigo-400' },
+    { name: 'Sentence case', value: toSentence(text),     color: 'text-rose-500 dark:text-rose-400' },
   ];
 
   return (

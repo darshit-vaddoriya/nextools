@@ -14,7 +14,7 @@ export const ThemeMenu: React.FC<ThemeMenuProps> = ({ resolvedDark, onThemeChang
       onClick={() => onThemeChange(resolvedDark ? 'light' : 'dark')}
       title="Toggle theme"
       aria-label={`Switch to ${resolvedDark ? 'light' : 'dark'} mode`}
-      className="w-11 h-11 md:w-9 md:h-9 flex items-center justify-center rounded-lg border border-border text-muted-foreground hover:bg-muted hover:text-foreground transition-colors"
+      className="w-9 h-9 md:w-8 md:h-8 flex items-center justify-center rounded-lg border border-border text-muted-foreground hover:bg-muted hover:text-foreground transition-colors"
     >
       {resolvedDark ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
     </button>

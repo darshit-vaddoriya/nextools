@@ -63,7 +63,7 @@ export const NavDrawer: React.FC<NavDrawerProps> = ({
         aria-label="Navigation menu"
       >
         {/* Header */}
-        <div className="flex items-center justify-between px-4 h-16 border-b border-border shrink-0">
+        <div className="flex items-center justify-between px-4 h-[52px] border-b border-border shrink-0">
           <AppLink href="/" onNavigate={onGoHome} className="flex items-center gap-2.5" aria-label="NextTool Home">
             <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-primary to-tertiary text-white flex items-center justify-center shrink-0">
               <Blocks className="w-4 h-4" strokeWidth={2.25} />

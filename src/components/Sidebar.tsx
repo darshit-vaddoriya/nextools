@@ -166,7 +166,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
             className="lg:hidden fixed inset-0 z-40 bg-black/60 backdrop-blur-sm"
             onClick={onCloseMobile}
           />
-          <aside className="lg:hidden fixed left-0 top-14 bottom-0 z-50 w-[272px] dark:bg-dark-bg bg-white border-r dark:border-dark-border border-slate-200 shadow-2xl overflow-y-auto animate-slide-in">
+          <aside className="lg:hidden fixed left-0 top-[53px] bottom-0 z-50 w-[272px] dark:bg-dark-bg bg-white border-r dark:border-dark-border border-slate-200 shadow-2xl overflow-y-auto animate-slide-in">
             {sidebarContent}
           </aside>
         </>

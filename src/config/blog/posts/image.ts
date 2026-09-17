@@ -1194,4 +1194,155 @@ Two final steps that take seconds.
 
 All of it runs in this browser tab, which is the relevant property when the screenshot is of an internal admin panel with real customer records on it, which is what support screenshots very often are.`,
   },
+  {
+    slug: 'making-a-gif-worth-sending',
+    title: 'Making a GIF that is not 40 megabytes',
+    description: 'GIF is a 1987 format with 256 colours and no real compression for photos. Knowing what it is bad at is how you get a small, clean loop.',
+    excerpt: 'A five-second clip becomes a 40 MB GIF and a 900 KB MP4 of identical quality. GIF is not a video format, and that is the whole explanation.',
+    category: 'image',
+    tags: ['gif', 'video', 'compression', 'formats'],
+    published: '2026-09-16',
+    relatedTools: ['gif-maker', 'gif-converter', 'video-trim', 'video-converter'],
+    takeaways: [
+      'GIF stores at most 256 colours per frame and cannot compress across frames the way a video codec does, so photographic content explodes in size.',
+      'Duration, frame rate and dimensions each multiply the size. Cut length first, then width, then frames per second.',
+      'Flat-colour screen recordings are what GIF is genuinely good at. Camera footage almost never is.',
+      'If the destination accepts a silent looping MP4 or WebM, use that instead: same motion, a fraction of the bytes.',
+    ],
+    body: `You export a five-second screen recording as a GIF and it comes out at 38 MB. The same clip as an MP4 is under a megabyte and looks better. This is not a bad exporter. It is the format doing exactly what it was designed to do in 1987.
+
+## What GIF actually is
+
+Three constraints explain nearly every oversized GIF:
+
+**256 colours per frame.** A GIF frame carries a palette of at most 256 entries. A photograph or camera footage contains tens of thousands of distinct colours, so the encoder has to quantise, and to hide the banding it dithers — scattering pixels of two palette colours to fake a third.
+
+**Dithering defeats compression.** GIF compresses with LZW, which works by finding repeated runs of pixels. Dithering deliberately makes neighbouring pixels differ. So the trick that keeps a photo looking acceptable is the same trick that stops it compressing.
+
+**No motion compensation.** A video codec stores one full frame and then describes what moved. GIF stores each frame as its own image, with only a simple optimisation for unchanged regions. Thirty frames is thirty images.
+
+Put those together and you get the rule: GIF is good at flat-colour, low-motion, small-dimension content, and terrible at everything else.
+
+> [!NOTE]
+> A screen recording of a terminal, a diagram animating, or a UI interaction with solid backgrounds is close to the ideal case — few colours, large unchanged areas, sharp edges. That is why developer demos as GIFs look fine and holiday clips as GIFs look like a fax.
+
+## The three dials, in order
+
+**Duration.** Size is close to linear in length. Three seconds of the interaction that matters beats twelve seconds that includes you finding the menu. [Trim before converting](/tool/video-trim), always.
+
+**Dimensions.** Halving the width quarters the pixels per frame. Most GIFs are displayed in a chat window or a README at around 600–800 px wide; exporting at 1920 and letting the page scale it down wastes three quarters of the file.
+
+**Frame rate.** GIF timing is stored in hundredths of a second per frame, and browsers historically clamp very small delays, so anything above about 50 fps is not even displayed as encoded. 10–15 fps is fine for UI demos, 20–24 for anything with real motion. Going from 30 to 15 fps halves the frames.
+
+Change them in that order. Cutting length costs you nothing you needed; cutting frame rate is the one people notice.
+
+## Colour choices that matter
+
+If your converter exposes them, two settings do most of the work:
+
+**Palette scope.** A single palette for the whole animation compresses far better than a fresh palette per frame, and looks fine when the scene does not change much. Per-frame palettes are for clips where the colours genuinely shift.
+
+**Dithering.** Turning it off makes flat-colour content smaller and usually *cleaner* — banding on a UI screenshot is invisible because the source was already flat. Leave it on only for gradients and photographic content, where the banding would be obvious.
+
+> [!WARNING]
+> Converting an existing GIF to a smaller GIF re-quantises an already-quantised image. Go back to the video or screen recording if you still have it. Second-generation GIFs pick up colour blotching that no setting removes.
+
+## When not to use GIF at all
+
+Most places that accepted only GIF ten years ago now accept a silent auto-playing video. GitHub READMEs, most chat clients, Slack, and every browser support a looping muted MP4 or WebM, at roughly one tenth the size with full colour.
+
+The honest checklist:
+
+- Needs to work as an image, in an email, or in something old → GIF.
+- Needs transparency with animation → GIF, or APNG/WebP if support allows.
+- Anywhere else → a short muted video, [converted once](/tool/video-converter) from the original.
+
+## A working recipe for a UI demo
+
+1. Record at the size it will be shown, not full screen.
+2. Trim to the seconds that carry the point.
+3. Export at 12–15 fps, 600–800 px wide.
+4. Single palette, dithering off.
+5. Check the result at display size, not zoomed in.
+
+That typically lands a UI interaction between 500 KB and 2 MB — small enough for a README, a ticket or a chat message.
+
+The [GIF maker](/tool/gif-maker) and [converter](/tool/gif-converter) here run in the browser on your local file, which is worth having when the recording shows an internal dashboard that should not be uploaded anywhere just to be turned into a loop.`,
+  },
+  {
+    slug: 'reading-text-off-an-image',
+    title: 'Reading text off an image: what OCR gets right and where it fails',
+    description: 'OCR turns pixels into characters, and its accuracy is decided before it runs — by resolution, contrast and whether the page is straight.',
+    excerpt: 'The difference between 99% and 80% accuracy is usually the photo, not the engine. Most of the fix happens before any text is recognised.',
+    category: 'image',
+    tags: ['ocr', 'text', 'scanning'],
+    published: '2026-09-15',
+    relatedTools: ['ocr-image', 'ai-ocr', 'image-adjust', 'image-crop'],
+    takeaways: [
+      'OCR wants roughly 300 DPI of text. A phone photo of a page from a distance is often below that, and no engine recovers detail that was never captured.',
+      'Straighten, crop and raise contrast before recognising. Skew of more than a couple of degrees measurably lowers accuracy.',
+      'Columns, tables and forms fail at the layout stage, not the character stage: the characters are right and the reading order is wrong.',
+      'Always proofread digits. A misread character in a word is obvious; a misread digit in an amount is not.',
+    ],
+    body: `Optical character recognition has quietly become very good, which makes its failures more confusing than they used to be. A page comes back perfect and the next one comes back as fragments. The difference is almost never the engine.
+
+## What OCR is doing
+
+Three stages, and they fail in different ways:
+
+1. **Preprocessing.** Convert to greyscale, decide what is ink and what is paper, straighten the page, find the text regions.
+2. **Layout analysis.** Work out blocks, columns, lines and reading order.
+3. **Recognition.** Turn each glyph shape into a character, using a language model to resolve ambiguity from context.
+
+Step three is the part people picture and the part that is now rarely the bottleneck. Step one decides whether step three has anything to work with, and step two decides whether the correct characters come out in the correct order.
+
+## Resolution is the hard floor
+
+OCR wants around 300 DPI relative to the text — roughly 20–30 pixels of height for a normal body character.
+
+A phone photo of an A4 page framed edge to edge at 12 megapixels is comfortably above that. The same page photographed from across a desk, at an angle, with half the frame being the table, may have body text only 10 pixels tall. At that point strokes merge, and no amount of sharpening invents the gap between the two verticals of an \`n\`.
+
+The fix is to re-take the photo: fill the frame with the page, hold the camera parallel to it, and let the autofocus settle. That single change usually outperforms every processing option combined.
+
+> [!NOTE]
+> [Cropping to the page](/tool/image-crop) before recognition also helps the layout stage. Table edges, a desk and a hand in frame all get analysed as potential content and can confuse the block detection.
+
+## What to fix before running it
+
+**Skew.** More than about two degrees of rotation and line detection starts merging or splitting lines. Straighten first.
+
+**Contrast and shadow.** A shadow falling across half the page makes a global black-and-white threshold pick the wrong cut-off on one side. [Raising contrast and flattening brightness](/tool/image-adjust) before recognition is often the difference between half a page and a full page.
+
+**Colour backgrounds.** Text on a coloured or patterned background loses contrast in the greyscale conversion. Increasing contrast hard, even to the point where the image looks ugly, usually improves recognition.
+
+**Perspective.** A photo taken at an angle makes characters trapezoidal, which is a shape no glyph model expects. Shooting square is much easier than correcting afterwards.
+
+## Where it still fails
+
+**Handwriting.** Standard OCR is trained on print. Neat handwriting gets partial results; ordinary handwriting does not.
+
+**Tables.** The characters are usually right and the structure is usually wrong. Cells get merged, columns get read as one line, and the output needs rebuilding by hand.
+
+**Multi-column layouts.** If layout analysis misses the column break, you get sentences from column one and column two interleaved — every character correct, the text meaningless.
+
+**Very stylised type.** Logos, condensed display faces and heavy italics have glyph shapes that fall outside what the model saw in training.
+
+**Low-contrast scans.** Faded thermal receipts and second-generation photocopies lose the strokes themselves, and the engine's language model starts guessing whole words.
+
+> [!WARNING]
+> Check every number. Language models fix "recieve" into "receive", but they have no way to know that an invoice total should be 1,180 rather than 1,180 misread as 7,780 — \`1\`/\`7\`, \`0\`/\`O\`, \`5\`/\`S\` and \`8\`/\`B\` are the standard confusions. Amounts, dates, account numbers and quantities need a human pass.
+
+## Getting the best out of a single page
+
+1. Re-photograph if the text is small in the frame. This is the highest-value step.
+2. Crop to the page.
+3. Straighten.
+4. Raise contrast; remove shadow.
+5. Recognise.
+6. Proofread digits and proper nouns.
+
+For a scanned PDF rather than a photo, the same logic applies one layer up — see [what OCR can and cannot read off a scan](/blog/ocr-scanned-pdf-explained) for how the text layer gets attached to the page.
+
+The [image OCR](/tool/ocr-image) and [adjustment](/tool/image-adjust) tools here run in the browser, which matters given how often the thing being recognised is an ID document, a payslip or a contract — exactly the documents worth not uploading to an unknown server.`,
+  },
 ];

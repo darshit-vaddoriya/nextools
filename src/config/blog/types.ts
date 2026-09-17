@@ -1,7 +1,7 @@
 import React from 'react';
-import { Calculator, Code, FileSpreadsheet, FileText, FileType2, Image, Lock, Shield } from 'lucide-react';
+import { Calculator, Code, FileSpreadsheet, FileText, FileType2, Image, Lock, Shield, Video } from 'lucide-react';
 
-export type BlogCategory = 'pdf' | 'docs' | 'image' | 'dev' | 'data' | 'numbers' | 'security' | 'privacy';
+export type BlogCategory = 'pdf' | 'docs' | 'image' | 'media' | 'dev' | 'data' | 'numbers' | 'security' | 'privacy';
 
 export interface BlogPost {
   /** URL segment: /blog/<slug> */
@@ -61,6 +61,12 @@ export const BLOG_CATEGORY_META: Record<BlogCategory, {
     color: 'text-pink-600 dark:text-pink-400', bg: 'bg-pink-100 dark:bg-pink-500/15',
     heading: 'Images and file formats',
     description: 'Choosing between JPEG, PNG, WebP and AVIF, the difference between resizing and compressing, and how to get a photo small without making it look it.',
+  },
+  media: {
+    label: 'Video & Audio', icon: Video,
+    color: 'text-purple-600 dark:text-purple-400', bg: 'bg-purple-100 dark:bg-purple-500/15',
+    heading: 'Video and audio files',
+    description: 'What a codec is and why MP4 is not one, how to make a video smaller without ruining it, trimming without re-encoding, and getting audio or subtitles out of a clip.',
   },
   dev: {
     label: 'Developer', icon: Code,
