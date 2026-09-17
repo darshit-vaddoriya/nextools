@@ -467,8 +467,8 @@ export function updateBlogPostMeta(slug: string) {
     datePublished: post.published,
     dateModified: post.updated ?? post.published,
     keywords: post.tags.join(', '),
-    wordCount: post.body.split(/\s+/).length,
-    timeRequired: `PT${readingMinutes(post.body)}M`,
+    wordCount: post.words,
+    timeRequired: `PT${readingMinutes(post)}M`,
     articleSection: BLOG_CATEGORY_LABELS[post.category],
     author: { '@type': 'Organization', name: 'NextTool', url: `${SITE}/` },
     publisher: {

@@ -1,7 +1,8 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Upload, Download, Loader2, AlertTriangle, Image as ImageIcon, Maximize2 } from 'lucide-react';
 import { formatBytes, type ProcessedImage } from './ImageUtils';
 import { Lightbox } from '../../components/ui/Lightbox';
+import { takeStagedFilesForRoute } from '../../lib/fileHandoff';
 
 interface DropZoneProps {
   onFiles: (files: File[]) => void;
@@ -22,6 +23,20 @@ export const DropZone: React.FC<DropZoneProps> = ({
 }) => {
   const [isDragging, setIsDragging] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
+
+  /* A file chosen on the homepage is handed to the tool the visitor picked, so
+     the first thing this drop zone does is check whether one is waiting. Without
+     it every tool asked for the same file a second time. The slot is consumed
+     once, so a later visit never picks up a stale file.
+
+     onFiles is deliberately not a dependency: this runs for the initial handoff
+     only, and tools pass a fresh closure on every render. */
+  const onFilesRef = useRef(onFiles);
+  onFilesRef.current = onFiles;
+  useEffect(() => {
+    const staged = takeStagedFilesForRoute();
+    if (staged.length) onFilesRef.current(multiple ? staged : staged.slice(0, 1));
+  }, [multiple]);
 
   return (
     <div

@@ -8,6 +8,7 @@ import {
 import { errorMessage } from '../../utils/errorMessage';
 import { DropZone, ResultPanel, ErrorNotice } from './ImageShared';
 import { useExportProgress } from './ExportProgress';
+import { ToolSteps } from '../../components/ui/ToolSteps';
 
 function Slider({ label, value, min, max, step, onChange, display }: {
   label: string; value: number; min: number; max: number; step?: number;
@@ -99,6 +100,7 @@ export const ImageAdjustTool: React.FC = () => {
 
   return (
     <div className="space-y-4">
+      <ToolSteps phase={result ? 'done' : img ? 'configure' : 'upload'} middleLabel="Adjust" />
       {!img ? (
         <DropZone onFiles={handleFiles} />
       ) : (
@@ -188,6 +190,7 @@ export const ImageSharpenTool: React.FC = () => {
 
   return (
     <div className="space-y-4">
+      <ToolSteps phase={result ? 'done' : img ? 'configure' : 'upload'} middleLabel="Sharpen" />
       {!img ? (
         <DropZone onFiles={handleFiles} />
       ) : (
@@ -269,6 +272,7 @@ export const NoiseReductionTool: React.FC = () => {
 
   return (
     <div className="space-y-4">
+      <ToolSteps phase={result ? 'done' : img ? 'configure' : 'upload'} middleLabel="Reduce noise" />
       {!img ? (
         <DropZone onFiles={handleFiles} />
       ) : (
@@ -379,6 +383,7 @@ export const BlurBackgroundTool: React.FC = () => {
 
   return (
     <div className="space-y-4">
+      <ToolSteps phase={result ? 'done' : img ? 'configure' : 'upload'} middleLabel="Blur" />
       {!img ? (
         <DropZone onFiles={handleFiles} label="Select a photo to blur its background" />
       ) : (

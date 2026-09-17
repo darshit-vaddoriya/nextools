@@ -8,6 +8,7 @@ import { loadImage, downloadBlob, formatBytes, baseNameFrom, canvasExport } from
 import { CopyButton } from '../../components/CopyButton';
 import { Select } from '../../components/Select';
 import { errorMessage } from '../../utils/errorMessage';
+import { ToolSteps } from '../../components/ui/ToolSteps';
 
 // ─── ICO GENERATOR ─────────────────────────────────────────────
 const ICO_SIZES = [16, 32, 48, 64];
@@ -99,6 +100,7 @@ export const IcoGeneratorTool: React.FC = () => {
 
   return (
     <div className="space-y-4">
+      <ToolSteps phase={icoUrl ? 'done' : img ? 'configure' : 'upload'} middleLabel="Sizes" />
       {!img ? (
         <DropZone onFiles={handleFiles} label="Select an image to convert to .ico" />
       ) : (
@@ -147,6 +149,7 @@ export const ImageToBase64Tool: React.FC = () => {
 
   return (
     <div className="space-y-4">
+      <ToolSteps phase={dataUrl ? 'done' : 'upload'} middleLabel="Encode" />
       <DropZone onFiles={handleFiles} label="Select an image to convert to Base64" />
       <ErrorNotice message={error} />
       {dataUrl && (
@@ -282,6 +285,7 @@ export const ImageCollageTool: React.FC = () => {
 
   return (
     <div className="space-y-4">
+      <ToolSteps phase={result ? 'done' : images.length ? 'configure' : 'upload'} middleLabel="Layout" />
       <DropZone onFiles={handleFiles} multiple label="Select 2-9 images" hint="Arranged into a grid collage" />
       {images.length > 0 && (
         <div className="rounded-xl border border-border bg-card p-4 space-y-3">
@@ -387,6 +391,7 @@ export const MemeGeneratorTool: React.FC = () => {
 
   return (
     <div className="space-y-4">
+      <ToolSteps phase={result ? 'done' : img ? 'configure' : 'upload'} middleLabel="Caption" />
       {!img ? (
         <DropZone onFiles={handleFiles} label="Select an image for your meme" />
       ) : (
@@ -474,6 +479,7 @@ export const BatchResizeTool: React.FC = () => {
 
   return (
     <div className="space-y-4">
+      <ToolSteps phase={files.length ? 'configure' : 'upload'} middleLabel="Size" />
       <DropZone onFiles={handleFiles} multiple label="Select images to batch resize" />
       {files.length > 0 && (
         <div className="rounded-xl border border-border bg-card p-4 space-y-4">

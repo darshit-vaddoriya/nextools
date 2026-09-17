@@ -1,4 +1,4 @@
-import React, { useMemo, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import {
   Table2, Upload, Download, Plus, Minus, Trash2, Sparkles,
   FileJson, FileSpreadsheet, ArrowLeftRight, Copy as CopyIcon, Layers, ListX,
@@ -6,7 +6,9 @@ import {
 import { CopyButton } from '../../components/CopyButton';
 import { Select } from '../../components/Select';
 import { downloadBlob } from '../image/ImageUtils';
+import { takeStagedFilesForRoute } from '../../lib/fileHandoff';
 import { errorMessage } from '../../utils/errorMessage';
+import { ToolSteps } from '../../components/ui/ToolSteps';
 
 // ─── CSV parsing / serialization (RFC4180-ish, hand-written) ─────
 
@@ -134,6 +136,17 @@ const CsvInput: React.FC<{
     onChange(text);
     onFile?.(text, delim);
   };
+
+  /* A CSV chosen on the homepage is claimed here, so picking a CSV tool after
+     dropping a file does not ask for the same file again. See the matching
+     blocks in image/ImageShared.tsx and pdf/PdfShared.tsx. */
+  const handleFileRef = useRef(handleFile);
+  handleFileRef.current = handleFile;
+  useEffect(() => {
+    const [staged] = takeStagedFilesForRoute();
+    if (staged) handleFileRef.current(staged);
+  }, []);
+
   return (
     <div className="bg-card rounded-xl border border-border p-4 space-y-2.5">
       <div className="flex items-center justify-between">
@@ -202,6 +215,7 @@ export const CsvViewerTool: React.FC = () => {
 
   return (
     <div className="space-y-4">
+      <ToolSteps phase={text.trim() ? 'configure' : 'upload'} middleLabel="Review" />
       <CsvInput value={text} onChange={setText} onFile={(_, d) => setDelimiter(d)} />
       <div className="flex items-center gap-2">
         <span className="section-label">Delimiter</span>
@@ -314,6 +328,7 @@ export const CsvCleanerTool: React.FC = () => {
 
   return (
     <div className="space-y-4">
+      <ToolSteps phase={text.trim() ? 'configure' : 'upload'} middleLabel="Clean" />
       <CsvInput value={text} onChange={setText} onFile={(_, d) => setDelimiter(d)} />
       <div className="rounded-xl border border-border bg-card p-4 space-y-3">
         <div className="flex items-center gap-2">
@@ -367,6 +382,7 @@ export const CsvToJsonTool: React.FC = () => {
 
   return (
     <div className="space-y-4">
+      <ToolSteps phase={text.trim() ? 'configure' : 'upload'} middleLabel="Convert" />
       <CsvInput value={text} onChange={setText} onFile={(_, d) => setDelimiter(d)} />
       <div className="flex items-center gap-2">
         <span className="section-label">Delimiter</span>
@@ -414,6 +430,7 @@ export const JsonToCsvTool: React.FC = () => {
 
   return (
     <div className="space-y-4">
+      <ToolSteps phase={text.trim() ? 'configure' : 'upload'} middleLabel="Convert" />
       <div className="bg-card rounded-xl border border-border p-4 space-y-2.5">
         <div className="flex items-center gap-2">
           <FileJson className="w-4 h-4 text-primary" />
@@ -484,6 +501,7 @@ export const TsvConverterTool: React.FC = () => {
 
   return (
     <div className="space-y-4">
+      <ToolSteps phase={text.trim() ? 'configure' : 'upload'} middleLabel="Convert" />
       <div className="flex flex-wrap items-center gap-3">
         <label className="flex items-center gap-2 text-xs">
           <span className="section-label">From</span>
@@ -530,6 +548,7 @@ export const DelimiterConverterTool: React.FC = () => {
 
   return (
     <div className="space-y-4">
+      <ToolSteps phase={text.trim() ? 'configure' : 'upload'} middleLabel="Delimiter" />
       <div className="bg-card rounded-xl border border-border p-4 space-y-2.5">
         <p className="section-label">Delimited text</p>
         <textarea value={text} onChange={(e) => setText(e.target.value)} rows={8} className="textarea-base font-mono h-48" />
@@ -585,6 +604,7 @@ export const RemoveDuplicateRowsTool: React.FC = () => {
 
   return (
     <div className="space-y-4">
+      <ToolSteps phase={text.trim() ? 'configure' : 'upload'} middleLabel="Deduplicate" />
       <CsvInput value={text} onChange={setText} onFile={(_, d) => setDelimiter(d)} />
       <div className="flex items-center gap-2">
         <span className="section-label">Delimiter</span>
@@ -652,6 +672,7 @@ export const MergeCsvTool: React.FC = () => {
 
   return (
     <div className="space-y-4">
+      <ToolSteps phase={merged ? 'done' : files.length ? 'configure' : 'upload'} middleLabel="Merge" />
       <div className="bg-card rounded-xl border border-border p-4 space-y-3">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">

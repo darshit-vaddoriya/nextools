@@ -9,6 +9,7 @@ import { errorMessage } from '../../utils/errorMessage';
 import { DropZone, ResultPanel, ErrorNotice } from './ImageShared';
 import { Select } from '../../components/Select';
 import { useExportProgress } from './ExportProgress';
+import { ToolSteps } from '../../components/ui/ToolSteps';
 
 // ─── FORMAT OPTIONS ──────────────────────────────────────────
 const FORMATS = [
@@ -89,6 +90,7 @@ export const ImageResizeTool: React.FC = () => {
 
   return (
     <div className="space-y-4">
+      <ToolSteps phase={result ? 'done' : img ? 'configure' : 'upload'} middleLabel="Resize" />
       {!img ? (
         <DropZone onFiles={handleFiles} />
       ) : (
@@ -189,6 +191,7 @@ export const ImageRotateTool: React.FC = () => {
 
   return (
     <div className="space-y-4">
+      <ToolSteps phase={result ? 'done' : img ? 'configure' : 'upload'} middleLabel="Rotate" />
       {!img ? (
         <DropZone onFiles={handleFiles} />
       ) : (
@@ -320,6 +323,7 @@ export const ImageFlipTool: React.FC = () => {
 
   return (
     <div className="space-y-4">
+      <ToolSteps phase={result ? 'done' : img ? 'configure' : 'upload'} middleLabel="Flip" />
       {!img ? (
         <DropZone onFiles={handleFiles} />
       ) : (
@@ -436,6 +440,7 @@ export const ImageConverterTool: React.FC = () => {
 
   return (
     <div className="space-y-4">
+      <ToolSteps phase={results.length ? 'done' : files.length ? 'configure' : 'upload'} middleLabel="Format" />
       <DropZone onFiles={handleFiles} multiple label="Select images to convert" />
       {files.length > 0 && (
         <div className="rounded-xl border   bg-card border-border p-4 space-y-3 text-xs">
@@ -546,6 +551,7 @@ export const ImageCompressorTool: React.FC = () => {
 
   return (
     <div className="space-y-4">
+      <ToolSteps phase={result ? 'done' : img ? 'configure' : 'upload'} middleLabel="Quality" />
       {!img ? (
         <DropZone onFiles={handleFiles} label="Select an image to compress" />
       ) : (
@@ -712,6 +718,7 @@ export const ImageCropTool: React.FC = () => {
 
   return (
     <div className="space-y-4">
+      <ToolSteps phase={result ? 'done' : img ? 'configure' : 'upload'} middleLabel="Crop" />
       {!img ? (
         <DropZone onFiles={handleFiles} />
       ) : (

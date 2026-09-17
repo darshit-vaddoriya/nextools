@@ -1,0 +1,291 @@
+# NextTool
+
+> Free browser-based tools for PDF, image, developer and AI tasks. Every tool runs
+> entirely on the visitor's own device — files are never uploaded to a server, and
+> no account is required.
+
+## pdf tools
+
+- [PDF Merge](https://nexttool.click/tool/pdf-merge): Combine multiple PDF files into one document with drag-and-drop reordering
+- [PDF Split](https://nexttool.click/tool/pdf-split): Split a PDF into individual pages or custom page ranges in your browser
+- [Compress PDF](https://nexttool.click/tool/pdf-compress): Reduce PDF file size without visible quality loss using client-side compression
+- [PDF to Word (DOCX)](https://nexttool.click/tool/pdf-to-word): Extract text from a PDF and convert it into an editable Word DOCX file locally
+- [PDF to Image](https://nexttool.click/tool/pdf-to-jpg): Convert each PDF page to high-quality JPG or PNG images in your browser
+- [Image to PDF](https://nexttool.click/tool/jpg-to-pdf): Combine one or multiple JPG or PNG images into a single PDF document
+- [HTML to PDF](https://nexttool.click/tool/html-to-pdf): Convert HTML content into a paginated PDF document in your browser
+- [Text to PDF](https://nexttool.click/tool/text-to-pdf): Convert plain text content into a formatted PDF document
+- [PDF OCR](https://nexttool.click/tool/pdf-ocr): Extract text from scanned or image-based PDFs using OCR technology in browser
+- [Extract Text from PDF](https://nexttool.click/tool/pdf-extract-text): Pull all text content out of any PDF file and copy or download as TXT
+- [Extract Images from PDF](https://nexttool.click/tool/pdf-extract-images): Extract all embedded images from a PDF and download them individually
+- [Rotate PDF](https://nexttool.click/tool/pdf-rotate): Rotate all or selected PDF pages by 90, 180 or 270 degrees
+- [Reorder PDF Pages](https://nexttool.click/tool/pdf-reorder): Drag and drop PDF pages into any order and save the rearranged document
+- [Delete PDF Pages](https://nexttool.click/tool/pdf-delete-pages): Remove specific pages from a PDF document quickly in browser
+- [Crop PDF](https://nexttool.click/tool/pdf-crop): Crop margins or trim PDF pages to a custom size
+- [Add Watermark](https://nexttool.click/tool/pdf-watermark): Stamp custom text or image watermarks onto PDF pages
+- [Add Page Numbers](https://nexttool.click/tool/pdf-page-numbers): Add automatic page numbers to any position on every PDF page
+- [Add Header & Footer](https://nexttool.click/tool/pdf-header-footer): Insert custom header and footer text into every PDF page
+- [Sign PDF](https://nexttool.click/tool/pdf-sign): Draw, type or upload a signature and place it on any PDF page
+- [Fill PDF Forms](https://nexttool.click/tool/pdf-fill-forms): Fill in interactive PDF form fields directly in your browser
+- [Flatten PDF](https://nexttool.click/tool/pdf-flatten): Flatten form fields and annotations into the PDF page content
+- [Repair PDF](https://nexttool.click/tool/pdf-repair): Attempt to fix corrupted or damaged PDF files
+- [Compare PDFs](https://nexttool.click/tool/pdf-compare): Highlight differences between two PDF documents side by side
+- [Redact PDF](https://nexttool.click/tool/pdf-redact): Permanently black out sensitive text or regions in a PDF
+- [PDF Metadata Editor](https://nexttool.click/tool/pdf-metadata): View and edit title, author, subject and keywords stored in a PDF
+- [PDF Viewer](https://nexttool.click/tool/pdf-viewer): View and browse PDF files directly in your browser without plugins
+- [PDF Page Extractor](https://nexttool.click/tool/pdf-page-extractor): Extract a specific page range from a PDF as a new document
+
+## word tools
+
+- [DOCX to PDF](https://nexttool.click/tool/docx-to-pdf): Convert Microsoft Word DOCX files to PDF format entirely in browser
+- [DOCX to HTML](https://nexttool.click/tool/docx-to-html): Extract formatted HTML markup from Word DOCX documents
+- [DOCX to Markdown](https://nexttool.click/tool/docx-to-markdown): Convert Word documents to clean Markdown format
+- [DOCX to TXT](https://nexttool.click/tool/docx-to-txt): Strip formatting and extract plain text from Word DOCX files
+- [HTML to DOCX](https://nexttool.click/tool/html-to-docx): Convert HTML content into a Word DOCX document
+- [Markdown to DOCX](https://nexttool.click/tool/markdown-to-docx): Convert Markdown files into formatted Word DOCX documents
+- [Word Viewer](https://nexttool.click/tool/word-viewer): View DOCX files directly in your browser without Microsoft Word
+- [Word Metadata Viewer](https://nexttool.click/tool/word-metadata): Inspect author, dates, revision count and other metadata inside DOCX files
+- [Document Compare](https://nexttool.click/tool/word-compare): Compare two Word documents and highlight text differences
+- [Remove Formatting](https://nexttool.click/tool/word-remove-format): Strip all formatting from a Word document and produce clean plain text
+
+## excel tools
+
+- [CSV Viewer](https://nexttool.click/tool/csv-viewer): View and browse CSV files in a clean table layout in browser
+- [CSV Editor](https://nexttool.click/tool/csv-editor): Edit CSV data in an interactive spreadsheet-style table editor
+- [CSV Cleaner](https://nexttool.click/tool/csv-cleaner): Remove extra spaces, fix encodings, and sanitize CSV data automatically
+- [CSV to JSON](https://nexttool.click/tool/csv-to-json): Convert CSV files to JSON arrays with configurable key mapping
+- [JSON to CSV](https://nexttool.click/tool/json-to-csv): Flatten JSON arrays into CSV rows with automatic header detection
+- [TSV Converter](https://nexttool.click/tool/tsv-converter): Convert between TSV (tab-separated) and CSV or JSON formats
+- [Delimiter Converter](https://nexttool.click/tool/delimiter-converter): Change the delimiter of any delimited text file, comma, tab, pipe, semicolon
+- [Remove Duplicate Rows](https://nexttool.click/tool/remove-duplicates): Detect and delete duplicate rows in any CSV or XLSX file
+- [Merge CSV Files](https://nexttool.click/tool/merge-csv): Merge multiple CSV files by appending rows or joining on a key column
+
+## image tools
+
+- [Image Compressor](https://nexttool.click/tool/image-compressor): Compress JPEG, PNG, WebP & AVIF images with quality control, no upload needed
+- [Resize Image](https://nexttool.click/tool/image-resize): Resize images to exact pixel dimensions or by percentage - all in browser
+- [Crop Image](https://nexttool.click/tool/image-crop): Crop any image to a precise selection with aspect ratio locking
+- [Rotate Image](https://nexttool.click/tool/image-rotate): Rotate images by any degree or flip them horizontally/vertically
+- [Flip Image](https://nexttool.click/tool/image-flip): Mirror images horizontally or vertically
+- [Convert Image Formats](https://nexttool.click/tool/image-convert): Convert images between JPG, PNG, WebP, AVIF, HEIC, BMP, TIFF and more
+- [SVG Converter](https://nexttool.click/tool/svg-converter): Convert SVG to PNG/JPG or rasterize SVG files at any resolution
+- [ICO Generator](https://nexttool.click/tool/ico-generator): Create multi-size ICO favicon files from any image
+- [Background Remover](https://nexttool.click/tool/ai-bg-remover): Remove backgrounds from images using WebGPU/WASM AI models, no upload
+- [Sharpen Image](https://nexttool.click/tool/image-sharpen): Sharpen blurry photos and enhance image details using browser filters
+- [Brightness / Contrast](https://nexttool.click/tool/image-adjust): Adjust brightness, contrast, saturation, hue, and sharpness of any image
+- [Image to Base64](https://nexttool.click/tool/image-to-base64): Encode any image file to a Base64 data URL string
+- [Base64 to Image](https://nexttool.click/tool/base64-to-image): Decode a Base64 data URL string back into an image file
+- [OCR - Image to Text](https://nexttool.click/tool/ocr-image): Extract text from any image using Tesseract.js OCR running in browser
+- [Watermark Image](https://nexttool.click/tool/image-watermark): Add custom text or logo watermarks to images with opacity and position control
+- [Draw on Image](https://nexttool.click/tool/image-draw): Upload an image and draw, highlight or annotate it with pen, eraser and color tools
+- [Image Editor](https://nexttool.click/tool/image-editor): Full in-browser image editor: crop, resize, rotate, flip, adjust colors, blur, annotate and export
+- [Drawing Board](https://nexttool.click/tool/drawing): Full-screen drawing app: sketch on a blank canvas or over a photo with brushes, shapes, text and layers
+- [Remove Metadata](https://nexttool.click/tool/image-metadata): Strip EXIF and other metadata from images for privacy
+- [Batch Resize](https://nexttool.click/tool/batch-resize): Resize hundreds of images at once to the same dimensions
+- [Image Collage](https://nexttool.click/tool/image-collage): Arrange multiple images into a collage layout and download as one image
+- [Meme Generator](https://nexttool.click/tool/meme-generator): Add top/bottom text to any image and create shareable memes in browser
+- [QR & Barcode Generator](https://nexttool.click/tool/qr-generator): Generate high-res QR codes and barcodes for URLs, Wi-Fi, vCards and more
+
+## archive tools
+
+- [ZIP Extractor](https://nexttool.click/tool/zip-extractor): Extract files from ZIP archives entirely in browser, no upload needed
+- [ZIP Creator](https://nexttool.click/tool/zip-creator): Compress multiple files into a ZIP archive right in your browser
+- [Batch ZIP Creator](https://nexttool.click/tool/batch-zip): Zip each file individually in bulk and download all as a single archive
+
+## text tools
+
+- [Word Counter](https://nexttool.click/tool/word-counter): Count words, characters, sentences and paragraphs, plus reading time and readability stats
+- [Case Converter](https://nexttool.click/tool/case-converter): Convert text between camelCase, snake_case, kebab-case, PascalCase, UPPER and more
+- [Remove Duplicate Lines](https://nexttool.click/tool/remove-duplicates-text): Remove duplicate lines from any block of text, with optional sorting
+- [Sort Lines](https://nexttool.click/tool/sort-lines): Sort lines of text alphabetically, numerically, by length, or reverse order
+- [Reverse Text](https://nexttool.click/tool/reverse-text): Reverse an entire text string, or reverse word order
+- [Lorem Ipsum Generator](https://nexttool.click/tool/lorem-ipsum): Generate placeholder Lorem Ipsum text by paragraphs, sentences or words
+- [Slug Generator](https://nexttool.click/tool/slug-generator): Convert any text to a URL-friendly slug with customizable separators
+- [Text Cleaner](https://nexttool.click/tool/text-cleaner): Remove extra whitespace, special characters, HTML tags and fix encoding issues
+- [Find & Replace](https://nexttool.click/tool/find-replace): Find and replace text with plain string or regex patterns across a document
+- [Remove Empty Lines](https://nexttool.click/tool/remove-empty-lines): Strip all blank or empty lines from a block of text instantly
+- [Extract Emails](https://nexttool.click/tool/extract-emails): Pull all email addresses from any block of text using regex
+- [Extract URLs](https://nexttool.click/tool/extract-urls): Extract all URLs and hyperlinks from a text block or HTML source
+- [Extract Phone Numbers](https://nexttool.click/tool/extract-phones): Find and extract all phone numbers from a body of text
+- [Extract Hashtags](https://nexttool.click/tool/extract-hashtags): Pull all #hashtags and @mentions from social media text
+- [Live Regex Tester](https://nexttool.click/tool/regex-tester): Test regular expressions in real-time with flags, match highlights and groups
+- [Text Diff Checker](https://nexttool.click/tool/diff-text): Compare two blocks of text and highlight all additions, deletions and changes
+
+## dev tools
+
+- [JSON Formatter](https://nexttool.click/tool/json-formatter): Format, minify, validate, repair and explore JSON with tree inspector
+- [XML Formatter](https://nexttool.click/tool/xml-formatter): Format, minify and validate XML documents with syntax highlighting
+- [YAML Formatter](https://nexttool.click/tool/yaml-formatter): Format, validate and convert YAML to JSON or JSON to YAML
+- [SQL Formatter](https://nexttool.click/tool/sql-formatter): Beautify and format SQL queries with configurable dialect and indentation
+- [HTML Formatter / Minifier](https://nexttool.click/tool/html-formatter): Prettify or minify HTML markup with configurable indent size
+- [CSS Formatter / Minifier](https://nexttool.click/tool/css-formatter): Format or minify CSS stylesheets and SCSS/LESS snippets
+- [JS Formatter / Minifier](https://nexttool.click/tool/js-formatter): Prettify or minify JavaScript and TypeScript code in browser
+- [URL Encoder / Decoder](https://nexttool.click/tool/url-encoder): Encode or decode URI components and full URLs
+- [Base64 Encoder / Decoder](https://nexttool.click/tool/base64): Encode text or files to Base64 and decode Base64 strings back to data
+- [JWT Token Inspector](https://nexttool.click/tool/jwt-decoder): Decode JWT header, payload, verify expiry and inspect claims
+- [UUID / GUID Generator](https://nexttool.click/tool/uuid-generator): Generate RFC4122 v4 UUIDs in bulk with casing and separator options
+- [Hash Generator](https://nexttool.click/tool/hash-generator): Generate MD5, SHA-1, SHA-256 and SHA-512 hashes via the Web Crypto API
+- [Diff Checker](https://nexttool.click/tool/diff-checker): Compare two code files or text blocks and show a colour-coded diff
+- [Markdown Preview](https://nexttool.click/tool/markdown-preview): Write Markdown in a live editor and see the rendered HTML side by side
+- [HTML ↔ Markdown](https://nexttool.click/tool/html-markdown): Convert HTML to Markdown or Markdown to HTML instantly
+- [JSON to TypeScript](https://nexttool.click/tool/json-to-types): Generate TypeScript interfaces, Zod schemas, Go structs or Python dataclasses from JSON
+- [Cron Expression Parser](https://nexttool.click/tool/cron-parser): Explain any cron expression in plain English and preview its next run times
+- [cURL to Code](https://nexttool.click/tool/curl-to-code): Convert a cURL command into fetch, axios, Python requests or Node code
+- [String Escaper](https://nexttool.click/tool/string-escaper): Escape or unescape strings for JSON, JavaScript, SQL, shell, regex, CSV and XML
+- [.env to JSON Converter](https://nexttool.click/tool/env-json): Convert .env files to JSON config objects and JSON back into .env lines
+- [HTTP Status Codes](https://nexttool.click/tool/http-status-codes): Search every HTTP status code with a plain-English explanation of what it means
+- [JSONPath Tester](https://nexttool.click/tool/jsonpath-tester): Query a JSON document with JSONPath expressions and see matching values live
+- [Mock JSON Generator](https://nexttool.click/tool/mock-json): Generate realistic fake JSON, CSV or SQL test data from custom field definitions
+
+## security tools
+
+- [Password Generator](https://nexttool.click/tool/password-generator): Generate cryptographically strong passwords with custom charset and entropy meter
+- [Passphrase Generator](https://nexttool.click/tool/passphrase-gen): Generate memorable multi-word passphrases using the EFF wordlist
+- [Password Strength Checker](https://nexttool.click/tool/password-strength): Analyse password strength, entropy bits and estimated crack time
+- [File Checksum](https://nexttool.click/tool/file-checksum): Verify file integrity by computing and comparing SHA-256 or MD5 checksums
+- [Random String Generator](https://nexttool.click/tool/random-string): Generate random strings with custom length, charset and output count
+- [Secure Notes](https://nexttool.click/tool/secure-notes): Write encrypted notes that are stored only in your browser, never sent to a server
+
+## color tools
+
+- [Color Converter](https://nexttool.click/tool/color-converter): Convert colors between HEX, RGB and HSL formats
+- [Gradient Generator](https://nexttool.click/tool/gradient-generator): Build CSS linear and radial gradients visually and copy the CSS code
+- [Palette Generator](https://nexttool.click/tool/palette-color): Generate harmonious color palettes from a seed color with multiple harmony rules
+- [Contrast Checker](https://nexttool.click/tool/contrast-checker): Check WCAG AA/AAA contrast ratio between text and background colors
+- [Glassmorphism Builder](https://nexttool.click/tool/glassmorphism): Design frosted glass UI components visually and copy the ready-to-use CSS
+
+## utility tools
+
+- [Unit Converter](https://nexttool.click/tool/unit-converter): Convert between length, weight, temperature, area, volume, speed and more
+- [Time Zone Converter](https://nexttool.click/tool/timezone-converter): Convert times between any two time zones and see world clock
+- [Timestamp Converter](https://nexttool.click/tool/timestamp-converter): Convert Unix timestamps to human-readable dates and back
+- [Age Calculator](https://nexttool.click/tool/age-calculator): Calculate exact age in years, months, days and hours from a birthdate
+- [Percentage Calculator](https://nexttool.click/tool/percentage-calc): Calculate percentages, percentage change, and reverse percentage problems
+- [BMI Calculator](https://nexttool.click/tool/bmi-calculator): Calculate Body Mass Index with metric and imperial unit support
+- [EMI Calculator](https://nexttool.click/tool/emi-calculator): Calculate monthly EMI for loans with breakdown of principal and interest
+- [Scientific Calculator](https://nexttool.click/tool/scientific-calc): Full scientific calculator with trig, log, factorial and memory functions
+- [GST Calculator](https://nexttool.click/tool/gst-calculator): Calculate GST inclusive/exclusive amounts and breakdown by tax slab
+- [Number to Words](https://nexttool.click/tool/number-to-words): Convert any number to its English word representation
+- [Roman Numerals](https://nexttool.click/tool/roman-numerals): Convert between Roman numerals and standard Arabic numbers
+
+## web tools
+
+- [URL Parser](https://nexttool.click/tool/url-parser): Parse any URL into its components: protocol, host, path, query, fragment
+- [User Agent Parser](https://nexttool.click/tool/user-agent-parser): Parse any user-agent string into browser, OS, device and engine details
+- [MIME Type Checker](https://nexttool.click/tool/mime-checker): Detect the MIME type of any file by reading its magic bytes locally
+- [HTML Entity Encoder](https://nexttool.click/tool/html-entity): Encode or decode HTML entities such as &amp;, &lt;, &gt; and &#x...
+- [Unicode Converter](https://nexttool.click/tool/unicode-converter): Convert characters to Unicode code points and back, supports emoji and scripts
+- [ASCII Converter](https://nexttool.click/tool/ascii-converter): Convert text to ASCII codes and ASCII codes back to characters
+- [Binary Converter](https://nexttool.click/tool/binary-converter): Convert between binary, decimal, hexadecimal and octal number systems
+
+## Guides
+
+- [Making a GIF that is not 40 megabytes](https://nexttool.click/blog/making-a-gif-worth-sending): GIF is a 1987 format with 256 colours and no real compression for photos. Knowing what it is bad at is how you get a small, clean loop.
+- [MP4 is not a codec: containers, codecs and why a file will not play](https://nexttool.click/blog/mp4-is-not-a-codec): A video file has a container and at least two codecs inside it. Playback failures are almost always a codec problem wearing a container name.
+- [Compressing a video without ruining it](https://nexttool.click/blog/compressing-a-video-without-ruining-it): Video size is bit rate times duration. Knowing which of resolution, bit rate and frame rate to cut first is what keeps a compressed clip watchable.
+- [Trimming, cropping and rotating video without re-encoding everything](https://nexttool.click/blog/trimming-and-cropping-video): Some video edits copy the streams and finish in seconds. Others decode every frame. Knowing which is which saves time and quality.
+- [MIME types, magic bytes and why a file opens as the wrong thing](https://nexttool.click/blog/mime-types-and-file-signatures): The extension, the declared MIME type and the actual bytes are three separate claims about a file, and any of them can be wrong.
+- [Merging CSV files whose columns do not line up](https://nexttool.click/blog/merging-csv-files-that-do-not-line-up): Combining exports is easy when the headers match and a data-loss trap when they do not. The failure is silent, which is the problem.
+- [Password-protecting a PDF, and what the password actually stops](https://nexttool.click/blog/password-protecting-a-pdf): PDF has two passwords doing two different jobs, and only one of them is real encryption. The other is a request that viewers may ignore.
+- [Reading text off an image: what OCR gets right and where it fails](https://nexttool.click/blog/reading-text-off-an-image): OCR turns pixels into characters, and its accuracy is decided before it runs — by resolution, contrast and whether the page is straight.
+- [Getting the audio out of a video, and what quality survives](https://nexttool.click/blog/extracting-audio-from-video): Extracting audio can be a lossless copy or a re-encode. Which one you get decides whether the result is identical to the original track.
+- [Subtitles: SRT files, embedded tracks and burned-in captions](https://nexttool.click/blog/subtitles-srt-and-burned-in-captions): Three different ways a caption reaches a viewer, with different consequences for editing, accessibility and whether the text can be turned off.
+- [What a user agent string actually says about you](https://nexttool.click/blog/what-a-user-agent-string-says): The user agent is a browser identifying itself in a format shaped by decades of compatibility hacks, and it is losing detail on purpose.
+- [Unit conversion is not one multiplication](https://nexttool.click/blog/unit-conversion-and-its-assumptions): Some conversions are a factor, some need an offset, and some depend on what you are measuring. Mixing them up is how spacecraft get lost.
+- [GST on an invoice: inclusive, exclusive and where the rounding goes](https://nexttool.click/blog/gst-invoices-and-rounding): Tax arithmetic is simple until rounding, line items and reverse calculations meet. Most invoice disputes are one paise of rounding order.
+- [Making a PDF out of HTML, plain text and a form you filled in](https://nexttool.click/blog/making-a-pdf-from-something-else): Generating a PDF from a web page or a text file involves choices about page size, fonts and what happens to links. Here is what each one costs.
+- [Turning photos into a PDF, and finding what changed between two versions](https://nexttool.click/blog/images-to-pdf-and-comparing-versions): Scanning with a phone and assembling the result into a PDF has a few decisions in it. So does working out what actually changed in a revised contract.
+- [Cleaning a block of text: the operations worth doing in order](https://nexttool.click/blog/cleaning-a-block-of-text): Deduplicating, sorting, trimming and case conversion are trivial individually. The order you run them in decides whether the result is right.
+- [Find, replace and extract: getting structure out of unstructured text](https://nexttool.click/blog/find-replace-and-extraction): Bulk editing and pattern extraction solve the same problem from opposite ends, and both have the same failure mode.
+- [Public Wi-Fi: what HTTPS already protects, and what a VPN adds](https://nexttool.click/blog/public-wifi-and-vpns): The coffee shop threat model is not what it was in 2010. Knowing what changed tells you what a VPN is actually buying you.
+- [Your details were in a breach: what actually helps, in order](https://nexttool.click/blog/after-a-data-breach): A breach notification is vague by design. The useful response depends on what was taken, and password reuse is the real exposure.
+- [Why zipping your photos saves nothing, and what to do instead](https://nexttool.click/blog/what-actually-compresses-in-a-zip): ZIP finds repetition. JPEGs have none left, which is why a folder of 200 photos zips to 199 MB. Here is what zipping is actually for.
+- [EMI, GST and percentages: the formulas the calculators are running](https://nexttool.click/blog/the-maths-behind-the-calculators): Loan instalments, tax-inclusive prices and percentage change all have one formula each. Knowing them tells you when an answer is wrong.
+- [The same number written six ways: dates and separators across locales](https://nexttool.click/blog/dates-numbers-across-locales): A file that reads 03/04/2026 says two different dates depending on who opens it, and 1,234 means two different numbers.
+- [Mean, median and percentiles: reading a number honestly](https://nexttool.click/blog/mean-median-and-percentiles): An average is one number standing in for a distribution. Which average you pick decides what it conceals.
+- [Compound interest: the arithmetic behind savings and debt](https://nexttool.click/blog/compound-interest-and-saving): The same formula grows a savings balance and a credit card balance. Compounding frequency and fees decide how much of it you keep.
+- [Saving a web page so it is still readable later](https://nexttool.click/blog/saving-a-web-page-properly): Bookmarks break, screenshots are not searchable and Save As often produces a folder that no longer renders. Each has a fix.
+- [Taking pages out of a PDF: split, delete, extract, and which you want](https://nexttool.click/blog/taking-pages-out-of-a-pdf): Splitting, deleting pages and extracting a range sound interchangeable. They produce different files, and picking the wrong one loses work.
+- [Page numbers, headers and margins: making a PDF look submitted, not exported](https://nexttool.click/blog/page-numbers-headers-and-margins): Adding page furniture to a finished PDF is straightforward once you know what a page box is and why rotation is not what you think.
+- [Cropping well: aspect ratios, the rule nobody needs, and safe areas](https://nexttool.click/blog/cropping-well): Cropping is the cheapest way to improve a photograph and the easiest way to have it mangled by a platform that crops it again.
+- [URL encoding, HTML entities and MIME types: three things people mix up](https://nexttool.click/blog/three-kinds-of-escaping): Percent-encoding, entity encoding and content types solve different problems. Using the wrong one produces bugs that look identical.
+- [Gradients and palettes: why yours goes grey in the middle](https://nexttool.click/blog/gradients-and-palettes): Interpolating between two colours in sRGB passes through a dead zone. Understanding why explains most disappointing gradients and palettes.
+- [What you are actually sharing when you paste a link](https://nexttool.click/blog/cleaning-a-url-before-sharing): Most shared links carry tracking parameters, and some carry a session token. Both survive being forwarded.
+- [Keeping API keys out of your repository, and what to do when one leaks](https://nexttool.click/blog/keeping-secrets-out-of-git): A key committed once is in the history forever. Deleting the line does not remove it, and rotation is the only real fix.
+- [Summarising a spreadsheet: grouping, counting and the totals trap](https://nexttool.click/blog/aggregating-without-a-pivot-table): Most reporting questions are a group-by plus a count or a sum. Knowing that makes the tool you use almost irrelevant.
+- [Validating data at the point of entry, not after it has spread](https://nexttool.click/blog/validating-data-on-the-way-in): A bad value caught at the form costs seconds. The same value caught in a report costs a reconciliation across every system it reached.
+- [Unix timestamps, UTC and the off-by-one-hour bug](https://nexttool.click/blog/timestamps-time-zones-and-the-missing-hour): A timestamp is a count of seconds with no time zone in it. Almost every date bug comes from adding a zone too early or too late.
+- [What your browser announces before you click anything](https://nexttool.click/blog/what-your-browser-announces): The user agent string, the headers and the capability list your browser sends on every request, and how little of it you can change.
+- [What you agree to when you install a browser extension](https://nexttool.click/blog/browser-permissions-and-extensions): An extension asking to read and change all your data on all websites is asking for exactly that, including your banking session.
+- [How an email knows you opened it](https://nexttool.click/blog/email-tracking-pixels): A one-pixel image and a rewritten link are enough to record when you read a message, where you were and what you clicked.
+- [Sending a file to a printer: bleed, DPI and why the colours shift](https://nexttool.click/blog/preparing-files-for-print): Screens emit light and mix colours additively; ink absorbs it and mixes subtractively. That one difference explains most print disappointments.
+- [Writing in Markdown and generating the Word file later](https://nexttool.click/blog/markdown-as-a-document-source): Keeping the source as Markdown and producing DOCX or HTML on demand solves versioning, diffing and consistency problems that Word cannot.
+- [Rotate, flip and sharpen: the small fixes, and which ones cost quality](https://nexttool.click/blog/rotate-flip-and-sharpen): Three corrections that look equally trivial. One is free, one is free, and one permanently alters your image and cannot be undone.
+- [Base64 images: when inlining helps and when it costs you](https://nexttool.click/blog/data-uris-when-to-inline-an-image): Turning an image into a data URI removes a request and adds 33% to its size. Knowing which trade matters tells you when to do it.
+- [Screenshots that actually help: annotation, redaction and what leaks](https://nexttool.click/blog/screenshots-for-bug-reports): A screenshot sent for support often contains more than the bug. Browser tabs, notifications and the clipboard all end up in frame.
+- [YAML, JSON and TSV: picking a format for config and interchange](https://nexttool.click/blog/yaml-json-and-tabular-interchange): JSON has no comments, YAML has the Norway problem, and TSV avoids the quoting mess CSV is famous for. Each trade matters somewhere.
+- [HTTP status codes: the handful that decide what search engines do](https://nexttool.click/blog/http-status-codes-that-matter): A 301 and a 302 look the same to a visitor and mean opposite things to a crawler. So do a 404 and a soft 404.
+- [Cron expressions: reading the five fields without guessing](https://nexttool.click/blog/cron-expressions-explained): Five numbers decide when a job runs. Day-of-month and day-of-week interact in a way that surprises almost everyone.
+- [Generating a random string that is actually random](https://nexttool.click/blog/random-strings-and-tokens): Math.random is not a source of secrets. The difference between a pseudo-random generator and a cryptographic one decides whether a token is guessable.
+- [A backup that works when you need it](https://nexttool.click/blog/a-backup-that-actually-works): Most backup plans fail in the same three ways: one copy, same building, never tested. The 3-2-1 rule exists because of each.
+- [Private browsing: what it hides, and from whom](https://nexttool.click/blog/what-incognito-mode-does-not-do): Incognito mode hides your activity from other people using your device. It hides nothing from the sites, your employer or your provider.
+- [Opening a DOCX without Word, and what is hiding inside it](https://nexttool.click/blog/open-a-docx-without-word): A .docx is a zip file full of XML. That explains how any browser can read one, and why documents leak author names and edit history.
+- [Finding what changed between two versions of a document](https://nexttool.click/blog/comparing-two-documents): Comparing documents, PDFs and plain text each work differently, and knowing which comparison you are running explains the false positives.
+- [Watermarks, annotations, memes and collages: drawing on an image](https://nexttool.click/blog/putting-things-on-top-of-images): Four tools that all composite something onto a picture, and the surprisingly different things they are each good for.
+- [Why the same image looks different on every screen](https://nexttool.click/blog/why-colours-look-different-on-each-screen): Colour profiles decide how stored numbers become visible colour. Strip one and your careful red becomes somebody else orange.
+- [Product photos that pass a marketplace listing check](https://nexttool.click/blog/product-photos-for-listings): Amazon, Etsy and Shopify each impose minimum pixels, background rules and aspect ratios. The overlap between them is a single workable spec.
+- [Prettify or minify: what formatters actually do to your code](https://nexttool.click/blog/what-a-formatter-actually-does): Formatting and minifying are the same parse-and-print operation with opposite goals. Knowing what each one is allowed to change explains the edge cases.
+- [Alt text, headings and the accessibility work that also helps search](https://nexttool.click/blog/alt-text-and-accessible-documents): The things that make a page or a document usable with a screen reader are largely the same things that make it legible to a crawler.
+- [File names that survive being moved, zipped and emailed](https://nexttool.click/blog/naming-files-that-survive): Spaces, accents, colons and emoji in filenames break in predictable places. A few rules avoid all of them.
+- [Getting a table out of a PDF without retyping it](https://nexttool.click/blog/getting-tables-out-of-a-pdf): PDFs have no tables, only text positioned in a grid. That is why extraction produces jumbled columns, and what to do about it.
+- [Word styles: why formatting by hand costs you later](https://nexttool.click/blog/word-styles-and-templates): Direct formatting and styles look identical and behave completely differently. One converts, exports and restyles; the other does not.
+- [Favicons: the sizes that still matter and the ones that do not](https://nexttool.click/blog/favicon-sizes-and-formats): Browsers, phones and search results all want a different icon. Here is the short list that actually covers them without shipping fourteen files.
+- [QR codes: what is actually encoded, and how to make one that scans](https://nexttool.click/blog/qr-codes-what-is-encoded): A QR code is just text with error correction. Knowing that explains why some codes are dense, why some fail to scan, and why the logo in the middle works.
+- [Signing a PDF: what a signature image proves, and what it does not](https://nexttool.click/blog/signing-a-pdf-what-it-proves): Pasting a picture of your signature onto a PDF and applying a digital signature are unrelated operations. One is a drawing; the other is cryptography.
+- [PDF/A: making a document still readable in twenty years](https://nexttool.click/blog/pdf-a-and-long-term-archiving): An ordinary PDF depends on fonts and software that may not exist later. PDF/A is the version that carries everything it needs.
+- [Word to PDF and back: what survives the round trip](https://nexttool.click/blog/word-to-pdf-and-back): Going from DOCX to PDF is a one-way conversion dressed up as a save. Here is what changes, and why the return journey never gives you the original back.
+- [Getting a passport or visa photo to pass the checker](https://nexttool.click/blog/passport-and-id-photo-specs): Photo rejections are nearly always dimensions, head ratio or background. Each one is measurable before you submit.
+- [Why your link preview looks wrong when you share it](https://nexttool.click/blog/social-preview-images): Open Graph images get cropped differently by every platform. Designing for the safe area is what stops your title being cut in half.
+- [Reading a link before you click it](https://nexttool.click/blog/spotting-a-dangerous-link): Almost every malicious link gives itself away in the hostname. Knowing where to look takes a couple of seconds.
+- [Email attachment limits: why 25MB is not 25MB](https://nexttool.click/blog/email-attachment-size-limits): Attachments are encoded before sending, which inflates them by a third. That is why a 24MB file bounces off a 25MB limit.
+- [Colour contrast: what the WCAG numbers mean and how to hit them](https://nexttool.click/blog/colour-contrast-and-wcag): The 4.5:1 ratio comes from a luminance formula. Understanding it explains why light grey on white fails and how to fix a palette that does.
+- [CSV delimiters, quoting and encoding: the three things that break files](https://nexttool.click/blog/csv-delimiters-quoting-and-encoding): RFC 4180 is one page long and widely ignored. Knowing the rules, and where real files depart from them, makes parsing failures diagnosable.
+- [What browsers can encrypt on their own: the Web Crypto API in plain English](https://nexttool.click/blog/web-crypto-in-plain-english): Modern browsers ship a real cryptographic library. Understanding what it offers explains how tools can encrypt and hash without a server.
+- [Image optimisation for web performance: the four things that matter](https://nexttool.click/blog/optimise-images-for-web-performance): Images are usually the largest thing on a page. Format, dimensions, layout stability and loading strategy account for nearly all of the gain.
+- [Getting a PDF under a strict upload limit, without destroying it](https://nexttool.click/blog/reduce-pdf-file-size-for-upload-limits): Government portals want 1 MB, email wants 25 MB, and your scan is 48 MB. A decision order that gets you under the limit with the least damage.
+- [UUID v4 or v7? What changed and which to use for database keys](https://nexttool.click/blog/uuid-v4-vs-v7-which-one): Random UUIDs fragment database indexes. Version 7 puts a timestamp in front, making identifiers sortable while staying unpredictable enough.
+- [Cookies, tracking and what you can actually control](https://nexttool.click/blog/cookies-tracking-and-what-you-can-control): First-party versus third-party cookies, fingerprinting, and which browser settings genuinely change what is collected about you.
+- [CSV or Excel? Choosing the right format for the job](https://nexttool.click/blog/csv-vs-excel-when-to-use-which): CSV is a text format with no types and no formulas. XLSX is a compressed archive with everything. Each is the wrong choice in specific, predictable ways.
+- [Password managers and 2FA: the setup that actually protects an account](https://nexttool.click/blog/password-manager-and-2fa-setup): Unique passwords everywhere and a second factor on the accounts that matter. Which second factors are worth using, and which are close to theatre.
+- [How AI background removal works, and where it still fails](https://nexttool.click/blog/remove-image-background-in-browser): Segmentation models can cut a subject out of a photo in seconds. Understanding what the model is doing tells you which photos will work and which will not.
+- [OCR on scanned PDFs: what it can read, what it cannot, and why DPI matters](https://nexttool.click/blog/ocr-scanned-pdf-explained): Optical character recognition turns page images into searchable text. Scan quality, resolution and layout decide whether you get 99% accuracy or gibberish.
+- [Regex without the mystique: the patterns that actually come up](https://nexttool.click/blog/regex-patterns-that-actually-come-up): Anchors, greedy versus lazy matching, groups and the backtracking trap. The regex knowledge that covers most real tasks.
+- [What actually happens to a file you upload to a free online tool](https://nexttool.click/blog/what-happens-when-you-upload-a-file): A walk through the infrastructure an uploaded document passes through, and which parts a "deleted after 1 hour" policy typically does not cover.
+- [Cleaning messy spreadsheet data: a repeatable order of operations](https://nexttool.click/blog/cleaning-messy-spreadsheet-data): Duplicate rows, inconsistent casing, invisible whitespace and mixed date formats. A sequence that fixes them without creating new problems.
+- [Verifying a download with a checksum: how, and what it actually proves](https://nexttool.click/blog/verify-a-download-with-checksums): Comparing SHA-256 hashes catches corrupted and tampered files. Understanding its limits tells you when you need a signature instead.
+- [JWTs: what is inside one, and why decoding is not verifying](https://nexttool.click/blog/jwt-structure-and-verification): A JSON Web Token is three Base64url segments. Reading them is trivial and proves nothing, the signature is what carries the security.
+- [Resize or compress? The difference that decides your file size](https://nexttool.click/blog/resize-vs-compress-images): Resizing changes pixel dimensions, compressing changes how those pixels are stored. Reaching for the wrong one is why images end up blurry and still too big.
+- [How to redact a PDF properly (a black rectangle is not redaction)](https://nexttool.click/blog/how-to-redact-a-pdf-properly): Drawing a black box over text leaves the text underneath, fully copyable. Here is what real redaction removes and how to verify it worked.
+- [What your photos reveal: EXIF metadata and how to remove it](https://nexttool.click/blog/exif-metadata-in-your-photos): Photos carry GPS coordinates, timestamps, device serial numbers and more. What is stored, which platforms strip it, and how to check your own files.
+- [Converting CSV to JSON without losing your data](https://nexttool.click/blog/csv-to-json-conversion-guide): CSV is flat and typeless; JSON is nested and typed. The conversion involves real decisions about types, nulls and structure.
+- [Hashing, encryption and encoding are three different things](https://nexttool.click/blog/hashing-vs-encryption-vs-encoding): One is one-way, one is reversible with a key, one is reversible by anyone. Confusing them is behind a large share of real security failures.
+- [How diff tools work, and why they sometimes show the wrong change](https://nexttool.click/blog/how-diff-tools-find-changes): Diff algorithms find the longest common subsequence between two texts. Knowing that explains misaligned hunks, and how to get a more useful comparison.
+- [Base64, explained properly: what it is for and what it is not](https://nexttool.click/blog/base64-encoding-explained): Base64 turns binary into text at a 33% size cost. It is an encoding, not encryption, and using it as the latter is a recurring security mistake.
+- [How image compression works: lossy, lossless, and the quality slider](https://nexttool.click/blog/how-image-compression-works): What the quality slider actually changes, why 80 is usually the sweet spot, and why re-saving the same image twice makes it worse.
+- [Merging PDFs: what gets preserved, what quietly breaks](https://nexttool.click/blog/merge-pdf-files-without-uploading): Combining PDFs is not just stapling pages. Forms, bookmarks, links and page sizes each behave differently, here is what survives a merge.
+- [Why browser-based tools are safer than upload-based ones](https://nexttool.click/blog/why-client-side-tools-are-safer): The difference is not a privacy policy. It is whether a copy of your file exists on someone else's hardware at all.
+- [Why your CSV breaks when Excel opens it](https://nexttool.click/blog/why-csv-files-break-in-excel): Leading zeros vanish, phone numbers turn into scientific notation and dates rearrange themselves. Every one of these has a specific cause and a fix.
+- [What actually makes a password strong (it is not the special characters)](https://nexttool.click/blog/what-makes-a-password-strong): Password strength is measured in entropy bits. Length dominates; complexity rules mostly produce predictable passwords people cannot remember.
+- [The JSON errors everyone hits, and what the spec actually says](https://nexttool.click/blog/json-errors-and-how-to-fix-them): Trailing commas, single quotes, comments and big numbers. The five JSON mistakes that account for most parse failures, and how to spot them fast.
+- [JPEG, PNG, WebP or AVIF: picking the right image format](https://nexttool.click/blog/jpeg-png-webp-avif-which-format): Four formats, four different jobs. A practical comparison of compression, transparency, browser support and when each one is the wrong choice.
+- [How PDF compression actually works (and why some files refuse to shrink)](https://nexttool.click/blog/how-pdf-compression-actually-works): A PDF is a bundle of streams, fonts and images. Knowing which part is heavy tells you whether compression will help or waste your time.
+- [Why your text turns into Ã©: Unicode, UTF-8 and mojibake explained](https://nexttool.click/blog/unicode-utf8-and-mojibake): Encoding bugs produce a small, recognisable set of symptoms. Learning to read them tells you exactly where the pipeline went wrong.
+
+## About
+
+- [All tools](https://nexttool.click/all-tools)
+- [About Us](https://nexttool.click/about): Who builds NextTool, why it exists and how a suite of free browser-based file, image and developer tools is run without uploads or accounts.
+- [Contact Us](https://nexttool.click/contact): Get in touch with the NextTool team for support, bug reports, feature requests, advertising or legal enquiries. We reply within two business days.
+- [Privacy Policy](https://nexttool.click/privacy): How NextTool handles your data: files are processed on your device, plus full disclosure of cookies, analytics and Google AdSense advertising.
+- [Terms of Service](https://nexttool.click/terms): The terms and conditions that govern your use of NextTool, including acceptable use, intellectual property and limitation of liability.
+- [Disclaimer](https://nexttool.click/disclaimer): Important disclaimers about the accuracy of NextTool results, external links, advertising and professional advice.
+- [Cookie Policy](https://nexttool.click/cookies): Which cookies and local storage keys NextTool uses, why they exist, and how to control advertising cookies from Google and its partners.

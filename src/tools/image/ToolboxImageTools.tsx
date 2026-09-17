@@ -10,6 +10,7 @@ import { errorMessage } from '../../utils/errorMessage';
 import { DropZone, ResultPanel, ErrorNotice } from './ImageShared';
 import { Select } from '../../components/Select';
 import { useExportProgress } from './ExportProgress';
+import { ToolSteps } from '../../components/ui/ToolSteps';
 
 // ─── SVG CONVERTER ──────────────────────────────────────────
 function svgDims(svg: string): { w: number; h: number } {
@@ -91,6 +92,7 @@ export const SvgConverterTool: React.FC = () => {
 
   return (
     <div className="space-y-4">
+      <ToolSteps phase={result ? 'done' : svgText ? 'configure' : 'upload'} middleLabel="Scale" />
       <DropZone onFiles={handleFiles} accept=".svg,image/svg+xml" label="Select an SVG file" hint="Or paste SVG code below" compact />
       <div className="rounded-xl border   bg-card border-border p-3 space-y-2">
         <label className="block text-xs  text-muted-foreground font-medium">SVG markup</label>
@@ -218,6 +220,7 @@ export const IcoGeneratorTool: React.FC = () => {
 
   return (
     <div className="space-y-4">
+      <ToolSteps phase={result ? 'done' : img ? 'configure' : 'upload'} middleLabel="Sizes" />
       {!img ? (
         <DropZone onFiles={handleFiles} label="Select a square image (PNG works best)" />
       ) : (
@@ -269,6 +272,7 @@ export const ImageToBase64Tool: React.FC = () => {
 
   return (
     <div className="space-y-4">
+      <ToolSteps phase={dataUrl ? 'done' : 'upload'} middleLabel="Encode" />
       <DropZone onFiles={handleFiles} label="Select an image to encode" compact />
       {dataUrl && (
         <>
@@ -412,6 +416,7 @@ export const ImageMetadataTool: React.FC = () => {
 
   return (
     <div className="space-y-4">
+      <ToolSteps phase={result ? 'done' : img ? 'configure' : 'upload'} middleLabel="Inspect" />
       {!img ? (
         <DropZone onFiles={handleFiles} label="Select an image to inspect & clean" />
       ) : (
@@ -499,6 +504,7 @@ export const PaletteGeneratorTool: React.FC = () => {
 
   return (
     <div className="space-y-4">
+      <ToolSteps phase={palette.length ? 'done' : img ? 'configure' : 'upload'} middleLabel="Extract" />
       {!img ? (
         <DropZone onFiles={handleFiles} label="Select an image to extract colors" compact />
       ) : (

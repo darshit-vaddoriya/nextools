@@ -2,6 +2,7 @@ import React, { useMemo, useState } from 'react';
 import { ArrowRight, FileText, ShieldCheck, X, Zap } from 'lucide-react';
 import { DropZone } from '../ui/DropZone';
 import { Button } from '../ui/Button';
+import { Stepper, type Step } from '../ui/Stepper';
 import { TOOLS } from '../../config/tools';
 import { ALL_CATEGORIES } from '../../config/categories';
 import { KIND_TO_CATEGORIES, formatBytes, formatOf } from '../../lib/formats';
@@ -14,6 +15,18 @@ interface HeroProps {
   onSelectCategory: (cat: ToolCategory | 'all') => void;
   onBrowseAll: () => void;
 }
+
+/**
+ * The journey the drop zone starts. Steps 3 and 4 are carried out on the tool
+ * page, whose own rail (Upload → Options → Convert → Download) picks up where
+ * this one leaves off, so the two read as one flow rather than two.
+ */
+const HERO_STEPS: Step[] = [
+  { id: 'choose', label: 'Choose file' },
+  { id: 'tool',   label: 'Pick a tool' },
+  { id: 'convert',label: 'Convert' },
+  { id: 'download', label: 'Download' },
+];
 
 /**
  * The homepage opening.
@@ -65,6 +78,16 @@ export const Hero: React.FC<HeroProps> = ({ onSelectTool, onSelectCategory, onBr
       </div>
 
       <div className="mx-auto mt-9 max-w-2xl">
+        {/* Rendered in both states, at a fixed height, so advancing from
+            "Choose file" to "Pick a tool" updates the rail without shifting
+            the drop zone underneath it. */}
+        <Stepper
+          steps={HERO_STEPS}
+          current={dropped ? 1 : 0}
+          onStepClick={dropped ? (i) => { if (i === 0) setDropped(null); } : undefined}
+          className="mb-6"
+        />
+
         {!dropped ? (
           <>
             <DropZone

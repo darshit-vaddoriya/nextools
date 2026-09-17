@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { ArrowLeft, ArrowUpRight, ChevronRight, ListChecks, Wrench } from 'lucide-react';
-import { BlogPost, BlogCategory, BLOG_CATEGORY_META, readingMinutes, formatPostDate, relatedPosts } from '../config/blog';
+import { BlogPost, BlogCategory, BLOG_CATEGORY_META, readingMinutes, formatPostDate, relatedPosts, loadPostBody } from '../config/blog';
 import { renderMarkdown } from '../utils/markdown';
 import { TOOLS } from '../config/tools';
 import { ALL_CATEGORIES } from '../config/categories';
@@ -58,7 +58,18 @@ function useReadingProgress(): number {
 }
 
 export const BlogPostView: React.FC<BlogPostViewProps> = ({ post, onBackToBlog, onOpenPost, onSelectTool, onSelectTopic }) => {
-  const { html, headings } = useMemo(() => renderMarkdown(post.body), [post.body]);
+  // The body is fetched per topic rather than bundled with the post metadata, so
+  // it arrives a tick after the header does. Everything above the article text —
+  // title, byline, takeaways — renders immediately from metadata.
+  const [body, setBody] = useState<string | null>(null);
+  useEffect(() => {
+    let cancelled = false;
+    setBody(null);
+    loadPostBody(post).then(text => { if (!cancelled) setBody(text); });
+    return () => { cancelled = true; };
+  }, [post]);
+
+  const { html, headings } = useMemo(() => renderMarkdown(body ?? ''), [body]);
   const related = useMemo(() => relatedPosts(post), [post]);
   const tools = post.relatedTools.map(id => TOOLS.find(tool => tool.id === id)).filter((tool): tool is typeof TOOLS[number] => Boolean(tool));
   const meta = BLOG_CATEGORY_META[post.category];
@@ -104,7 +115,7 @@ export const BlogPostView: React.FC<BlogPostViewProps> = ({ post, onBackToBlog, 
           <div className="flex flex-wrap items-center gap-x-4 gap-y-2 mt-6 text-[12.5px] text-muted-foreground">
             <time dateTime={post.published}>{formatPostDate(post.published)}</time>
             <span aria-hidden className="h-1 w-1 rounded-full bg-border" />
-            <span className="tabular-nums">{readingMinutes(post.body)} minute read</span>
+            <span className="tabular-nums">{readingMinutes(post)} minute read</span>
             {post.updated && <>
               <span aria-hidden className="h-1 w-1 rounded-full bg-border" />
               <span>Updated {formatPostDate(post.updated)}</span>
@@ -178,7 +189,7 @@ export const BlogPostView: React.FC<BlogPostViewProps> = ({ post, onBackToBlog, 
                 <span className="mt-1 flex items-center gap-2 text-[11px] text-muted-foreground">
                   <span className={`font-bold ${itemMeta.color}`}>{itemMeta.label}</span>
                   <span aria-hidden className="h-1 w-1 rounded-full bg-border" />
-                  <span className="tabular-nums">{readingMinutes(item.body)} min</span>
+                  <span className="tabular-nums">{readingMinutes(item)} min</span>
                 </span>
               </AppLink>;
             })}
@@ -205,7 +216,19 @@ export const BlogPostView: React.FC<BlogPostViewProps> = ({ post, onBackToBlog, 
             </ul>
           </aside>}
 
-          <div className="blog-prose" dangerouslySetInnerHTML={{ __html: html }} />
+          {body === null
+            ? <div className="blog-prose" aria-busy="true">
+                {/* Placeholder lines sized from the post's word count, so the page
+                    does not jump when the body lands. */}
+                {Array.from({ length: Math.min(12, Math.max(4, Math.round(post.words / 90))) }).map((_, i) => (
+                  <div
+                    key={i}
+                    className="mb-3 h-4 animate-pulse rounded bg-outline-variant/40"
+                    style={{ width: i % 4 === 3 ? '62%' : '100%' }}
+                  />
+                ))}
+              </div>
+            : <div className="blog-prose" dangerouslySetInnerHTML={{ __html: html }} />}
         </article>
 
         {/* Every guide argues towards doing something. This is where it is done,

@@ -1,4 +1,4 @@
-import React, { useCallback, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import {
   Upload, Download, AlertTriangle, CheckCircle, ShieldCheck,
   Loader2, FileText, Sparkles, X,
@@ -7,6 +7,7 @@ import { RotationTypes, type PDFDocument, type PDFPage } from 'pdf-lib';
 import type { PDFPageProxy } from 'pdfjs-dist';
 import { errorMessage } from '../../utils/errorMessage';
 import { downloadBlob, formatBytes } from '../image/ImageUtils';
+import { takeStagedFilesForRoute } from '../../lib/fileHandoff';
 import { ResultPreviewThumb } from '../../components/ui/ResultPreviewThumb';
 
 // ─── Small helpers ──────────────────────────────────────────────
@@ -126,6 +127,16 @@ export const PdfDropzone: React.FC<PdfDropzoneProps> = ({
     const files = Array.from(list);
     if (files.length) onFiles(files);
   };
+
+  /* Pick up a file staged by the homepage drop zone, so choosing a PDF tool
+     after dropping a PDF does not ask for the same file again. See the matching
+     block in image/ImageShared.tsx. */
+  const onFilesRef = useRef(onFiles);
+  onFilesRef.current = onFiles;
+  useEffect(() => {
+    const staged = takeStagedFilesForRoute();
+    if (staged.length) onFilesRef.current(multiple ? staged : staged.slice(0, 1));
+  }, [multiple]);
 
   return (
     <div

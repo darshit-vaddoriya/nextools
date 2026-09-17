@@ -33,23 +33,47 @@ export const Stepper: React.FC<StepperProps> = ({ steps, current, onStepClick, c
         Step {safeCurrent + 1} of {total}: {steps[safeCurrent]?.label}
       </p>
 
-      {/* ── Mobile: compact label + segmented bar ── */}
+      {/* ── Mobile: numbered pills, with only the current step labelled ──
+          Same markers as the full rail, so the flow looks like one component
+          across breakpoints. Labels are dropped from the row itself — four of
+          them cannot fit on a phone without wrapping — and the current one is
+          spelled out underneath instead. */}
       <div className="sm:hidden">
-        <p className="mb-2 text-sm font-semibold text-foreground">
+        <ol className="flex items-center" role="list">
+          {steps.map((step, i) => {
+            const isDone = i < safeCurrent;
+            const isCurrent = i === safeCurrent;
+            return (
+              <li key={step.id} className="flex items-center [&:not(:last-child)]:flex-1">
+                <span
+                  aria-current={isCurrent ? 'step' : undefined}
+                  className={[
+                    'grid place-items-center w-7 h-7 shrink-0 rounded-full text-xs font-bold',
+                    'transition-colors duration-[var(--motion-base)]',
+                    isDone ? 'bg-primary text-primary-foreground' : '',
+                    isCurrent ? 'bg-primary text-primary-foreground ring-4 ring-primary/20' : '',
+                    !isDone && !isCurrent ? 'bg-surface-container-high text-muted-foreground' : '',
+                  ].join(' ')}
+                >
+                  {isDone ? <Check className="w-4 h-4" aria-hidden="true" /> : i + 1}
+                </span>
+                {i < total - 1 && (
+                  <span
+                    aria-hidden="true"
+                    className={[
+                      'h-0.5 flex-1 min-w-3 mx-1.5 rounded-full transition-colors duration-[var(--motion-base)]',
+                      isDone ? 'bg-primary' : 'bg-surface-container-high',
+                    ].join(' ')}
+                  />
+                )}
+              </li>
+            );
+          })}
+        </ol>
+        <p className="mt-2.5 text-sm font-semibold text-foreground">
           <span className="text-muted-foreground font-medium">Step {safeCurrent + 1} of {total}</span>
-          {'  '}{steps[safeCurrent]?.label}
+          {' · '}{steps[safeCurrent]?.label}
         </p>
-        <div className="flex gap-1" aria-hidden="true">
-          {steps.map((step, i) => (
-            <span
-              key={step.id}
-              className={[
-                'h-1.5 flex-1 rounded-full transition-colors duration-[var(--motion-base)]',
-                i <= safeCurrent ? 'bg-primary' : 'bg-surface-container-high',
-              ].join(' ')}
-            />
-          ))}
-        </div>
       </div>
 
       {/* ── Tablet and up: full rail ── */}

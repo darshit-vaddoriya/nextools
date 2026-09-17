@@ -3,15 +3,8 @@ import { Header }          from './components/Header';
 import { CommandPalette }  from './components/CommandPalette';
 import { AdBanner }        from './components/AdBanner';
 import { Footer }          from './components/Footer';
-import { AllToolsView }    from './components/AllToolsView';
 import { Hero }            from './components/home/Hero';
 import { ToolGrid }        from './components/home/ToolGrid';
-import { PdfMergeFlow }    from './tools/pdf/PdfMergeFlow';
-import { MyFiles }         from './pages/MyFiles';
-import { Settings }        from './pages/Settings';
-import { StaticPageView }  from './pages/StaticPageView';
-import { Blog }            from './pages/Blog';
-import { BlogPostView }    from './pages/BlogPostView';
 import { getPost, postsForTool, readingMinutes, BlogCategory } from './config/blog';
 import { StaticPageId }    from './config/pages';
 import { ToolCategory }    from './types';
@@ -52,34 +45,10 @@ const WIDE_TOOL_IDS = new Set([
   'jsonpath-tester', 'mock-json', 'cron-parser', 'http-status-codes',
 ]);
 
-import { JsonFormatter }          from './tools/JsonFormatter';
-import { Base64Tool }             from './tools/Base64Tool';
-import { HashGenerator }          from './tools/HashGenerator';
-import { UuidGenerator }          from './tools/UuidGenerator';
-import { PasswordGenerator }      from './tools/PasswordGenerator';
-import { RegexTester }            from './tools/RegexTester';
-import { CaseConverter }          from './tools/CaseConverter';
-import { JwtDecoder }             from './tools/JwtDecoder';
-import { TextCounter }            from './tools/TextCounter';
-import { ColorPicker }            from './tools/ColorPicker';
-import { GlassmorphismGenerator } from './tools/GlassmorphismGenerator';
-import { AiBgRemover }            from './tools/AiBgRemover';
-import {
-  ImageResizeTool, ImageRotateTool, ImageFlipTool,
-  ImageConverterTool, ImageCompressorTool, ImageCropTool,
-} from './tools/image/BasicImageTools';
-import {
-  ImageAdjustTool, ImageSharpenTool,
-} from './tools/image/FilterImageTools';
-import {
-  SvgConverterTool, ImageMetadataTool,
-} from './tools/image/ToolboxImageTools';
-import {
-  ImageWatermarkTool,
-} from './tools/image/AdvancedImageTools';
-import { ImageDrawTool } from './tools/image/ImageDrawTool';
-import { ImageEditorTool } from './tools/image/ImageEditorTool';
-import { DrawingTool } from './tools/DrawingTool';
+// Every tool component below is code-split (see the lazy* factories further down).
+// Nothing a tool page needs may be imported statically here: this module is the
+// entry chunk, so a static import would ship that tool's code — and its library
+// dependencies — to the homepage, every blog post and every legal page too.
 import { WordTools }              from './tools/WordTools';
 import { ToolPlaceholder }        from './tools/ToolPlaceholder';
 import { ToolCard }               from './components/ToolCard';
@@ -112,6 +81,71 @@ const lazyTool = <K extends 'PdfMergeTool'>(
   lazyComponent(() => import('./tools/PdfMergeTool'), exportName);
 
 const PdfMergeToolLazy = lazyTool('PdfMergeTool');
+
+// ─── Code-split routes ───────────────────────────────────────
+// Only the home view is reachable without a navigation, so every other view is
+// its own chunk. BlogPostView in particular pulls in the Markdown renderer, which
+// has no business being on the homepage's critical path.
+const AllToolsView   = React.lazy(() => import('./components/AllToolsView').then(m => ({ default: m.AllToolsView })));
+const MyFiles        = React.lazy(() => import('./pages/MyFiles').then(m => ({ default: m.MyFiles })));
+const Settings       = React.lazy(() => import('./pages/Settings').then(m => ({ default: m.Settings })));
+const StaticPageView = React.lazy(() => import('./pages/StaticPageView').then(m => ({ default: m.StaticPageView })));
+const Blog           = React.lazy(() => import('./pages/Blog').then(m => ({ default: m.Blog })));
+const BlogPostView   = React.lazy(() => import('./pages/BlogPostView').then(m => ({ default: m.BlogPostView })));
+
+// ─── Code-split single-tool modules ──────────────────────────
+// One chunk per module, fetched only when that tool's route is opened.
+const JsonFormatter          = lazyComponent(() => import('./tools/JsonFormatter'), 'JsonFormatter');
+const Base64Tool             = lazyComponent(() => import('./tools/Base64Tool'), 'Base64Tool');
+const HashGenerator          = lazyComponent(() => import('./tools/HashGenerator'), 'HashGenerator');
+const UuidGenerator          = lazyComponent(() => import('./tools/UuidGenerator'), 'UuidGenerator');
+const PasswordGenerator      = lazyComponent(() => import('./tools/PasswordGenerator'), 'PasswordGenerator');
+const RegexTester            = lazyComponent(() => import('./tools/RegexTester'), 'RegexTester');
+const CaseConverter          = lazyComponent(() => import('./tools/CaseConverter'), 'CaseConverter');
+const JwtDecoder             = lazyComponent(() => import('./tools/JwtDecoder'), 'JwtDecoder');
+const TextCounter            = lazyComponent(() => import('./tools/TextCounter'), 'TextCounter');
+const ColorPicker            = lazyComponent(() => import('./tools/ColorPicker'), 'ColorPicker');
+const GlassmorphismGenerator = lazyComponent(() => import('./tools/GlassmorphismGenerator'), 'GlassmorphismGenerator');
+const AiBgRemover            = lazyComponent(() => import('./tools/AiBgRemover'), 'AiBgRemover');
+const DrawingTool            = lazyComponent(() => import('./tools/DrawingTool'), 'DrawingTool');
+const ImageDrawTool          = lazyComponent(() => import('./tools/image/ImageDrawTool'), 'ImageDrawTool');
+// pdf-lib (~470 KB) rides in on this one, so it must never be static.
+const PdfMergeFlow           = lazyComponent(() => import('./tools/pdf/PdfMergeFlow'), 'PdfMergeFlow');
+
+// The image editor is the one tool the shell renders with a prop, so unlike the rest
+// it needs a wrapper that forwards it. onExit stays optional, which also keeps the
+// component usable from IMPLEMENTED_TOOLS, where everything is rendered bare.
+type ImageEditorProps = { onExit?: () => void };
+const ImageEditorLazy = React.lazy(() =>
+  import('./tools/image/ImageEditorTool').then(m => ({ default: m.ImageEditorTool })),
+);
+const ImageEditorTool: React.FC<ImageEditorProps> = props => (
+  <React.Suspense fallback={<HeavyToolFallback />}>
+    <ImageEditorLazy {...props} />
+  </React.Suspense>
+);
+
+const lazyBasicImageTools = <K extends
+  'ImageResizeTool' | 'ImageRotateTool' | 'ImageFlipTool'
+  | 'ImageConverterTool' | 'ImageCompressorTool' | 'ImageCropTool'>(
+  exportName: K,
+): React.FC =>
+  lazyComponent(() => import('./tools/image/BasicImageTools'), exportName);
+
+const lazyFilterImageTools = <K extends 'ImageAdjustTool' | 'ImageSharpenTool'>(
+  exportName: K,
+): React.FC =>
+  lazyComponent(() => import('./tools/image/FilterImageTools'), exportName);
+
+const lazyToolboxImageTools = <K extends 'SvgConverterTool' | 'ImageMetadataTool'>(
+  exportName: K,
+): React.FC =>
+  lazyComponent(() => import('./tools/image/ToolboxImageTools'), exportName);
+
+const lazyAdvancedImageTools = <K extends 'ImageWatermarkTool'>(
+  exportName: K,
+): React.FC =>
+  lazyComponent(() => import('./tools/image/AdvancedImageTools'), exportName);
 
 const lazyPdfPageTools = <K extends
   'PdfSplitTool' | 'PdfRotateTool' | 'PdfDeletePagesTool' | 'PdfExtractPagesTool' | 'PdfReorderTool'>(
@@ -340,22 +374,22 @@ const IMPLEMENTED_TOOLS: Record<string, React.ComponentType> = {
   'meme-generator':       lazyMiscImageTools('MemeGeneratorTool'),
   'batch-resize':         lazyMiscImageTools('BatchResizeTool'),
   'ai-bg-remover':        AiBgRemover,
-  'image-resize':         ImageResizeTool,
-  'image-resize-image':   ImageResizeTool,
-  'image-crop':           ImageCropTool,
-  'image-rotate':         ImageRotateTool,
-  'image-flip':           ImageFlipTool,
-  'image-convert':        ImageConverterTool,
-  'image-converter':      ImageConverterTool,
-  'image-compressor':     ImageCompressorTool,
-  'compress-image':       ImageCompressorTool,
-  'compress-images':      ImageCompressorTool,
-  'image-adjust':         ImageAdjustTool,
-  'image-sharpen':        ImageSharpenTool,
-  'svg-converter':        SvgConverterTool,
-  'svg-to-png':           SvgConverterTool,
-  'image-metadata':       ImageMetadataTool,
-  'image-watermark':      ImageWatermarkTool,
+  'image-resize':         lazyBasicImageTools('ImageResizeTool'),
+  'image-resize-image':   lazyBasicImageTools('ImageResizeTool'),
+  'image-crop':           lazyBasicImageTools('ImageCropTool'),
+  'image-rotate':         lazyBasicImageTools('ImageRotateTool'),
+  'image-flip':           lazyBasicImageTools('ImageFlipTool'),
+  'image-convert':        lazyBasicImageTools('ImageConverterTool'),
+  'image-converter':      lazyBasicImageTools('ImageConverterTool'),
+  'image-compressor':     lazyBasicImageTools('ImageCompressorTool'),
+  'compress-image':       lazyBasicImageTools('ImageCompressorTool'),
+  'compress-images':      lazyBasicImageTools('ImageCompressorTool'),
+  'image-adjust':         lazyFilterImageTools('ImageAdjustTool'),
+  'image-sharpen':        lazyFilterImageTools('ImageSharpenTool'),
+  'svg-converter':        lazyToolboxImageTools('SvgConverterTool'),
+  'svg-to-png':           lazyToolboxImageTools('SvgConverterTool'),
+  'image-metadata':       lazyToolboxImageTools('ImageMetadataTool'),
+  'image-watermark':      lazyAdvancedImageTools('ImageWatermarkTool'),
   'image-draw':           ImageDrawTool,
   'image-editor':         ImageEditorTool,
   'drawing':              DrawingTool,
@@ -595,6 +629,7 @@ export const App: React.FC = () => {
       />
 
       <main className="flex-1">
+        <React.Suspense fallback={<ToolViewSkeleton />}>
         {currentView === 'page'
           ? <div className="max-w-4xl mx-auto px-4 sm:px-6 py-8">
               <StaticPageView pageId={activePageId} onBack={goHome} onOpenPage={openPage} />
@@ -619,6 +654,7 @@ export const App: React.FC = () => {
           ? <Settings theme={theme} onThemeChange={setTheme} />
           : <HomeView onSelectTool={openTool} onSelectCategory={openCategory} />
         }
+        </React.Suspense>
       </main>
 
       {currentView !== 'tool' && (
@@ -1231,7 +1267,7 @@ const ToolView: React.FC<{
                           {post.title}
                         </span>
                         <span className="text-[11px] tabular-nums text-muted-foreground shrink-0">
-                          {readingMinutes(post.body)} min
+                          {readingMinutes(post)} min
                         </span>
                       </AppLink>
                     ))}

@@ -65,10 +65,28 @@ async function main() {
     // Wait for the page's real heading, not just a title — index.html ships a
     // static <title>, so a title check passes instantly and snapshots the page
     // before a lazily-loaded tool has mounted its content.
+    // The aria-busy check covers content that is fetched in its own chunk after
+    // mount — a blog post's body, for one. Without it a snapshot can be taken
+    // while the article is still a skeleton, publishing a page whose heading is
+    // right and whose text is missing.
     await page.waitForFunction(
-      () => document.querySelector('h1') !== null,
+      () => document.querySelector('h1') !== null
+        && document.querySelector('[aria-busy="true"]') === null,
       { timeout: 15000 },
     ).catch(() => { incomplete.push(route); });
+
+    // index.html injects Google Analytics and AdSense only once the browser is
+    // idle, to keep ~430 KB of third-party JavaScript off the critical path.
+    // Prerendering runs that loader, so without this the injected <script> tags
+    // get serialised straight back into the static HTML — putting the tags in
+    // <head> again and undoing the deferral for every visitor. The inline
+    // loader survives and re-injects them at runtime.
+    await page.evaluate(() => {
+      const THIRD_PARTY = /googletagmanager\.com|googlesyndication\.com|doubleclick\.net/;
+      document.querySelectorAll('script[src]').forEach((s) => {
+        if (THIRD_PARTY.test(s.src)) s.remove();
+      });
+    });
 
     const html = await page.content();
 

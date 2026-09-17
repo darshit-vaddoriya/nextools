@@ -37,6 +37,22 @@ export function takeStagedFiles(toolId: string): File[] {
   return files;
 }
 
+/**
+ * Claim whatever was staged for the tool the URL is currently on.
+ *
+ * Tools are not built on one shared file component — most own their drop zone
+ * and their own `handleFiles` — so rather than thread a tool id through every
+ * one of them, the drop zones ask this on mount. The id comes from the route
+ * because that is the same id Hero staged under a moment earlier.
+ *
+ * Returns an empty array anywhere that is not a tool page, so it is safe to
+ * call unconditionally.
+ */
+export function takeStagedFilesForRoute(): File[] {
+  const match = /^\/tool\/([^/]+)/.exec(window.location.pathname);
+  return match ? takeStagedFiles(match[1]) : [];
+}
+
 /** Drop anything staged, used when navigating away without opening a tool. */
 export function clearStagedFiles(): void {
   pending = null;

@@ -4,6 +4,7 @@ import { Archive, Download, FileArchive, FolderArchive, Trash2 } from 'lucide-re
 import { DropZone, ErrorNotice } from '../image/ImageShared';
 import { downloadBlob, formatBytes } from '../image/ImageUtils';
 import { errorMessage } from '../../utils/errorMessage';
+import { ToolSteps } from '../../components/ui/ToolSteps';
 
 interface ZipEntry {
   name: string;
@@ -86,6 +87,7 @@ export const ZipExtractorTool: React.FC = () => {
 
   return (
     <div className="space-y-4">
+      <ToolSteps phase={entries.length ? 'done' : 'upload'} middleLabel="Extract" />
       {entries.length === 0 ? (
         <DropZone onFiles={handleFiles} accept=".zip,application/zip,application/x-zip-compressed" label="Select or drag & drop a .zip file" hint="Extracted entirely on your device" />
       ) : (
@@ -158,6 +160,7 @@ export const ZipCreatorTool: React.FC = () => {
 
   return (
     <div className="space-y-4">
+      <ToolSteps phase={files.length ? 'configure' : 'upload'} middleLabel="Add files" />
       <DropZone onFiles={addFiles} multiple label="Select or drag & drop files to zip" hint="Add as many files as you need" />
       {files.length > 0 && (
         <div className="rounded-2xl border border-border bg-card p-4 space-y-3">
@@ -226,6 +229,7 @@ export const BatchZipTool: React.FC = () => {
 
   return (
     <div className="space-y-4">
+      <ToolSteps phase={files.length ? 'configure' : 'upload'} middleLabel="Add files" />
       <div className="rounded-xl border border-border bg-muted p-3 text-[11px] text-muted-foreground flex items-start gap-2">
         <FolderArchive className="w-4 h-4 text-primary shrink-0 mt-0.5" />
         <span>Each file you add is zipped <strong>individually</strong>, then all of those little .zip files are bundled into a single outer <code>batch-zips.zip</code> for one convenient download.</span>

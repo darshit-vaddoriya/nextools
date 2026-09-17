@@ -64,6 +64,31 @@ export function relatedPosts(post: BlogPost, limit = 3): BlogPost[] {
   return [...sameCategory, ...rest].slice(0, limit);
 }
 
+/**
+ * Fetches an article's Markdown body, one chunk per topic.
+ *
+ * Bodies are deliberately not part of BlogPost: ~500 KB of article text was
+ * reaching the entry bundle, so the homepage and every tool page paid for
+ * articles they never render. A reader opening one guide now downloads only
+ * that guide's topic.
+ */
+const BODY_LOADERS: Record<BlogCategory, () => Promise<Record<string, string>>> = {
+  pdf:      () => import('./bodies/pdf').then(m => m.PDF_BODIES),
+  docs:     () => import('./bodies/docs').then(m => m.DOCS_BODIES),
+  image:    () => import('./bodies/image').then(m => m.IMAGE_BODIES),
+  media:    () => import('./bodies/media').then(m => m.MEDIA_BODIES),
+  dev:      () => import('./bodies/dev').then(m => m.DEV_BODIES),
+  security: () => import('./bodies/security').then(m => m.SECURITY_BODIES),
+  data:     () => import('./bodies/data').then(m => m.DATA_BODIES),
+  numbers:  () => import('./bodies/numbers').then(m => m.NUMBERS_BODIES),
+  privacy:  () => import('./bodies/privacy').then(m => m.PRIVACY_BODIES),
+};
+
+export async function loadPostBody(post: BlogPost): Promise<string> {
+  const bodies = await BODY_LOADERS[post.category]();
+  return bodies[post.slug] ?? '';
+}
+
 export function formatPostDate(iso: string): string {
   return new Date(`${iso}T00:00:00Z`).toLocaleDateString('en-GB', {
     day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC',

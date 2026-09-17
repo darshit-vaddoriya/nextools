@@ -9,6 +9,7 @@ import {
 import { errorMessage } from '../../utils/errorMessage';
 import { DropZone, ResultPanel, ErrorNotice } from './ImageShared';
 import { useExportProgress } from './ExportProgress';
+import { ToolSteps } from '../../components/ui/ToolSteps';
 
 type Item = { img: HTMLImageElement; file: File; name: string; size: number; width: number; height: number };
 
@@ -186,6 +187,7 @@ export const ImageWatermarkTool: React.FC = () => {
 
   return (
     <div className="space-y-4">
+      <ToolSteps phase={result ? 'done' : img ? 'configure' : 'upload'} middleLabel="Watermark" />
       {!img ? (
         <DropZone onFiles={handleFiles} />
       ) : (
@@ -327,6 +329,7 @@ export const BatchResizeTool: React.FC = () => {
 
   return (
     <div className="space-y-4">
+      <ToolSteps phase={results.length ? 'done' : items.length ? 'configure' : 'upload'} middleLabel="Size" />
       <DropZone onFiles={handleFiles} multiple label="Select images to resize" />
       {items.length > 0 && (
         <div className="rounded-xl border   bg-card border-border p-4 space-y-3">
@@ -406,6 +409,7 @@ export const BatchConvertTool: React.FC = () => {
 
   return (
     <div className="space-y-4">
+      <ToolSteps phase={results.length ? 'done' : items.length ? 'configure' : 'upload'} middleLabel="Format" />
       <DropZone onFiles={handleFiles} multiple label="Select images to convert" />
       {items.length > 0 && (
         <div className="rounded-xl border   bg-card border-border p-4 space-y-3">
@@ -464,6 +468,7 @@ export const BatchRenameTool: React.FC = () => {
 
   return (
     <div className="space-y-4">
+      <ToolSteps phase={results.length ? 'done' : items.length ? 'configure' : 'upload'} middleLabel="Rename" />
       <DropZone onFiles={handleFiles} multiple label="Select files to rename" hint="Rename is instant - no re-encoding needed" />
       {items.length > 0 && (
         <div className="rounded-xl border   bg-card border-border p-4 space-y-3 text-xs">
@@ -557,6 +562,7 @@ export const ImageCollageTool: React.FC = () => {
 
   return (
     <div className="space-y-4">
+      <ToolSteps phase={result ? 'done' : items.length ? 'configure' : 'upload'} middleLabel="Layout" />
       <DropZone onFiles={handleFiles} multiple label="Select images for your collage" />
       {items.length > 0 && (
         <div className="rounded-xl border   bg-card border-border p-4 space-y-3 text-xs">
@@ -696,6 +702,7 @@ export const MemeGeneratorTool: React.FC = () => {
 
   return (
     <div className="space-y-4">
+      <ToolSteps phase={result ? 'done' : img ? 'configure' : 'upload'} middleLabel="Caption" />
       {!img ? (
         <DropZone onFiles={handleFiles} label="Select a meme image" compact />
       ) : (

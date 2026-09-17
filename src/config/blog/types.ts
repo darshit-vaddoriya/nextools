@@ -24,8 +24,15 @@ export interface BlogPost {
    * who stops here still leaves with something.
    */
   takeaways?: string[];
-  /** Article body in a small Markdown subset (see utils/markdown.ts) */
-  body: string;
+  /**
+   * Word count of the article body, precomputed at authoring time.
+   *
+   * The body itself lives in config/blog/bodies/<category>.ts and is fetched on
+   * demand, so reading time has to be derivable without it — post cards on the
+   * blog index and the "related guides" strip on tool pages all show a reading
+   * time for articles whose text is never loaded.
+   */
+  words: number;
 }
 
 /**
@@ -104,8 +111,7 @@ export const BLOG_CATEGORY_LABELS = Object.fromEntries(
   Object.entries(BLOG_CATEGORY_META).map(([id, meta]) => [id, meta.label]),
 ) as Record<BlogCategory, string>;
 
-/** Rough reading time from the raw Markdown, at ~220 words per minute. */
-export function readingMinutes(body: string): number {
-  const words = body.replace(/[#>*`|-]/g, ' ').split(/\s+/).filter(Boolean).length;
-  return Math.max(2, Math.round(words / 220));
+/** Rough reading time at ~220 words per minute, from the post's stored word count. */
+export function readingMinutes(post: Pick<BlogPost, 'words'>): number {
+  return Math.max(2, Math.round(post.words / 220));
 }

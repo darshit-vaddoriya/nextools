@@ -66,7 +66,7 @@ const PostCard: React.FC<{ post: BlogPost; onOpen: (slug: string) => void; showS
     <div className="mt-auto pt-5 flex items-center gap-2 text-[11.5px] text-muted-foreground">
       <time dateTime={post.published}>{formatPostDate(post.published)}</time>
       <span aria-hidden className="h-1 w-1 rounded-full bg-border" />
-      <span className="tabular-nums">{readingMinutes(post.body)} min</span>
+      <span className="tabular-nums">{readingMinutes(post)} min</span>
       <ArrowUpRight className="ml-auto w-4 h-4 text-primary opacity-0 -translate-x-1 transition-all duration-150 group-hover:opacity-100 group-hover:translate-x-0" />
     </div>
   </AppLink>
@@ -222,7 +222,7 @@ export const Blog: React.FC<BlogProps> = ({ onBack, onOpenPost, topic, onSelectT
           <div className="mt-6 flex flex-wrap items-center gap-x-3 gap-y-2 text-[12px] text-muted-foreground">
             <time dateTime={lead.published}>{formatPostDate(lead.published)}</time>
             <span aria-hidden className="h-1 w-1 rounded-full bg-border" />
-            <span className="tabular-nums">{readingMinutes(lead.body)} min read</span>
+            <span className="tabular-nums">{readingMinutes(lead)} min read</span>
           </div>
           {leadTools.length > 0 && <p className="mt-6 pt-5 border-t border-border text-[12.5px] text-muted-foreground">
             Ends at <span className="font-bold text-foreground">{leadTools.map(tool => tool.name).join(', ')}</span>

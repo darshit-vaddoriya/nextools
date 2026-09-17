@@ -13,6 +13,7 @@ import { errorMessage } from '../../utils/errorMessage';
 import { DropZone, ResultPanel, ErrorNotice } from './ImageShared';
 import { CopyButton } from '../../components/CopyButton';
 import { useExportProgress } from './ExportProgress';
+import { ToolSteps } from '../../components/ui/ToolSteps';
 
 // ─── GIF CONVERTER ──────────────────────────────────────────
 type GifSource = { img: HTMLImageElement; name: string };
@@ -113,6 +114,7 @@ export const GifConverterTool: React.FC = () => {
 
   return (
     <div className="space-y-4">
+      <ToolSteps phase={result ? 'done' : (items.length || videoFile) ? 'configure' : 'upload'} middleLabel="Settings" />
       <div className="flex gap-2">
         <button onClick={() => setMode('images')} className={`btn-secondary text-xs px-4 py-2 ${mode === 'images' ? 'bg-primary/10 border-primary' : ''}`}>
           <Clapperboard className="w-3.5 h-3.5" /> Images → GIF
@@ -420,6 +422,7 @@ export const OcrImageTool: React.FC = () => {
 
   return (
     <div className="space-y-4">
+      <ToolSteps phase={text ? 'done' : file ? 'configure' : 'upload'} middleLabel="Language" />
       {!file ? (
         <DropZone onFiles={handleFiles} label="Select an image with text" hint="Uses Tesseract.js on your device, so the image never gets uploaded" />
       ) : (
@@ -526,6 +529,7 @@ export const AiUpscalerTool: React.FC = () => {
 
   return (
     <div className="space-y-4">
+      <ToolSteps phase={result ? 'done' : img ? 'configure' : 'upload'} middleLabel="Scale" />
       {!img ? (
         <DropZone onFiles={handleFiles} label="Select a photo to upscale" />
       ) : (

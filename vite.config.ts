@@ -72,6 +72,40 @@ ${u.lastmod ? `    <lastmod>${u.lastmod}</lastmod>\n` : ''}    <changefreq>${u.c
       mkdirSync('public', { recursive: true });
       writeFileSync('public/sitemap.xml', xml);
       console.log(`✓ sitemap.xml — ${urls.length} URLs`);
+
+      // llms.txt — the Markdown index AI crawlers look for. Generated from the
+      // same config as the sitemap rather than hand-written, so it cannot drift.
+      // Previously absent, which meant /llms.txt fell through the SPA catch-all
+      // in _redirects and answered with index.html: HTML where Markdown was
+      // expected, hence "missing H1" and "no links" in Lighthouse.
+      const section = (heading: string, items: { name: string; url: string; note?: string }[]) =>
+        `## ${heading}\n\n${items.map(i => `- [${i.name}](${i.url})${i.note ? `: ${i.note}` : ''}`).join('\n')}\n`;
+
+      const llms = [
+        '# NextTool',
+        '',
+        '> Free browser-based tools for PDF, image, developer and AI tasks. Every tool runs',
+        "> entirely on the visitor's own device — files are never uploaded to a server, and",
+        '> no account is required.',
+        '',
+        ...categories.map(cat => section(
+          `${cat} tools`,
+          TOOLS.filter(t => t.category === cat).map(t => ({
+            name: t.name, url: `${SITE}/tool/${t.id}`, note: t.description,
+          })),
+        )),
+        section('Guides', BLOG_POSTS.map(p => ({
+          name: p.title, url: `${SITE}/blog/${p.slug}`, note: p.description,
+        }))),
+        section('About', [
+          { name: 'All tools', url: `${SITE}/all-tools` },
+          ...STATIC_PAGES.map(p => ({ name: p.title, url: `${SITE}${p.path}`, note: p.description })),
+        ]),
+      ].join('\n');
+
+      writeFileSync('dist/llms.txt', llms);
+      writeFileSync('public/llms.txt', llms);
+      console.log(`✓ llms.txt — ${TOOLS.length} tools, ${BLOG_POSTS.length} guides`);
     },
   };
 }

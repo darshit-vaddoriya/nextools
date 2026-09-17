@@ -4,14 +4,48 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-M60L9W8G3B"></script>
+    <!--
+      Google Analytics + AdSense are injected after the load event rather than
+      parsed here in <head>. As head scripts they sat on the critical path:
+      Lighthouse mobile measured show_ads_impl.js alone at 2,710 ms of
+      render-blocking time, for ~430 KB of third-party JavaScript that
+      contributes nothing to first paint. Deferring keeps analytics and the
+      AdSense site review working — both scripts still run on every page — while
+      leaving the critical path to first-party code.
+
+      dataLayer/gtag are stubbed synchronously, so any gtag() call made before
+      the real script lands is buffered instead of thrown away.
+    -->
     <script>
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
-
       gtag('config', 'G-M60L9W8G3B');
+
+      (function () {
+        var TAGS = [
+          'https://www.googletagmanager.com/gtag/js?id=G-M60L9W8G3B',
+          'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3383457039703768',
+        ];
+        function load() {
+          for (var i = 0; i < TAGS.length; i++) {
+            var s = document.createElement('script');
+            s.async = true;
+            s.crossOrigin = 'anonymous';
+            s.src = TAGS[i];
+            document.head.appendChild(s);
+          }
+        }
+        // Wait for a genuinely idle main thread where possible, so the tags do
+        // not simply pile onto the load event. The timeout caps how long an
+        // always-busy page can postpone them.
+        function schedule() {
+          if (window.requestIdleCallback) requestIdleCallback(load, { timeout: 3000 });
+          else setTimeout(load, 1200);
+        }
+        if (document.readyState === 'complete') schedule();
+        else window.addEventListener('load', schedule);
+      })();
     </script>
 
     <script>
@@ -40,10 +74,11 @@
     <meta name="google-adsense-account" content="ca-pub-3383457039703768" />
     <link rel="canonical" href="https://nexttool.click/" />
 
-    <!-- ── Google AdSense loader — needed for site review and for serving ── -->
-    <script async
-      src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3383457039703768"
-      crossorigin="anonymous"></script>
+    <!--
+      The AdSense loader itself is injected by the deferred-tag block at the top
+      of this file. This meta tag is what site review actually looks for, and it
+      costs nothing to parse.
+    -->
 
     <!-- ── Open Graph ─────────────────────────────────────── -->
     <meta property="og:type"        content="website" />
