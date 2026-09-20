@@ -19,6 +19,20 @@ export interface ToolSeoContent {
   useCases?: string[];
   /** 2-4 short, specific pro tips or gotchas for getting the best result from this tool. */
   tips?: string[];
+  /**
+   * A longer explanatory section for tools whose interface is simple enough
+   * that the page would otherwise be mostly chrome.
+   *
+   * The small utilities — a checksum, a Roman numeral converter, a percentage
+   * calculator — need the least interface and have the most worth explaining:
+   * which standard the conversion follows, where the edge cases are, what the
+   * result does and does not prove. Without this those pages are a widget and a
+   * FAQ, which is exactly the thin page a reader gains nothing from.
+   */
+  deepDive?: {
+    heading: string;
+    paragraphs: string[];
+  };
 }
 
 export type ToolSeoMap = Record<string, ToolSeoContent>;

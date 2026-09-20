@@ -705,7 +705,7 @@ Extraction is the right tool when the PDF genuinely is the only copy, which is c
 So a file with only an owner password opens instantly for everybody. The permissions are a request to the viewer, and the specification is explicit that conforming readers *should* honour them. A reader that chooses not to is not breaking any encryption; it is ignoring a flag.
 
 > [!NOTE]
-> This is why "the PDF was locked but the text copied fine" is not a bug report. If you need content to be genuinely unavailable, the user password is the only mechanism with mathematics behind it. A [PDF protection tool](/tool/pdf-protect) should let you set them separately, because they answer different questions.
+> This is why "the PDF was locked but the text copied fine" is not a bug report. If you need content to be genuinely unavailable, the user password is the only mechanism with mathematics behind it. A PDF protection tool should let you set them separately, because they answer different questions.
 
 ## The strength depends on the password
 
@@ -730,7 +730,7 @@ Which means a 2.0 file with AES-256 and the password \`Invoice2026\` is not prot
 
 ## Removing protection
 
-A tool that removes a password can only do so with the password. Given it, decrypting is mechanical: the content is decrypted and rewritten without encryption. [Unlocking](/tool/pdf-unlock) is the right operation when you hold a file you can open but every edit prompts, or when a scanner-applied owner password is blocking an ordinary print.
+A tool that removes a password can only do so with the password. Given it, decrypting is mechanical: the content is decrypted and rewritten without encryption. Unlocking is the right operation when you hold a file you can open but every edit prompts, or when a scanner-applied owner password is blocking an ordinary print.
 
 Restrictions that are only permission flags can be cleared without knowing anything, because nothing secret protects them — which is a plain statement of what those flags were worth.
 
@@ -741,5 +741,5 @@ Restrictions that are only permission flags can be cleared without knowing anyth
 - **Must not be printed** → owner password permissions, understanding this is a convention, not a control.
 - **Must not contain the confidential paragraph at all** → [redact](/tool/pdf-redact) it, then consider whether it needs a password at all.
 
-Protecting and unlocking are both operations on the file itself, and the [PDF protect](/tool/pdf-protect) and [unlock](/tool/pdf-unlock) tools here do them in the browser — which is the only sensible arrangement, since uploading a confidential document to a server in order to encrypt it defeats the point of encrypting it.`,
+Protecting and unlocking are both operations on the file itself, so they belong wherever the file already is — a desktop PDF editor, or \`qpdf\` on the command line. Uploading a confidential document to a server in order to encrypt it defeats the point of encrypting it.`,
 };

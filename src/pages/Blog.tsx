@@ -146,6 +146,16 @@ export const Blog: React.FC<BlogProps> = ({ onBack, onOpenPost, topic, onSelectT
             : 'Short guides on the decisions behind PDFs, images, spreadsheets and privacy. Every one of them ends somewhere you can actually do the job.'}
         </p>
 
+        {/* On a topic hub the standfirst is the meta description, which has to
+            stay short. This paragraph is the page's own opening: it says what
+            the subject keeps getting wrong, so the hub is a piece of writing
+            rather than a heading sitting on top of a grid of cards. */}
+        {topicMeta && (
+          <p className="mt-5 max-w-[72ch] text-[14px] sm:text-[15px] leading-relaxed text-muted-foreground">
+            {topicMeta.intro}
+          </p>
+        )}
+
         {/* Search sits under the standfirst with the counts beside it, so the
             masthead is one block instead of a headline floating next to a box. */}
         <div className="mt-7 flex flex-wrap items-center gap-x-5 gap-y-3">

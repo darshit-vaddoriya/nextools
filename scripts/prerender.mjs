@@ -50,6 +50,15 @@ async function main() {
   const routes = [...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)]
     .map(m => new URL(m[1]).pathname);
 
+  // Routes that are deliberately not in the sitemap but are still linked from
+  // the site, so a crawler following one has to land on a real page rather than
+  // the raw SPA shell. They carry their own noindex (see NOINDEX_TOOL_IDS in
+  // src/utils/seo.ts) — not submitting a URL and not serving it are different
+  // things, and only the first is intended here.
+  for (const extra of ['/tool/image-editor']) {
+    if (!routes.includes(extra)) routes.push(extra);
+  }
+
   const server = serveStatic();
   await new Promise(resolve => server.listen(PORT, resolve));
   console.log(`static server up on :${PORT}, prerendering ${routes.length} routes...`);

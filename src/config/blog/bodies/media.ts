@@ -17,12 +17,12 @@ A video file is a container holding streams:
 - **The video codec** — H.264, HEVC (H.265), VP9, AV1. This is the compression scheme the picture is stored in.
 - **The audio codec** — AAC, MP3, Opus, FLAC, AC-3.
 
-"MP4" tells you about the box. It tells you almost nothing about whether the contents will play, because an MP4 can legally hold H.264 or HEVC or AV1, and the same goes for the audio.
+"MP4" tells you about the box. It tells you almost nothing about whether the contents will play, because an MP4 can legally hold H.264 or HEVC or AV1, and the same goes for the audio. This is the same gap between a file's name and its actual contents that makes [MIME types and magic bytes](/blog/mime-types-and-file-signatures) worth understanding — the extension is a claim, not a description.
 
 This is why "convert to MP4" is an incomplete instruction. If the file is already an MP4 with HEVC inside and the target device only decodes H.264, converting it to another MP4 with the same codecs achieves nothing.
 
 > [!NOTE]
-> The quickest diagnosis is to read the streams rather than guess. A [video metadata reader](/tool/video-metadata) lists the container, the video codec, the audio codec, resolution, frame rate and bit rate. Once you can see "HEVC / AAC", the black rectangle stops being mysterious.
+> The quickest diagnosis is to read the streams rather than guess. A video metadata reader lists the container, the video codec, the audio codec, resolution, frame rate and bit rate. Once you can see "HEVC / AAC", the black rectangle stops being mysterious.
 
 ## The combinations that actually matter
 
@@ -57,13 +57,13 @@ Three numbers get conflated constantly.
 
 **Bit rate** is bits per second of playback, and it is the one that actually determines file size: file size ≈ bit rate × duration. A "1080p" file can be 2 Mbps or 20 Mbps, and those look very different.
 
-When a file is too large for an upload limit, the order to try is: lower the bit rate, then the resolution, then the frame rate. [Converting the file](/tool/video-converter) with an explicit target rather than a vague "compress" setting is how you land near a limit on the first attempt.
+When a file is too large for an upload limit, the order to try is: lower the bit rate, then the resolution, then the frame rate. Converting the file with an explicit target rather than a vague "compress" setting is how you land near a limit on the first attempt.
 
 ## Audio has the same structure
 
 The same container-and-codec split applies to audio-only files. An \`.m4a\` is a container that usually holds AAC. An \`.ogg\` usually holds Vorbis or Opus. MP3 is unusual in being both a container and a codec, which is part of why it is the format people assume everything works like.
 
-Converting between them is a re-encode unless you are only rewrapping, so going MP3 → WAV does not restore anything that MP3 threw away; it just stores the same degraded audio without compression. An [audio converter](/tool/audio-converter) is the right tool for producing the format something demands, not for improving quality that has already gone.
+Converting between them is a re-encode unless you are only rewrapping, so going MP3 → WAV does not restore anything that MP3 threw away; it just stores the same degraded audio without compression. An audio converter is the right tool for producing the format something demands, not for improving quality that has already gone.
 
 ## A short diagnostic
 
@@ -73,7 +73,7 @@ Converting between them is a re-encode unless you are only rewrapping, so going 
 4. Nothing opens at all → the container is unsupported. Remux; do not re-encode.
 5. Plays but is too big → bit rate, then resolution, then frame rate.
 
-Reading metadata and converting a clip are both things the browser can do with the file sitting on your disk. The [video converter](/tool/video-converter) and [metadata reader](/tool/video-metadata) here work on the file locally, which matters when the clip is a recording of an internal meeting that should not be uploaded to a stranger's server just to find out which codec it uses.`,
+Reading metadata and converting a clip are both things the browser can do with the file sitting on your disk. Reading a container's stream list is something a player or a local inspector such as \`ffprobe\`, MediaInfo or VLC's codec panel will tell you in seconds, without the file going anywhere. That matters when the clip is a recording of an internal meeting that should not be uploaded to a stranger's server just to find out which codec it uses.`,
   'compressing-a-video-without-ruining-it': `An upload rejects your file at 25 MB and the recording is 200 MB. The temptation is to run a "compress" button until something fits. That works, but it usually gives up far more quality than it had to, because the three dials that make a video smaller do not degrade it equally.
 
 ## The arithmetic
@@ -92,7 +92,7 @@ total kbps = 25 × 8 × 1000 ÷ 240 ≈ 833 kbps
 
 Leave 96 kbps for audio and the video gets roughly 730 kbps. Now the question is a concrete one — does this footage look acceptable at 730 kbps — instead of a vague one about how much to compress.
 
-At that budget, 1080p will look soft and blocky on movement. 720p will look reasonable. 480p will look clean but small. That is the trade being made, and making it deliberately beats discovering it after the upload.
+At that budget, 1080p will look soft and blocky on movement. 720p will look reasonable. 480p will look clean but small. That is the trade being made, and making it deliberately beats discovering it after the upload. The underlying principle is the one [image compression](/blog/how-image-compression-works) runs on: quality is what you spend bits on, and fewer pixels means fewer bits to spend. If the target is an email rather than an upload form, [attachment limits](/blog/email-attachment-size-limits) are stricter than the number they advertise.
 
 ## Which dial, in which order
 
@@ -103,7 +103,7 @@ At that budget, 1080p will look soft and blocky on movement. 720p will look reas
 **Frame rate, last.** Going 60 → 30 saves real space, but motion judder is more noticeable than softness, especially in game capture, sport or fast scrolling. For a static talking head or a slide presentation, 30 → 24 or even 15 is invisible and saves a lot.
 
 > [!NOTE]
-> Before touching any of the three, cut the clip. Duration multiplies everything, so removing eleven seconds of you fumbling for the right window at the start removes eleven seconds of bits. [Trimming first](/tool/video-trim) and compressing second is nearly always the order that produces the smallest watchable file.
+> Before touching any of the three, cut the clip. Duration multiplies everything, so removing eleven seconds of you fumbling for the right window at the start removes eleven seconds of bits. Trimming first and compressing second is nearly always the order that produces the smallest watchable file.
 
 ## Why the same settings give different results
 
@@ -121,7 +121,7 @@ Encoders offer two ways to ask for quality.
 
 **Target bit rate.** You specify the size budget and the encoder fits it, spending the same rate on hard and easy scenes alike. You get a predictable file size and uneven quality.
 
-For archiving or sharing where the size is not fixed, constant quality is the better setting. For an upload limit, target bit rate is the one that answers the actual question. A [video compressor](/tool/video-compressor) that lets you state a target size is doing the second, which is what a hard limit calls for.
+For archiving or sharing where the size is not fixed, constant quality is the better setting. For an upload limit, target bit rate is the one that answers the actual question. A video compressor that lets you state a target size is doing the second, which is what a hard limit calls for.
 
 > [!WARNING]
 > Do not compress an already-compressed export. Each pass encodes the previous pass's artefacts as if they were detail, so quality falls faster than size does. Go back to the original recording and do a single pass from there.
@@ -130,7 +130,7 @@ For archiving or sharing where the size is not fixed, constant quality is the be
 
 Audio is frequently left at 320 kbps on a clip where nobody will notice 96 kbps. On a four-minute video that difference is about 6 MB — which, in the example above, was a quarter of the entire budget.
 
-For speech, 64–96 kbps AAC mono is clean. For music, 128–192 kbps stereo. If the video has no meaningful audio at all, [removing the track](/tool/video-remove-audio) removes its entire contribution.
+For speech, 64–96 kbps AAC mono is clean. For music, 128–192 kbps stereo. If the video has no meaningful audio at all, removing the track removes its entire contribution.
 
 ## A working order
 
@@ -141,14 +141,14 @@ For speech, 64–96 kbps AAC mono is clean. For music, 128–192 kbps stereo. If
 5. Reduce frame rate only if the content is static and you are still over.
 6. Encode once, from the original.
 
-The [video compressor](/tool/video-compressor) and [trimmer](/tool/video-trim) here run in the browser on the file you already have, so a recording of an internal call can be cut down to an attachable size without it leaving the machine on the way.`,
+Whichever tool you reach for, prefer one that works on the file where it already sits. A recording of an internal call should be cut down to an attachable size without leaving the machine on the way, and a local encoder is the only arrangement that guarantees it.`,
   'trimming-and-cropping-video': `Two edits that sound equally trivial behave completely differently. Cutting the first ten seconds off a clip can finish instantly with no quality change. Cropping ten pixels off the edge cannot. The reason is worth knowing, because it tells you which edits are free.
 
 ## Why some cuts are free
 
 A compressed video is not a sequence of complete pictures. It is occasional complete frames — keyframes, or I-frames — followed by frames that describe only what changed since the last one.
 
-To show the frame at 00:10, the decoder finds the most recent keyframe before it and replays the changes forward. Nothing at 00:10 is independently meaningful.
+To show the frame at 00:10, the decoder finds the most recent keyframe before it and replays the changes forward. Nothing at 00:10 is independently meaningful. Cropping is a different matter entirely, and the compositional questions it raises are the same ones that apply to [cropping a still image](/blog/cropping-well) — aspect ratio, safe areas, and what the frame is actually for.
 
 So if your cut lands exactly on a keyframe, the encoder can throw away everything before it and copy the rest of the stream untouched. No decoding, no re-compression, no quality loss, and it finishes as fast as the disk can write.
 
@@ -159,7 +159,7 @@ If your cut lands between keyframes, there are two options: move the cut to the 
 
 ## What each edit actually costs
 
-**Trim / cut.** Free if you accept keyframe-aligned boundaries. A [trimming tool](/tool/video-trim) that offers both a fast and an exact mode is exposing precisely this choice.
+**Trim / cut.** Free if you accept keyframe-aligned boundaries. A trimming tool that offers both a fast and an exact mode is exposing precisely this choice.
 
 **Rotate.** Often free. MP4 and MOV carry a rotation flag in the container, and setting it tells the player to turn the picture without touching a single pixel. Some players ignore the flag, which is why a clip can appear upright on a phone and sideways on a laptop. When the flag is not respected, the pixels have to be rotated for real, which is a re-encode.
 
@@ -179,7 +179,7 @@ Phones record with the sensor in a fixed orientation and record how the phone wa
 
 So the video is not broken. It is upright with an instruction attached, and something dropped the instruction.
 
-The correct fix depends on the destination. If the destination respects the flag, changing the flag is instant and lossless. If it does not, you have to [rotate the pixels](/tool/video-rotate) and accept the re-encode, because nothing else survives the trip.
+The correct fix depends on the destination. If the destination respects the flag, changing the flag is instant and lossless. If it does not, you have to rotate the pixels and accept the re-encode, because nothing else survives the trip.
 
 > [!WARNING]
 > Rotating a file that already has a rotation flag can double-apply the rotation and leave the clip upside down. Check what the metadata says before rotating; if the flag is already set, clearing it may be the entire fix.
@@ -201,10 +201,10 @@ When several edits are needed, sequence them so you re-encode once:
 3. Set rotation as metadata at the end if the destination honours it.
 4. Compress last, from the edited master, in a single encode.
 
-The [trim](/tool/video-trim), [crop](/tool/video-crop), [rotate](/tool/video-rotate) and [merge](/tool/video-merge) tools here all run on the file in the browser, so intermediate versions of an unreleased clip never leave your machine between steps.`,
+Because these edits chain, the intermediate files multiply quickly. Doing them with a local editor rather than a round trip through an upload keeps every half-finished version of an unreleased clip on your own machine, and saves the upload time between each step.`,
   'extracting-audio-from-video': `You have a recorded call, a lecture or an interview as a video file, and what you actually want is the sound. Maybe for a podcast cut, maybe to transcribe it, maybe because a 900 MB video of a static slide is absurd when the content is a voice.
 
-The audio is already a separate stream inside the container, so getting it out is more like unpacking than converting — as long as you ask for the right output.
+The audio is already a separate stream inside the container, so getting it out is more like unpacking than converting — as long as you ask for the right output. It is worth knowing this before reaching for an online converter, because [uploading a file to one](/blog/what-happens-when-you-upload-a-file) hands over a recording that a copy operation could have produced locally in seconds.
 
 ## Copy or convert
 
@@ -217,7 +217,7 @@ The audio in an MP4 is almost always AAC. That gives you two very different oper
 Asking for MP3 out of an MP4 is therefore always a re-encode, even though MP3 feels like the "normal" audio format. If nothing downstream specifically demands MP3, taking the M4A is both faster and better.
 
 > [!NOTE]
-> An [audio extractor](/tool/video-extract-audio) that offers "same as source" is offering the copy path. It is the right default unless a specific device or upload only accepts one format.
+> An audio extractor that offers "same as source" is offering the copy path. It is the right default unless a specific device or upload only accepts one format.
 
 ## WAV does not undo anything
 
@@ -243,15 +243,15 @@ Two people talking over a conference call are already mixed into a single channe
 
 ## Trimming before converting
 
-An hour-long recording of which twelve minutes matter is an hour-long encode. [Cutting the section you want first](/tool/audio-cutter) and converting the cut is faster, smaller and avoids a pile of audio you will never listen to.
+An hour-long recording of which twelve minutes matter is an hour-long encode. Cutting the section you want first and converting the cut is faster, smaller and avoids a pile of audio you will never listen to.
 
-This matters especially for transcription, where processing time scales with duration. Extracting, trimming and then [running speech-to-text](/tool/speech-to-text) on the relevant twelve minutes is a fraction of the work of transcribing the whole thing and searching the result.
+This matters especially for transcription, where processing time scales with duration. Extracting, trimming and then running speech-to-text on the relevant twelve minutes is a fraction of the work of transcribing the whole thing and searching the result.
 
 ## Removing audio instead
 
 The opposite job comes up as often: a clip that needs to be shared without the room's conversation on it, or a screen recording where the microphone caught something it should not have.
 
-[Removing the audio track](/tool/video-remove-audio) is a container-level operation on the video side — the video stream is copied untouched and the audio stream is simply not written. It is instant and does not degrade the picture.
+Removing the audio track is a container-level operation on the video side — the video stream is copied untouched and the audio stream is simply not written. It is instant and does not degrade the picture.
 
 That is also the safe way to handle a recording with a sensitive few seconds: strip the audio entirely, rather than trusting that nobody turns the volume up.
 
@@ -268,7 +268,7 @@ Extraction, trimming and conversion here all happen in the tab against the local
 
 ## The three forms
 
-**Sidecar file.** A separate \`.srt\` or \`.vtt\` alongside the video. The player loads it and draws the text. It can be switched off, replaced, corrected, translated and read by search engines. This is the form that keeps every option open.
+**Sidecar file.** A separate \`.srt\` or \`.vtt\` alongside the video. The player loads it and draws the text. It can be switched off, replaced, corrected, translated and read by search engines. This is the form that keeps every option open, and the one that does the [accessibility work](/blog/alt-text-and-accessible-documents) properly rather than decoratively. Being a plain text file, it is also subject to the usual [encoding traps](/blog/unicode-utf8-and-mojibake): an SRT saved as Windows-1252 and read as UTF-8 turns every accented character into noise.
 
 **Embedded track.** The subtitles live inside the container as their own stream, the way audio does. One file to move around, still switchable off in players that support it. MKV handles this well, MP4 support is patchier, and browsers mostly ignore embedded subtitle tracks entirely.
 
@@ -322,7 +322,7 @@ Speech recognition has become good enough that starting from an automatic transc
 - **Overlapping speakers.** Two people talking at once tends to produce one confident and wrong sentence.
 - **Technical terms and acronyms.** Anything domain-specific will need a pass.
 
-Running [speech-to-text](/tool/speech-to-text) to get a timed draft and then correcting those five categories is perhaps ten minutes per recorded hour, against an hour or more of transcribing from scratch.
+Running speech-to-text to get a timed draft and then correcting those five categories is perhaps ten minutes per recorded hour, against an hour or more of transcribing from scratch.
 
 ## Writing captions people can read
 
@@ -342,5 +342,5 @@ These are accessibility requirements as much as style preferences: captions exis
 4. Ship the SRT as a sidecar wherever it is supported.
 5. Produce a burned-in version, from the master, only for platforms that need it.
 
-[Adding subtitles](/tool/video-subtitles) and [transcribing audio](/tool/speech-to-text) here both run locally on the file, which is worth having when the recording is an internal meeting and the transcript would otherwise be a copy of that meeting sitting on someone else's server.`,
+Transcription is the step worth thinking hardest about, because the output is a searchable text copy of everything that was said. If the recording is an internal meeting, a local transcription model is worth the extra setup: the alternative leaves a full transcript of that meeting sitting on someone else's server.`,
 };

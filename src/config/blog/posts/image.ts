@@ -278,7 +278,8 @@ export const IMAGE_POSTS: BlogPost[] = [
     category: 'image',
     tags: ['gif', 'video', 'compression', 'formats'],
     published: '2026-09-16',
-    relatedTools: ['gif-maker', 'gif-converter', 'video-trim', 'video-converter'],
+    updated: '2026-09-20',
+    relatedTools: [],
     takeaways: [
       'GIF stores at most 256 colours per frame and cannot compress across frames the way a video codec does, so photographic content explodes in size.',
       'Duration, frame rate and dimensions each multiply the size. Cut length first, then width, then frames per second.',
@@ -295,7 +296,7 @@ export const IMAGE_POSTS: BlogPost[] = [
     category: 'image',
     tags: ['ocr', 'text', 'scanning'],
     published: '2026-09-15',
-    relatedTools: ['ocr-image', 'ai-ocr', 'image-adjust', 'image-crop'],
+    relatedTools: ['ocr-image', 'image-adjust', 'image-crop'],
     takeaways: [
       'OCR wants roughly 300 DPI of text. A phone photo of a page from a distance is often below that, and no engine recovers detail that was never captured.',
       'Straighten, crop and raise contrast before recognising. Skew of more than a couple of degrees measurably lowers accuracy.',

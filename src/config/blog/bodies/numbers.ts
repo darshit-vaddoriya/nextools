@@ -431,7 +431,7 @@ Some "conversions" are not unit conversions:
 
 **Mass to volume** requires density. 1 kg of water is 1 L; 1 kg of flour is about 1.9 L; 1 kg of honey is about 0.7 L. This is why cup measurements in recipes are unreliable across ingredients, and why professional baking uses mass.
 
-**Currency** requires a rate, which changes every second and differs between mid-market, card and cash. There is no intrinsic factor between two currencies; a [currency converter](/tool/currency-converter) reports a rate at a moment, not a fact.
+**Currency** requires a rate, which changes every second and differs between mid-market, card and cash. There is no intrinsic factor between two currencies; a currency converter reports a rate at a moment, not a fact.
 
 **Data rate to transfer time** requires the actual throughput, not the advertised one. And bits versus bytes is a factor of eight that connection speeds and file sizes deliberately state differently.
 

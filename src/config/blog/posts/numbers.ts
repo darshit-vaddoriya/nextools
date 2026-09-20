@@ -98,6 +98,7 @@ export const NUMBERS_POSTS: BlogPost[] = [
     category: 'numbers',
     tags: ['units', 'conversion', 'measurement'],
     published: '2026-09-15',
+    updated: '2026-09-20',
     relatedTools: ['unit-converter', 'scientific-calc', 'percentage-calc'],
     takeaways: [
       'Ratio scales (length, mass, time) convert by multiplication. Interval scales (Celsius, Fahrenheit) need an offset, so doubling them is meaningless.',

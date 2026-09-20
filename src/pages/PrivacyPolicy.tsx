@@ -136,7 +136,9 @@ export const PrivacyPolicy: React.FC<PrivacyPolicyProps> = ({ onBack, onOpenCook
           </p>
           <p>
             Where we rely on consent, specifically for personalised advertising and analytics
-            cookies, you may withdraw it at any time through the consent banner or your browser.
+            cookies, you may withdraw it at any time: through Google's own consent message where
+            it applies to your region, through the opt-out links in section 5, or by blocking
+            cookies in your browser.
             Our lawful basis for the strictly necessary operation of the site is our legitimate
             interest in providing and securing it. You also have the right to complain to your
             local data protection authority.

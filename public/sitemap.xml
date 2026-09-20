@@ -42,13 +42,13 @@
   </url>
   <url>
     <loc>https://nexttool.click/blog</loc>
-    <lastmod>2026-09-16</lastmod>
+    <lastmod>2026-09-20</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://nexttool.click/blog/topic/pdf</loc>
-    <lastmod>2026-09-15</lastmod>
+    <lastmod>2026-09-20</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -60,13 +60,13 @@
   </url>
   <url>
     <loc>https://nexttool.click/blog/topic/image</loc>
-    <lastmod>2026-09-16</lastmod>
+    <lastmod>2026-09-20</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://nexttool.click/blog/topic/media</loc>
-    <lastmod>2026-09-16</lastmod>
+    <lastmod>2026-09-20</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -78,7 +78,7 @@
   </url>
   <url>
     <loc>https://nexttool.click/blog/topic/numbers</loc>
-    <lastmod>2026-09-15</lastmod>
+    <lastmod>2026-09-20</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -102,25 +102,25 @@
   </url>
   <url>
     <loc>https://nexttool.click/blog/making-a-gif-worth-sending</loc>
-    <lastmod>2026-09-16</lastmod>
+    <lastmod>2026-09-20</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://nexttool.click/blog/mp4-is-not-a-codec</loc>
-    <lastmod>2026-09-16</lastmod>
+    <lastmod>2026-09-20</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://nexttool.click/blog/compressing-a-video-without-ruining-it</loc>
-    <lastmod>2026-09-16</lastmod>
+    <lastmod>2026-09-20</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://nexttool.click/blog/trimming-and-cropping-video</loc>
-    <lastmod>2026-09-16</lastmod>
+    <lastmod>2026-09-20</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -138,7 +138,7 @@
   </url>
   <url>
     <loc>https://nexttool.click/blog/password-protecting-a-pdf</loc>
-    <lastmod>2026-09-15</lastmod>
+    <lastmod>2026-09-20</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -150,13 +150,13 @@
   </url>
   <url>
     <loc>https://nexttool.click/blog/extracting-audio-from-video</loc>
-    <lastmod>2026-09-15</lastmod>
+    <lastmod>2026-09-20</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://nexttool.click/blog/subtitles-srt-and-burned-in-captions</loc>
-    <lastmod>2026-09-15</lastmod>
+    <lastmod>2026-09-20</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -168,7 +168,7 @@
   </url>
   <url>
     <loc>https://nexttool.click/blog/unit-conversion-and-its-assumptions</loc>
-    <lastmod>2026-09-15</lastmod>
+    <lastmod>2026-09-20</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -1062,11 +1062,6 @@
   </url>
   <url>
     <loc>https://nexttool.click/tool/image-draw</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://nexttool.click/tool/image-editor</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>

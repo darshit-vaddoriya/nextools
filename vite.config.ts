@@ -8,6 +8,9 @@ import { BLOG_POSTS, BLOG_CATEGORIES, postsInCategory } from './src/config/blog'
 
 const SITE = 'https://nexttool.click';
 
+/** Tool routes deliberately kept out of the sitemap — see the loop below. */
+const NOINDEX_TOOL_IDS = ['image-editor'];
+
 function sitemapPlugin() {
   return {
     name: 'generate-sitemap',
@@ -52,6 +55,11 @@ function sitemapPlugin() {
         urls.push({ loc: `${SITE}/category/${cat}`, priority: '0.8', changefreq: 'weekly' });
       }
       for (const tool of TOOLS) {
+        // The full-screen image editor is a canvas application, not a document:
+        // prerendering it yields a page with no readable text, which is exactly
+        // the thin page a crawler is right to discount. It stays linked from the
+        // image category and reachable, just not submitted for indexing.
+        if (NOINDEX_TOOL_IDS.includes(tool.id)) continue;
         urls.push({
           loc: `${SITE}/tool/${tool.id}`,
           priority: tool.isPopular ? '0.9' : '0.7',
@@ -121,6 +129,11 @@ export default defineConfig({
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),
+      // mammoth's `main` entry is the Node build, which pulls in @xmldom and
+      // path-is-absolute. The package ships a self-contained browser bundle;
+      // point the bare specifier at it so the Word tools stay client-side and
+      // TypeScript still resolves the types next to the Node entry.
+      mammoth: path.resolve(__dirname, './node_modules/mammoth/mammoth.browser.js'),
     },
   },
 });

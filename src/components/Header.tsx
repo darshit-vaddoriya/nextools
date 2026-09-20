@@ -8,7 +8,7 @@ import { SUPPORT_URL } from '../config/support';
 import { StaticPageId, getStaticPage } from '../config/pages';
 import { AppLink } from './AppLink';
 
-export type HeaderView = 'home' | 'tool' | 'category' | 'page' | 'all' | 'blog' | 'files' | 'settings';
+export type HeaderView = 'home' | 'tool' | 'category' | 'page' | 'all' | 'blog' | 'files' | 'settings' | 'notfound';
 
 const navPath = (id: StaticPageId) => getStaticPage(id)?.path ?? '/';
 

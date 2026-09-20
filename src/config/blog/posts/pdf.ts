@@ -224,7 +224,8 @@ export const PDF_POSTS: BlogPost[] = [
     category: 'pdf',
     tags: ['pdf', 'encryption', 'permissions', 'security'],
     published: '2026-09-15',
-    relatedTools: ['pdf-protect', 'pdf-unlock', 'pdf-flatten', 'pdf-redact'],
+    updated: '2026-09-20',
+    relatedTools: ['pdf-flatten', 'pdf-redact'],
     takeaways: [
       'A user password encrypts the content: without it there is nothing to read. An owner password only sets permission flags that viewers are asked to respect.',
       'Permissions like "no printing" and "no copying" are honoured by well-behaved viewers and ignored by others. They are not a security control.',

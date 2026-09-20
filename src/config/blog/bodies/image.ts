@@ -952,9 +952,9 @@ Three constraints explain nearly every oversized GIF:
 
 **256 colours per frame.** A GIF frame carries a palette of at most 256 entries. A photograph or camera footage contains tens of thousands of distinct colours, so the encoder has to quantise, and to hide the banding it dithers — scattering pixels of two palette colours to fake a third.
 
-**Dithering defeats compression.** GIF compresses with LZW, which works by finding repeated runs of pixels. Dithering deliberately makes neighbouring pixels differ. So the trick that keeps a photo looking acceptable is the same trick that stops it compressing.
+**Dithering defeats compression.** GIF compresses with LZW, which works by finding repeated runs of pixels. Dithering deliberately makes neighbouring pixels differ. So the trick that keeps a photo looking acceptable is the same trick that stops it compressing. If the goal is a small file that still looks right, [choosing a modern format](/blog/jpeg-png-webp-avif-which-format) solves the problem that no amount of GIF tuning will.
 
-**No motion compensation.** A video codec stores one full frame and then describes what moved. GIF stores each frame as its own image, with only a simple optimisation for unchanged regions. Thirty frames is thirty images.
+**No motion compensation.** A video codec stores one full frame and then describes what moved. GIF stores each frame as its own image, with only a simple optimisation for unchanged regions. Thirty frames is thirty images. This is precisely the keyframe machinery that [makes a video trim cheap and a crop expensive](/blog/trimming-and-cropping-video), and GIF has none of it.
 
 Put those together and you get the rule: GIF is good at flat-colour, low-motion, small-dimension content, and terrible at everything else.
 
@@ -963,7 +963,7 @@ Put those together and you get the rule: GIF is good at flat-colour, low-motion,
 
 ## The three dials, in order
 
-**Duration.** Size is close to linear in length. Three seconds of the interaction that matters beats twelve seconds that includes you finding the menu. [Trim before converting](/tool/video-trim), always.
+**Duration.** Size is close to linear in length. Three seconds of the interaction that matters beats twelve seconds that includes you finding the menu. Trim before converting, always.
 
 **Dimensions.** Halving the width quarters the pixels per frame. Most GIFs are displayed in a chat window or a README at around 600–800 px wide; exporting at 1920 and letting the page scale it down wastes three quarters of the file.
 
@@ -990,7 +990,7 @@ The honest checklist:
 
 - Needs to work as an image, in an email, or in something old → GIF.
 - Needs transparency with animation → GIF, or APNG/WebP if support allows.
-- Anywhere else → a short muted video, [converted once](/tool/video-converter) from the original.
+- Anywhere else → a short muted video, converted once from the original.
 
 ## A working recipe for a UI demo
 
@@ -1002,7 +1002,7 @@ The honest checklist:
 
 That typically lands a UI interaction between 500 KB and 2 MB — small enough for a README, a ticket or a chat message.
 
-The [GIF maker](/tool/gif-maker) and [converter](/tool/gif-converter) here run in the browser on your local file, which is worth having when the recording shows an internal dashboard that should not be uploaded anywhere just to be turned into a loop.`,
+Screen recordings are the common case here, and they are also the ones most likely to show an internal dashboard. Converting them with something that runs on your own machine avoids uploading a picture of production anywhere just to turn it into a loop.`,
   'reading-text-off-an-image': `Optical character recognition has quietly become very good, which makes its failures more confusing than they used to be. A page comes back perfect and the next one comes back as fragments. The difference is almost never the engine.
 
 ## What OCR is doing

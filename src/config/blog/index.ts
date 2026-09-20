@@ -55,6 +55,30 @@ export const postsForTool = (toolId: string, limit = 3): BlogPost[] =>
   (POSTS_BY_TOOL[toolId] ?? []).slice(0, limit);
 
 /**
+ * Every guide that names any tool in a given tool category — what a category
+ * landing page links out to. Derived from `relatedTools` rather than from the
+ * blog's own categories, because the two taxonomies are deliberately different:
+ * a guide about CSV encoding is filed under "data" but belongs on the Excel &
+ * CSV page.
+ */
+export function postsForToolCategory(
+  toolIds: readonly string[],
+  limit = 4,
+): BlogPost[] {
+  const seen = new Set<string>();
+  const out: BlogPost[] = [];
+  for (const toolId of toolIds) {
+    for (const post of POSTS_BY_TOOL[toolId] ?? []) {
+      if (seen.has(post.slug)) continue;
+      seen.add(post.slug);
+      out.push(post);
+      if (out.length === limit) return out;
+    }
+  }
+  return out;
+}
+
+/**
  * Picks articles to show under a post: same category first, then whatever is
  * newest, so every article always has somewhere to go next.
  */

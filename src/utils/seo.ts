@@ -90,6 +90,21 @@ function keywordList(words: string[]): string {
   return out.slice(0, 12).join(', ');
 }
 
+/**
+ * Tool routes kept out of the index. The full-screen image editor renders a
+ * canvas and nothing else, so its page has no readable content — the same list
+ * is applied to the sitemap in vite.config.ts.
+ */
+const NOINDEX_TOOL_IDS = new Set(['image-editor']);
+
+/** The robots directive index.html ships with, restored on every real page. */
+const INDEXABLE_ROBOTS =
+  'index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1';
+
+function setRobots(value: string) {
+  setMeta('robots', value);
+}
+
 function setCanonical(url: string) {
   let el = document.querySelector('link[rel="canonical"]') as HTMLLinkElement | null;
   if (!el) {
@@ -98,6 +113,34 @@ function setCanonical(url: string) {
     document.head.appendChild(el);
   }
   el.href = url;
+  // Every published page routes through here, so this is the one place that
+  // reliably undoes the noindex a not-found view leaves behind when the visitor
+  // navigates on from it without a full page load.
+  setRobots(INDEXABLE_ROBOTS);
+}
+
+/**
+ * A URL this site does not publish. The SPA fallback answers every path with
+ * HTTP 200, so without an explicit noindex the address would be a soft 404 —
+ * which AdSense and Search both read as a broken, low-value page.
+ */
+export function updateNotFoundMeta() {
+  clearPageSchema();
+  const title = 'Page not found | NextTool';
+  const desc = 'This page does not exist on NextTool. Browse the tool directory or the blog to find what you were looking for.';
+
+  document.title = title;
+  setMeta('description', desc);
+  setMeta('keywords', DEFAULT_KEYWORDS);
+  setMeta('og:title', title, true);
+  setMeta('og:description', desc, true);
+  setMeta('og:url', `${SITE}/`, true);
+  setMeta('twitter:title', title);
+  setMeta('twitter:description', desc);
+  setRobots('noindex, follow');
+
+  const canonical = document.querySelector('link[rel="canonical"]');
+  if (canonical) canonical.remove();
 }
 
 function setJsonLd(id: string, data: object) {
@@ -211,6 +254,9 @@ export function updateToolMeta(toolId: string) {
   setMeta('twitter:title', title);
   setMeta('twitter:description', desc);
   setCanonical(url);
+  // setCanonical restores the indexable directive; a canvas-only tool then opts
+  // back out, because its rendered page carries no text for a crawler to read.
+  if (NOINDEX_TOOL_IDS.has(tool.id)) setRobots('noindex, follow');
 
   setJsonLd('page-jsonld', {
     '@context': 'https://schema.org',
@@ -487,8 +533,15 @@ export function updateBlogPostMeta(slug: string) {
   ]));
 }
 
+/**
+ * Categories that actually have at least one live tool. A category with none
+ * renders an empty grid, which is a thin page Google treats as a soft 404 — so
+ * those URLs resolve to the real not-found view instead.
+ */
+const POPULATED_CATEGORIES = new Set<string>(TOOLS.map(t => t.category));
+
 export function parseRoute(pathname: string): {
-  view: 'home' | 'tool' | 'category' | 'page' | 'all' | 'blog' | 'files' | 'settings';
+  view: 'home' | 'tool' | 'category' | 'page' | 'all' | 'blog' | 'files' | 'settings' | 'notfound';
   toolId?: string;
   category?: ToolCategory;
   pageId?: StaticPageId;
@@ -510,13 +563,25 @@ export function parseRoute(pathname: string): {
   const topicMatch = pathname.match(/^\/blog\/topic\/([a-z]+)$/);
   if (topicMatch && isBlogCategory(topicMatch[1])) return { view: 'blog', blogTopic: topicMatch[1] };
   const postMatch = pathname.match(/^\/blog\/([a-z0-9-]+)$/);
-  if (postMatch) return { view: 'blog', blogSlug: postMatch[1] };
+  if (postMatch) return getPost(postMatch[1]) ? { view: 'blog', blogSlug: postMatch[1] } : { view: 'notfound' };
   if (pathname === '/all-tools') return { view: 'all' };
   const toolMatch = pathname.match(/^\/tool\/([a-z0-9-]+)$/);
-  if (toolMatch) return { view: 'tool', toolId: toolMatch[1] };
+  if (toolMatch) {
+    return TOOLS.some(t => t.id === toolMatch[1])
+      ? { view: 'tool', toolId: toolMatch[1] }
+      : { view: 'notfound' };
+  }
   const catMatch = pathname.match(/^\/category\/([a-z]+)$/);
-  if (catMatch) return { view: 'category', category: catMatch[1] as ToolCategory };
-  return { view: 'home' };
+  if (catMatch) {
+    return POPULATED_CATEGORIES.has(catMatch[1])
+      ? { view: 'category', category: catMatch[1] as ToolCategory }
+      : { view: 'notfound' };
+  }
+  if (pathname === '/') return { view: 'home' };
+  // Everything else is a URL this site does not publish. Serving the home page
+  // under it would be a soft 404: HTTP 200 with content that has nothing to do
+  // with the requested address.
+  return { view: 'notfound' };
 }
 
 export const blogTopicPath = (category: BlogCategory): string => `/blog/topic/${category}`;

@@ -106,7 +106,7 @@ export const CookiePolicy: React.FC<CookiePolicyProps> = ({ onBack, onOpenPrivac
             <>Third-party vendors, including Google, use cookies to serve ads based on your prior visits to this or other websites.</>,
             <>Opt out of personalised advertising from Google at{' '}<ExternalLink href="https://www.google.com/settings/ads">Google Ads Settings</ExternalLink>.</>,
             <>Opt out of many other vendors at{' '}<ExternalLink href="https://www.aboutads.info/choices/">aboutads.info/choices</ExternalLink>{' '}or{' '}<ExternalLink href="https://optout.networkadvertising.org/">optout.networkadvertising.org</ExternalLink>.</>,
-            <>Visitors in the EEA, UK and Switzerland are shown a consent message before personalised advertising cookies are set, and can change that choice at any time from the privacy link in the ad consent banner.</>,
+            <>Where Google's consent messaging applies — visitors in the EEA, the UK and Switzerland — a consent message is presented by Google before personalised advertising cookies are set, and the choice can be changed from the privacy link that message provides. Outside those regions no consent message is shown, and the opt-out links above are the way to exercise a choice.</>,
           ]}
         />
       </PageSection>

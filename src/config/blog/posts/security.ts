@@ -171,7 +171,7 @@ export const SECURITY_POSTS: BlogPost[] = [
     category: 'security',
     tags: ['wifi', 'vpn', 'https', 'network'],
     published: '2026-09-14',
-    relatedTools: ['url-parser', 'password-manager', 'file-checksum', 'user-agent-parser'],
+    relatedTools: ['url-parser', 'file-checksum', 'user-agent-parser'],
     takeaways: [
       'HTTPS encrypts the content of your traffic, so someone on the same network cannot read what you send.',
       'They can still see which domains you connect to, because DNS and the certificate name are visible.',

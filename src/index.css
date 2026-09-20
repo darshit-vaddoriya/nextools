@@ -984,3 +984,59 @@ input[type="range"].range-progress:focus-visible {
   border-radius: 5px;
   background: rgb(var(--card));
 }
+
+/* ─── Word document rendering (.docx viewer / PDF export preview) ───────────
+   mammoth emits bare semantic HTML with no classes, and this app's reset
+   strips heading and list styling everywhere. These rules put the document
+   back on a page: fixed black-on-white regardless of theme, because both the
+   viewer and the PDF renderer are showing a printed page, not a web page. */
+.docx-preview { color: #111111; }
+.docx-preview > :first-child { margin-top: 0; }
+.docx-preview > :last-child { margin-bottom: 0; }
+.docx-preview h1,
+.docx-preview h2,
+.docx-preview h3,
+.docx-preview h4,
+.docx-preview h5,
+.docx-preview h6 {
+  font-weight: 700;
+  line-height: 1.25;
+  margin: 1.6em 0 0.6em;
+  color: #000000;
+}
+.docx-preview h1 { font-size: 1.85em; }
+.docx-preview h2 { font-size: 1.45em; }
+.docx-preview h3 { font-size: 1.2em; }
+.docx-preview h4,
+.docx-preview h5,
+.docx-preview h6 { font-size: 1.05em; }
+.docx-preview p { margin: 0 0 0.85em; }
+.docx-preview ul,
+.docx-preview ol { margin: 0 0 0.9em; padding-left: 1.6em; }
+.docx-preview ul { list-style: disc; }
+.docx-preview ol { list-style: decimal; }
+.docx-preview li { margin-bottom: 0.3em; }
+.docx-preview a { color: #1a4fd6; text-decoration: underline; }
+.docx-preview strong { font-weight: 700; }
+.docx-preview em { font-style: italic; }
+.docx-preview img { max-width: 100%; height: auto; margin: 0.6em 0; }
+.docx-preview table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 0 0 1em;
+  font-size: 0.95em;
+}
+.docx-preview th,
+.docx-preview td {
+  border: 1px solid #cfcfcf;
+  padding: 0.45em 0.7em;
+  text-align: left;
+  vertical-align: top;
+}
+.docx-preview th { background: #f4f4f4; font-weight: 700; }
+.docx-preview blockquote {
+  margin: 0 0 1em;
+  padding-left: 1em;
+  border-left: 3px solid #d4d4d4;
+  color: #444444;
+}

@@ -9,7 +9,8 @@ export const MEDIA_POSTS: BlogPost[] = [
     category: 'media',
     tags: ['video', 'codecs', 'mp4', 'formats'],
     published: '2026-09-16',
-    relatedTools: ['video-converter', 'video-metadata', 'audio-converter'],
+    updated: '2026-09-20',
+    relatedTools: [],
     takeaways: [
       'MP4, MKV and MOV are containers. H.264, HEVC, VP9 and AV1 are video codecs. AAC, MP3 and Opus are audio codecs. A file has one container and usually two codecs.',
       'A file that opens with sound but no picture, or picture but no sound, has a codec the player cannot decode. The container was fine.',
@@ -26,7 +27,8 @@ export const MEDIA_POSTS: BlogPost[] = [
     category: 'media',
     tags: ['video', 'compression', 'bitrate'],
     published: '2026-09-16',
-    relatedTools: ['video-compressor', 'video-converter', 'video-metadata'],
+    updated: '2026-09-20',
+    relatedTools: [],
     takeaways: [
       'File size is roughly bit rate × duration. Resolution and frame rate matter because they determine what bit rate looks acceptable.',
       'Cut bit rate first, resolution second, frame rate last. Frame rate is the most visible of the three on motion.',
@@ -43,7 +45,8 @@ export const MEDIA_POSTS: BlogPost[] = [
     category: 'media',
     tags: ['video', 'editing', 'keyframes'],
     published: '2026-09-16',
-    relatedTools: ['video-trim', 'video-crop', 'video-rotate', 'video-merge'],
+    updated: '2026-09-20',
+    relatedTools: [],
     takeaways: [
       'Trimming on a keyframe can copy streams directly: no quality loss, seconds instead of minutes.',
       'Cropping and rotating change the picture itself, so they require re-encoding — except rotation, which can sometimes be a metadata flag.',
@@ -60,7 +63,8 @@ export const MEDIA_POSTS: BlogPost[] = [
     category: 'media',
     tags: ['audio', 'video', 'extraction', 'podcast'],
     published: '2026-09-15',
-    relatedTools: ['video-extract-audio', 'audio-converter', 'audio-cutter', 'speech-to-text'],
+    updated: '2026-09-20',
+    relatedTools: [],
     takeaways: [
       'The audio track in an MP4 is usually AAC. Saving it as .m4a copies it bit for bit; saving it as MP3 re-encodes and loses a little more.',
       'Converting a lossy track to WAV does not restore quality. It only stops compressing what is already damaged.',
@@ -77,7 +81,8 @@ export const MEDIA_POSTS: BlogPost[] = [
     category: 'media',
     tags: ['subtitles', 'captions', 'accessibility', 'video'],
     published: '2026-09-15',
-    relatedTools: ['video-subtitles', 'speech-to-text', 'video-converter'],
+    updated: '2026-09-20',
+    relatedTools: [],
     takeaways: [
       'An SRT is a plain text file of numbered cues with start and end timestamps. It can be edited in any text editor.',
       'A sidecar file can be turned off, indexed and corrected. Burned-in captions cannot be removed without re-encoding from the original.',

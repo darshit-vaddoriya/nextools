@@ -5,7 +5,7 @@ import { AdBanner }        from './components/AdBanner';
 import { Footer }          from './components/Footer';
 import { Hero }            from './components/home/Hero';
 import { ToolGrid }        from './components/home/ToolGrid';
-import { getPost, postsForTool, readingMinutes, BlogCategory } from './config/blog';
+import { getPost, postsForTool, postsForToolCategory, readingMinutes, BlogCategory } from './config/blog';
 import { StaticPageId }    from './config/pages';
 import { ToolCategory }    from './types';
 import { TOOLS }           from './config/tools';
@@ -16,7 +16,7 @@ import { HOME_FAQ }        from './config/faq';
 import {
   updateHomeMeta, updateToolMeta, updateCategoryMeta, updatePageMeta,
   updateBlogIndexMeta, updateBlogPostMeta, updateBlogTopicMeta,
-  updateAllToolsMeta, parseRoute, buildPath, blogTopicPath,
+  updateAllToolsMeta, updateNotFoundMeta, parseRoute, buildPath, blogTopicPath,
 } from './utils/seo';
 import { trackPageView } from './utils/analytics';
 import {
@@ -27,6 +27,7 @@ import {
   CheckCircle2, Lightbulb, BookOpen,
 } from 'lucide-react';
 import { ALL_CATEGORIES } from './config/categories';
+import { getCategoryContent } from './config/categoryContent';
 import { DevRunPill } from './components/DevToolChrome';
 import { resolveToolIcon } from './utils/toolIcons';
 
@@ -49,8 +50,8 @@ const WIDE_TOOL_IDS = new Set([
 // Nothing a tool page needs may be imported statically here: this module is the
 // entry chunk, so a static import would ship that tool's code — and its library
 // dependencies — to the homepage, every blog post and every legal page too.
-import { WordTools }              from './tools/WordTools';
 import { ToolPlaceholder }        from './tools/ToolPlaceholder';
+const NotFound = React.lazy(() => import('./pages/NotFound').then(m => ({ default: m.NotFound })));
 import { ToolCard }               from './components/ToolCard';
 import { AppLink }                from './components/AppLink';
 import { FavoriteButton }         from './components/FavoriteButton';
@@ -230,6 +231,14 @@ const lazyExtraColorTools = <K extends
 ): React.FC =>
   lazyComponent(() => import('./tools/color/ExtraColorTools'), exportName);
 
+const lazyWordTools = <K extends
+  'DocxToHtmlTool' | 'DocxToMarkdownTool' | 'DocxToTxtTool' | 'DocxToPdfTool'
+  | 'WordViewerTool' | 'WordMetadataTool' | 'WordRemoveFormatTool' | 'WordCompareTool'
+  | 'HtmlToDocxTool' | 'MarkdownToDocxTool'>(
+  exportName: K,
+): React.FC =>
+  lazyComponent(() => import('./tools/word/WordToolsImpl'), exportName);
+
 const lazyArchiveTools = <K extends 'ZipExtractorTool' | 'ZipCreatorTool' | 'BatchZipTool'>(
   exportName: K,
 ): React.FC =>
@@ -353,6 +362,17 @@ const IMPLEMENTED_TOOLS: Record<string, React.ComponentType> = {
   'contrast-checker':     lazyExtraColorTools('ContrastCheckerTool'),
   'glassmorphism':        GlassmorphismGenerator,
   // Archive tools
+  'docx-to-pdf':          lazyWordTools('DocxToPdfTool'),
+  'docx-to-html':         lazyWordTools('DocxToHtmlTool'),
+  'docx-to-markdown':     lazyWordTools('DocxToMarkdownTool'),
+  'docx-to-txt':          lazyWordTools('DocxToTxtTool'),
+  'html-to-docx':         lazyWordTools('HtmlToDocxTool'),
+  'markdown-to-docx':     lazyWordTools('MarkdownToDocxTool'),
+  'word-viewer':          lazyWordTools('WordViewerTool'),
+  'word-metadata':        lazyWordTools('WordMetadataTool'),
+  'word-compare':         lazyWordTools('WordCompareTool'),
+  'word-remove-format':   lazyWordTools('WordRemoveFormatTool'),
+
   'zip-extractor':        lazyArchiveTools('ZipExtractorTool'),
   'zip-creator':          lazyArchiveTools('ZipCreatorTool'),
   'batch-zip':            lazyArchiveTools('BatchZipTool'),
@@ -427,7 +447,7 @@ export const App: React.FC = () => {
 
   const [activeToolId,        setActiveToolId]        = useState(initRoute.toolId ?? '');
   const [isSearchOpen,        setIsSearchOpen]        = useState(false);
-  const [currentView,         setCurrentView]         = useState<'home'|'tool'|'category'|'page'|'all'|'blog'|'files'|'settings'>(initRoute.view);
+  const [currentView,         setCurrentView]         = useState<'home'|'tool'|'category'|'page'|'all'|'blog'|'files'|'settings'|'notfound'>(initRoute.view);
   const [activeCategoryView,  setActiveCategoryView]  = useState<ToolCategory|null>(initRoute.category ?? null);
   const [activePageId,        setActivePageId]        = useState<StaticPageId>(initRoute.pageId ?? 'privacy');
   const [activeBlogSlug,      setActiveBlogSlug]      = useState(initRoute.blogSlug ?? '');
@@ -436,7 +456,8 @@ export const App: React.FC = () => {
   const { preference: theme, resolvedDark, setTheme } = useTheme();
 
   const syncMeta = useCallback(() => {
-    if (currentView === 'page') updatePageMeta(activePageId);
+    if (currentView === 'notfound') updateNotFoundMeta();
+    else if (currentView === 'page') updatePageMeta(activePageId);
     else if (currentView === 'blog') {
       if (activeBlogSlug) updateBlogPostMeta(activeBlogSlug);
       else if (activeBlogTopic) updateBlogTopicMeta(activeBlogTopic);
@@ -585,8 +606,6 @@ export const App: React.FC = () => {
     const Implemented = IMPLEMENTED_TOOLS[activeToolId];
     if (Implemented) return <Implemented />;
 
-    if (activeTool?.category === 'word') return <WordTools toolId={activeToolId} />;
-
     if (activeTool) {
       const meta = getPlaceholderMeta(activeTool.category);
       const features = PLANNED_FEATURES[activeTool.id] ?? meta.features;
@@ -630,7 +649,17 @@ export const App: React.FC = () => {
 
       <main className="flex-1">
         <React.Suspense fallback={<ToolViewSkeleton />}>
-        {currentView === 'page'
+        {currentView === 'notfound'
+          ? <NotFound
+              path={window.location.pathname}
+              onGoHome={goHome}
+              onOpenAllTools={openAllTools}
+              onOpenBlog={() => openBlog()}
+              onSelectTool={openTool}
+              onSelectCategory={(id) => openCategory(id as ToolCategory)}
+              onOpenContact={() => openPage('contact')}
+            />
+          : currentView === 'page'
           ? <div className="max-w-4xl mx-auto px-4 sm:px-6 py-8">
               <StaticPageView pageId={activePageId} onBack={goHome} onOpenPage={openPage} />
             </div>
@@ -645,7 +674,7 @@ export const App: React.FC = () => {
           ? <ToolView activeTool={activeTool} onBack={goHome} renderTool={renderTool} categories={ALL_CATEGORIES}
               onOpenPage={openPage} onOpenBlog={openBlog} onSelectTool={openTool} onSelectCategory={openCategory} onGoHome={goHome} onOpenFaq={scrollToFaq} onOpenCategories={scrollToCategories} />
           : currentView === 'category' && activeCategoryView
-          ? <CategoryView cat={activeCategoryView} onSelectTool={openTool} onBack={goHome} categories={ALL_CATEGORIES} />
+          ? <CategoryView cat={activeCategoryView} onSelectTool={openTool} onBack={goHome} categories={ALL_CATEGORIES} onOpenBlog={openBlog} />
           : currentView === 'all'
           ? <AllToolsView onSelectTool={openTool} onBack={goHome} categories={ALL_CATEGORIES} />
           : currentView === 'files'
@@ -967,10 +996,13 @@ const CategoryView: React.FC<{
   onSelectTool: (id: string) => void;
   onBack: () => void;
   categories: typeof ALL_CATEGORIES;
-}> = ({ cat, onSelectTool, onBack, categories }) => {
+  onOpenBlog: (slug?: string) => void;
+}> = ({ cat, onSelectTool, onBack, categories, onOpenBlog }) => {
   const conf  = categories.find(c => c.id === cat);
   const tools = TOOLS.filter(t => t.category === cat);
   const Icon  = conf?.icon ?? FileText;
+  const content = getCategoryContent(cat);
+  const guides = postsForToolCategory(tools.map(t => t.id), 4);
 
   return (
     <div className="max-w-[1560px] mx-auto px-4 sm:px-6 py-8 fade-in">
@@ -984,9 +1016,17 @@ const CategoryView: React.FC<{
         </div>
         <div>
           <h1 className="text-xl font-semibold text-foreground">{conf?.name}</h1>
-          <p className="text-[13px] text-muted-foreground mt-0.5">{tools.length} tools available</p>
+          <p className="text-[13px] text-muted-foreground mt-0.5">
+            {tools.length} tools{content ? ` · ${content.tagline}` : ' available'}
+          </p>
         </div>
       </div>
+
+      {content && (
+        <p className="max-w-3xl text-[14px] leading-relaxed text-muted-foreground mb-8">
+          {content.intro}
+        </p>
+      )}
 
       {tools.length === 0 ? (
         <div className="text-center py-16">
@@ -1013,6 +1053,61 @@ const CategoryView: React.FC<{
               />
             );
           })}
+        </div>
+      )}
+
+      {content && (
+        <div className="mt-14 max-w-3xl space-y-12">
+          <section>
+            <h2 className="font-heading text-[19px] font-extrabold tracking-[-.02em] text-foreground mb-5">
+              Choosing between these {conf?.name.toLowerCase()}
+            </h2>
+            <div className="space-y-5">
+              {content.guide.map(point => (
+                <div key={point.title} className="border-l-2 border-primary/30 pl-4">
+                  <h3 className="text-[14px] font-bold text-foreground mb-1.5">{point.title}</h3>
+                  <p className="text-[13.5px] leading-relaxed text-muted-foreground">{point.body}</p>
+                </div>
+              ))}
+            </div>
+          </section>
+
+          <section>
+            <h2 className="font-heading text-[19px] font-extrabold tracking-[-.02em] text-foreground mb-5">
+              Questions people ask
+            </h2>
+            <dl className="space-y-5">
+              {content.faqs.map(faq => (
+                <div key={faq.question}>
+                  <dt className="text-[14px] font-bold text-foreground mb-1.5">{faq.question}</dt>
+                  <dd className="text-[13.5px] leading-relaxed text-muted-foreground">{faq.answer}</dd>
+                </div>
+              ))}
+            </dl>
+          </section>
+
+          {guides.length > 0 && (
+            <section>
+              <h2 className="font-heading text-[19px] font-extrabold tracking-[-.02em] text-foreground mb-5">
+                Guides on this topic
+              </h2>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                {guides.map(post => (
+                  <AppLink
+                    key={post.slug}
+                    href={`/blog/${post.slug}`}
+                    onNavigate={() => onOpenBlog(post.slug)}
+                    className="rounded-xl border border-border bg-card px-4 py-3 hover:border-primary/50 transition-colors"
+                  >
+                    <span className="block text-[13px] font-bold text-foreground">{post.title}</span>
+                    <span className="block text-[12px] text-muted-foreground leading-relaxed mt-1">
+                      {post.excerpt}
+                    </span>
+                  </AppLink>
+                ))}
+              </div>
+            </section>
+          )}
         </div>
       )}
     </div>
@@ -1146,6 +1241,25 @@ const ToolView: React.FC<{
                     ))}
                   </ul>
                 </div>
+              )}
+
+              {/* The long-form section, for the tools whose interface is small
+                  enough that the page would otherwise be mostly chrome. Always
+                  expanded: it is the part of the page worth reading, and
+                  collapsing it would hide it from both readers and crawlers. */}
+              {!activeTool.isComingSoon && seo?.deepDive && (
+                <section className="rounded-2xl border bg-card border-border p-6 sm:p-7">
+                  <h2 className="font-heading text-[17px] sm:text-[18.5px] font-extrabold tracking-[-0.01em] text-foreground mb-4">
+                    {seo.deepDive.heading}
+                  </h2>
+                  <div className="space-y-4">
+                    {seo.deepDive.paragraphs.map((para, i) => (
+                      <p key={i} className="text-[13.5px] leading-relaxed text-muted-foreground">
+                        {para}
+                      </p>
+                    ))}
+                  </div>
+                </section>
               )}
 
               {/* Privacy note */}

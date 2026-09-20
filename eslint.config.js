@@ -11,7 +11,7 @@ export default tseslint.config(
     // page.waitForFunction() callback, which actually runs in-browser.
     files: ['scripts/**/*.mjs'],
     languageOptions: {
-      globals: { console: 'readonly', process: 'readonly', document: 'readonly' },
+      globals: { console: 'readonly', process: 'readonly', document: 'readonly', URL: 'readonly' },
     },
   },
   {
