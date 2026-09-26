@@ -5,10 +5,12 @@ import { renderMarkdown } from '../utils/markdown';
 import { TOOLS } from '../config/tools';
 import { ALL_CATEGORIES } from '../config/categories';
 import { AppLink } from '../components/AppLink';
-import { blogTopicPath } from '../utils/seo';
+import { blogTopicPath } from '../utils/routes';
 
 interface BlogPostViewProps {
   post: BlogPost;
+  /** The Markdown body, when it was already loaded at build time. */
+  initialBody?: string;
   onBackToBlog: () => void;
   onOpenPost: (slug: string) => void;
   onSelectTool: (id: string) => void;
@@ -57,17 +59,18 @@ function useReadingProgress(): number {
   return progress;
 }
 
-export const BlogPostView: React.FC<BlogPostViewProps> = ({ post, onBackToBlog, onOpenPost, onSelectTool, onSelectTopic }) => {
+export const BlogPostView: React.FC<BlogPostViewProps> = ({ post, initialBody, onBackToBlog, onOpenPost, onSelectTool, onSelectTopic }) => {
   // The body is fetched per topic rather than bundled with the post metadata, so
   // it arrives a tick after the header does. Everything above the article text —
   // title, byline, takeaways — renders immediately from metadata.
-  const [body, setBody] = useState<string | null>(null);
+  const [body, setBody] = useState<string | null>(initialBody ?? null);
   useEffect(() => {
+    if (initialBody !== undefined) return;
     let cancelled = false;
     setBody(null);
     loadPostBody(post).then(text => { if (!cancelled) setBody(text); });
     return () => { cancelled = true; };
-  }, [post]);
+  }, [post, initialBody]);
 
   const { html, headings } = useMemo(() => renderMarkdown(body ?? ''), [body]);
   const related = useMemo(() => relatedPosts(post), [post]);

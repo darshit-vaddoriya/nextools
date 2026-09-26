@@ -1,1 +1,3 @@
-/*    /index.html   200
+# Every published URL is a prerendered file in dist/. Anything else falls
+# through to dist/404.html with a real 404 status (no SPA catch-all, which
+# answered unknown paths with the homepage at HTTP 200: a soft 404).

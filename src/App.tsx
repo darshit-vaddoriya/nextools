@@ -1,25 +1,19 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Header }          from './components/Header';
 import { CommandPalette }  from './components/CommandPalette';
 import { AdBanner }        from './components/AdBanner';
 import { Footer }          from './components/Footer';
 import { Hero }            from './components/home/Hero';
 import { ToolGrid }        from './components/home/ToolGrid';
-import { getPost, postsForTool, postsForToolCategory, readingMinutes, BlogCategory } from './config/blog';
-import { StaticPageId }    from './config/pages';
+import { readingMinutes, BlogCategory, BlogPost } from './config/blog/types';
+import { StaticPageId, getStaticPage } from './config/pages';
 import { ToolCategory }    from './types';
 import { TOOLS }           from './config/tools';
 import { CONVERTER_TOOLS } from './config/converters';
-import { PLANNED_FEATURES } from './config/toolFeatures';
-import { TOOL_EXPLANATIONS } from './config/toolExplanations';
-import { TOOL_SEO_CONTENT } from './config/seoContent';
+import type { ToolSeoContent } from './config/seoContent/types';
+import type { CategoryContent } from './config/categoryContent';
 import { HOME_FAQ }        from './config/faq';
-import {
-  updateHomeMeta, updateToolMeta, updateCategoryMeta, updatePageMeta,
-  updateBlogIndexMeta, updateBlogPostMeta, updateBlogTopicMeta,
-  updateAllToolsMeta, updateNotFoundMeta, parseRoute, buildPath, blogTopicPath,
-} from './utils/seo';
-import { trackPageView } from './utils/analytics';
+import { buildPath, blogTopicPath } from './utils/routes';
 import {
   FileText, Globe,
   ChevronRight, ArrowLeft, Star, Plus, Minus,
@@ -28,7 +22,6 @@ import {
   CheckCircle2, Lightbulb, BookOpen,
 } from 'lucide-react';
 import { ALL_CATEGORIES } from './config/categories';
-import { getCategoryContent } from './config/categoryContent';
 import { DevRunPill } from './components/DevToolChrome';
 import { resolveToolIcon } from './utils/toolIcons';
 
@@ -52,7 +45,7 @@ const WIDE_TOOL_IDS = new Set([
 // entry chunk, so a static import would ship that tool's code — and its library
 // dependencies — to the homepage, every blog post and every legal page too.
 import { ToolPlaceholder }        from './tools/ToolPlaceholder';
-const NotFound = React.lazy(() => import('./pages/NotFound').then(m => ({ default: m.NotFound })));
+const NotFoundLazy = React.lazy(() => import('./pages/NotFound').then(m => ({ default: m.NotFound })));
 import { ToolCard }               from './components/ToolCard';
 import { ConverterDirectory }     from './components/ConverterDirectory';
 import { AppLink }                from './components/AppLink';
@@ -69,17 +62,64 @@ import { AppTopBar }              from './components/app/AppTopBar';
 import { AppHome }                from './components/app/AppHome';
 import { NavDrawer }              from './components/NavDrawer';
 import { useAppMode }             from './lib/pwa';
-import { getStaticPage }          from './config/pages';
+
+/** Which view a URL shows. Resolved at build time (see src/astro/routes.ts). */
+export type AppView = 'home'|'tool'|'category'|'page'|'all'|'blog'|'files'|'settings'|'notfound';
+export interface AppRoute {
+  view: AppView;
+  toolId?: string;
+  category?: ToolCategory;
+  pageId?: StaticPageId;
+  blogSlug?: string;
+  blogTopic?: BlogCategory;
+}
+
+/**
+ * Route-specific content computed at build time and handed to the island as
+ * props. These configs (tool SEO copy, category guides, blog bodies) total over
+ * a megabyte; importing them here would ship all of it to every page, when each
+ * page renders exactly one entry.
+ */
+export interface PageData {
+  toolSeo?: ToolSeoContent;
+  toolExplanation?: string;
+  toolGuides?: BlogPost[];
+  plannedFeatures?: string[];
+  categoryContent?: CategoryContent;
+  categoryGuides?: BlogPost[];
+  post?: BlogPost;
+  postBody?: string;
+}
+
+/** Navigation is a real page load: every URL is its own prerendered page. */
+const go = (path: string) => { window.location.assign(path); };
+
+/** True only after hydration, so server HTML and the first client render match. */
+function useMounted() {
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
+  return mounted;
+}
 
 // ─── Lazy-loaded heavy tools (tesseract.js / qrcode) ─────────
 const HeavyToolFallback = () => <ToolViewSkeleton />;
+
+/**
+ * At build time some tool modules cannot even be imported (pdf.js needs
+ * DOMMatrix, for one). Those prerender as the skeleton instead of failing the
+ * build; in the browser the import is untouched.
+ */
+const ssrSafe = <T extends Record<string, unknown>>(loader: () => Promise<T>) =>
+  typeof window === 'undefined'
+    ? () => loader().catch((e) => { if (process.env.DEBUG_TOOL_SSR) console.warn('ssrSafe', e); return {} as T; })
+    : loader;
 
 const lazyComponent = (
   loader: () => Promise<Record<string, unknown>>,
   exportName: string,
 ): React.FC => {
   const Cmp = React.lazy(() =>
-    loader().then(m => ({ default: m[exportName] as React.ComponentType })),
+    ssrSafe(loader)().then(m => ({ default: (m[exportName] ?? HeavyToolFallback) as React.ComponentType })),
   );
   return () => (
     <React.Suspense fallback={<HeavyToolFallback />}>
@@ -99,12 +139,28 @@ const PdfMergeToolLazy = lazyTool('PdfMergeTool');
 // Only the home view is reachable without a navigation, so every other view is
 // its own chunk. BlogPostView in particular pulls in the Markdown renderer, which
 // has no business being on the homepage's critical path.
-const AllToolsView   = React.lazy(() => import('./components/AllToolsView').then(m => ({ default: m.AllToolsView })));
-const MyFiles        = React.lazy(() => import('./pages/MyFiles').then(m => ({ default: m.MyFiles })));
-const Settings       = React.lazy(() => import('./pages/Settings').then(m => ({ default: m.Settings })));
-const StaticPageView = React.lazy(() => import('./pages/StaticPageView').then(m => ({ default: m.StaticPageView })));
-const Blog           = React.lazy(() => import('./pages/Blog').then(m => ({ default: m.Blog })));
-const BlogPostView   = React.lazy(() => import('./pages/BlogPostView').then(m => ({ default: m.BlogPostView })));
+const LAZY_VIEWS = {
+  NotFound:       NotFoundLazy,
+  AllToolsView:   React.lazy(() => import('./components/AllToolsView').then(m => ({ default: m.AllToolsView }))),
+  MyFiles:        React.lazy(() => import('./pages/MyFiles').then(m => ({ default: m.MyFiles }))),
+  Settings:       React.lazy(() => import('./pages/Settings').then(m => ({ default: m.Settings }))),
+  StaticPageView: React.lazy(() => import('./pages/StaticPageView').then(m => ({ default: m.StaticPageView }))),
+  Blog:           React.lazy(() => import('./pages/Blog').then(m => ({ default: m.Blog }))),
+  BlogPostView:   React.lazy(() => import('./pages/BlogPostView').then(m => ({ default: m.BlogPostView }))),
+};
+type ViewName = keyof typeof LAZY_VIEWS;
+
+/**
+ * Views an island entry has already imported (see src/islands/). A page's own
+ * view must not be lazy while hydrating: React would hold a suspended boundary
+ * over the prerendered HTML and throw it away on the first state update. Each
+ * entry registers the one view its pages render; the rest stay code-split.
+ */
+const eagerViews: Partial<Record<ViewName, React.ComponentType<never>>> = {};
+export function registerView<K extends ViewName>(name: K, component: React.ComponentType<React.ComponentProps<(typeof LAZY_VIEWS)[K]>>) {
+  eagerViews[name] = component as React.ComponentType<never>;
+}
+const view = <K extends ViewName>(name: K) => (eagerViews[name] ?? LAZY_VIEWS[name]) as (typeof LAZY_VIEWS)[K];
 
 // ─── Code-split single-tool modules ──────────────────────────
 // One chunk per module, fetched only when that tool's route is opened.
@@ -130,7 +186,8 @@ const PdfMergeFlow           = lazyComponent(() => import('./tools/pdf/PdfMergeF
 // component usable from IMPLEMENTED_TOOLS, where everything is rendered bare.
 type ImageEditorProps = { onExit?: () => void };
 const ImageEditorLazy = React.lazy(() =>
-  import('./tools/image/ImageEditorTool').then(m => ({ default: m.ImageEditorTool })),
+  ssrSafe(() => import('./tools/image/ImageEditorTool') as Promise<Record<string, unknown>>)()
+    .then(m => ({ default: (m.ImageEditorTool ?? HeavyToolFallback) as React.ComponentType<ImageEditorProps> })),
 );
 const ImageEditorTool: React.FC<ImageEditorProps> = props => (
   <React.Suspense fallback={<HeavyToolFallback />}>
@@ -246,7 +303,8 @@ const lazyExtraColorTools = <K extends
 // Every converter page is the same component reading its own spec from
 // CONVERTER_TOOLS, so one chunk serves all of them.
 const UniversalConverterLazy = React.lazy(() =>
-  import('./tools/convert/UniversalConverter').then(m => ({ default: m.UniversalConverter })),
+  ssrSafe(() => import('./tools/convert/UniversalConverter') as Promise<Record<string, unknown>>)()
+    .then(m => ({ default: (m.UniversalConverter ?? HeavyToolFallback) as React.ComponentType<{ toolId: string }> })),
 );
 const lazyConverter = (toolId: string): React.FC => () => (
   <React.Suspense fallback={<HeavyToolFallback />}>
@@ -467,216 +525,126 @@ const getPlaceholderMeta = (category: ToolCategory) => {
   return map[category] ?? { features: ['Works directly on your device', 'No account or uploads needed', 'Quick to use and always free'], from: 'from-indigo-500', to: 'to-purple-600' };
 };
 
-// ─── App Shell ───────────────────────────────────────────────
-export const App: React.FC = () => {
-  const initRoute = parseRoute(window.location.pathname);
+/** One tool's own interface, without the page around it. */
+export const ToolBody: React.FC<{ toolId: string; plannedFeatures?: string[]; onExit?: () => void }> = ({ toolId, plannedFeatures, onExit }) => {
+  if (toolId === 'image-editor') return <ImageEditorTool onExit={onExit} />;
 
-  const [activeToolId,        setActiveToolId]        = useState(initRoute.toolId ?? '');
-  const [isSearchOpen,        setIsSearchOpen]        = useState(false);
-  const [currentView,         setCurrentView]         = useState<'home'|'tool'|'category'|'page'|'all'|'blog'|'files'|'settings'|'notfound'>(initRoute.view);
-  const [activeCategoryView,  setActiveCategoryView]  = useState<ToolCategory|null>(initRoute.category ?? null);
-  const [activePageId,        setActivePageId]        = useState<StaticPageId>(initRoute.pageId ?? 'privacy');
-  const [activeBlogSlug,      setActiveBlogSlug]      = useState(initRoute.blogSlug ?? '');
-  const [activeBlogTopic,     setActiveBlogTopic]     = useState<BlogCategory | null>(initRoute.blogTopic ?? null);
+  const Implemented = IMPLEMENTED_TOOLS[toolId];
+  if (Implemented) return <Implemented />;
+
+  const tool = TOOLS.find(t => t.id === toolId);
+  if (tool) {
+    const meta = getPlaceholderMeta(tool.category);
+    const features = plannedFeatures ?? meta.features;
+    const catConf = ALL_CATEGORIES.find(c => c.id === tool.category);
+    return (
+      <ToolPlaceholder
+        toolName={tool.name}
+        toolDescription={tool.description}
+        category={catConf?.name ?? tool.category}
+        features={features}
+        gradientFrom={meta.from}
+        gradientTo={meta.to}
+      />
+    );
+  }
+  return <PdfMergeToolLazy />;
+};
+
+// ─── App Shell ───────────────────────────────────────────────
+export const App: React.FC<{
+  path: string;
+  route: AppRoute;
+  data?: PageData;
+  /** The tool's prerendered markup, passed in as an Astro slot (static HTML). */
+  children?: React.ReactNode;
+}> = ({ path, route, data = {}, children: prerenderedTool }) => {
+  const currentView = route.view;
+  const activeToolId = route.toolId ?? '';
+  const activeCategoryView = route.category ?? null;
+  const activePageId: StaticPageId = route.pageId ?? 'privacy';
+  const activeBlogSlug = route.blogSlug ?? '';
+  const activeBlogTopic = route.blogTopic ?? null;
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const mounted = useMounted();
 
   const { preference: theme, resolvedDark, setTheme } = useTheme();
 
-  const syncMeta = useCallback(() => {
-    if (currentView === 'notfound') updateNotFoundMeta();
-    else if (currentView === 'page') updatePageMeta(activePageId);
-    else if (currentView === 'blog') {
-      if (activeBlogSlug) updateBlogPostMeta(activeBlogSlug);
-      else if (activeBlogTopic) updateBlogTopicMeta(activeBlogTopic);
-      else updateBlogIndexMeta();
-    }
-    else if (currentView === 'all') updateAllToolsMeta();
-    else if (currentView === 'tool' && activeToolId) updateToolMeta(activeToolId);
-    else if (currentView === 'category' && activeCategoryView) updateCategoryMeta(activeCategoryView);
-    else updateHomeMeta();
-  }, [currentView, activeToolId, activeCategoryView, activePageId, activeBlogSlug, activeBlogTopic]);
-
-  useEffect(() => { syncMeta(); }, [syncMeta]);
-
-  const isFirstRender = React.useRef(true);
-  useEffect(() => {
-    if (isFirstRender.current) {
-      isFirstRender.current = false;
-      return;
-    }
-    trackPageView(window.location.pathname, document.title);
-  }, [currentView, activeToolId, activeCategoryView, activePageId, activeBlogSlug, activeBlogTopic]);
-
-  useEffect(() => {
-    const onPopState = () => {
-      navDepth.current = Math.max(0, navDepth.current - 1);
-      const route = parseRoute(window.location.pathname);
-      setCurrentView(route.view);
-      setActiveToolId(route.toolId ?? '');
-      setActiveCategoryView(route.category ?? null);
-      if (route.pageId) setActivePageId(route.pageId);
-      setActiveBlogSlug(route.blogSlug ?? '');
-      setActiveBlogTopic(route.blogTopic ?? null);
-    };
-    window.addEventListener('popstate', onPopState);
-    return () => window.removeEventListener('popstate', onPopState);
-  }, []);
-
-  // In-app navigations since launch, so the app bar's back arrow can use real
-  // history when there is some, and fall back to Home on a cold start (an
-  // installed app opened straight onto a tool has nothing to go back to).
-  const navDepth = React.useRef(0);
-  const navigate = (view: typeof currentView, id?: string) => {
-    const path = buildPath(view, id);
-    window.history.pushState(null, '', path);
-    navDepth.current += 1;
-  };
-
   const activeTool = TOOLS.find(t => t.id === activeToolId);
 
-  const goHome = () => {
-    setCurrentView('home');
-    setActiveToolId('');
-    setActiveCategoryView(null);
-    navigate('home');
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
-
-  const openAllTools = () => {
-    setCurrentView('all');
-    setActiveToolId('');
-    setActiveCategoryView(null);
-    navigate('all');
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
+  const goHome = () => go('/');
+  const openAllTools = () => go(buildPath('all'));
 
   const openTool = (id: string) => {
-    setActiveToolId(id);
-    setCurrentView('tool');
-    navigate('tool', id);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
     try {
       const recent = JSON.parse(localStorage.getItem('nexttool-recent') || '[]');
       const filtered = recent.filter((r: string) => r !== id);
       filtered.unshift(id);
       localStorage.setItem('nexttool-recent', JSON.stringify(filtered.slice(0, 6)));
     } catch { /* ignore */ }
+    go(buildPath('tool', id));
   };
 
-  const openHistory = () => {
-    setCurrentView('files');
-    setActiveToolId('');
-    setActiveCategoryView(null);
-    navigate('files');
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
+  // A direct visit counts as "recently used" too, not only in-app clicks.
+  useEffect(() => {
+    if (currentView !== 'tool' || !activeToolId) return;
+    try {
+      const recent = JSON.parse(localStorage.getItem('nexttool-recent') || '[]').filter((r: string) => r !== activeToolId);
+      recent.unshift(activeToolId);
+      localStorage.setItem('nexttool-recent', JSON.stringify(recent.slice(0, 6)));
+    } catch { /* ignore */ }
+  }, [currentView, activeToolId]);
 
-  const openSettings = () => {
-    setCurrentView('settings');
-    setActiveToolId('');
-    setActiveCategoryView(null);
-    navigate('settings');
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
-
+  const openHistory = () => go(buildPath('files'));
+  const openSettings = () => go(buildPath('settings'));
   const openCategory = (cat: ToolCategory | 'all') => {
     if (cat === 'all') { openAllTools(); return; }
-    setActiveCategoryView(cat as ToolCategory);
-    setCurrentView('category');
-    navigate('category', cat);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    go(buildPath('category', cat));
   };
-
-  const openBlog = (slug?: string) => {
-    setActiveBlogSlug(slug ?? '');
-    setActiveBlogTopic(null);
-    setCurrentView('blog');
-    setActiveToolId('');
-    setActiveCategoryView(null);
-    navigate('blog', slug);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
-
+  const openBlog = (slug?: string) => go(buildPath('blog', slug));
   // `null` is the "Everything" tab, which is the blog index itself rather than
   // a seventh hub, so it navigates to /blog and not /blog/topic/all.
   const openBlogTopic = (topic: BlogCategory | null) => {
     if (!topic) { openBlog(); return; }
-    setActiveBlogSlug('');
-    setActiveBlogTopic(topic);
-    setCurrentView('blog');
-    setActiveToolId('');
-    setActiveCategoryView(null);
-    window.history.pushState(null, '', blogTopicPath(topic));
-    navDepth.current += 1;
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    go(blogTopicPath(topic));
   };
+  const openPage = (id: StaticPageId) => go(buildPath('page', id));
 
-  const openPage = (id: StaticPageId) => {
-    setActivePageId(id);
-    setCurrentView('page');
-    setActiveToolId('');
-    setActiveCategoryView(null);
-    setActiveBlogSlug('');
-    setActiveBlogTopic(null);
-    navigate('page', id);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+  const scrollToHomeSection = (id: string) => {
+    if (currentView !== 'home') { go(`/#${id}`); return; }
+    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   };
-
-  const scrollToCategories = () => {
-    if (currentView !== 'home') {
-      setCurrentView('home');
-      setActiveToolId('');
-      setActiveCategoryView(null);
-      navigate('home');
-      setTimeout(() => {
-        document.getElementById('categories-section')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }, 60);
-    } else {
-      document.getElementById('categories-section')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
-  };
-
-  const scrollToFaq = () => {
-    if (currentView !== 'home') {
-      setCurrentView('home');
-      setActiveToolId('');
-      setActiveCategoryView(null);
-      navigate('home');
-      setTimeout(() => {
-        document.getElementById('faq-heading')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }, 60);
-    } else {
-      document.getElementById('faq-heading')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
-  };
+  const scrollToCategories = () => scrollToHomeSection('categories-section');
+  const scrollToFaq = () => scrollToHomeSection('faq-heading');
 
   const renderTool = () => {
-    if (activeToolId === 'image-editor') return <ImageEditorTool onExit={goHome} />;
-
-    const Implemented = IMPLEMENTED_TOOLS[activeToolId];
-    if (Implemented) return <Implemented />;
-
-    if (activeTool) {
-      const meta = getPlaceholderMeta(activeTool.category);
-      const features = PLANNED_FEATURES[activeTool.id] ?? meta.features;
-      const catConf = ALL_CATEGORIES.find(c => c.id === activeTool.category);
-      return (
-        <ToolPlaceholder
-          toolName={activeTool.name}
-          toolDescription={activeTool.description}
-          category={catConf?.name ?? activeTool.category}
-          features={features}
-          gradientFrom={meta.from}
-          gradientTo={meta.to}
-        />
-      );
+    // The tool UI is prerendered into the HTML at build time (its labels and
+    // reference text are part of what crawlers read; see toolHtmlFor in
+    // src/astro/build.ts) but is not hydrated: tools are code-split and touch
+    // browser-only APIs. Until mount the client leaves that markup untouched,
+    // then swaps in the live tool.
+    if (!mounted) {
+      return prerenderedTool ?? <ToolViewSkeleton />;
     }
-    return <PdfMergeToolLazy />;
+    return <ToolBody toolId={activeToolId} plannedFeatures={data.plannedFeatures} onExit={goHome} />;
   };
+
+  const NotFound = view('NotFound');
+  const AllToolsView = view('AllToolsView');
+  const MyFiles = view('MyFiles');
+  const Settings = view('Settings');
+  const StaticPageView = view('StaticPageView');
+  const Blog = view('Blog');
+  const BlogPostView = view('BlogPostView');
 
   const appMode = useAppMode();
   const [appMenuOpen, setAppMenuOpen] = useState(false);
   const appBack = () => {
-    if (navDepth.current > 0) window.history.back();
+    // Back to the previous page of this site when there is one; a cold start
+    // (installed app opened straight onto a tool) goes home instead.
+    let internal = false;
+    try { internal = !!document.referrer && new URL(document.referrer).origin === window.location.origin; } catch { /* ignore */ }
+    if (internal && window.history.length > 1) window.history.back();
     else goHome();
   };
   // Tab roots show the brand; everything else gets a back arrow and a title.
@@ -750,11 +718,11 @@ export const App: React.FC = () => {
       />
 
       <main className="flex-1">
-        <RouteErrorBoundary key={`${currentView}:${activeToolId}:${activeBlogSlug}:${activePageId}:${activeCategoryView ?? ''}`} onGoHome={goHome}>
+        <RouteErrorBoundary onGoHome={goHome}>
         <React.Suspense fallback={<ToolViewSkeleton />}>
         {currentView === 'notfound'
           ? <NotFound
-              path={window.location.pathname}
+              path={mounted ? window.location.pathname : path}
               onGoHome={goHome}
               onOpenAllTools={openAllTools}
               onOpenBlog={() => openBlog()}
@@ -768,16 +736,16 @@ export const App: React.FC = () => {
             </div>
           : currentView === 'blog'
           ? (() => {
-              const post = activeBlogSlug ? getPost(activeBlogSlug) : undefined;
+              const post = activeBlogSlug ? data.post : undefined;
               return post
-                ? <BlogPostView post={post} onBackToBlog={() => openBlog()} onOpenPost={openBlog} onSelectTool={openTool} onSelectTopic={openBlogTopic} />
+                ? <BlogPostView post={post} initialBody={data.postBody} onBackToBlog={() => openBlog()} onOpenPost={openBlog} onSelectTool={openTool} onSelectTopic={openBlogTopic} />
                 : <Blog onBack={goHome} onOpenPost={openBlog} topic={activeBlogTopic} onSelectTopic={openBlogTopic} />;
             })()
           : currentView === 'tool'
-          ? <ToolView appMode={appMode} activeTool={activeTool} onBack={goHome} renderTool={renderTool} categories={ALL_CATEGORIES} onOpenHistory={openHistory}
+          ? <ToolView data={data} appMode={appMode} activeTool={activeTool} onBack={goHome} renderTool={renderTool} categories={ALL_CATEGORIES} onOpenHistory={openHistory}
               onOpenPage={openPage} onOpenBlog={openBlog} onSelectTool={openTool} onSelectCategory={openCategory} onGoHome={goHome} onOpenFaq={scrollToFaq} onOpenCategories={scrollToCategories} />
           : currentView === 'category' && activeCategoryView
-          ? <CategoryView cat={activeCategoryView} onSelectTool={openTool} onBack={goHome} categories={ALL_CATEGORIES} onOpenBlog={openBlog} />
+          ? <CategoryView cat={activeCategoryView} content={data.categoryContent} guides={data.categoryGuides ?? []} onSelectTool={openTool} onBack={goHome} categories={ALL_CATEGORIES} onOpenBlog={openBlog} />
           : currentView === 'all'
           ? <AllToolsView onSelectTool={openTool} onBack={goHome} categories={ALL_CATEGORIES} />
           : currentView === 'files'
@@ -1108,16 +1076,16 @@ const HomeView: React.FC<{
 // ─── CATEGORY VIEW ───────────────────────────────────────────
 const CategoryView: React.FC<{
   cat: ToolCategory;
+  content?: CategoryContent;
+  guides: BlogPost[];
   onSelectTool: (id: string) => void;
   onBack: () => void;
   categories: typeof ALL_CATEGORIES;
   onOpenBlog: (slug?: string) => void;
-}> = ({ cat, onSelectTool, onBack, categories, onOpenBlog }) => {
+}> = ({ cat, content, guides, onSelectTool, onBack, categories, onOpenBlog }) => {
   const conf  = categories.find(c => c.id === cat);
   const tools = TOOLS.filter(t => t.category === cat);
   const Icon  = conf?.icon ?? FileText;
-  const content = getCategoryContent(cat);
-  const guides = postsForToolCategory(tools.map(t => t.id), 4);
 
   return (
     <div className="max-w-[1560px] mx-auto px-4 sm:px-6 pt-4 pb-8 sm:py-8 fade-in">
@@ -1235,6 +1203,7 @@ const CategoryView: React.FC<{
 
 // ─── TOOL VIEW ───────────────────────────────────────────────
 const ToolView: React.FC<{
+  data: PageData;
   /** Installed-app layout: the app bar carries the title, back and favourite,
       and the long-form website sections are left out. */
   appMode?: boolean;
@@ -1250,7 +1219,7 @@ const ToolView: React.FC<{
   onGoHome: () => void;
   onOpenFaq: () => void;
   onOpenCategories: () => void;
-}> = ({ appMode = false, activeTool, onBack, renderTool: renderToolBare, categories, onOpenHistory, onOpenPage, onOpenBlog, onSelectTool, onSelectCategory, onGoHome, onOpenFaq, onOpenCategories }) => {
+}> = ({ data, appMode = false, activeTool, onBack, renderTool: renderToolBare, categories, onOpenHistory, onOpenPage, onOpenBlog, onSelectTool, onSelectCategory, onGoHome, onOpenFaq, onOpenCategories }) => {
   const conf = categories.find(c => c.id === activeTool?.category);
   const CategoryIcon = conf?.icon ?? FileText;
   const Icon = activeTool ? resolveToolIcon(activeTool.icon, CategoryIcon) : CategoryIcon;
@@ -1260,7 +1229,7 @@ const ToolView: React.FC<{
   // Guides already point at tools through `relatedTools`; this is the return
   // leg, so the two halves of the site link to each other instead of the blog
   // being a one-way funnel that nothing links back into.
-  const guides = activeTool ? postsForTool(activeTool.id) : [];
+  const guides = data.toolGuides ?? [];
   const [learnMoreOpen, setLearnMoreOpen] = useState(true);
 
   // Every tool is wrapped so its edits land in the local history.
@@ -1270,7 +1239,7 @@ const ToolView: React.FC<{
 
   if (activeTool?.id === 'image-editor') return <>{renderTool()}</>;
 
-  const seo = activeTool ? TOOL_SEO_CONTENT[activeTool.id] : undefined;
+  const seo = data.toolSeo;
   const stacked = !!activeTool && WIDE_TOOL_IDS.has(activeTool.id);
   const sidebarCardCls = `rounded-2xl border bg-card border-border p-5 shadow-card${stacked ? ' flex-1 min-w-[240px]' : ''}`;
 
@@ -1321,7 +1290,7 @@ const ToolView: React.FC<{
                   <h1 className="font-heading font-extrabold text-[22px] sm:text-[27px] leading-tight tracking-[-0.02em] text-foreground">
                     {activeTool.name}
                   </h1>
-                  {!activeTool.isComingSoon && TOOL_EXPLANATIONS[activeTool.id] && (
+                  {!activeTool.isComingSoon && data.toolExplanation && (
                     // Static below sm, so the popover anchors to the whole header row
                     // and spans the screen instead of running off its right edge.
                     <span className="sm:relative inline-flex group/info">
@@ -1337,7 +1306,7 @@ const ToolView: React.FC<{
                         <div className="rounded-xl border border-border bg-card shadow-float p-3.5">
                           <p className="text-[11px] font-bold text-foreground mb-1.5">How to use</p>
                           <p className="text-[12px] text-muted-foreground leading-relaxed">
-                            {TOOL_EXPLANATIONS[activeTool.id]}
+                            {data.toolExplanation}
                           </p>
                         </div>
                       </div>

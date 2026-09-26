@@ -94,7 +94,7 @@ function keywordList(words: string[]): string {
 /**
  * Tool routes kept out of the index. The full-screen image editor renders a
  * canvas and nothing else, so its page has no readable content — the same list
- * is applied to the sitemap in vite.config.ts.
+ * is applied to the sitemap in astro.config.ts.
  */
 const NOINDEX_TOOL_IDS = new Set(['image-editor']);
 
@@ -609,15 +609,4 @@ export function parseRoute(pathname: string): {
   return { view: 'notfound' };
 }
 
-export const blogTopicPath = (category: BlogCategory): string => `/blog/topic/${category}`;
-
-export function buildPath(view: string, id?: string): string {
-  if (view === 'files') return '/my-files';
-  if (view === 'settings') return '/settings';
-  if (view === 'page' && id) return getStaticPage(id)?.path ?? '/';
-  if (view === 'blog') return id ? `/blog/${id}` : '/blog';
-  if (view === 'all') return '/all-tools';
-  if (view === 'tool' && id) return `/tool/${id}`;
-  if (view === 'category' && id) return `/category/${id}`;
-  return '/';
-}
+export { blogTopicPath, buildPath } from './routes';

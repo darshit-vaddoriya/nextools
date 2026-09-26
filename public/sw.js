@@ -1,6 +1,6 @@
 /* NextTool service worker.
  *
- * The build (pwaPlugin in vite.config.ts) rewrites the two placeholders below
+ * The build (stampServiceWorker in astro.config.ts) rewrites the two placeholders below
  * with the build id and the app-shell file list. In dev this file is served
  * as-is but never registered (see src/lib/pwa.ts).
  *
@@ -95,6 +95,9 @@ async function doCacheAll() {
         let res = await caches.match(f.url, MATCH);
         if (!res) res = await fetch(f.url);
         if (!res.ok) throw new Error(String(res.status));
+        // Pages can arrive through Netlify's /path -> /path/ redirect, and a
+        // redirected response cannot answer a navigation, so store a plain copy.
+        if (res.redirected) res = new Response(await res.blob(), { status: res.status, statusText: res.statusText, headers: res.headers });
         await cache.put(f.url, res);
       } catch {
         failed++;
@@ -137,8 +140,8 @@ async function handleNavigation(event, url) {
     }
     return response;
   } catch {
-    // Offline or too slow. Any cached HTML works as the shell: the app reads
-    // the route from location.pathname and renders the right view itself.
+    // Offline or too slow. Serve this page if it was cached (visited, or saved
+    // by "Download for offline"); otherwise the home page is better than nothing.
     return (await caches.match(key, MATCH))
       || (await caches.match('/', { cacheName: SHELL_CACHE, ...MATCH }))
       || (await caches.match('/', MATCH))

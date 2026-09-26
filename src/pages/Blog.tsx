@@ -3,7 +3,7 @@ import { ArrowLeft, ArrowUpRight, LayoutGrid, Search, X } from 'lucide-react';
 import { BLOG_POSTS, BLOG_CATEGORIES, BLOG_CATEGORY_META, BlogCategory, BlogPost, readingMinutes, formatPostDate } from '../config/blog';
 import { TOOLS } from '../config/tools';
 import { AppLink } from '../components/AppLink';
-import { blogTopicPath } from '../utils/seo';
+import { blogTopicPath } from '../utils/routes';
 
 interface BlogProps {
   onBack: () => void;

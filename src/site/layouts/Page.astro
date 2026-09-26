@@ -1,0 +1,59 @@
+---
+// One layout for every URL. The <head> is generated at build time by the
+// same meta writers the SPA ran in the browser (see src/astro/build.ts), and
+// <body> is the React app server-rendered for this route, hydrated as an island.
+import '@fontsource-variable/inter';
+import '@fontsource-variable/jetbrains-mono';
+import '../../index.css';
+import HomeIsland from '../../islands/Home';
+import NotFoundIsland from '../../islands/NotFound';
+import AllToolsIsland from '../../islands/AllTools';
+import MyFilesIsland from '../../islands/MyFiles';
+import SettingsIsland from '../../islands/Settings';
+import StaticPageIsland from '../../islands/StaticPage';
+import BlogIsland from '../../islands/Blog';
+import BlogPostIsland from '../../islands/BlogPost';
+import { headFor, pageDataFor, toolHtmlFor } from '../../astro/build';
+import type { AppRoute } from '../../App';
+
+interface Props { path: string; route: AppRoute }
+const { path, route } = Astro.props;
+const head = headFor(route);
+const data = await pageDataFor(route);
+
+// Home, tool and category pages render views that ship with the app shell;
+// every other kind of page gets an entry that bundles its own view. Astro
+// needs each hydrated component named literally below, hence the chain.
+const v = route.view;
+const kind =
+  v === 'notfound' || v === 'all' || v === 'files' || v === 'settings' || v === 'page' ? v
+  : v === 'blog' ? (route.blogSlug ? 'post' : 'blog')
+  : 'home';
+const props = { path, route, data };
+// A tool page's interface, prerendered and handed to the island as a slot:
+// static HTML the app shows until the live tool mounts over it.
+const toolHtml = route.view === 'tool' && route.toolId
+  ? await toolHtmlFor(route.toolId, data.plannedFeatures)
+  : undefined;
+---
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <Fragment set:html={head} />
+  </head>
+  <body class="font-sans antialiased">
+    <div id="root">
+      {kind === 'home' && (toolHtml
+        ? <HomeIsland client:load {...props}><Fragment set:html={toolHtml} /></HomeIsland>
+        : <HomeIsland client:load {...props} />)}
+      {kind === 'notfound' && <NotFoundIsland client:load {...props} />}
+      {kind === 'all' && <AllToolsIsland client:load {...props} />}
+      {kind === 'files' && <MyFilesIsland client:load {...props} />}
+      {kind === 'settings' && <SettingsIsland client:load {...props} />}
+      {kind === 'page' && <StaticPageIsland client:load {...props} />}
+      {kind === 'blog' && <BlogIsland client:load {...props} />}
+      {kind === 'post' && <BlogPostIsland client:load {...props} />}
+    </div>
+    <script>import '../../client';</script>
+  </body>
+</html>

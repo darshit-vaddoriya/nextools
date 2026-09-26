@@ -23,8 +23,18 @@ export function applyThemeClass(resolvedDark: boolean) {
 }
 
 export function useTheme() {
-  const [preference, setPreference] = useState<ThemePreference>(getStoredTheme);
-  const [systemDark, setSystemDark] = useState<boolean>(getSystemDark);
+  // Defaults first, real values after mount: the page is prerendered, and the
+  // inline script in <head> has already applied the right theme class, so the
+  // first client render only has to match the static HTML.
+  const [preference, setPreference] = useState<ThemePreference>('light');
+  const [systemDark, setSystemDark] = useState<boolean>(false);
+  const [ready, setReady] = useState(false);
+
+  useEffect(() => {
+    setPreference(getStoredTheme());
+    setSystemDark(getSystemDark());
+    setReady(true);
+  }, []);
 
   useEffect(() => {
     const mq = window.matchMedia('(prefers-color-scheme: dark)');
@@ -37,6 +47,7 @@ export function useTheme() {
     preference === 'dark' || (preference === 'system' && systemDark);
 
   useEffect(() => {
+    if (!ready) return;
     applyThemeClass(resolvedDark);
     try { localStorage.setItem(KEY, preference); } catch { /* ignore */ }
     // Colours the phone status bar / installed-app title bar. Matches --background.
@@ -44,7 +55,7 @@ export function useTheme() {
       meta.removeAttribute('media');
       meta.setAttribute('content', resolvedDark ? '#0b0d12' : '#f7f8fa');
     });
-  }, [resolvedDark, preference]);
+  }, [resolvedDark, preference, ready]);
 
   const setTheme = useCallback((t: ThemePreference) => setPreference(t), []);
 

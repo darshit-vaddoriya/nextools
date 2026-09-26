@@ -12,7 +12,7 @@
  * bytes of every file are identical to the original.
  *
  * The worker and its .wasm are served from /vendor/libarchive/ (see the
- * vendor plugin in vite.config.ts), since the worker locates the .wasm next
+ * vendor files in astro.config.ts), since the worker locates the .wasm next
  * to itself and a bundler would rename one of them.
  */
 import type { ConvFormat } from '../../../config/converters';

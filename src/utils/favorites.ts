@@ -23,10 +23,13 @@ const persist = (ids: string[]) => {
 export const loadFavorites = (): string[] => [...getStore()];
 
 export const useFavorites = () => {
-  const [favorites, setFavorites] = useState<string[]>(getStore());
+  // Starts empty and reads storage after mount, so the prerendered HTML and the
+  // first client render agree (storage does not exist at build time).
+  const [favorites, setFavorites] = useState<string[]>([]);
 
   useEffect(() => {
     const update = () => setFavorites([...getStore()]);
+    update();
     listeners.add(update);
     return () => { listeners.delete(update); };
   }, []);
@@ -37,7 +40,7 @@ export const useFavorites = () => {
     persist(next);
   }, []);
 
-  const isFavorite = useCallback((id: string) => getStore().includes(id), []);
+  const isFavorite = useCallback((id: string) => favorites.includes(id), [favorites]);
 
   return { favorites, toggle, isFavorite };
 };

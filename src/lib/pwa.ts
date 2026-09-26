@@ -3,7 +3,7 @@ import { useEffect, useState, useSyncExternalStore } from 'react';
 /**
  * PWA runtime state, kept outside React so the install prompt and the waiting
  * service worker are captured even if they fire before the first render.
- * `initPwa()` runs once from main.tsx; components read through the hooks below.
+ * `initPwa()` runs once from src/client.ts; components read through the hooks below.
  */
 
 interface BeforeInstallPromptEvent extends Event {
@@ -52,6 +52,8 @@ let state: PwaState = {
   offline: { enabled: false, downloading: false, complete: false, done: 0, total: 0, bytes: 0 },
   appMode: false,
 };
+/** What hydration renders against: the prerendered HTML knows none of the runtime state. */
+const INITIAL_STATE = state;
 
 const APP_PREVIEW_KEY = 'nexttool-app-preview';
 const APP_WIDTH = '(max-width: 1023.98px)';
@@ -259,11 +261,11 @@ export async function checkForUpdate(): Promise<'none' | 'ready' | 'unsupported'
 
 /** True once a service worker controls this page, i.e. it can load offline. */
 export function useOfflineReady(): boolean {
-  const [ready, setReady] = useState(() =>
-    typeof navigator !== 'undefined' && 'serviceWorker' in navigator && !!navigator.serviceWorker.controller);
+  const [ready, setReady] = useState(false);
   useEffect(() => {
     if (!('serviceWorker' in navigator)) return;
     const on = () => setReady(!!navigator.serviceWorker.controller);
+    on();
     navigator.serviceWorker.addEventListener('controllerchange', on);
     navigator.serviceWorker.ready.then(on).catch(() => {});
     return () => navigator.serviceWorker.removeEventListener('controllerchange', on);
@@ -304,11 +306,11 @@ export function useAppMode(): boolean {
 }
 
 export function useOfflineStatus(): OfflineStatus {
-  return useSyncExternalStore(subscribe, () => state.offline, () => state.offline);
+  return useSyncExternalStore(subscribe, () => state.offline, () => INITIAL_STATE.offline);
 }
 
 export function usePwa() {
-  const s = useSyncExternalStore(subscribe, () => state, () => state);
+  const s = useSyncExternalStore(subscribe, () => state, () => INITIAL_STATE);
   const ios = typeof navigator !== 'undefined' && isIOS();
   return {
     ...s,
@@ -322,8 +324,11 @@ export function usePwa() {
 }
 
 export function useOnline(): boolean {
-  const [online, setOnline] = useState(() => (typeof navigator === 'undefined' ? true : navigator.onLine));
+  // Assume online for the prerendered HTML and the first client render (Node
+  // has a `navigator` without onLine), then read the real state after mount.
+  const [online, setOnline] = useState(true);
   useEffect(() => {
+    setOnline(navigator.onLine);
     const on = () => setOnline(true);
     const off = () => setOnline(false);
     window.addEventListener('online', on);

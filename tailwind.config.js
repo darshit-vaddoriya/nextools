@@ -74,8 +74,8 @@ export default {
       // so existing markup keeps working. Mono is for code and numeric
       // readouts only — never for labels.
       fontFamily: {
-        sans: ['Plus Jakarta Sans Variable', 'Plus Jakarta Sans', 'system-ui', '-apple-system', 'Segoe UI', 'Roboto', 'Helvetica Neue', 'Arial', 'sans-serif'],
-        heading: ['Plus Jakarta Sans Variable', 'Plus Jakarta Sans', 'system-ui', '-apple-system', 'Segoe UI', 'Roboto', 'Helvetica Neue', 'Arial', 'sans-serif'],
+        sans: ['Inter Variable', 'Inter', 'system-ui', '-apple-system', 'Segoe UI', 'Roboto', 'Helvetica Neue', 'Arial', 'sans-serif'],
+        heading: ['ui-serif', 'Iowan Old Style', 'Charter', 'Georgia', 'Cambria', 'Times New Roman', 'serif'],
         mono: ['JetBrains Mono Variable', 'JetBrains Mono', 'Menlo', 'Consolas', 'monospace'],
       },
       // Modular scale, base 16px, ratio 1.25 (major third).

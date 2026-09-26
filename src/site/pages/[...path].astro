@@ -1,0 +1,14 @@
+---
+import Page from '../layouts/Page.astro';
+import { allRoutes, routeFor } from '../../astro/build';
+
+export function getStaticPaths() {
+  return allRoutes().map(p => ({
+    params: { path: p === '/' ? undefined : p.slice(1) },
+    props: { path: p, route: routeFor(p) },
+  }));
+}
+
+const { path, route } = Astro.props;
+---
+<Page path={path} route={route} />
