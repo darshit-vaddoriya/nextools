@@ -25,6 +25,7 @@ const STORAGE_ROWS = [
   { key: 'nexttool-activity',        purpose: 'Your tool History: edits (with before / after text), options changed, files added, copies and downloads. Values from password fields and secret-handling tools are never kept.' },
   { key: 'nexttool-history',         purpose: 'Your conversion History: file names, sizes, tool, status and time.' },
   { key: 'secure-notes-v1',          purpose: 'A note you save in the Secure Notes tool, encrypted with your passphrase (AES-GCM) before it is stored.' },
+  { key: 'nexttool-handoff (IndexedDB)', purpose: 'Holds a file you dropped on the homepage or a category page for the few seconds it takes to open the tool you picked, then deletes it. Anything unclaimed expires after five minutes.' },
   { key: 'nexttool-files (IndexedDB)', purpose: 'Copies of the files you added and the results you downloaded, so History can show them again. Only when "Save files in history" is on. Oldest files are removed first.' },
 ];
 
@@ -44,14 +45,15 @@ export const CookiePolicy: React.FC<CookiePolicyProps> = ({ onBack, onOpenPrivac
           and web beacons serve comparable purposes and are covered by this policy.
         </p>
         <p>
-          NextTool sets no cookies of its own. Every cookie on this site comes from Google
-          Analytics or Google AdSense.
+          NextTool sets no cookies of its own. The cookies on this site come from Google Analytics
+          and Google AdSense. On the Contact page only, the Cloudflare Turnstile spam check may
+          also store a short-lived value in your browser while it verifies the form.
         </p>
       </PageSection>
 
       <PageSection title="Cookies set by third parties">
         <div className="overflow-x-auto rounded-xl border border-border">
-          <table className="w-full text-left text-[12.5px] min-w-[560px]">
+          <table className="w-full text-left text-[13.5px] min-w-[560px]">
             <thead className="bg-muted/60">
               <tr className="text-foreground">
                 <th className="px-3 py-2.5 font-semibold">Cookie</th>
@@ -88,7 +90,7 @@ export const CookiePolicy: React.FC<CookiePolicyProps> = ({ onBack, onOpenPrivac
           your browser's site data removes all of them.
         </p>
         <div className="overflow-x-auto rounded-xl border border-border">
-          <table className="w-full text-left text-[12.5px] min-w-[420px]">
+          <table className="w-full text-left text-[13.5px] min-w-[420px]">
             <thead className="bg-muted/60">
               <tr className="text-foreground">
                 <th className="px-3 py-2.5 font-semibold">Key</th>
@@ -113,7 +115,7 @@ export const CookiePolicy: React.FC<CookiePolicyProps> = ({ onBack, onOpenPrivac
             <>Third-party vendors, including Google, use cookies to serve ads based on your prior visits to this or other websites.</>,
             <>Opt out of personalised advertising from Google at{' '}<ExternalLink href="https://www.google.com/settings/ads">Google Ads Settings</ExternalLink>.</>,
             <>Opt out of many other vendors at{' '}<ExternalLink href="https://www.aboutads.info/choices/">aboutads.info/choices</ExternalLink>{' '}or{' '}<ExternalLink href="https://optout.networkadvertising.org/">optout.networkadvertising.org</ExternalLink>.</>,
-            <>Where Google's consent messaging applies — visitors in the EEA, the UK and Switzerland — a consent message is presented by Google before personalised advertising cookies are set, and the choice can be changed from the privacy link that message provides. Outside those regions no consent message is shown, and the opt-out links above are the way to exercise a choice.</>,
+            <>Visitors in the EEA, the UK and Switzerland: analytics and advertising cookies are switched off by default (through Google Consent Mode) and are only set if you agree through a consent message. Where that message is shown, your choice can be changed from the privacy link it provides. Outside those regions no consent message is shown, and the opt-out links above are the way to exercise a choice.</>,
           ]}
         />
       </PageSection>

@@ -46,7 +46,7 @@ export const Disclaimer: React.FC<DisclaimerProps> = ({ onBack }) => (
         </p>
         <PageList
           items={[
-            'Financial calculators (EMI, GST, percentage, currency and similar) produce estimates for illustration only and are not financial, tax or investment advice.',
+            'Financial calculators (EMI, GST, percentage and similar) produce estimates for illustration only and are not financial, tax or investment advice.',
             'Health calculators such as BMI are simplified formulas and are not medical advice or a diagnosis.',
             'Security tools such as password and hash generators are provided as utilities and are not a substitute for a professional security review.',
             'Document tools do not make an output legally valid; signing, redaction and form-filling results should be reviewed by a qualified professional where the stakes require it.',
@@ -61,8 +61,7 @@ export const Disclaimer: React.FC<DisclaimerProps> = ({ onBack }) => (
       <PageSection title="Advertising disclosure">
         <p>
           NextTool is free to use and is funded by advertising served through Google AdSense, and
-          occasionally by voluntary donations. Advertisements are labelled and are placed outside
-          the working area of each tool. We do not choose, endorse or vet individual advertisements
+          by optional support payments that unlock nothing. We do not choose, endorse or vet individual advertisements
           and receive no compensation from advertisers for editorial coverage. Any transaction you
           enter into with an advertiser is entirely between you and that advertiser.
         </p>

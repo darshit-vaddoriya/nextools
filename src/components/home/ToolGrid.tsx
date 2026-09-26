@@ -5,6 +5,7 @@ import { ALL_CATEGORIES } from '../../config/categories';
 import { resolveToolIcon } from '../../utils/toolIcons';
 import { EmptyState } from '../ui/EmptyState';
 import { Button } from '../ui/Button';
+import { AppLink } from '../AppLink';
 import type { Tool, ToolCategory } from '../../types';
 
 interface ToolGridProps {
@@ -32,9 +33,9 @@ const ToolTile: React.FC<{ tool: Tool; onSelect: (id: string) => void }> = ({ to
   const category = ALL_CATEGORIES.find((c) => c.id === tool.category);
 
   return (
-    <button
-      type="button"
-      onClick={() => onSelect(tool.id)}
+    <AppLink
+      href={`/tool/${tool.id}`}
+      onNavigate={() => onSelect(tool.id)}
       className="group flex flex-col items-start gap-3 h-full rounded-[var(--radius-md)] border border-border
                  bg-card p-4 text-left transition-all duration-[var(--motion-fast)]
                  hover:border-primary/50 hover:shadow-raised hover:-translate-y-0.5
@@ -59,7 +60,7 @@ const ToolTile: React.FC<{ tool: Tool; onSelect: (id: string) => void }> = ({ to
           {tool.description}
         </span>
       </span>
-    </button>
+    </AppLink>
   );
 };
 
@@ -199,7 +200,7 @@ export const ToolGrid: React.FC<ToolGridProps> = ({ onSelectTool }) => {
         ) : (
           <div className="mt-10 flex flex-col gap-12">
             {grouped?.map(({ category, tools }) => (
-              <section key={category.id} aria-labelledby={`cat-${category.id}`}>
+              <section key={category.id} aria-labelledby={`cat-${category.id}`} className="cv-auto">
                 <div className="flex items-center gap-3">
                   <span className={`grid place-items-center w-10 h-10 shrink-0 rounded-[var(--radius-md)]
                                     ${category.iconBg} ${category.iconColor}`}>

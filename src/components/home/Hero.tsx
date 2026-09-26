@@ -5,9 +5,10 @@ import { Button } from '../ui/Button';
 import { Stepper, type Step } from '../ui/Stepper';
 import { TOOLS } from '../../config/tools';
 import { ALL_CATEGORIES } from '../../config/categories';
-import { KIND_TO_CATEGORIES, formatBytes, formatOf } from '../../lib/formats';
+import { formatBytes, formatOf } from '../../lib/formats';
+import { toolsForFile } from '../../lib/toolsForFile';
 import { stageFiles } from '../../lib/fileHandoff';
-import { CONVERTER_TOOLS, converterToolsAccepting, detectFormat } from '../../config/converters';
+import { AppLink } from '../AppLink';
 import { resolveToolIcon } from '../../utils/toolIcons';
 import type { ToolCategory } from '../../types';
 
@@ -61,25 +62,9 @@ export const Hero: React.FC<HeroProps> = ({ onSelectTool, onSelectCategory, onBr
     [available],
   );
 
-  const matches = useMemo(() => {
-    if (!meta) return [];
-    const categories = KIND_TO_CATEGORIES[meta.kind];
-    // Converters are grouped as one category but each reads specific formats:
-    // a PNG should surface "PNG to JPG", not "HEIC to JPG".
-    const converters = dropped ? new Set(converterToolsAccepting(dropped)) : new Set<string>();
-    // A converter built for this exact format answers "what can I do with it?"
-    // most directly, so pair pages lead, then the open converter, then the rest.
-    const format = dropped ? detectFormat(dropped) : null;
-    const rank = (id: string) => {
-      if (!converters.has(id)) return 3;
-      if (CONVERTER_TOOLS[id].inputs[0] === format && id !== 'file-converter') return 0;
-      return id === 'file-converter' ? 1 : 2;
-    };
-    return available
-      .filter((t) => (t.category === 'convert' ? converters.has(t.id) : categories.includes(t.category)))
-      .sort((a, b) => rank(a.id) - rank(b.id) || Number(Boolean(b.isPopular)) - Number(Boolean(a.isPopular)))
-      .slice(0, 8);
-  }, [meta, available, dropped]);
+  const matches = useMemo(() => (dropped ? toolsForFile(dropped) : []), [dropped]);
+  const [showAll, setShowAll] = useState(false);
+  const shown = showAll ? matches : matches.slice(0, 10);
 
   return (
     <section className={app ? '' : 'px-4 sm:px-6 lg:px-8 pt-6 pb-10 sm:pt-16 sm:pb-12'}>
@@ -147,7 +132,7 @@ export const Hero: React.FC<HeroProps> = ({ onSelectTool, onSelectCategory, onBr
               </div>
               <button
                 type="button"
-                onClick={() => setDropped(null)}
+                onClick={() => { setDropped(null); setShowAll(false); }}
                 aria-label="Clear selected file"
                 className="grid place-items-center w-9 h-9 shrink-0 rounded-[var(--radius-sm)] text-muted-foreground
                            hover:bg-surface-container hover:text-foreground transition-colors duration-[var(--motion-fast)]
@@ -165,17 +150,18 @@ export const Hero: React.FC<HeroProps> = ({ onSelectTool, onSelectCategory, onBr
                   {matches.length} {matches.length === 1 ? 'tool works' : 'tools work'} with {meta?.label} files
                 </h2>
                 <ul className="grid gap-2 sm:grid-cols-2" role="list">
-                  {matches.map((tool) => {
+                  {shown.map((tool) => {
                     const Icon = resolveToolIcon(tool.icon, FileText);
                     const category = ALL_CATEGORIES.find((c) => c.id === tool.category);
                     return (
                       <li key={tool.id}>
                         <button
                           type="button"
-                          onClick={() => {
+                          onClick={async () => {
                             // Hand the file over so the tool opens with it
-                            // already queued, instead of asking again.
-                            if (dropped) stageFiles(tool.id, [dropped]);
+                            // already queued, instead of asking again. The
+                            // write must finish before the page navigates.
+                            if (dropped) await stageFiles(tool.id, [dropped]);
                             onSelectTool(tool.id);
                           }}
                           className="group w-full flex items-center gap-3 rounded-[var(--radius-md)] border border-border
@@ -201,6 +187,16 @@ export const Hero: React.FC<HeroProps> = ({ onSelectTool, onSelectCategory, onBr
                     );
                   })}
                 </ul>
+                {matches.length > shown.length && (
+                  <button
+                    type="button"
+                    onClick={() => setShowAll(true)}
+                    className="mt-3 w-full rounded-[var(--radius-md)] border border-dashed border-border py-2.5 text-sm font-semibold
+                               text-primary hover:border-primary/50 hover:bg-primary/[0.04] transition-colors"
+                  >
+                    Show all {matches.length} tools
+                  </button>
+                )}
               </>
             ) : (
               <div className="text-center py-4">
@@ -226,9 +222,9 @@ export const Hero: React.FC<HeroProps> = ({ onSelectTool, onSelectCategory, onBr
           <ul className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3" role="list">
             {shortcuts.map((category) => (
               <li key={category.id}>
-                <button
-                  type="button"
-                  onClick={() => onSelectCategory(category.id)}
+                <AppLink
+                  href={`/category/${category.id}`}
+                  onNavigate={() => onSelectCategory(category.id)}
                   className="group w-full flex flex-col items-center gap-2.5 rounded-[var(--radius-lg)]
                              border border-border bg-card px-3 py-5
                              transition-all duration-[var(--motion-fast)]
@@ -249,7 +245,7 @@ export const Hero: React.FC<HeroProps> = ({ onSelectTool, onSelectCategory, onBr
                     </span>
                     <span className="text-xs text-muted-foreground">{category.count} tools</span>
                   </span>
-                </button>
+                </AppLink>
               </li>
             ))}
           </ul>

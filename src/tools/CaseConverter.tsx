@@ -3,7 +3,7 @@ import { CopyButton } from '../components/CopyButton';
 import { Type } from 'lucide-react';
 
 export const CaseConverter: React.FC = () => {
-  const [text, setText] = useState<string>('hello world developer tools lab');
+  const [text, setText] = useState<string>('hello world from nexttool');
 
   const toCamelCase  = (s: string) => s.toLowerCase().replace(/[^a-zA-Z0-9]+(.)/g, (_, c) => c.toUpperCase());
   const toSnakeCase  = (s: string) => s.replace(/([a-z])([A-Z])/g, '$1_$2').replace(/[^a-zA-Z0-9]+/g, '_').toLowerCase();

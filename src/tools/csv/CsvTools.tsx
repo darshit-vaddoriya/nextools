@@ -144,8 +144,9 @@ const CsvInput: React.FC<{
   const handleFileRef = useRef(handleFile);
   handleFileRef.current = handleFile;
   useEffect(() => {
-    const [staged] = takeStagedFilesForRoute();
-    if (staged) handleFileRef.current(staged);
+    void takeStagedFilesForRoute().then(([staged]) => {
+      if (staged) handleFileRef.current(staged);
+    });
   }, []);
 
   return (

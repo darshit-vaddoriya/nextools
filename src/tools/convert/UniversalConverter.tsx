@@ -66,15 +66,6 @@ const PDF_ELSEWHERE = ['pdf-to-word', 'pdf-extract-text', 'pdf-ocr'];
 const extOf = (name: string) => name.slice(name.lastIndexOf('.') + 1).toLowerCase();
 const baseOf = (name: string) => name.replace(/\.[^.]+$/, '') || 'converted';
 
-/** SPA navigation without a reference to the router: App listens for popstate. */
-function openTool(e: React.MouseEvent<HTMLAnchorElement>, id: string) {
-  if (e.metaKey || e.ctrlKey || e.shiftKey || e.button !== 0) return;
-  e.preventDefault();
-  window.history.pushState({}, '', `/tool/${id}`);
-  window.dispatchEvent(new PopStateEvent('popstate'));
-  window.scrollTo({ top: 0 });
-}
-
 const ToolLinks: React.FC<{ ids: string[] }> = ({ ids }) => (
   <span className="flex flex-wrap gap-2">
     {ids.map((id) => {
@@ -84,7 +75,6 @@ const ToolLinks: React.FC<{ ids: string[] }> = ({ ids }) => (
         <a
           key={id}
           href={`/tool/${id}`}
-          onClick={(e) => openTool(e, id)}
           className="inline-flex items-center gap-1 rounded-full border border-border bg-background px-3 py-1
                      text-sm font-semibold text-primary hover:border-primary/50"
         >

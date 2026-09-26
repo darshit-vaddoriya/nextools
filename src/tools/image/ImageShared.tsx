@@ -35,8 +35,9 @@ export const DropZone: React.FC<DropZoneProps> = ({
   const onFilesRef = useRef(onFiles);
   onFilesRef.current = onFiles;
   useEffect(() => {
-    const staged = takeStagedFilesForRoute();
-    if (staged.length) onFilesRef.current(multiple ? staged : staged.slice(0, 1));
+    void takeStagedFilesForRoute().then((staged) => {
+      if (staged.length) onFilesRef.current(multiple ? staged : staged.slice(0, 1));
+    });
   }, [multiple]);
 
   return (

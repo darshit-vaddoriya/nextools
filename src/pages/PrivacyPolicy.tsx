@@ -1,6 +1,6 @@
 import React from 'react';
 import { ShieldCheck, Lock, HardDrive, Cpu, History } from 'lucide-react';
-import { PageLayout, PageProse, PageSection, PageList, ExternalLink } from './PageLayout';
+import { PageLayout, PageProse, PageSection, PageList, ExternalLink, PageHighlights } from './PageLayout';
 import { CONTACT_EMAIL } from '../config/pages';
 
 interface PrivacyPolicyProps {
@@ -9,10 +9,10 @@ interface PrivacyPolicyProps {
 }
 
 const PILLARS = [
-  { icon: Cpu, title: '100% Client-Side', desc: 'Every tool (PDF, image, WASM AI, code formatters) runs locally on your device using JavaScript and WebAssembly.', color: 'text-success', bg: 'bg-success/10' },
-  { icon: Lock, title: 'Zero File Upload', desc: 'Your files, PDFs, images and code are never sent to an external server. They stay in your browser while you work.', color: 'text-primary', bg: 'bg-primary/10' },
-  { icon: HardDrive, title: 'No Account Needed', desc: 'No registration, sign-up or email address is ever required. NextTool is free and accessible instantly.', color: 'text-cyan-700 dark:text-cyan-400', bg: 'bg-cyan-500/10' },
-  { icon: History, title: 'History Stays Local', desc: 'Your optional tool history and saved files live only in this browser. You can turn them off or clear them at any time.', color: 'text-amber-700 dark:text-amber-400', bg: 'bg-amber-500/10' },
+  { icon: Cpu, title: 'Tools Run on Your Device', desc: 'Every tool (PDF, image, WASM AI, code formatters) runs locally in your browser using JavaScript and WebAssembly.' },
+  { icon: Lock, title: 'Zero File Upload', desc: 'Your files, PDFs, images and code are never sent to an external server. They stay in your browser while you work.' },
+  { icon: HardDrive, title: 'No Account Needed', desc: 'No registration, sign-up or email address is ever required. NextTool is free and accessible instantly.' },
+  { icon: History, title: 'History Stays Local', desc: 'Your optional tool history and saved files live only in this browser. You can turn them off or clear them at any time.' },
 ];
 
 const code = 'px-1.5 py-0.5 rounded bg-muted text-foreground text-xs font-mono';
@@ -26,20 +26,7 @@ export const PrivacyPolicy: React.FC<PrivacyPolicyProps> = ({ onBack, onOpenCook
       subtitle="Zero file uploads · processing happens in your browser · no login required"
       onBack={onBack}
     >
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        {PILLARS.map(item => {
-          const Icon = item.icon;
-          return (
-            <div key={item.title} className="p-5 rounded-xl border border-border bg-muted/50">
-              <div className={`w-10 h-10 rounded-xl ${item.bg} flex items-center justify-center mb-3 ${item.color}`}>
-                <Icon className="w-5 h-5" />
-              </div>
-              <h2 className="text-[13px] font-bold text-foreground mb-1">{item.title}</h2>
-              <p className="text-[12px] text-muted-foreground leading-relaxed">{item.desc}</p>
-            </div>
-          );
-        })}
-      </div>
+      <PageHighlights items={PILLARS} />
 
       <PageProse>
         <PageSection title="1. Who we are">
@@ -63,6 +50,14 @@ export const PrivacyPolicy: React.FC<PrivacyPolicyProps> = ({ onBack, onOpenCook
             NextTool is a static website. Every tool, PDF merging and splitting, image compression
             and conversion, AI background removal, OCR, code formatting, hashing and the rest, executes inside your browser using standard browser technologies such as the WebCrypto
             API, HTML5 Canvas, WebAssembly and on-device machine-learning models.
+          </p>
+          <p>
+            Some tools need a library or model that is too large to ship with every page. The AI
+            Background Remover downloads its model from IMG.LY's content delivery network
+            (staticimgly.com), and the OCR tools download their recognition engine and language
+            data from jsDelivr (cdn.jsdelivr.net). Those downloads go from the provider to you:
+            like any web request they reveal your IP address and browser to that provider, but
+            your file is never sent to them.
           </p>
           <p>
             The documents, images and text you open in a tool are read into your browser's memory.
@@ -108,15 +103,20 @@ export const PrivacyPolicy: React.FC<PrivacyPolicyProps> = ({ onBack, onOpenCook
         <PageSection title="4. Information we do collect">
           <PageList
             items={[
-              <><strong className="text-foreground">Usage analytics.</strong> Google Analytics 4 records pageviews and basic technical details (approximate region, device type, browser, referring page) so we know which tools are worth improving. IP addresses are anonymised by Google before we ever see aggregate reports.</>,
+              <><strong className="text-foreground">Server logs.</strong> The site is hosted by Netlify. Like any web host, Netlify processes your IP address, the page requested, the time and your browser's user-agent to deliver the site and protect it from abuse, and keeps these logs for a limited period under its own privacy policy.</>,
+              <><strong className="text-foreground">Usage analytics.</strong> Google Analytics 4 records pageviews and basic technical details (approximate region, device type, browser, referring page) so we know which tools are worth improving. Google Analytics 4 does not log or store IP addresses; it uses them only to estimate an approximate location, and we only ever see aggregate reports.</>,
               <><strong className="text-foreground">Advertising data.</strong> Google AdSense and its partners may collect data through cookies and similar technologies to select and measure ads. See section 6.</>,
-              <><strong className="text-foreground">Local browser storage.</strong> Your theme choice, settings, recently opened tools, starred favourites and, if enabled, your History (section 3) are stored in <code className={code}>localStorage</code> and <code className={code}>IndexedDB</code> on your own device. This never reaches us.</>,
-              <><strong className="text-foreground">Messages you send us.</strong> If you email us, we keep that correspondence so we can reply and follow up.</>,
+              <><strong className="text-foreground">Local browser storage.</strong> Your theme choice, settings, recently opened tools, starred favourites and, if enabled, your History (section 3) are stored in <code className={code}>localStorage</code> and <code className={code}>IndexedDB</code> on your own device. So is a file you drop on the homepage or a category page, for the few seconds it takes to open the tool you picked. None of this reaches us.</>,
+              <><strong className="text-foreground">Messages you send us.</strong> If you use the form on our Contact page, we receive the topic you choose, your message, the email address you give (so we can reply), your name if you add it, the page you sent it from and your browser's user-agent string (which helps us reproduce bug reports). This is stored in a database hosted by Supabase, which processes it on our behalf and does not use it for its own purposes. To keep automated spam out, the form is protected by Cloudflare Turnstile, which checks signals from your browser and your IP address to tell people from bots; Cloudflare's handling of that data is described at <ExternalLink href="https://www.cloudflare.com/turnstile-privacy-policy/">cloudflare.com/turnstile-privacy-policy</ExternalLink>. If you email us instead, we keep that correspondence so we can reply and follow up.</>,
+              <><strong className="text-foreground">Optional support payments.</strong> The Support button opens a payment page run by Razorpay. Paying is entirely optional and unlocks nothing. If you do pay, Razorpay processes your payment details under its own privacy policy; we never see your card, UPI or bank details, and receive only what Razorpay passes on to a merchant, such as the amount and the name, email address and phone number you entered there. We use these only to keep records the law requires.</>,
             ]}
           />
           <p>
-            We do not ask for or store names, email addresses, payment details or account
-            credentials, because the site has no accounts and no payments.
+            Apart from what you choose to send through the Contact form, by email or with an
+            optional support payment, we do not ask for or store names, email addresses or account
+            credentials, and the site has no accounts. Contact messages are used only to answer
+            you: never for marketing, never sold and never shared, except with the service
+            providers that store them and check the form for spam.
           </p>
         </PageSection>
 
@@ -141,10 +141,10 @@ export const PrivacyPolicy: React.FC<PrivacyPolicyProps> = ({ onBack, onOpenCook
 
         <PageSection title="6. Google AdSense and third-party advertising">
           <p>
-            To keep every tool free without subscriptions or login walls, NextTool displays
-            advertising served by Google AdSense. Advertisements are clearly labelled and are kept
-            outside the working area of each tool. Ad networks never receive the files or text you
-            process, that content never leaves your browser in the first place.
+            To keep every tool free without subscriptions or login walls, NextTool displays, or
+            may display, advertising served by Google AdSense. Ad networks never receive the files
+            or text you process in a tool; that content never leaves your browser in the first
+            place.
           </p>
           <PageList
             items={[
@@ -174,12 +174,22 @@ export const PrivacyPolicy: React.FC<PrivacyPolicyProps> = ({ onBack, onOpenCook
           </p>
           <p>
             Where we rely on consent, specifically for personalised advertising and analytics
-            cookies, you may withdraw it at any time: through Google's own consent message where
-            it applies to your region, through the opt-out links in section 6, or by blocking
-            cookies in your browser.
-            Our lawful basis for the strictly necessary operation of the site is our legitimate
-            interest in providing and securing it. You also have the right to complain to your
-            local data protection authority.
+            cookies, those cookies are switched off by default for visitors in the EEA, the UK and
+            Switzerland (through Google Consent Mode) and are only set if you agree through a
+            consent message. You may withdraw consent at any time: through the privacy link in
+            that message where it is shown, through the opt-out links in section 6, or by
+            blocking cookies in your browser.
+            Our lawful basis for the strictly necessary operation of the site (including server
+            logs and spam protection on the Contact form) is our legitimate interest in providing
+            and securing it. We process a Contact form message or an email to answer the request
+            you made in it.
+          </p>
+          <p>
+            The service providers named in this policy (Netlify, Supabase, Cloudflare, Google,
+            IMG.LY, jsDelivr and Razorpay) may process data in countries other than yours,
+            including India and the United States. Where the law requires it, they rely on
+            safeguards such as the European Commission's standard contractual clauses. You also
+            have the right to complain to your local data protection authority.
           </p>
         </PageSection>
 
@@ -194,29 +204,43 @@ export const PrivacyPolicy: React.FC<PrivacyPolicyProps> = ({ onBack, onOpenCook
           </p>
         </PageSection>
 
-        <PageSection title="9. Children's privacy">
+        <PageSection title="9. Visitors in India">
           <p>
-            NextTool is a general-audience website and is not directed at children under 13 (or the
-            equivalent minimum age in your jurisdiction). We do not knowingly collect personal
-            information from children. If you believe a child has provided us with personal
-            information through an email to us, contact us and we will delete it promptly.
+            NextTool is operated from India. Under the Digital Personal Data Protection Act, 2023
+            you may ask what personal data we hold about you (in practice, only a Contact form
+            message or an email you sent), ask us to correct or erase it, and withdraw any consent
+            you gave. Write to{' '}
+            <a href={`mailto:${CONTACT_EMAIL}`} className={link}>{CONTACT_EMAIL}</a>, which is
+            also the contact for grievances about how we handle your data.
           </p>
         </PageSection>
 
-        <PageSection title="10. Data retention and security">
+        <PageSection title="10. Children's privacy">
+          <p>
+            NextTool is a general-audience website and is not directed at children. The tools
+            themselves collect nothing from anyone, but if you are under 18 (the age of a child
+            under India's Digital Personal Data Protection Act), please do not send us a message
+            through the Contact form, by email or with a support payment without a parent or
+            guardian's permission. We do not knowingly collect personal data from children. If you
+            believe a child has sent us personal data, contact us and we will delete it promptly.
+          </p>
+        </PageSection>
+
+        <PageSection title="11. Data retention and security">
           <p>
             We never receive your files, so we keep none of them. Your local History (section 3)
             stays on your device until you delete it, turn it off, or your browser clears it. We
             cannot read it, recover it or delete it for you. Analytics data is retained by
-            Google according to its standard retention settings (currently 14 months) and is only
-            ever seen by us in aggregate. Email correspondence is kept as long as needed to resolve
-            your enquiry. The site is served exclusively over HTTPS from a content delivery
-            network, and fonts and scripts are self-hosted wherever possible to limit third-party
-            requests.
+            Google for no longer than 14 months and is only ever seen by us in aggregate. Contact form messages and email correspondence are kept
+            as long as needed to resolve your enquiry and deleted within 12 months; write to us
+            and we will delete yours sooner. Records of support payments are kept only as long as
+            tax and accounting law requires. The site is served exclusively over HTTPS from a
+            content delivery network, and fonts and scripts are self-hosted wherever possible to
+            limit third-party requests.
           </p>
         </PageSection>
 
-        <PageSection title="11. External links">
+        <PageSection title="12. External links">
           <p>
             The site links to third-party websites, including advertisers and documentation. We are
             not responsible for the content or privacy practices of those sites, and we encourage
@@ -224,20 +248,20 @@ export const PrivacyPolicy: React.FC<PrivacyPolicyProps> = ({ onBack, onOpenCook
           </p>
         </PageSection>
 
-        <PageSection title="12. Changes to this policy">
+        <PageSection title="13. Changes to this policy">
           <p>
             We may update this policy as the site evolves or as legal requirements change. Material
-            changes will be reflected in the "last updated" date below. Continuing to use NextTool
+            changes will be reflected in the "last updated" date at the top of this page. Continuing to use NextTool
             after an update means you accept the revised policy.
           </p>
         </PageSection>
 
-        <PageSection title="13. Contact">
+        <PageSection title="14. Contact">
           <p>
             Questions, requests or complaints about this policy can be sent to{' '}
             <a href={`mailto:${CONTACT_EMAIL}`} className="text-primary underline underline-offset-2 hover:brightness-110">
               {CONTACT_EMAIL}
-            </a>. We aim to respond within two business days.
+            </a>. We answer data-protection requests within one month at the latest.
           </p>
         </PageSection>
       </PageProse>

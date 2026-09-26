@@ -2,8 +2,11 @@
 // One layout for every URL. The <head> is generated at build time by the
 // same meta writers the SPA ran in the browser (see src/astro/build.ts), and
 // <body> is the React app server-rendered for this route, hydrated as an island.
-import '@fontsource-variable/inter';
+import '@fontsource-variable/plus-jakarta-sans';
 import '@fontsource-variable/jetbrains-mono';
+// The body font is discovered only after the stylesheet is parsed; preloading
+// the Latin file starts it alongside the CSS instead of after it.
+import bodyFontUrl from '@fontsource-variable/plus-jakarta-sans/files/plus-jakarta-sans-latin-wght-normal.woff2?url';
 import '../../index.css';
 import HomeIsland from '../../islands/Home';
 import NotFoundIsland from '../../islands/NotFound';
@@ -40,6 +43,7 @@ const toolHtml = route.view === 'tool' && route.toolId
 <html lang="en">
   <head>
     <Fragment set:html={head} />
+    <link rel="preload" href={bodyFontUrl} as="font" type="font/woff2" crossorigin />
   </head>
   <body class="font-sans antialiased">
     <div id="root">

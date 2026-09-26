@@ -1,6 +1,6 @@
 import React from 'react';
 import { Info, Cpu, Lock, Infinity as InfinityIcon, Mail } from 'lucide-react';
-import { PageLayout, PageProse, PageSection, PageList } from './PageLayout';
+import { PageLayout, PageProse, PageSection, PageList, PageHighlights } from './PageLayout';
 import { CONTACT_EMAIL } from '../config/pages';
 import { workingToolCount } from '../utils/toolStats';
 import { TOOLS } from '../config/tools';
@@ -25,7 +25,7 @@ const PILLARS = [
   {
     icon: InfinityIcon,
     title: 'Free, funded by ads',
-    desc: 'NextTool is supported by modest advertising and voluntary donations instead of subscriptions, watermarks or file-size limits.',
+    desc: 'NextTool is supported by advertising and optional support payments instead of subscriptions, watermarks or paywalls.',
   },
 ];
 
@@ -40,20 +40,7 @@ export const About: React.FC<AboutProps> = ({ onBack, onOpenContact }) => {
       onBack={onBack}
       showUpdated={false}
     >
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        {PILLARS.map(item => {
-          const Icon = item.icon;
-          return (
-            <div key={item.title} className="p-5 rounded-xl border border-border bg-muted/50">
-              <div className="w-10 h-10 rounded-xl bg-primary/10 text-primary flex items-center justify-center mb-3">
-                <Icon className="w-5 h-5" />
-              </div>
-              <h2 className="text-[13px] font-bold text-foreground mb-1">{item.title}</h2>
-              <p className="text-[12px] text-muted-foreground leading-relaxed">{item.desc}</p>
-            </div>
-          );
-        })}
-      </div>
+      <PageHighlights items={PILLARS} />
 
       <PageProse>
         <PageSection title="What NextTool is">
@@ -61,13 +48,15 @@ export const About: React.FC<AboutProps> = ({ onBack, onOpenContact }) => {
             NextTool is a free collection of everyday file and developer utilities that run entirely
             inside your web browser. You can merge and split PDFs, compress and convert images,
             remove backgrounds with an on-device AI model, format JSON and SQL, generate passwords
-            and QR codes, convert units and currencies, and dozens of other small jobs that normally
+            and QR codes, convert units and time zones, and dozens of other small jobs that normally
             require either desktop software or a website that wants your files on its servers.
           </p>
           <p>
-            The whole site is a static web app. There is no database, no user account system and no
-            upload endpoint. When you open a tool, the code for that tool is downloaded to your
-            browser and runs locally, the same way a spreadsheet runs on your laptop.
+            The whole site is a static web app with no user accounts and nowhere to upload your
+            files. When you open a tool, the code for that tool is downloaded to your browser and
+            runs locally, the same way a spreadsheet runs on your laptop. The only things we keep
+            about you are a message you choose to send us through the Contact form, and the
+            payment record if you choose to support the site.
           </p>
         </PageSection>
 
@@ -80,8 +69,8 @@ export const About: React.FC<AboutProps> = ({ onBack, onOpenContact }) => {
           </p>
           <p>
             Browsers became powerful enough to do this work themselves. NextTool exists to prove
-            that point in practice: the same tasks, done faster, without the file ever leaving your
-            machine, and without asking for an email address first.
+            that point in practice: the same tasks, without an upload wait, without the file leaving
+            your machine, and without asking for an email address first.
           </p>
         </PageSection>
 
@@ -91,17 +80,17 @@ export const About: React.FC<AboutProps> = ({ onBack, onOpenContact }) => {
               <><strong className="text-foreground">Local first.</strong> If a feature cannot be built client-side, we would rather not ship it than start uploading your files.</>,
               <><strong className="text-foreground">No dark patterns.</strong> No forced sign-ups, no fake progress bars, no "your download is ready, install this app" detours.</>,
               <><strong className="text-foreground">Honest labelling.</strong> Tools that are still in progress are marked as coming soon rather than dressed up as finished.</>,
-              <><strong className="text-foreground">Ads stay in their lane.</strong> Advertising is kept out of the working area of each tool and is clearly labelled where it appears.</>,
+              <><strong className="text-foreground">Ads never see your files.</strong> Advertising pays for the site, but ad networks never receive the files or text you work on, because those never leave your browser.</>,
             ]}
           />
         </PageSection>
 
         <PageSection title="Who runs it">
           <p>
-            NextTool is an independent project built and maintained by a small team of web
-            developers led by Darshit Vadadoriya. It is not affiliated with, endorsed by or
-            sponsored by Adobe, Google, Microsoft, iLovePDF, SmallPDF or any other company whose
-            file formats or products are mentioned on this site.
+            NextTool is an independent project, built and maintained in India. It is not
+            affiliated with, endorsed by or sponsored by Adobe, Google, Microsoft, iLovePDF,
+            SmallPDF or any other company whose file formats or products are mentioned on this
+            site.
           </p>
           <p>
             Editorial content, the tool guides, FAQs and how-to explanations you see across the
@@ -112,7 +101,7 @@ export const About: React.FC<AboutProps> = ({ onBack, onOpenContact }) => {
         <PageSection title="How we pay for it">
           <p>
             Hosting, bandwidth and development time are paid for by advertising served through
-            Google AdSense and by optional reader donations. Advertisers have no influence over
+            Google AdSense and by optional support payments. Advertisers have no influence over
             which tools we build, and no advertiser or ad network receives the files you process.
             Full detail is in our Privacy Policy and Cookie Policy.
           </p>
@@ -120,8 +109,8 @@ export const About: React.FC<AboutProps> = ({ onBack, onOpenContact }) => {
 
         <PageSection title="Talk to us">
           <p>
-            Bug reports, missing features and corrections are genuinely welcome, most of the tools
-            on this site started as somebody's email. Reach us at{' '}
+            Bug reports, missing features and corrections are genuinely welcome; many
+            improvements to this site started as somebody's email. Reach us at{' '}
             <a href={`mailto:${CONTACT_EMAIL}`} className="text-primary underline underline-offset-2 hover:brightness-110">
               {CONTACT_EMAIL}
             </a>{' '}
@@ -132,7 +121,7 @@ export const About: React.FC<AboutProps> = ({ onBack, onOpenContact }) => {
 
       <button
         onClick={onOpenContact}
-        className="inline-flex items-center gap-2 h-10 px-4 rounded-xl bg-primary text-primary-foreground text-[13px] font-semibold hover:brightness-110 transition-all"
+        className="inline-flex items-center gap-2 h-11 px-5 rounded-xl bg-primary text-primary-foreground text-[14px] font-semibold hover:brightness-110 transition-all"
       >
         <Mail className="w-4 h-4" /> Contact us
       </button>

@@ -342,9 +342,9 @@
 ## About
 
 - [All tools](https://nexttool.click/all-tools)
-- [About Us](https://nexttool.click/about): Who builds NextTool, why it exists and how a suite of free browser-based file, image and developer tools is run without uploads or accounts.
-- [Contact Us](https://nexttool.click/contact): Get in touch with the NextTool team for support, bug reports, feature requests, advertising or legal enquiries. We reply within two business days.
+- [About NextTool: Free Tools That Run in Your Browser](https://nexttool.click/about): Who builds NextTool, why it exists and how a suite of free browser-based file, image and developer tools is run without uploads or accounts.
+- [Contact NextTool: Support, Bugs and Feature Requests](https://nexttool.click/contact): Contact NextTool for support, bug reports, feature requests, and legal or privacy enquiries. Send a message through the form or by email.
 - [Privacy Policy](https://nexttool.click/privacy): How NextTool handles your data: files are processed on your device, plus full disclosure of cookies, analytics and Google AdSense advertising.
 - [Terms of Service](https://nexttool.click/terms): The terms and conditions that govern your use of NextTool, including acceptable use, intellectual property and limitation of liability.
-- [Disclaimer](https://nexttool.click/disclaimer): Important disclaimers about the accuracy of NextTool results, external links, advertising and professional advice.
-- [Cookie Policy](https://nexttool.click/cookies): Which cookies and local storage keys NextTool uses, why they exist, and how to control advertising cookies from Google and its partners.
+- [Disclaimer: Tool Results, Advice and Advertising](https://nexttool.click/disclaimer): Important disclaimers about the accuracy of NextTool results, external links, advertising and professional advice.
+- [Cookie Policy: Cookies and Local Storage Used](https://nexttool.click/cookies): Which cookies and local storage keys NextTool uses, why they exist, and how to control advertising cookies from Google and its partners.

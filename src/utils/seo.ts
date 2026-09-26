@@ -7,6 +7,8 @@ import {
   BlogCategory, isBlogCategory, postsInCategory, readingMinutes,
 } from '../config/blog';
 import { HOME_FAQ } from '../config/faq';
+import { getCategoryContent } from '../config/categoryContent';
+import { BLOG_SEO_TITLES } from '../config/blog/seoTitles';
 
 const SITE = 'https://nexttool.click';
 const DEFAULT_TITLE = 'NextTool - Free Online Tools';
@@ -142,6 +144,31 @@ export function updateNotFoundMeta() {
 
   const canonical = document.querySelector('link[rel="canonical"]');
   if (canonical) canonical.remove();
+}
+
+/**
+ * History (/my-files) and Settings are app screens: their content is the
+ * visitor's own browser storage, which is empty for a crawler. They get their
+ * own title and a noindex rather than duplicating the homepage's head.
+ */
+export function updateAppPageMeta(view: 'files' | 'settings') {
+  clearPageSchema();
+  const isFiles = view === 'files';
+  const title = isFiles ? 'History and Saved Files | NextTool' : 'Settings | NextTool';
+  const desc = isFiles
+    ? 'Your NextTool history: recent tool activity and saved files, kept in this browser only.'
+    : 'Theme, history and privacy settings for NextTool, stored in this browser only.';
+  const url = `${SITE}${isFiles ? '/my-files' : '/settings'}`;
+
+  document.title = title;
+  setMeta('description', desc);
+  setMeta('og:title', title, true);
+  setMeta('og:description', desc, true);
+  setMeta('og:url', url, true);
+  setMeta('twitter:title', title);
+  setMeta('twitter:description', desc);
+  setCanonical(url);
+  setRobots('noindex, follow');
 }
 
 function setJsonLd(id: string, data: object) {
@@ -312,7 +339,7 @@ const CATEGORY_SEO: Partial<Record<ToolCategory, { title: string; noun: string; 
   color:    { title: 'Free Color Converter, Gradient & Contrast Checker', noun: 'color and CSS tools', tasks: 'convert HEX, RGB and HSL, build gradients and check WCAG contrast' },
   utility:  { title: 'Free Calculators: Units, EMI, GST, Age, BMI', noun: 'calculators', tasks: 'convert units and time zones, and work out EMI, GST, age and percentages' },
   web:      { title: 'Free Web Tools: URL Encoder, Parser, Entities', noun: 'web tools', tasks: 'encode and parse URLs, inspect user agents and convert HTML entities' },
-  archive:  { title: 'Free ZIP Tools: Create & Extract Archives', noun: 'archive tools', tasks: 'create ZIP files and extract ZIP, TAR and 7z archives' },
+  archive:  { title: 'Free ZIP Tools: Create & Extract Archives', noun: 'archive tools', tasks: 'create ZIP files, zip files one by one in bulk and extract ZIP archives' },
 };
 
 export function updateCategoryMeta(cat: ToolCategory) {
@@ -322,7 +349,7 @@ export function updateCategoryMeta(cat: ToolCategory) {
   const seo = CATEGORY_SEO[cat];
   const title = seo ? `${seo.title} | NextTool` : `${name} | NextTool`;
   const desc = seo
-    ? `${count} free ${seo.noun} in your browser: ${seo.tasks}. No upload, no sign-up.`
+    ? truncateDescription(`${count} free ${seo.noun} in your browser: ${seo.tasks}. No upload, no sign-up.`)
     : `Free ${name} that run in your browser without uploading your files anywhere.`;
   const url = `${SITE}/category/${cat}`;
 
@@ -338,13 +365,25 @@ export function updateCategoryMeta(cat: ToolCategory) {
   setMeta('twitter:description', desc);
   setCanonical(url);
 
+  // The tool list as an ItemList, so search engines read the page as a
+  // directory of these tools rather than as a single thin page.
+  const tools = TOOLS.filter(t => t.category === cat);
   setJsonLd('page-jsonld', {
     '@context': 'https://schema.org',
     '@type': 'CollectionPage',
     name: `${name} - NextTool`,
     url,
     description: desc,
-    numberOfItems: count,
+    mainEntity: {
+      '@type': 'ItemList',
+      numberOfItems: count,
+      itemListElement: tools.map((t, i) => ({
+        '@type': 'ListItem',
+        position: i + 1,
+        name: t.name,
+        url: `${SITE}/tool/${t.id}`,
+      })),
+    },
   });
 
   setJsonLd('breadcrumb-jsonld', breadcrumbList([
@@ -352,8 +391,22 @@ export function updateCategoryMeta(cat: ToolCategory) {
     { name, url },
   ]));
 
+  // Mirrors the "Questions people ask" section rendered on the page.
+  const faqs = getCategoryContent(cat)?.faqs ?? [];
   const faqEl = document.getElementById('faq-jsonld');
-  if (faqEl) faqEl.remove();
+  if (faqs.length) {
+    setJsonLd('faq-jsonld', {
+      '@context': 'https://schema.org',
+      '@type': 'FAQPage',
+      mainEntity: faqs.map(f => ({
+        '@type': 'Question',
+        name: f.question,
+        acceptedAnswer: { '@type': 'Answer', text: f.answer },
+      })),
+    });
+  } else if (faqEl) {
+    faqEl.remove();
+  }
 }
 
 export function updatePageMeta(pageId: StaticPageId) {
@@ -361,7 +414,7 @@ export function updatePageMeta(pageId: StaticPageId) {
   if (!page) return updateHomeMeta();
 
   clearPageSchema();
-  const title = `${page.title} | NextTool`;
+  const title = page.title.includes('NextTool') ? page.title : `${page.title} | NextTool`;
   const url = `${SITE}${page.path}`;
 
   document.title = title;
@@ -409,7 +462,7 @@ export function updateAllToolsMeta() {
   setJsonLd('page-jsonld', {
     '@context': 'https://schema.org',
     '@type': 'CollectionPage',
-    name: 'All NextTool',
+    name: 'All NextTool tools',
     url,
     description: desc,
     numberOfItems: TOOLS.length,
@@ -510,7 +563,8 @@ export function updateBlogPostMeta(slug: string) {
   // Article headlines are already the keyword-bearing part, so when adding the
   // site suffix would push the title past where results truncate, the suffix
   // is what goes rather than the end of the headline.
-  const title = post.title.length + 11 <= TITLE_LIMIT ? `${post.title} | NextTool` : post.title;
+  const headline = BLOG_SEO_TITLES[post.slug] ?? post.title;
+  const title = headline.length + 11 <= TITLE_LIMIT ? `${headline} | NextTool` : headline;
   const url = `${SITE}/blog/${post.slug}`;
 
   document.title = title;

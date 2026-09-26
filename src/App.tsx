@@ -21,7 +21,7 @@ import {
   Lock, MonitorSmartphone, Infinity as InfinityIcon, ChevronDown,
   CheckCircle2, Lightbulb, BookOpen,
 } from 'lucide-react';
-import { ALL_CATEGORIES } from './config/categories';
+import { ALL_CATEGORIES, categoryNoun } from './config/categories';
 import { DevRunPill } from './components/DevToolChrome';
 import { resolveToolIcon } from './utils/toolIcons';
 
@@ -48,6 +48,7 @@ import { ToolPlaceholder }        from './tools/ToolPlaceholder';
 const NotFoundLazy = React.lazy(() => import('./pages/NotFound').then(m => ({ default: m.NotFound })));
 import { ToolCard }               from './components/ToolCard';
 import { ConverterDirectory }     from './components/ConverterDirectory';
+import { CategoryDirectory }      from './components/CategoryDirectory';
 import { AppLink }                from './components/AppLink';
 import { FavoriteButton }         from './components/FavoriteButton';
 import { ToolViewSkeleton }       from './components/Skeleton';
@@ -506,21 +507,21 @@ const IMPLEMENTED_TOOLS: Record<string, React.ComponentType> = {
 const getPlaceholderMeta = (category: ToolCategory) => {
   const map: Record<string, { features: string[]; from: string; to: string }> = {
     convert:    { features: ['Convert images, audio, video and spreadsheets', 'Batch conversion with one ZIP download', 'Quality, bitrate and size controls', 'Runs entirely on your device'], from: 'from-teal-500', to: 'to-cyan-600' },
-    pdf:        { features: ['Merge, split, compress & convert PDFs', 'Add watermarks, page numbers & signatures', 'Extract text, images and tables', 'Encrypt, unlock and redact documents'], from: 'from-red-500', to: 'to-orange-600' },
+    pdf:        { features: ['Merge, split, compress & convert PDFs', 'Add watermarks, page numbers & signatures', 'Extract text, images and tables', 'Sign, redact and fill forms'], from: 'from-red-500', to: 'to-orange-600' },
     word:       { features: ['Convert DOCX to PDF, HTML & Markdown', 'View documents without Microsoft Word', 'Inspect metadata and compare versions', 'Strip formatting and clean documents'], from: 'from-blue-500', to: 'to-indigo-600' },
-    excel:      { features: ['Convert Excel to CSV and back', 'View and edit CSV in a table grid', 'Clean, sort and transform data', 'Merge and split worksheets'], from: 'from-green-500', to: 'to-emerald-600' },
+    excel:      { features: ['Convert Excel to CSV and back', 'View and edit CSV in a table grid', 'Clean, sort and transform data', 'Merge CSV files and remove duplicates'], from: 'from-green-500', to: 'to-emerald-600' },
     powerpoint: { features: ['Convert PPTX to PDF and images', 'Merge presentation slides', 'View decks in the browser', 'Extract slides and assets'], from: 'from-orange-500', to: 'to-red-600' },
     image:      { features: ['Compress and resize images', 'Convert between formats', 'Remove backgrounds with AI', 'Apply filters and effects'], from: 'from-pink-500', to: 'to-rose-600' },
     video:      { features: ['Trim and cut video clips', 'Compress without quality loss', 'Convert formats and extract audio', 'Create GIFs from video'], from: 'from-violet-500', to: 'to-purple-600' },
     audio:      { features: ['Cut and merge audio files', 'Convert between audio formats', 'Record from your microphone', 'Normalize volume levels'], from: 'from-cyan-500', to: 'to-blue-600' },
     dev:        { features: ['Format and validate code', 'Encode, decode and hash data', 'Generate UUIDs and passwords', 'Test regex and inspect JWTs'], from: 'from-slate-500', to: 'to-zinc-700' },
-    ai:         { features: ['Remove image backgrounds on-device', 'OCR text from images and PDFs', 'Upscale and enhance photos', 'Runs locally with WebGPU'], from: 'from-purple-500', to: 'to-violet-600' },
-    security:   { features: ['Generate strong passwords', 'Compute cryptographic hashes', 'Encrypt and decrypt data', 'Check password strength'], from: 'from-emerald-500', to: 'to-teal-600' },
+    ai:         { features: ['Remove image backgrounds on-device', 'OCR text from images and PDFs', 'Recognise text in photos and scans', 'Runs locally with WebGPU'], from: 'from-purple-500', to: 'to-violet-600' },
+    security:   { features: ['Generate strong passwords', 'Compute cryptographic hashes', 'Verify file checksums', 'Check password strength'], from: 'from-emerald-500', to: 'to-teal-600' },
     text:       { features: ['Count words, lines and characters', 'Convert text case formats', 'Clean and sort text', 'Extract and transform data'], from: 'from-teal-500', to: 'to-cyan-600' },
     color:      { features: ['Pick and convert color formats', 'Generate CSS gradients', 'Build color palettes', 'Preview glassmorphism styles'], from: 'from-fuchsia-500', to: 'to-pink-600' },
-    utility:    { features: ['Convert units and currencies', 'Calculate BMI, GST and EMI', 'Generate random numbers', 'Calculate dates and timezones'], from: 'from-sky-500', to: 'to-indigo-600' },
+    utility:    { features: ['Convert units and time zones', 'Calculate BMI, GST and EMI', 'Work out age and percentages', 'Calculate dates and timezones'], from: 'from-sky-500', to: 'to-indigo-600' },
     web:        { features: ['Encode and decode URLs', 'Detect MIME types', 'Convert between binary and text', 'Generate UUIDs and slugs'], from: 'from-indigo-500', to: 'to-blue-600' },
-    archive:    { features: ['Create and extract ZIP files', 'Read TAR and 7Z archives', 'Compress files locally', 'Never upload to a server'], from: 'from-amber-500', to: 'to-yellow-600' },
+    archive:    { features: ['Create and extract ZIP files', 'Zip files one by one in bulk', 'Compress files locally', 'Never upload to a server'], from: 'from-amber-500', to: 'to-yellow-600' },
   };
   return map[category] ?? { features: ['Works directly on your device', 'No account or uploads needed', 'Quick to use and always free'], from: 'from-indigo-500', to: 'to-purple-600' };
 };
@@ -731,7 +732,7 @@ export const App: React.FC<{
               onOpenContact={() => openPage('contact')}
             />
           : currentView === 'page'
-          ? <div className="max-w-4xl mx-auto px-4 sm:px-6 py-8">
+          ? <div className="max-w-5xl mx-auto px-4 sm:px-6 py-8">
               <StaticPageView pageId={activePageId} onBack={goHome} onOpenPage={openPage} />
             </div>
           : currentView === 'blog'
@@ -780,10 +781,10 @@ export const App: React.FC<{
 // ─── HOME VIEW ───────────────────────────────────────────────
 
 const WHY_FEATURES = [
-  { icon: Zap,             title: 'Fast by design',       desc: 'Lightweight and code-split, every tool opens instantly without heavy downloads.' },
+  { icon: Zap,             title: 'Fast by design',       desc: 'Each tool loads only the code it needs, and heavy libraries download only when you use them.' },
   { icon: Lock,            title: 'Files stay on device', desc: 'Everything is processed in your browser. Your files are never uploaded anywhere.' },
   { icon: ShieldCheck,     title: 'Private by default',   desc: 'No accounts, no file tracking and no sign-up walls.' },
-  { icon: InfinityIcon,    title: 'Free forever',         desc: 'No hidden tiers, watermarks or paywalls. Every tool is free to use.' },
+  { icon: InfinityIcon,    title: 'Free to use',          desc: 'No paid tiers, watermarks or paywalls. The site is supported by advertising.' },
   { icon: MonitorSmartphone, title: 'Works everywhere',   desc: 'Optimized for desktop, tablet and phone with one consistent experience.' },
   { icon: Globe,           title: 'Nothing to install',   desc: 'Just open a tool and start working on any modern browser.' },
 ];
@@ -1030,7 +1031,7 @@ const HomeView: React.FC<{
         )}
 
         {/* ── Why NextTool ───────────────────────────────── */}
-        <section aria-labelledby="why-heading">
+        <section aria-labelledby="why-heading" className="cv-auto">
           <div className="text-center max-w-2xl mx-auto mb-8">
             <span className="section-kicker mb-3">Why NextTool</span>
             <h2 id="why-heading" className="text-[24px] sm:text-[28px] font-bold text-foreground tracking-[-0.02em]">
@@ -1054,7 +1055,7 @@ const HomeView: React.FC<{
         </section>
 
         {/* ── FAQ ────────────────────────────────────────── */}
-        <section aria-labelledby="faq-heading" className="max-w-3xl mx-auto w-full">
+        <section aria-labelledby="faq-heading" className="max-w-3xl mx-auto w-full cv-auto">
           <div className="text-center mb-9">
             <span className="section-kicker mb-3">FAQ</span>
             <h2 id="faq-heading" className="text-[25px] sm:text-[29px] font-bold text-foreground tracking-[-0.02em]">
@@ -1084,8 +1085,6 @@ const CategoryView: React.FC<{
   onOpenBlog: (slug?: string) => void;
 }> = ({ cat, content, guides, onSelectTool, onBack, categories, onOpenBlog }) => {
   const conf  = categories.find(c => c.id === cat);
-  const tools = TOOLS.filter(t => t.category === cat);
-  const Icon  = conf?.icon ?? FileText;
 
   return (
     <div className="max-w-[1560px] mx-auto px-4 sm:px-6 pt-4 pb-8 sm:py-8 fade-in">
@@ -1095,59 +1094,15 @@ const CategoryView: React.FC<{
 
       {cat === 'convert' ? (
         <ConverterDirectory tagline={content?.tagline} intro={content?.intro} onSelectTool={onSelectTool} />
-      ) : (<>
-      <div className="web-only flex items-center gap-3 mb-8">
-        <div className={`cat-icon ${conf?.iconBg}`}>
-          <Icon className={conf?.iconColor} style={{ width: 20, height: 20 }} />
-        </div>
-        <div>
-          <h1 className="text-xl font-semibold text-foreground">{conf?.name}</h1>
-          <p className="text-[13px] text-muted-foreground mt-0.5">
-            {tools.length} tools{content ? ` · ${content.tagline}` : ' available'}
-          </p>
-        </div>
-      </div>
-
-      {content && (
-        <p className="web-only max-w-3xl text-[14px] leading-relaxed text-muted-foreground mb-8">
-          {content.intro}
-        </p>
-      )}
-
-      {tools.length === 0 ? (
-        <div className="text-center py-16">
-          <div className="w-14 h-14 mx-auto rounded-2xl bg-muted flex items-center justify-center mb-4">
-            <Icon className="w-6 h-6 text-muted-foreground/50" />
-          </div>
-          <h3 className="text-[16px] font-semibold text-foreground mb-1">No tools in this category yet</h3>
-          <p className="text-[13px] text-muted-foreground max-w-xs mx-auto">Check back soon, new tools are added regularly.</p>
-        </div>
-      ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
-          {tools.map(tool => {
-            const catConf = categories.find(c => c.id === tool.category);
-            return (
-              <ToolCard
-                key={tool.id}
-                tool={tool}
-                icon={catConf?.icon ?? FileText}
-                iconColor={catConf?.iconColor}
-                iconBg={catConf?.iconBg}
-                onSelect={onSelectTool}
-                showPopularBadge={tool.isPopular}
-                headingLevel={2}
-              />
-            );
-          })}
-        </div>
-      )}
-      </>)}
+      ) : conf ? (
+        <CategoryDirectory cat={cat} conf={conf} tagline={content?.tagline} intro={content?.intro} onSelectTool={onSelectTool} />
+      ) : null}
 
       {content && (
         <div className="mt-14 max-w-3xl space-y-12">
           <section>
             <h2 className="font-heading text-[19px] font-extrabold tracking-[-.02em] text-foreground mb-5">
-              Choosing between these {conf?.name.toLowerCase()}
+              Choosing between these {conf ? categoryNoun(conf) : 'tools'}
             </h2>
             <div className="space-y-5">
               {content.guide.map(point => (

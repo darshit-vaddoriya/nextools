@@ -18,6 +18,17 @@
     <script>
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
+      // Google Consent Mode v2. In the EEA, the UK and Switzerland analytics and
+      // advertising storage start switched off, so no cookie is set there until
+      // a consent message (Google's CMP, enabled in the AdSense dashboard)
+      // records a yes. Must run before 'config'. The Privacy and Cookie
+      // policies describe exactly this behaviour; keep them in step.
+      gtag('consent', 'default', {
+        ad_storage: 'denied', ad_user_data: 'denied', ad_personalization: 'denied',
+        analytics_storage: 'denied', wait_for_update: 500,
+        region: ['AT','BE','BG','HR','CY','CZ','DK','EE','FI','FR','DE','GR','HU','IE','IT','LV','LT','LU',
+                 'MT','NL','PL','PT','RO','SK','SI','ES','SE','IS','LI','NO','GB','CH']
+      });
       gtag('js', new Date());
       gtag('config', 'G-M60L9W8G3B');
 
@@ -121,7 +132,6 @@
 
     <!-- ── Twitter Card ──────────────────────────────────── -->
     <meta name="twitter:card"        content="summary_large_image" />
-    <meta name="twitter:site"        content="@nexttool" />
     <meta name="twitter:title"       content="NextTool - Free Online Tools" />
     <meta name="twitter:description" content="Free PDF, image, document, AI and developer tools that run in your browser. No uploads or logins needed." />
     <meta name="twitter:image"       content="https://nexttool.click/og-image.png" />

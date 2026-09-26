@@ -21,7 +21,7 @@ export const STATIC_PAGES: StaticPageMeta[] = [
     id: 'about',
     path: '/about',
     label: 'About Us',
-    title: 'About Us',
+    title: 'About NextTool: Free Tools That Run in Your Browser',
     description:
       'Who builds NextTool, why it exists and how a suite of free browser-based file, image and developer tools is run without uploads or accounts.',
   },
@@ -29,9 +29,9 @@ export const STATIC_PAGES: StaticPageMeta[] = [
     id: 'contact',
     path: '/contact',
     label: 'Contact Us',
-    title: 'Contact Us',
+    title: 'Contact NextTool: Support, Bugs and Feature Requests',
     description:
-      'Get in touch with the NextTool team for support, bug reports, feature requests, advertising or legal enquiries. We reply within two business days.',
+      'Contact NextTool for support, bug reports, feature requests, and legal or privacy enquiries. Send a message through the form or by email.',
   },
   {
     id: 'privacy',
@@ -53,7 +53,7 @@ export const STATIC_PAGES: StaticPageMeta[] = [
     id: 'disclaimer',
     path: '/disclaimer',
     label: 'Disclaimer',
-    title: 'Disclaimer',
+    title: 'Disclaimer: Tool Results, Advice and Advertising',
     description:
       'Important disclaimers about the accuracy of NextTool results, external links, advertising and professional advice.',
   },
@@ -61,7 +61,7 @@ export const STATIC_PAGES: StaticPageMeta[] = [
     id: 'cookies',
     path: '/cookies',
     label: 'Cookie Policy',
-    title: 'Cookie Policy',
+    title: 'Cookie Policy: Cookies and Local Storage Used',
     description:
       'Which cookies and local storage keys NextTool uses, why they exist, and how to control advertising cookies from Google and its partners.',
   },
@@ -79,4 +79,4 @@ export const getStaticPageByPath = (path: string): StaticPageMeta | undefined =>
 export const CONTACT_EMAIL = 'dk.coder7250@gmail.com';
 
 /** Human-readable date shown at the bottom of every policy page. */
-export const POLICY_LAST_UPDATED = 'September 25, 2026';
+export const POLICY_LAST_UPDATED = 'September 26, 2026';

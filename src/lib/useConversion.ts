@@ -57,10 +57,11 @@ export function useConversion({ toolId, toolName, run, skipConfigure = false }: 
   /* Pick up a file handed over from the homepage drop zone, so choosing a
      tool after dropping a file doesn't ask for the same file twice. */
   useEffect(() => {
-    const staged = takeStagedFiles(toolId);
-    if (staged.length === 0) return;
-    setFiles(staged.map((file) => ({ id: nextId(), file })));
-    setPhase('configure');
+    void takeStagedFiles(toolId).then((staged) => {
+      if (staged.length === 0) return;
+      setFiles(staged.map((file) => ({ id: nextId(), file })));
+      setPhase('configure');
+    });
   }, [toolId]);
 
   /* Tick the elapsed clock while work is in flight, for the ETA readout. */

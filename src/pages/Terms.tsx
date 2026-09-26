@@ -26,9 +26,13 @@ export const Terms: React.FC<TermsProps> = ({ onBack }) => (
       <PageSection title="2. The Service">
         <p>
           NextTool provides free, browser-based utilities for working with documents, images, text,
-          code and other data. All processing happens locally in your browser. No account is
-          required and no fee is charged. We may add, change, suspend or remove any tool at any
-          time without notice.
+          code and other data. The tools process your files locally in your browser. No account is
+          required and using the tools costs nothing. We may add, change, suspend or remove any
+          tool at any time without notice.
+        </p>
+        <p>
+          If you are under 18, use the Service only with the involvement of a parent or guardian,
+          who accepts these terms on your behalf.
         </p>
       </PageSection>
 
@@ -67,6 +71,11 @@ export const Terms: React.FC<TermsProps> = ({ onBack }) => (
           itself without written permission. Third-party open-source libraries used by the site
           remain under their own licences.
         </p>
+        <p>
+          If you believe something published on NextTool infringes your copyright or other rights,
+          write to us with the page address, what you own and why it infringes. We will review
+          every such notice promptly and remove material that infringes.
+        </p>
       </PageSection>
 
       <PageSection title="6. Advertising">
@@ -78,7 +87,18 @@ export const Terms: React.FC<TermsProps> = ({ onBack }) => (
         </p>
       </PageSection>
 
-      <PageSection title="7. No warranty">
+      <PageSection title="7. Optional support payments">
+        <p>
+          The Support button lets you pay NextTool a voluntary amount through Razorpay. It is a
+          contribution toward running the site, not a purchase: it unlocks no feature, creates no
+          subscription and is not a charitable donation, so it is not eligible for any tax
+          deduction. Razorpay's own terms apply to the payment itself. Because a support payment is
+          voluntary and buys nothing, it is non-refundable, except where the law requires a
+          refund. Please check the amount before you pay.
+        </p>
+      </PageSection>
+
+      <PageSection title="8. No warranty">
         <p>
           The Service is provided "as is" and "as available", without warranties of any kind,
           express or implied, including merchantability, fitness for a particular purpose,
@@ -88,7 +108,7 @@ export const Terms: React.FC<TermsProps> = ({ onBack }) => (
         </p>
       </PageSection>
 
-      <PageSection title="8. Limitation of liability">
+      <PageSection title="9. Limitation of liability">
         <p>
           To the maximum extent permitted by law, NextTool and its operators will not be liable for
           any indirect, incidental, special, consequential or exemplary damages, or for any loss of
@@ -99,7 +119,7 @@ export const Terms: React.FC<TermsProps> = ({ onBack }) => (
         </p>
       </PageSection>
 
-      <PageSection title="9. Indemnity">
+      <PageSection title="10. Indemnity">
         <p>
           You agree to indemnify and hold harmless NextTool and its operators from any claim,
           demand, loss or expense (including reasonable legal fees) arising out of your misuse of
@@ -107,7 +127,7 @@ export const Terms: React.FC<TermsProps> = ({ onBack }) => (
         </p>
       </PageSection>
 
-      <PageSection title="10. Third-party links and services">
+      <PageSection title="11. Third-party links and services">
         <p>
           The Service contains links to third-party websites and embeds third-party services such
           as advertising and analytics. We do not control and are not responsible for their
@@ -115,7 +135,7 @@ export const Terms: React.FC<TermsProps> = ({ onBack }) => (
         </p>
       </PageSection>
 
-      <PageSection title="11. Termination">
+      <PageSection title="12. Termination">
         <p>
           We may restrict or terminate your access to the Service at any time if you breach these
           terms or use the Service in a way that harms it or other users. You may stop using the
@@ -123,7 +143,7 @@ export const Terms: React.FC<TermsProps> = ({ onBack }) => (
         </p>
       </PageSection>
 
-      <PageSection title="12. Governing law">
+      <PageSection title="13. Governing law">
         <p>
           These terms are governed by the laws of India, and the courts of Gujarat, India will have
           exclusive jurisdiction over any dispute, without prejudice to any mandatory consumer
@@ -131,10 +151,10 @@ export const Terms: React.FC<TermsProps> = ({ onBack }) => (
         </p>
       </PageSection>
 
-      <PageSection title="13. Changes and contact">
+      <PageSection title="14. Changes and contact">
         <p>
           We may revise these terms from time to time; the current version is always the one
-          published on this page, and the date below shows when it last changed. Questions about
+          published on this page, and the date at the top shows when it last changed. Questions about
           these terms can be sent to{' '}
           <a href={`mailto:${CONTACT_EMAIL}`} className="text-primary underline underline-offset-2 hover:brightness-110">
             {CONTACT_EMAIL}

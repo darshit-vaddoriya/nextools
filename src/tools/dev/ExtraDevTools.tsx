@@ -1791,10 +1791,9 @@ export const MarkdownPreviewTool: React.FC = () => {
       }
     >
       <div ref={previewRef} onScroll={syncFrom('preview')} className="flex-1 overflow-auto px-6 py-7">
-        {/* Preview-only mode reads like a document, so the prose gets a measure cap
-            and centres itself instead of stretching across the whole screen. */}
+        {/* The preview fills the pane in both split and preview-only mode. */}
         <div
-          className={`blog-prose md-preview ${pane === 'preview' ? 'mx-auto max-w-[780px]' : ''}`}
+          className="blog-prose md-preview max-w-none w-full"
           dangerouslySetInnerHTML={{ __html: labelTaskBoxes(html) }}
         />
       </div>

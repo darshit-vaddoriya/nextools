@@ -6,6 +6,7 @@ import { writeFileSync, mkdirSync, readFileSync, copyFileSync, readdirSync, stat
 import { TOOLS } from './src/config/tools';
 import { STATIC_PAGES } from './src/config/pages';
 import { BLOG_POSTS, BLOG_CATEGORIES, postsInCategory } from './src/config/blog';
+import { validateCategoryHubs } from './src/config/categoryHubs';
 
 const SITE = 'https://nexttool.click';
 const root = path.dirname(fileURLToPath(import.meta.url));
@@ -16,6 +17,10 @@ const NOINDEX_TOOL_IDS = ['image-editor'];
 
 /** sitemap.xml and llms.txt, generated from config exactly as the Vite build did. */
 function writeSitemap() {
+  // A tool left out of its category hub would vanish from that landing page.
+  const hubProblems = validateCategoryHubs();
+  if (hubProblems.length) throw new Error(`Category hubs are out of date:\n${hubProblems.join('\n')}`);
+
   const categories = [...new Set(TOOLS.map(t => t.category))];
   // Only pages with a real publication date carry <lastmod>. Stamping every
   // URL with the build time would tell crawlers the whole site changed on

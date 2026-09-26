@@ -11,7 +11,7 @@ import { TOOL_EXPLANATIONS } from '../config/toolExplanations';
 import { PLANNED_FEATURES } from '../config/toolFeatures';
 import { getCategoryContent } from '../config/categoryContent';
 import {
-  parseRoute, updateHomeMeta, updateToolMeta, updateCategoryMeta, updatePageMeta,
+  parseRoute, updateHomeMeta, updateAppPageMeta, updateToolMeta, updateCategoryMeta, updatePageMeta,
   updateBlogIndexMeta, updateBlogPostMeta, updateBlogTopicMeta, updateAllToolsMeta, updateNotFoundMeta,
 } from '../utils/seo';
 import React from 'react';
@@ -155,9 +155,8 @@ export function headFor(route: AppRoute): string {
   const previous = g.document;
   g.document = document;
   try {
-    // Same dispatch as the SPA's syncMeta(); /my-files and /settings fell
-    // through to the home meta there, so they do here too.
     if (route.view === 'notfound') updateNotFoundMeta();
+    else if (route.view === 'files' || route.view === 'settings') updateAppPageMeta(route.view);
     else if (route.view === 'page' && route.pageId) updatePageMeta(route.pageId);
     else if (route.view === 'blog') {
       if (route.blogSlug) updateBlogPostMeta(route.blogSlug);

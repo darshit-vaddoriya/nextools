@@ -6,7 +6,7 @@ import { DarkPanel, WhitePanel, Segmented, SegmentedButton, StatusPill } from '.
 
 export const Base64Tool: React.FC = () => {
   const [mode, setMode] = useState<'encode' | 'decode'>('encode');
-  const [inputText, setInputText] = useState<string>('Hello World! ToolsLab is 100% Client Side.');
+  const [inputText, setInputText] = useState<string>('Hello World! NextTool runs in your browser.');
   const [outputText, setOutputText] = useState<string>('');
   const [error, setError] = useState<string | null>(null);
   const isFileRef = React.useRef(false);

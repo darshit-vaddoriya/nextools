@@ -3,7 +3,7 @@ import tseslint from 'typescript-eslint';
 import reactHooks from 'eslint-plugin-react-hooks';
 
 export default tseslint.config(
-  { ignores: ['dist', 'node_modules'] },
+  { ignores: ['dist', 'node_modules', '.astro', 'supabase/functions'] },
   js.configs.recommended,
   ...tseslint.configs.recommended,
   {
@@ -12,6 +12,16 @@ export default tseslint.config(
     files: ['scripts/**/*.mjs'],
     languageOptions: {
       globals: { console: 'readonly', process: 'readonly', document: 'readonly', URL: 'readonly' },
+    },
+  },
+  {
+    // Service worker: runs in the worker scope, not the page.
+    files: ['public/sw.js'],
+    languageOptions: {
+      globals: {
+        self: 'readonly', caches: 'readonly', fetch: 'readonly', URL: 'readonly', Response: 'readonly',
+        Request: 'readonly', clients: 'readonly', console: 'readonly', Promise: 'readonly', setTimeout: 'readonly',
+      },
     },
   },
   {

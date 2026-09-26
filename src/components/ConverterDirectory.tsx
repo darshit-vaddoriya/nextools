@@ -89,8 +89,8 @@ export const ConverterDirectory: React.FC<ConverterDirectoryProps> = ({ tagline,
     if (!targetsFor(f).includes(to)) setTo(targetsFor(f)[0]);
   };
 
-  const openWithFiles = (files: File[]) => {
-    stageFiles(HUB_ID, files);
+  const openWithFiles = async (files: File[]) => {
+    await stageFiles(HUB_ID, files);
     onSelectTool(HUB_ID);
   };
 
@@ -221,7 +221,7 @@ export const ConverterDirectory: React.FC<ConverterDirectoryProps> = ({ tagline,
                 onChange={(e) => setQuery(e.target.value)}
                 placeholder="Search, e.g. heic, mp3"
                 className="w-full rounded-full border border-border bg-card py-2 pl-9 pr-8 text-[13px] text-foreground
-                           placeholder:text-muted-foreground focus:border-primary/60 focus:outline-none focus:ring-2 focus:ring-primary/25"
+                           placeholder:text-muted-foreground [&::-webkit-search-cancel-button]:appearance-none focus:border-primary/60 focus:outline-none focus:ring-2 focus:ring-primary/25"
               />
               {query && (
                 <button type="button" onClick={() => setQuery('')} aria-label="Clear search"

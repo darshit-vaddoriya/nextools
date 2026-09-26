@@ -1,6 +1,6 @@
 # NextTool
 
-**Free online tools that run entirely in your browser.** Merge PDFs, convert documents, compress images, remove backgrounds with AI and more — no uploads, no accounts, no limits.
+**Free online tools that run entirely in your browser.** Merge PDFs, convert documents, compress images, remove backgrounds with AI and more — no uploads and no accounts.
 
 > 🔗 **Live site:** [nexttool.click](https://nexttool.click)
 
@@ -11,9 +11,9 @@
 Most "free" tool sites upload your files to a server. NextTool is different:
 
 - **100% client-side** — files are processed on your own device and never leave it
-- **Private by default** — no accounts, no tracking of your files, no upload limits
-- **Free forever** — no hidden tiers, no watermarks, no paywalls
-- **AI tools included** — background removal and image upscaling run on WebGPU/WASM locally, not the cloud
+- **Private by default** — no accounts, and your files are never sent to a server
+- **Free to use** — no paid tiers, no watermarks, no paywalls; supported by advertising
+- **AI tools included** — background removal and OCR run on WebGPU/WASM locally, not the cloud
 
 ---
 
@@ -43,7 +43,6 @@ Most "free" tool sites upload your files to a server. NextTool is different:
 | Tool | What it does |
 |------|-------------|
 | AI Background Remover | WebGPU/WASM models, no upload |
-| AI Image Upscaler | Up to 4× super-resolution, runs locally |
 | Image Compressor | JPEG/PNG/WebP/AVIF with quality control |
 | Resize / Crop / Rotate / Flip | Core editing in-browser |
 | Convert Formats | JPG, PNG, WebP, AVIF, HEIC, BMP, TIFF |
@@ -73,11 +72,11 @@ Most "free" tool sites upload your files to a server. NextTool is different:
 | Layer | Tech |
 |-------|------|
 | Framework | React 18 + TypeScript |
-| Build tool | Vite 5 |
+| Build tool | Astro 7 (static pages, React islands) + Vite |
 | Styling | Tailwind CSS 3 (dark/light modes) |
 | PDF | pdf-lib, pdfjs-dist |
 | OCR | tesseract.js |
-| AI (background removal, upscaling) | @imgly/background-removal, ONNX Runtime WebGPU/WASM |
+| AI (background removal) | @imgly/background-removal, ONNX Runtime WebGPU/WASM |
 | Icons | lucide-react |
 | QR codes | qrcode |
 | Hosting | Netlify (static, with SPA redirects + security headers) |

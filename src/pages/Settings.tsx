@@ -368,7 +368,7 @@ export const Settings: React.FC<SettingsProps> = ({ theme, onThemeChange, onOpen
             {STATIC_PAGES.map(page => (
               <AppLink key={page.id} href={page.path} onNavigate={() => onOpenPage(page.id)}
                 className="flex items-center justify-between gap-3 px-4 sm:px-6 py-3.5 text-sm font-semibold text-foreground hover:bg-muted transition-colors">
-                {page.title}
+                {page.label}
                 <ChevronRight className="w-4 h-4 text-muted-foreground" aria-hidden="true" />
               </AppLink>
             ))}

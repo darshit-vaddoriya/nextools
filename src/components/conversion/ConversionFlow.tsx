@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import {
   ArrowLeft, AlertCircle, Download, RotateCcw, Share2, Sparkles, X,
 } from 'lucide-react';
@@ -10,6 +10,7 @@ import { Stepper, type Step } from '../ui/Stepper';
 import { formatBytes, formatOf } from '../../lib/formats';
 import { useConversion, type ConversionResult, type RunContext } from '../../lib/useConversion';
 import { useToast } from '../Toast';
+import { NextSteps } from './NextSteps';
 
 const STEPS: Step[] = [
   { id: 'upload',    label: 'Upload' },
@@ -71,6 +72,12 @@ export const ConversionFlow: React.FC<ConversionFlowProps> = ({
   const queued = flow.files.map((f) => f.file);
   const optionsNode = typeof options === 'function' ? options(queued) : options;
   const action = typeof actionLabel === 'function' ? actionLabel(queued) : actionLabel;
+
+  // One File for the result, so the next-step suggestions are worked out once.
+  const resultFile = useMemo(
+    () => (flow.result ? new File([flow.result.blob], flow.result.filename, { type: flow.result.blob.type }) : null),
+    [flow.result],
+  );
 
   const handleDownload = () => {
     if (!flow.result || !flow.downloadUrl) return;
@@ -235,6 +242,8 @@ export const ConversionFlow: React.FC<ConversionFlowProps> = ({
               Share
             </Button>
           </div>
+
+          {resultFile && <NextSteps file={resultFile} currentToolId={toolId} />}
         </div>
       )}
 

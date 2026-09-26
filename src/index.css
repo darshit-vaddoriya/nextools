@@ -359,6 +359,21 @@
 /* ══════════════════════════════════════════════════════════
    FORM ELEMENTS
 ══════════════════════════════════════════════════════════ */
+/*
+ * Below-the-fold sections skip style, layout and paint until they are about
+ * to scroll into view. The homepage lists every tool (about 3,000 elements),
+ * and laying that out up front cost ~2.5 s of main-thread time on a mid-range
+ * phone. The markup and links stay in the DOM, so crawlers, find-in-page and
+ * anchors still see everything. `auto` makes the browser remember each
+ * section's real height once it has been rendered, so the scrollbar settles.
+ */
+@layer utilities {
+  .cv-auto {
+    content-visibility: auto;
+    contain-intrinsic-size: auto 640px;
+  }
+}
+
 @layer components {
   .input-base {
     @apply w-full rounded-lg border px-3 py-2 text-sm
@@ -941,7 +956,33 @@ body {
   margin-bottom: 0.5em;
 }
 .md-preview > :first-child { margin-top: 0; }
-.md-preview table { min-width: 0; font-size: 13px; }
+/* Tables match Claude / GitHub previews: full width, a visible grid on every
+   cell, plain header row. Overrides the article-style table from .blog-prose. */
+.md-preview .table-scroll {
+  border-radius: 8px;
+  box-shadow: none;
+  background: transparent;
+}
+.md-preview table { width: 100%; min-width: 0; font-size: 14px; border-collapse: collapse; }
+.md-preview th,
+.md-preview td {
+  border: 1px solid rgb(var(--border));
+  padding: 8px 14px;
+  vertical-align: top;
+}
+.md-preview th {
+  position: static;
+  background: rgb(var(--muted) / 0.6);
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0;
+  text-transform: none;
+  white-space: normal;
+  color: rgb(var(--foreground));
+}
+.md-preview td:first-child { font-weight: 400; }
+.md-preview tbody tr:nth-child(even) { background: transparent; }
+.md-preview tbody tr:last-child td { border-bottom: 1px solid rgb(var(--border)); }
 .md-preview pre { font-size: 12.5px; border-radius: 10px; padding: 12px 14px; }
 
 /* Task lists: marked emits a disabled checkbox inside the <li>. */
