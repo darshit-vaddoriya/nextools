@@ -258,19 +258,23 @@ export const MyFiles: React.FC<MyFilesProps> = ({ onBrowseTools, onOpenTool }) =
           { icon: HardDrive, label: 'Saved files', value: `${stats.files} · ${formatBytes(stats.bytes)}` },
           { icon: Clock3, label: 'Last activity', value: stats.last ? relativeTime(stats.last) : '—' },
         ].map(({ icon: Icon, label, value }) => (
-          <div key={label} className="flex items-center gap-3 rounded-[var(--radius-lg)] border border-border bg-card px-4 py-3.5">
-            <span className="grid place-items-center w-9 h-9 shrink-0 rounded-[var(--radius-sm)] bg-surface-container text-muted-foreground">
+          <div key={label} className="flex items-center gap-3 rounded-[var(--radius-lg)] border border-border bg-card px-3 sm:px-4 py-3 sm:py-3.5">
+            {/* Icon dropped on phones: two cards a row leave the value too little room. */}
+            <span className="hidden sm:grid place-items-center w-9 h-9 shrink-0 rounded-[var(--radius-sm)] bg-surface-container text-muted-foreground">
               <Icon className="w-4 h-4" aria-hidden="true" />
             </span>
             <div className="min-w-0">
               <dt className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground">{label}</dt>
-              <dd className="truncate text-base font-extrabold text-foreground tabular-nums">{value}</dd>
+              <dd className="sm:truncate leading-snug text-base font-extrabold text-foreground tabular-nums">{value}</dd>
             </div>
           </div>
         ))}
       </dl>
 
-      <div className="mt-8 grid gap-6 lg:grid-cols-[250px_minmax(0,1fr)]">
+      {/* grid-cols-1 = minmax(0, 1fr): with the implicit auto column, the tool
+          chip scroller set the column to its full width (~1000px on a phone)
+          and everything past the screen edge was clipped. */}
+      <div className="mt-8 grid grid-cols-1 gap-6 lg:grid-cols-[250px_minmax(0,1fr)]">
         {/* ── Tools (sidebar on desktop, scroller on mobile) ── */}
         <nav aria-label="Filter by tool" className="lg:sticky lg:top-20 lg:self-start">
           <h2 className="hidden lg:block mb-2 px-2 text-[11px] font-bold uppercase tracking-wider text-muted-foreground">Tools</h2>

@@ -134,6 +134,15 @@
 @layer base {
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
+  /* A grid with no column template gets one implicit `auto` column, which is
+     at least as wide as its widest child. On a phone, where most grids here
+     are single-column until sm:/lg:grid-cols-*, a long file name or a chip
+     scroller then stretched the column past the screen and the overflow was
+     clipped (History, category tool lists). minmax(0, 1fr) is the same single
+     column that is allowed to shrink. In the base layer, so every
+     grid-cols-* utility still overrides it. */
+  .grid { grid-template-columns: minmax(0, 1fr); }
+
   html {
     scroll-behavior: smooth;
     -webkit-font-smoothing: antialiased;
@@ -457,6 +466,10 @@ input[type="range"].range-progress:focus-visible {
   @apply text-[10px] font-semibold uppercase tracking-[0.1em]
          text-muted-foreground;
 }
+/* 10px uppercase is hard to read on a phone held at arm's length. */
+@media (max-width: 639.98px) {
+  .section-label, .section-kicker { font-size: 11px; }
+}
 
 /* ══════════════════════════════════════════════════════════
    ANIMATIONS
@@ -663,6 +676,21 @@ input[type="range"].range-progress:focus-visible {
 /* Website-only chrome (breadcrumbs, long-form SEO sections, back links the
    app bar replaces). Still rendered, so crawlers and browsers keep it. */
 .app-mode .web-only { display: none !important; }
+
+/* ── Touch targets ────────────────────────────────────────
+   Some controls are deliberately small to look at (breadcrumbs, badges, the
+   ⓘ button, compact copy buttons) but a fingertip needs ~40px. .hit-y and
+   .hit enlarge only the tappable area with an invisible ::after, so the
+   layout does not move. Vertical-only for items in a row, so neighbours'
+   areas never overlap. Touch screens only. */
+@media (pointer: coarse) {
+  /* :where() = zero specificity, so an element that is already absolute or
+     fixed (a copy button pinned in a corner) keeps its own positioning. */
+  :where(.hit-y, .hit) { position: relative; }
+  .hit-y::after, .hit::after { content: ''; position: absolute; }
+  .hit-y::after { inset: -9px 0; }
+  .hit::after { inset: -10px; }
+}
 
 /* App-mode page load: hide the prerendered website layout until React has
    switched to the app layout (App.tsx adds .app-ready), and paint the app bar

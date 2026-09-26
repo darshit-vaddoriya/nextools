@@ -85,11 +85,13 @@ export const WhitePanel: React.FC<{
   children: React.ReactNode;
 }> = ({ label, headerRight, className = '', children }) => (
   <div className={`rounded-2xl overflow-hidden flex flex-col bg-card border border-border ${className}`}>
-    <div className="px-4 py-2.5 flex items-center justify-between border-b border-border shrink-0">
+    {/* Wraps on narrow screens: a label plus four buttons does not fit a
+        320px phone, and the overflow was clipped by the rounded panel. */}
+    <div className="px-4 py-2.5 flex flex-wrap items-center justify-between gap-x-3 gap-y-2 border-b border-border shrink-0">
       <span className="text-[11.5px] font-bold uppercase tracking-[0.06em] font-mono text-muted-foreground">
         {label}
       </span>
-      {headerRight}
+      {headerRight && <div className="min-w-0 max-w-full [&>*]:flex-wrap">{headerRight}</div>}
     </div>
     {children}
   </div>

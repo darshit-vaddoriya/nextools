@@ -30,7 +30,7 @@ export const CopyButton: React.FC<CopyButtonProps> = ({ text, className = '', la
     <button
       onClick={handleCopy}
       disabled={!text}
-      className={`inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-medium rounded-md border transition-all duration-150 ${
+      className={`hit-y inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-medium rounded-md border transition-all duration-150 ${
         copied
           ? 'bg-success/10 text-success border-success/30'
           : 'bg-muted text-foreground/80 border-border hover:bg-muted hover:border-input hover:text-foreground'

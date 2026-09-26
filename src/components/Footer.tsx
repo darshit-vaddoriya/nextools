@@ -24,8 +24,10 @@ const POPULAR_TOOLS = [
   { id: 'password-generator', label: 'Password Generator' },
 ];
 
+// On phones each link is a 40px-tall row: at 20px, stacked 10px apart, the
+// footer was a column of targets too tight to hit reliably.
 const linkClass =
-  'text-[13px] text-muted-foreground hover:text-primary transition-colors duration-150 text-left';
+  'inline-flex items-center min-h-[40px] sm:min-h-0 text-[14px] sm:text-[13px] text-muted-foreground hover:text-primary transition-colors duration-150 text-left';
 
 const pagePath = (id: StaticPageId) => getStaticPage(id)?.path ?? '/';
 
@@ -39,7 +41,7 @@ export const Footer: React.FC<FooterProps> = ({
         <AppLink
           href={href}
           onNavigate={go}
-          className={Icon ? `${linkClass} inline-flex items-center gap-2` : linkClass}
+          className={Icon ? `${linkClass} gap-2` : linkClass}
         >
           {Icon && <Icon className="w-3.5 h-3.5 shrink-0" />} {children}
         </AppLink>
@@ -107,7 +109,7 @@ export const Footer: React.FC<FooterProps> = ({
           {/* Product */}
           <div>
             <h3 className="section-label mb-3.5">Product</h3>
-            <ul className="space-y-2.5">
+            <ul className="sm:space-y-2.5">
               <Row href="/all-tools" go={() => onSelectCategory('all')} icon={LayoutGrid}>All Tools</Row>
               <Row href="/#categories-section" go={onOpenCategories} icon={FolderTree}>Categories</Row>
               {POPULAR_TOOLS.slice(0, 3).map(t => (
@@ -119,7 +121,7 @@ export const Footer: React.FC<FooterProps> = ({
           {/* Resources */}
           <div>
             <h3 className="section-label mb-3.5">Resources</h3>
-            <ul className="space-y-2.5">
+            <ul className="sm:space-y-2.5">
               <Row href="/#faq-heading" go={onOpenFaq} icon={Sparkles}>FAQ</Row>
               <Row href="/blog" go={() => onOpenBlog()} icon={Newspaper}>Blog</Row>
               <Row href={pagePath('contact')} go={() => onOpenPage('contact')} icon={LifeBuoy}>Support</Row>
@@ -142,7 +144,7 @@ export const Footer: React.FC<FooterProps> = ({
           {/* Company */}
           <div>
             <h3 className="section-label mb-3.5">Company</h3>
-            <ul className="space-y-2.5">
+            <ul className="sm:space-y-2.5">
               <Row href={pagePath('about')} go={() => onOpenPage('about')} icon={Info}>About Us</Row>
               <Row href={pagePath('contact')} go={() => onOpenPage('contact')} icon={Mail}>Contact Us</Row>
               <li>
@@ -154,7 +156,7 @@ export const Footer: React.FC<FooterProps> = ({
           {/* Legal */}
           <div>
             <h3 className="section-label mb-3.5">Legal</h3>
-            <ul className="space-y-2.5">
+            <ul className="sm:space-y-2.5">
               <Row href={pagePath('privacy')} go={() => onOpenPage('privacy')} icon={ShieldCheck}>Privacy Policy</Row>
               <Row href={pagePath('terms')} go={() => onOpenPage('terms')} icon={Scale}>Terms of Service</Row>
               <Row href={pagePath('disclaimer')} go={() => onOpenPage('disclaimer')} icon={AlertTriangle}>Disclaimer</Row>
@@ -174,7 +176,7 @@ export const Footer: React.FC<FooterProps> = ({
                 href={SUPPORT_URL}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 text-[13px] font-semibold text-rose-700 dark:text-rose-500 hover:brightness-110 transition-all duration-150"
+                className="inline-flex items-center gap-1.5 min-h-[40px] sm:min-h-0 text-[13px] font-semibold text-rose-700 dark:text-rose-500 hover:brightness-110 transition-all duration-150"
               >
                 <Heart className="w-3.5 h-3.5" /> Support NextTool
               </a>
@@ -182,7 +184,7 @@ export const Footer: React.FC<FooterProps> = ({
             <AppLink
               href="/all-tools"
               onNavigate={() => onSelectCategory('all')}
-              className="inline-flex items-center gap-1.5 text-[13px] font-semibold text-primary hover:brightness-110 transition-all duration-150"
+              className="inline-flex items-center gap-1.5 min-h-[40px] sm:min-h-0 text-[13px] font-semibold text-primary hover:brightness-110 transition-all duration-150"
             >
               Browse all tools <ArrowUpRight className="w-3.5 h-3.5" />
             </AppLink>

@@ -2141,7 +2141,7 @@ export const ImageEditorTool: React.FC<{ onExit?: () => void }> = ({ onExit }) =
   return (
     <div ref={editorRef} className="fixed inset-0 z-[60] flex flex-col bg-muted text-foreground">
       {/* ── Top bar ─────────────────────────────────────────── */}
-      <header className="shrink-0 h-14 flex items-center gap-2 px-3 border-b bg-card border-border z-10 overflow-x-auto">
+      <header className="shrink-0 h-14 pt-[env(safe-area-inset-top)] box-content flex items-center gap-1 sm:gap-2 px-2 sm:px-3 border-b bg-card border-border z-10 overflow-x-auto">
         <HdrBtn onClick={() => onExit?.()} title="Back to NextTool">
           <ArrowLeft className="w-4 h-4" />
         </HdrBtn>
@@ -2163,10 +2163,12 @@ export const ImageEditorTool: React.FC<{ onExit?: () => void }> = ({ onExit }) =
         />
 
         <div className="min-w-0 flex-1 flex items-center gap-2.5">
-          <div className="w-7 h-8 rounded-md overflow-hidden bg-primary/10 border border-primary/20 flex items-center justify-center shrink-0">
+          {/* On a phone the controls fill the bar; the title only takes the
+              space and, squeezed to nothing, its icon slid under Undo. */}
+          <div className="hidden sm:flex w-7 h-8 rounded-md overflow-hidden bg-primary/10 border border-primary/20 items-center justify-center shrink-0">
             <ImageIcon className="w-3.5 h-3.5 text-primary" />
           </div>
-          <div className="min-w-0">
+          <div className="hidden sm:block min-w-0">
             <h1 className="text-xs font-semibold text-foreground truncate">Image Editor</h1>
             <div className="text-[10px] font-mono text-muted-foreground truncate">
               {file.name} · {imgW || '…'} × {imgH || '…'} · {fileType.replace('image/', '')} · {formatBytes(file.size)} · {zoomPct}
@@ -2207,12 +2209,12 @@ export const ImageEditorTool: React.FC<{ onExit?: () => void }> = ({ onExit }) =
         <HdrBtn onClick={toggleFullscreen} title="Fullscreen" className="hidden lg:flex" active={isFullscreen}>
           <Maximize2 className="w-4 h-4" />
         </HdrBtn>
-        <HdrBtn onClick={copyImage} title="Copy image to clipboard">
+        <HdrBtn onClick={copyImage} title="Copy image to clipboard" className="hidden sm:flex">
           <Copy className="w-4 h-4" /> <span className="hidden md:inline">Copy</span>
         </HdrBtn>
         <div className="flex items-center shrink-0 rounded-lg overflow-hidden">
-          <button onClick={downloadExport} className="h-9 px-3.5 inline-flex items-center gap-1.5 text-xs font-semibold bg-primary hover:brightness-110 text-primary-foreground transition-all">
-            <Download className="w-4 h-4" /> Export
+          <button onClick={downloadExport} aria-label="Export" className="h-9 px-2.5 sm:px-3.5 inline-flex items-center gap-1.5 text-xs font-semibold bg-primary hover:brightness-110 text-primary-foreground transition-all">
+            <Download className="w-4 h-4" /> <span className="hidden sm:inline">Export</span>
           </button>
           <button onClick={openExport} title="Export options" aria-label="Export options"
             className="h-9 px-2 inline-flex items-center bg-primary hover:brightness-110 text-primary-foreground transition-all border-l border-primary-foreground/20">
@@ -2221,9 +2223,12 @@ export const ImageEditorTool: React.FC<{ onExit?: () => void }> = ({ onExit }) =
         </div>
       </header>
 
-      <div className="flex-1 min-h-0 flex">
-        {/* ── Left toolbar ─────────────────────────────────── */}
-        <nav className="shrink-0 flex lg:flex-col gap-1 p-2 border-r bg-card border-border overflow-x-auto lg:overflow-y-auto lg:w-16 order-2 lg:order-1">
+      {/* Column on phones (canvas, then the tool strip below it), row from lg.
+          As a row on a phone the unshrinkable strip took the full width and
+          left the canvas 0px wide, so an opened image was invisible. */}
+      <div className="flex-1 min-h-0 flex flex-col lg:flex-row">
+        {/* ── Left toolbar (bottom strip on phones) ────────── */}
+        <nav className="shrink-0 min-w-0 flex lg:flex-col gap-1 p-2 pb-[calc(0.5rem+env(safe-area-inset-bottom))] lg:pb-2 border-t lg:border-t-0 lg:border-r bg-card border-border overflow-x-auto lg:overflow-y-auto lg:w-16 order-2 lg:order-1">
           {TOOL_GROUPS.map((group, gi) => (
             <React.Fragment key={group}>
               {gi > 0 && <div className="w-px h-6 self-center lg:w-6 lg:h-px lg:self-auto lg:my-1 bg-border shrink-0" aria-hidden="true" />}
@@ -2244,6 +2249,10 @@ export const ImageEditorTool: React.FC<{ onExit?: () => void }> = ({ onExit }) =
 
         {/* ── Canvas area ──────────────────────────────────── */}
         <div className="flex-1 min-w-0 min-h-0 flex flex-col order-1 lg:order-2">
+          {/* Positioned wrapper, so the phone's floating zoom and panel buttons
+              sit in the canvas's own corners, above the tool strip and the
+              status bar rather than on top of them. */}
+          <div className="relative flex-1 min-h-0 flex flex-col">
           <div ref={containerRef} className="flex-1 min-h-0 overflow-auto relative bg-muted">
             <div className="min-w-full min-h-full flex">
               <div className="m-auto p-4 relative">
@@ -2307,6 +2316,28 @@ export const ImageEditorTool: React.FC<{ onExit?: () => void }> = ({ onExit }) =
                 />
               </div>
             </div>
+          </div>
+
+            {/* Mobile zoom controls */}
+        <div className="absolute bottom-3 left-3 sm:hidden z-20 flex items-center gap-0.5 rounded-xl border bg-card border-border shadow-lg p-1">
+          <button onClick={() => setZoom(Math.max(ZOOM_MIN, zoom / 1.25))} title="Zoom out" aria-label="Zoom out"
+            className="w-9 h-9 rounded-lg flex items-center justify-center hover:bg-muted  text-muted-foreground">
+            <ZoomOut className="w-4 h-4" />
+          </button>
+          <span className="w-12 text-center text-[11px] font-mono  text-muted-foreground select-none">{zoomPct}</span>
+          <button onClick={() => setZoom(z => Math.min(ZOOM_MAX, z * 1.25))} title="Zoom in" aria-label="Zoom in"
+            className="w-9 h-9 rounded-lg flex items-center justify-center hover:bg-muted  text-muted-foreground">
+            <ZoomIn className="w-4 h-4" />
+          </button>
+          <button onClick={applyFit} title="Fit to screen" aria-label="Fit to screen"
+            className="w-9 h-9 rounded-lg flex items-center justify-center hover:bg-muted  text-muted-foreground">
+            <Maximize2 className="w-4 h-4" />
+          </button>
+        </div>
+
+            <HdrBtn onClick={() => setShowSidebar(v => !v)} title="Settings panel" className="absolute bottom-3 right-3 lg:hidden z-20 h-11 w-11 rounded-xl shadow-lg bg-card">
+          <SlidersHorizontal className="w-4 h-4" />
+        </HdrBtn>
           </div>
 
           {/* Bottom bar */}
@@ -2814,26 +2845,6 @@ export const ImageEditorTool: React.FC<{ onExit?: () => void }> = ({ onExit }) =
           </>
         )}
 
-        {/* Mobile zoom controls */}
-        <div className="absolute bottom-16 right-3 sm:hidden z-40 flex items-center gap-0.5 rounded-xl border dark:bg-card border-border shadow-lg p-1">
-          <button onClick={() => setZoom(Math.max(ZOOM_MIN, zoom / 1.25))} title="Zoom out" aria-label="Zoom out"
-            className="w-9 h-9 rounded-lg flex items-center justify-center hover:bg-muted  text-muted-foreground">
-            <ZoomOut className="w-4 h-4" />
-          </button>
-          <span className="w-12 text-center text-[11px] font-mono  text-muted-foreground select-none">{zoomPct}</span>
-          <button onClick={() => setZoom(z => Math.min(ZOOM_MAX, z * 1.25))} title="Zoom in" aria-label="Zoom in"
-            className="w-9 h-9 rounded-lg flex items-center justify-center hover:bg-muted  text-muted-foreground">
-            <ZoomIn className="w-4 h-4" />
-          </button>
-          <button onClick={applyFit} title="Fit to screen" aria-label="Fit to screen"
-            className="w-9 h-9 rounded-lg flex items-center justify-center hover:bg-muted  text-muted-foreground">
-            <Maximize2 className="w-4 h-4" />
-          </button>
-        </div>
-
-        <HdrBtn onClick={() => setShowSidebar(v => !v)} title="Settings panel" className="absolute bottom-3 right-3 lg:hidden z-40 h-11 w-11 rounded-xl shadow-lg">
-          <SlidersHorizontal className="w-4 h-4" />
-        </HdrBtn>
       </div>
 
       {/* Replace confirmation */}

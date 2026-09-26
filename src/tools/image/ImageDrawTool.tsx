@@ -1616,7 +1616,7 @@ export const ImageDrawTool: React.FC = () => {
 
   return (
     <div className="fixed inset-0 z-[60] flex flex-col bg-muted dark:bg-[#0b0b12] text-foreground ">
-      <header className="shrink-0 h-14 flex items-center gap-2 px-3 border-b dark:bg-[#12121a] dark:border-white/[0.08] bg-card border-border z-10 overflow-x-auto">
+      <header className="shrink-0 h-14 flex items-center gap-1 sm:gap-2 px-2 sm:px-3 border-b dark:bg-[#12121a] dark:border-white/[0.08] bg-card border-border z-10 overflow-x-auto">
         <HdrBtn onClick={() => { setFile(null); setError(null); }} title="Close editor">
           <X className="w-4 h-4" />
         </HdrBtn>
@@ -1634,11 +1634,12 @@ export const ImageDrawTool: React.FC = () => {
           }}
         />
 
+        {/* Title hidden on phones: squeezed to nothing, it slid under Undo. */}
         <div className="min-w-0 flex-1 flex items-center gap-2.5">
-          <div className="w-7 h-8 rounded-md overflow-hidden  bg-card border  border-border flex items-center justify-center shrink-0">
+          <div className="hidden sm:flex w-7 h-8 rounded-md overflow-hidden  bg-card border  border-border items-center justify-center shrink-0">
             <ImageIcon className="w-3.5 h-3.5 text-pink-700 dark:text-pink-400" />
           </div>
-          <div className="min-w-0">
+          <div className="hidden sm:block min-w-0">
             <div className="text-xs font-semibold  text-foreground truncate">{file.name}</div>
             <div className="text-[10px] font-mono  text-muted-foreground">
               {imgW || '…'} × {imgH || '…'}px · {objects.length} object{objects.length === 1 ? '' : 's'}
@@ -1684,12 +1685,12 @@ export const ImageDrawTool: React.FC = () => {
           </button>
         </div>
 
-        <HdrBtn onClick={copyImage} title="Copy image to clipboard">
+        <HdrBtn onClick={copyImage} title="Copy image to clipboard" className="hidden sm:flex">
           <Copy className="w-4 h-4" /> <span className="hidden md:inline">Copy</span>
         </HdrBtn>
         <div className="flex items-center shrink-0 rounded-lg overflow-hidden">
-          <button onClick={downloadExport} className="h-9 px-3.5 inline-flex items-center gap-1.5 text-xs font-semibold bg-primary hover:brightness-110 text-primary-foreground transition-all">
-            <Download className="w-4 h-4" /> Export
+          <button onClick={downloadExport} aria-label="Export" className="h-9 px-2.5 sm:px-3.5 inline-flex items-center gap-1.5 text-xs font-semibold bg-primary hover:brightness-110 text-primary-foreground transition-all">
+            <Download className="w-4 h-4" /> <span className="hidden sm:inline">Export</span>
           </button>
           <button onClick={openExport} title="Export options" aria-label="Export options"
             className="h-9 px-2 inline-flex items-center bg-primary hover:brightness-110 text-primary-foreground transition-all border-l border-primary-foreground/20">
@@ -1698,8 +1699,10 @@ export const ImageDrawTool: React.FC = () => {
         </div>
       </header>
 
-      <div className="flex-1 min-h-0 flex">
-        <nav className="shrink-0 flex lg:flex-col gap-1 p-2 border-r dark:bg-[#12121a] dark:border-white/[0.08] bg-card border-border overflow-x-auto lg:overflow-y-auto lg:w-[68px] lg:p-1.5">
+      {/* Column on phones (canvas, then the tool strip), row from lg. As a
+          row the unshrinkable strip took the whole width: canvas 0px wide. */}
+      <div className="flex-1 min-h-0 flex flex-col lg:flex-row">
+        <nav className="shrink-0 min-w-0 order-2 lg:order-none flex lg:flex-col gap-1 p-2 pb-[calc(0.5rem+env(safe-area-inset-bottom))] lg:pb-2 border-t lg:border-t-0 lg:border-r dark:bg-[#12121a] dark:border-white/[0.08] bg-card border-border overflow-x-auto lg:overflow-y-auto lg:w-[68px] lg:p-1.5">
           {TOOL_ORDER.map(t => (
             <RailBtn key={t.id} active={tool === t.id} onClick={() => setTool(t.id)} title={t.label} shortcut={t.shortcut} label={t.label}>
               <t.Icon className="w-[18px] h-[18px]" />
@@ -1707,7 +1710,10 @@ export const ImageDrawTool: React.FC = () => {
           ))}
         </nav>
 
-        <div className="flex-1 min-w-0 min-h-0 flex flex-col">
+        <div className="flex-1 min-w-0 min-h-0 flex flex-col order-1 lg:order-none">
+          {/* Positioned wrapper: the phone's floating zoom and panel buttons sit
+              in the canvas's corners, not over the status bar or tool strip. */}
+          <div className="relative flex-1 min-h-0 flex flex-col">
           <div ref={containerRef} className="flex-1 min-h-0 overflow-auto relative">
             <div className="min-w-full min-h-full flex">
               <div className="m-auto p-4">
@@ -1774,6 +1780,31 @@ export const ImageDrawTool: React.FC = () => {
               className={`pointer-events-none absolute top-0 left-0 z-20 rounded-full border-2 ${tool === 'eraser' ? 'border-dashed' : 'border-solid'}`}
               style={{ visibility: 'hidden', borderColor: '#ef4444' }}
             />
+          </div>
+
+        <div className="absolute bottom-3 left-3 sm:hidden z-20 flex items-center gap-0.5 rounded-xl border dark:bg-[#12121a] dark:border-white/[0.12] bg-card border-border shadow-lg p-1">
+          <button onClick={() => setZoom(Math.max(ZOOM_MIN, zoom / 1.25))} title="Zoom out" aria-label="Zoom out"
+            className="w-8 h-8 rounded-lg flex items-center justify-center dark:hover:bg-white/[0.06] hover:bg-muted  text-muted-foreground">
+            <ZoomOut className="w-4 h-4" />
+          </button>
+          <span className="w-11 text-center text-[11px] font-mono  text-muted-foreground select-none">{zoomPct}</span>
+          <button onClick={() => setZoom(z => Math.min(ZOOM_MAX, z * 1.25))} title="Zoom in" aria-label="Zoom in"
+            className="w-8 h-8 rounded-lg flex items-center justify-center dark:hover:bg-white/[0.06] hover:bg-muted  text-muted-foreground">
+            <ZoomIn className="w-4 h-4" />
+          </button>
+          <button onClick={applyFit} title="Fit to screen" aria-label="Fit to screen"
+            className="w-8 h-8 rounded-lg flex items-center justify-center dark:hover:bg-white/[0.06] hover:bg-muted  text-muted-foreground">
+            <Maximize2 className="w-4 h-4" />
+          </button>
+        </div>
+
+        <HdrBtn
+          onClick={() => setShowOptions(v => !v)}
+          title="Style & layers"
+          className="absolute bottom-3 right-3 lg:hidden z-20 h-10 w-10 rounded-xl shadow-lg bg-card"
+        >
+          <SlidersHorizontal className="w-4 h-4" />
+        </HdrBtn>
           </div>
 
           <div className="shrink-0 flex items-center justify-between gap-3 px-3 py-1.5 border-t dark:bg-[#12121a] dark:border-white/[0.08] bg-card border-border text-[11px]">
@@ -2116,29 +2147,6 @@ export const ImageDrawTool: React.FC = () => {
           </>
         )}
 
-        <div className="absolute bottom-16 right-3 sm:hidden z-40 flex items-center gap-0.5 rounded-xl border dark:bg-[#12121a] dark:border-white/[0.12] bg-card border-border shadow-lg p-1">
-          <button onClick={() => setZoom(Math.max(ZOOM_MIN, zoom / 1.25))} title="Zoom out" aria-label="Zoom out"
-            className="w-8 h-8 rounded-lg flex items-center justify-center dark:hover:bg-white/[0.06] hover:bg-muted  text-muted-foreground">
-            <ZoomOut className="w-4 h-4" />
-          </button>
-          <span className="w-11 text-center text-[11px] font-mono  text-muted-foreground select-none">{zoomPct}</span>
-          <button onClick={() => setZoom(z => Math.min(ZOOM_MAX, z * 1.25))} title="Zoom in" aria-label="Zoom in"
-            className="w-8 h-8 rounded-lg flex items-center justify-center dark:hover:bg-white/[0.06] hover:bg-muted  text-muted-foreground">
-            <ZoomIn className="w-4 h-4" />
-          </button>
-          <button onClick={applyFit} title="Fit to screen" aria-label="Fit to screen"
-            className="w-8 h-8 rounded-lg flex items-center justify-center dark:hover:bg-white/[0.06] hover:bg-muted  text-muted-foreground">
-            <Maximize2 className="w-4 h-4" />
-          </button>
-        </div>
-
-        <HdrBtn
-          onClick={() => setShowOptions(v => !v)}
-          title="Style & layers"
-          className="absolute bottom-3 right-3 lg:hidden z-40 h-10 w-10 rounded-xl shadow-lg"
-        >
-          <SlidersHorizontal className="w-4 h-4" />
-        </HdrBtn>
       </div>
 
       {error && (

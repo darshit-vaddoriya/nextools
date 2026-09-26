@@ -267,7 +267,7 @@ export const JsonFormatter: React.FC = () => {
             disabled={!output}
             title="Download JSON"
             aria-label="Download JSON"
-            className="inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-medium rounded-md border border-border bg-muted text-foreground/80 hover:bg-muted hover:border-input hover:text-foreground transition-all duration-150 disabled:opacity-40 disabled:cursor-not-allowed"
+            className="hit-y inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-medium rounded-md border border-border bg-muted text-foreground/80 hover:bg-muted hover:border-input hover:text-foreground transition-all duration-150 disabled:opacity-40 disabled:cursor-not-allowed"
           >
             <Download className="w-3.5 h-3.5" />
           </button>

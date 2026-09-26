@@ -1213,7 +1213,7 @@ const ToolView: React.FC<{
             // tool's own controls (history, live pill) and its category.
             <div className="flex items-center justify-between gap-2 -mt-1">
               <AppLink href={`/category/${activeTool.category}`} onNavigate={() => onSelectCategory(activeTool.category)}
-                className={`badge capitalize border-transparent ${conf?.iconBg} ${conf?.iconColor}`}>
+                className={`hit-y badge capitalize border-transparent ${conf?.iconBg} ${conf?.iconColor}`}>
                 {conf?.name}
               </AppLink>
               <div className="flex items-center gap-2">
@@ -1226,12 +1226,12 @@ const ToolView: React.FC<{
           ) : (<>
           {/* Breadcrumb */}
           <nav className="flex items-center gap-1.5 text-[12px] flex-wrap" aria-label="Breadcrumb">
-            <button onClick={onBack} className="text-muted-foreground hover:text-foreground transition-colors">
+            <button onClick={onBack} className="hit-y text-muted-foreground hover:text-foreground transition-colors">
               Home
             </button>
             <ChevronRight className="w-3 h-3 text-border" />
             <AppLink href={`/category/${activeTool.category}`} onNavigate={() => onSelectCategory(activeTool.category)}
-              className="text-muted-foreground hover:text-primary transition-colors capitalize">
+              className="hit-y text-muted-foreground hover:text-primary transition-colors capitalize">
               {conf?.name}
             </AppLink>
             <ChevronRight className="w-3 h-3 text-border" />
@@ -1257,7 +1257,7 @@ const ToolView: React.FC<{
                         type="button"
                         tabIndex={0}
                         aria-label="How to use this tool"
-                        className="w-5 h-5 rounded-full flex items-center justify-center text-muted-foreground hover:text-primary hover:bg-primary/10 transition-colors"
+                        className="hit w-5 h-5 rounded-full flex items-center justify-center text-muted-foreground hover:text-primary hover:bg-primary/10 transition-colors"
                       >
                         <Info className="w-3.5 h-3.5" />
                       </button>
@@ -1276,7 +1276,7 @@ const ToolView: React.FC<{
                   <AppLink
                     href={`/category/${activeTool.category}`}
                     onNavigate={() => onSelectCategory(activeTool.category)}
-                    className={`badge capitalize border-transparent ${conf?.iconBg} ${conf?.iconColor}`}
+                    className={`hit-y badge capitalize border-transparent ${conf?.iconBg} ${conf?.iconColor}`}
                   >
                     {conf?.name}
                   </AppLink>
