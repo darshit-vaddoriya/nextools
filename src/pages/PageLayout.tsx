@@ -165,7 +165,7 @@ export const ExternalLink: React.FC<{ href: string; children: React.ReactNode }>
     href={href}
     target="_blank"
     rel="noopener noreferrer"
-    className="text-primary underline underline-offset-2 hover:brightness-110"
+    className="text-primary underline underline-offset-2 [overflow-wrap:anywhere] hover:brightness-110"
   >
     {children}
   </a>

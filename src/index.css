@@ -663,6 +663,33 @@ input[type="range"].range-progress:focus-visible {
 /* Website-only chrome (breadcrumbs, long-form SEO sections, back links the
    app bar replaces). Still rendered, so crawlers and browsers keep it. */
 .app-mode .web-only { display: none !important; }
+
+/* App-mode page load: hide the prerendered website layout until React has
+   switched to the app layout (App.tsx adds .app-ready), and paint the app bar
+   and tab bar as empty shapes meanwhile, so a tap between screens looks like a
+   native screen change instead of the website flashing past. */
+.app-mode:not(.app-ready) #root { visibility: hidden; }
+.app-mode:not(.app-ready) body::before,
+.app-mode:not(.app-ready) body::after {
+  content: '';
+  position: fixed;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  background: rgb(var(--card) / 0.9);
+  border-color: rgb(var(--outline-variant));
+  border-style: solid;
+}
+.app-mode:not(.app-ready) body::before {
+  top: 0;
+  height: calc(56px + env(safe-area-inset-top, 0px));
+  border-width: 0 0 1px;
+}
+.app-mode:not(.app-ready) body::after {
+  bottom: 0;
+  height: var(--app-bottom-inset);
+  border-width: 1px 0 0;
+}
 .mobile-tabbar {
   padding-bottom: env(safe-area-inset-bottom, 0px);
   -webkit-touch-callout: none;
@@ -797,6 +824,13 @@ body {
   background: none;
   padding: 0;
   font-size: inherit;
+}
+/* Inline code (file names, URLs) has no spaces to break at, so a long one
+   pushes the page wider than a phone. Let it wrap anywhere; code blocks keep
+   their own horizontal scroll. */
+.blog-prose :not(pre) > code {
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 .blog-prose blockquote {

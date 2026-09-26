@@ -172,6 +172,12 @@ export function initPwa() {
       syncAppMode();
     });
     window.matchMedia(APP_WIDTH).addEventListener('change', syncAppMode);
+    // A media-query listener only reports changes after it is attached; a
+    // width that settled earlier (window restored, split screen, rotation
+    // during load) would otherwise leave the wrong layout. syncAppMode is
+    // cheap and only re-renders when the answer changes.
+    window.addEventListener('resize', syncAppMode, { passive: true });
+    window.addEventListener('load', syncAppMode, { once: true });
   } catch { /* old Safari */ }
 
   window.addEventListener('beforeinstallprompt', (e) => {

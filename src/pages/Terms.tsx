@@ -156,7 +156,7 @@ export const Terms: React.FC<TermsProps> = ({ onBack }) => (
           We may revise these terms from time to time; the current version is always the one
           published on this page, and the date at the top shows when it last changed. Questions about
           these terms can be sent to{' '}
-          <a href={`mailto:${CONTACT_EMAIL}`} className="text-primary underline underline-offset-2 hover:brightness-110">
+          <a href={`mailto:${CONTACT_EMAIL}`} className="text-primary underline underline-offset-2 [overflow-wrap:anywhere] hover:brightness-110">
             {CONTACT_EMAIL}
           </a>.
         </p>

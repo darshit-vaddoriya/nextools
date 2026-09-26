@@ -96,7 +96,7 @@ export const Disclaimer: React.FC<DisclaimerProps> = ({ onBack }) => (
       <PageSection title="Contact">
         <p>
           If you believe something on this site is inaccurate or misleading, please tell us at{' '}
-          <a href={`mailto:${CONTACT_EMAIL}`} className="text-primary underline underline-offset-2 hover:brightness-110">
+          <a href={`mailto:${CONTACT_EMAIL}`} className="text-primary underline underline-offset-2 [overflow-wrap:anywhere] hover:brightness-110">
             {CONTACT_EMAIL}
           </a>{' '}
           and we will review it.

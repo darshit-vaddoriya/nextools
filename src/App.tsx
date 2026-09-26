@@ -639,6 +639,10 @@ export const App: React.FC<{
   const BlogPostView = view('BlogPostView');
 
   const appMode = useAppMode();
+  // Reveal the page once it renders in the app layout (see .app-ready in index.css).
+  useEffect(() => {
+    if (appMode) document.documentElement.classList.add('app-ready');
+  }, [appMode]);
   const [appMenuOpen, setAppMenuOpen] = useState(false);
   const appBack = () => {
     // Back to the previous page of this site when there is one; a cold start
@@ -658,7 +662,7 @@ export const App: React.FC<{
     : currentView === 'tool' ? (activeTool?.name ?? 'Tool')
     : currentView === 'category' ? (ALL_CATEGORIES.find(c => c.id === activeCategoryView)?.name ?? 'Category')
     : currentView === 'blog' ? (activeBlogSlug ? 'Guide' : 'Guides')
-    : currentView === 'page' ? (getStaticPage(activePageId)?.title ?? 'NextTool')
+    : currentView === 'page' ? (getStaticPage(activePageId)?.label ?? 'NextTool')
     : 'Not found';
 
   return (

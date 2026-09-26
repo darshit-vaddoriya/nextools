@@ -901,7 +901,7 @@ export const HtmlToPdfTool: React.FC = () => {
             type="file"
             accept=".html,text/html"
             onChange={(e) => handleUpload(e.target.files)}
-            className="block text-xs text-muted-foreground file:mr-3 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-primary file:text-primary-foreground file:text-xs file:font-semibold hover:file:brightness-110 cursor-pointer"
+            className="block min-w-0 w-full text-xs text-muted-foreground file:mr-3 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-primary file:text-primary-foreground file:text-xs file:font-semibold hover:file:brightness-110 cursor-pointer"
           />
         </div>
         <ActionButton onClick={convert} busy={isBusy} busyLabel="Converting…">

@@ -161,7 +161,7 @@ export const CategoryDirectory: React.FC<CategoryDirectoryProps> = ({ cat, conf,
                     <h2 className="mb-3 mt-5 text-[14px] font-bold text-foreground">
                       {dropMatches.length} {dropMatches.length === 1 ? 'tool' : 'tools'} here can open {meta?.label} files
                     </h2>
-                    <ul className="grid gap-2 sm:grid-cols-2" role="list">
+                    <ul className="grid grid-cols-1 gap-2 sm:grid-cols-2" role="list">
                       {dropMatches.map((t) => (
                         <ToolRow key={t.id} tool={t} onOpen={() => openWithFiles(t.id)} />
                       ))}
@@ -174,7 +174,7 @@ export const CategoryDirectory: React.FC<CategoryDirectoryProps> = ({ cat, conf,
                     <h2 className="mb-3 mt-5 text-[14px] font-bold text-foreground">
                       {dropMatches.length ? 'Or convert it to another format' : `Convert your ${meta?.label} file`}
                     </h2>
-                    <ul className="grid gap-2 sm:grid-cols-2" role="list">
+                    <ul className="grid grid-cols-1 gap-2 sm:grid-cols-2" role="list">
                       {converterMatches.map((t) => (
                         <ToolRow key={t.id} tool={t} onOpen={() => openWithFiles(t.id)} note="File Converters" />
                       ))}
@@ -224,7 +224,7 @@ export const CategoryDirectory: React.FC<CategoryDirectoryProps> = ({ cat, conf,
               <h2 className="mb-3 mt-5 text-[12px] font-semibold uppercase tracking-wide text-muted-foreground">
                 {q ? (searchResults.length ? 'Best matches' : `Nothing matches “${query}”`) : 'Most used'}
               </h2>
-              <ul className="grid gap-2 sm:grid-cols-2" role="list">
+              <ul className="grid grid-cols-1 gap-2 sm:grid-cols-2" role="list">
                 {(q ? searchResults : popular).map((t) => (
                   <ToolRow key={t.id} tool={t} onOpen={() => onSelectTool(t.id)} note={t.description} />
                 ))}

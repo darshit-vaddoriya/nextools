@@ -82,8 +82,14 @@
           // Mirrors computeAppMode() in src/lib/pwa.ts.
           var mode = new URLSearchParams(location.search).get('mode');
           var preview = mode === 'app' || (mode !== 'web' && localStorage.getItem('nexttool-app-preview') === '1');
-          if ((standalone || preview) && matchMedia('(max-width: 1023.98px)').matches)
+          if ((standalone || preview) && matchMedia('(max-width: 1023.98px)').matches) {
             document.documentElement.classList.add('app-mode');
+            // Every page is prerendered in the website layout; the app layout
+            // exists only once React hydrates. Until then index.css hides the
+            // page behind an app-bar/tab-bar skeleton. App adds app-ready; this
+            // timer is the safety net if scripts never run.
+            setTimeout(function () { document.documentElement.classList.add('app-ready'); }, 3000);
+          }
         } catch (e) {}
       })();
     </script>

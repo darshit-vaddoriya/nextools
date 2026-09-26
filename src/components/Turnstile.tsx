@@ -69,14 +69,21 @@ export const Turnstile = React.forwardRef<TurnstileHandle, TurnstileProps>(
       return () => observer.disconnect();
     }, []);
 
+    // 'flexible' is at least 300px wide; on a 320px phone the form leaves
+    // ~250px, so the widget would push the page sideways. 'compact' (150x140)
+    // fits anywhere.
+    const [compact, setCompact] = useState(false);
+
     useEffect(() => {
       let cancelled = false;
       loadTurnstile().then(api => {
         if (cancelled || !box.current) return;
+        const small = box.current.clientWidth < 300;
+        setCompact(small);
         widgetId.current = api.render(box.current, {
           sitekey: siteKey,
           theme: dark ? 'dark' : 'light',
-          size: 'flexible',
+          size: small ? 'compact' : 'flexible',
           callback: (token: string) => cb.current.onToken(token),
           'expired-callback': () => cb.current.onToken(null),
           'error-callback': () => cb.current.onToken(null),
@@ -91,7 +98,7 @@ export const Turnstile = React.forwardRef<TurnstileHandle, TurnstileProps>(
     }, [siteKey, dark]);
 
     // Reserve the widget's height so the form does not jump when it appears.
-    return <div ref={box} className="min-h-[65px]" />;
+    return <div ref={box} className={`max-w-full ${compact ? 'min-h-[140px]' : 'min-h-[65px]'}`} />;
   },
 );
 Turnstile.displayName = 'Turnstile';

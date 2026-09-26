@@ -94,17 +94,18 @@ export const PwaPrompts: React.FC = () => {
       {/* ── Update ready ── (takes precedence over the install offer) */}
       {pwa.updateReady ? (
         <div role="status" className={`${FLOAT} toast-in flex items-center gap-3 rounded-2xl border border-border bg-card p-3 pl-3.5 shadow-2xl`}>
-          <span className="w-9 h-9 shrink-0 rounded-xl bg-primary/10 text-primary flex items-center justify-center">
+          <span className="max-[359px]:hidden w-9 h-9 shrink-0 rounded-xl bg-primary/10 text-primary flex items-center justify-center">
             <RefreshCw className="w-[18px] h-[18px]" />
           </span>
           <div className="flex-1 min-w-0">
-            <p className="text-[13.5px] font-bold leading-tight">Update available</p>
-            <p className="text-[12px] text-muted-foreground leading-snug mt-0.5">A newer NextTool is ready.</p>
+            <p className="text-[13.5px] font-bold leading-tight whitespace-nowrap">Update available</p>
+            {/* Dropped on the narrowest phones, where it only wraps word by word. */}
+            <p className="max-[359px]:hidden text-[12px] text-muted-foreground leading-snug mt-0.5 truncate">A newer NextTool is ready.</p>
           </div>
-          <button onClick={dismissUpdate} className="h-9 px-2.5 rounded-lg text-[12.5px] font-semibold text-muted-foreground hover:bg-muted">
+          <button onClick={dismissUpdate} className="shrink-0 h-9 px-2.5 rounded-lg text-[12.5px] font-semibold text-muted-foreground hover:bg-muted">
             Later
           </button>
-          <button onClick={applyUpdate} className="h-9 px-3.5 rounded-lg text-[12.5px] font-bold bg-primary text-primary-foreground active:scale-95 transition-transform">
+          <button onClick={applyUpdate} className="shrink-0 h-9 px-3.5 rounded-lg text-[12.5px] font-bold bg-primary text-primary-foreground active:scale-95 transition-transform">
             Reload
           </button>
         </div>

@@ -187,9 +187,13 @@ function stampServiceWorker() {
     ...walk(path.join(dist, 'assets')).filter(f => /\.(js|mjs|css|woff2?)$/.test(f)),
     ...(existsSync(path.join(dist, 'vendor')) ? walk(path.join(dist, 'vendor')) : []),
   ].map(f => ({ url: toUrl(f), bytes: statSync(f).size }));
+  // Blog articles are reading material, not something a tool needs offline;
+  // leaving them out saves ~40% of the download. Guides someone has opened are
+  // still kept by the worker's visited-pages cache.
   const pages = walk(dist)
     .filter(f => f.endsWith(`${path.sep}index.html`))
-    .map(f => ({ url: pageUrl(f), bytes: statSync(f).size }));
+    .map(f => ({ url: pageUrl(f), bytes: statSync(f).size }))
+    .filter(p => p.url !== '/blog' && !p.url.startsWith('/blog/'));
   const files = [...pages, ...assets];
   const bytes = files.reduce((n, f) => n + f.bytes, 0);
   writeFileSync(path.join(dist, 'offline-manifest.json'), JSON.stringify({ build: buildId, bytes, files }));

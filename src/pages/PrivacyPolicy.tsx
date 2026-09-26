@@ -16,7 +16,7 @@ const PILLARS = [
 ];
 
 const code = 'px-1.5 py-0.5 rounded bg-muted text-foreground text-xs font-mono';
-const link = 'text-primary underline underline-offset-2 hover:brightness-110';
+const link = 'text-primary underline underline-offset-2 [overflow-wrap:anywhere] hover:brightness-110';
 
 export const PrivacyPolicy: React.FC<PrivacyPolicyProps> = ({ onBack, onOpenCookies }) => {
   return (
@@ -35,7 +35,7 @@ export const PrivacyPolicy: React.FC<PrivacyPolicyProps> = ({ onBack, onOpenCook
             when you visit <strong className="text-foreground">https://nexttool.click</strong> and use
             the tools published there. NextTool is an independent, ad-supported website operated
             from India. For any privacy question or request you can write to{' '}
-            <a href={`mailto:${CONTACT_EMAIL}`} className="text-primary underline underline-offset-2 hover:brightness-110">
+            <a href={`mailto:${CONTACT_EMAIL}`} className="text-primary underline underline-offset-2 [overflow-wrap:anywhere] hover:brightness-110">
               {CONTACT_EMAIL}
             </a>.
           </p>
@@ -130,11 +130,11 @@ export const PrivacyPolicy: React.FC<PrivacyPolicyProps> = ({ onBack, onOpenCook
           <p>
             A full, itemised list is in our{' '}
             {onOpenCookies ? (
-              <button onClick={onOpenCookies} className="text-primary underline underline-offset-2 hover:brightness-110">
+              <button onClick={onOpenCookies} className="text-primary underline underline-offset-2 [overflow-wrap:anywhere] hover:brightness-110">
                 Cookie Policy
               </button>
             ) : (
-              <a href="/cookies" className="text-primary underline underline-offset-2 hover:brightness-110">Cookie Policy</a>
+              <a href="/cookies" className="text-primary underline underline-offset-2 [overflow-wrap:anywhere] hover:brightness-110">Cookie Policy</a>
             )}.
           </p>
         </PageSection>
@@ -259,7 +259,7 @@ export const PrivacyPolicy: React.FC<PrivacyPolicyProps> = ({ onBack, onOpenCook
         <PageSection title="14. Contact">
           <p>
             Questions, requests or complaints about this policy can be sent to{' '}
-            <a href={`mailto:${CONTACT_EMAIL}`} className="text-primary underline underline-offset-2 hover:brightness-110">
+            <a href={`mailto:${CONTACT_EMAIL}`} className="text-primary underline underline-offset-2 [overflow-wrap:anywhere] hover:brightness-110">
               {CONTACT_EMAIL}
             </a>. We answer data-protection requests within one month at the latest.
           </p>

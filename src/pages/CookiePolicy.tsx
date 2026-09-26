@@ -140,14 +140,14 @@ export const CookiePolicy: React.FC<CookiePolicyProps> = ({ onBack, onOpenPrivac
         <p>
           For the wider picture of how we handle data, see our{' '}
           {onOpenPrivacy ? (
-            <button onClick={onOpenPrivacy} className="text-primary underline underline-offset-2 hover:brightness-110">
+            <button onClick={onOpenPrivacy} className="text-primary underline underline-offset-2 [overflow-wrap:anywhere] hover:brightness-110">
               Privacy Policy
             </button>
           ) : (
-            <a href="/privacy" className="text-primary underline underline-offset-2 hover:brightness-110">Privacy Policy</a>
+            <a href="/privacy" className="text-primary underline underline-offset-2 [overflow-wrap:anywhere] hover:brightness-110">Privacy Policy</a>
           )}
           . Questions about cookies can go to{' '}
-          <a href={`mailto:${CONTACT_EMAIL}`} className="text-primary underline underline-offset-2 hover:brightness-110">
+          <a href={`mailto:${CONTACT_EMAIL}`} className="text-primary underline underline-offset-2 [overflow-wrap:anywhere] hover:brightness-110">
             {CONTACT_EMAIL}
           </a>.
         </p>

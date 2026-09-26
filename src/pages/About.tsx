@@ -111,7 +111,7 @@ export const About: React.FC<AboutProps> = ({ onBack, onOpenContact }) => {
           <p>
             Bug reports, missing features and corrections are genuinely welcome; many
             improvements to this site started as somebody's email. Reach us at{' '}
-            <a href={`mailto:${CONTACT_EMAIL}`} className="text-primary underline underline-offset-2 hover:brightness-110">
+            <a href={`mailto:${CONTACT_EMAIL}`} className="text-primary underline underline-offset-2 [overflow-wrap:anywhere] hover:brightness-110">
               {CONTACT_EMAIL}
             </a>{' '}
             or through the contact page.

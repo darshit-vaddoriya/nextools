@@ -99,8 +99,8 @@ export const ResultPanel: React.FC<ResultPanelProps> = ({ result, onDownload, do
   if (!result) return null;
   return (
     <div className="rounded-2xl border border-border bg-card p-4 space-y-3 shadow-card">
-      <div className="flex items-center justify-between text-xs font-semibold text-foreground">
-        <span className="flex items-center gap-1.5 text-success">
+      <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-1 text-xs font-semibold text-foreground">
+        <span className="flex shrink-0 items-center gap-1.5 text-success">
           <ImageIcon className="w-4 h-4" /> Result ready
         </span>
         <span className="font-mono text-[11px] text-muted-foreground">
