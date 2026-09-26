@@ -56,7 +56,7 @@ export const AdBanner: React.FC<AdBannerProps> = ({ type, className = '' }) => {
           className={`w-full ${cfg.h} rounded-xl border border-dashed bg-muted/40 border-border flex flex-col items-center justify-center relative overflow-hidden`}
         >
           <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/[0.04] to-transparent pointer-events-none" />
-          <span className="text-[11px] font-medium text-muted-foreground/70">{cfg.label}</span>
+          <span className="text-[11px] font-medium text-muted-foreground">{cfg.label}</span>
           <span className="text-[9px] font-mono text-border mt-0.5">[{cfg.dim}]</span>
         </div>
       )}

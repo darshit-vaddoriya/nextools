@@ -7,7 +7,10 @@ import '@fontsource-variable/jetbrains-mono';
 import { App } from './App';
 import { ToastProvider } from './components/Toast';
 import { AD_CONFIG } from './config/ads';
+import { initPwa } from './lib/pwa';
 import './index.css';
+
+initPwa();
 
 if (AD_CONFIG.enabled && !AD_CONFIG.client.includes('XXXX')) {
   const adScript = document.createElement('script');

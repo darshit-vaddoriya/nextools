@@ -9,6 +9,7 @@ import { getPost, postsForTool, postsForToolCategory, readingMinutes, BlogCatego
 import { StaticPageId }    from './config/pages';
 import { ToolCategory }    from './types';
 import { TOOLS }           from './config/tools';
+import { CONVERTER_TOOLS } from './config/converters';
 import { PLANNED_FEATURES } from './config/toolFeatures';
 import { TOOL_EXPLANATIONS } from './config/toolExplanations';
 import { TOOL_SEO_CONTENT } from './config/seoContent';
@@ -53,11 +54,22 @@ const WIDE_TOOL_IDS = new Set([
 import { ToolPlaceholder }        from './tools/ToolPlaceholder';
 const NotFound = React.lazy(() => import('./pages/NotFound').then(m => ({ default: m.NotFound })));
 import { ToolCard }               from './components/ToolCard';
+import { ConverterDirectory }     from './components/ConverterDirectory';
 import { AppLink }                from './components/AppLink';
 import { FavoriteButton }         from './components/FavoriteButton';
 import { ToolViewSkeleton }       from './components/Skeleton';
 import { useFavorites }           from './utils/favorites';
 import { useTheme }               from './utils/theme';
+import { ToolActivityTracker }    from './components/history/ToolActivityTracker';
+import { ToolHistoryButton }      from './components/history/ToolHistoryButton';
+import { MobileTabBar }           from './components/MobileTabBar';
+import { PwaPrompts }             from './components/PwaPrompts';
+import { RouteErrorBoundary }     from './components/RouteErrorBoundary';
+import { AppTopBar }              from './components/app/AppTopBar';
+import { AppHome }                from './components/app/AppHome';
+import { NavDrawer }              from './components/NavDrawer';
+import { useAppMode }             from './lib/pwa';
+import { getStaticPage }          from './config/pages';
 
 // ─── Lazy-loaded heavy tools (tesseract.js / qrcode) ─────────
 const HeavyToolFallback = () => <ToolViewSkeleton />;
@@ -230,6 +242,17 @@ const lazyExtraColorTools = <K extends
   exportName: K,
 ): React.FC =>
   lazyComponent(() => import('./tools/color/ExtraColorTools'), exportName);
+
+// Every converter page is the same component reading its own spec from
+// CONVERTER_TOOLS, so one chunk serves all of them.
+const UniversalConverterLazy = React.lazy(() =>
+  import('./tools/convert/UniversalConverter').then(m => ({ default: m.UniversalConverter })),
+);
+const lazyConverter = (toolId: string): React.FC => () => (
+  <React.Suspense fallback={<HeavyToolFallback />}>
+    <UniversalConverterLazy key={toolId} toolId={toolId} />
+  </React.Suspense>
+);
 
 const lazyWordTools = <K extends
   'DocxToHtmlTool' | 'DocxToMarkdownTool' | 'DocxToTxtTool' | 'DocxToPdfTool'
@@ -417,11 +440,14 @@ const IMPLEMENTED_TOOLS: Record<string, React.ComponentType> = {
   'qr-generator':         lazyToolHeavy('QrGeneratorTool'),
   'qr-code-generator':    lazyToolHeavy('QrGeneratorTool'),
   'ocr-image':            lazyToolHeavy('OcrImageTool'),
+  // File converters
+  ...Object.fromEntries(Object.keys(CONVERTER_TOOLS).map(id => [id, lazyConverter(id)])),
 };
 
 // ─── Placeholder metadata per category (for un-built tools) ──
 const getPlaceholderMeta = (category: ToolCategory) => {
   const map: Record<string, { features: string[]; from: string; to: string }> = {
+    convert:    { features: ['Convert images, audio, video and spreadsheets', 'Batch conversion with one ZIP download', 'Quality, bitrate and size controls', 'Runs entirely on your device'], from: 'from-teal-500', to: 'to-cyan-600' },
     pdf:        { features: ['Merge, split, compress & convert PDFs', 'Add watermarks, page numbers & signatures', 'Extract text, images and tables', 'Encrypt, unlock and redact documents'], from: 'from-red-500', to: 'to-orange-600' },
     word:       { features: ['Convert DOCX to PDF, HTML & Markdown', 'View documents without Microsoft Word', 'Inspect metadata and compare versions', 'Strip formatting and clean documents'], from: 'from-blue-500', to: 'to-indigo-600' },
     excel:      { features: ['Convert Excel to CSV and back', 'View and edit CSV in a table grid', 'Clean, sort and transform data', 'Merge and split worksheets'], from: 'from-green-500', to: 'to-emerald-600' },
@@ -482,6 +508,7 @@ export const App: React.FC = () => {
 
   useEffect(() => {
     const onPopState = () => {
+      navDepth.current = Math.max(0, navDepth.current - 1);
       const route = parseRoute(window.location.pathname);
       setCurrentView(route.view);
       setActiveToolId(route.toolId ?? '');
@@ -494,9 +521,14 @@ export const App: React.FC = () => {
     return () => window.removeEventListener('popstate', onPopState);
   }, []);
 
+  // In-app navigations since launch, so the app bar's back arrow can use real
+  // history when there is some, and fall back to Home on a cold start (an
+  // installed app opened straight onto a tool has nothing to go back to).
+  const navDepth = React.useRef(0);
   const navigate = (view: typeof currentView, id?: string) => {
     const path = buildPath(view, id);
     window.history.pushState(null, '', path);
+    navDepth.current += 1;
   };
 
   const activeTool = TOOLS.find(t => t.id === activeToolId);
@@ -530,6 +562,22 @@ export const App: React.FC = () => {
     } catch { /* ignore */ }
   };
 
+  const openHistory = () => {
+    setCurrentView('files');
+    setActiveToolId('');
+    setActiveCategoryView(null);
+    navigate('files');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const openSettings = () => {
+    setCurrentView('settings');
+    setActiveToolId('');
+    setActiveCategoryView(null);
+    navigate('settings');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   const openCategory = (cat: ToolCategory | 'all') => {
     if (cat === 'all') { openAllTools(); return; }
     setActiveCategoryView(cat as ToolCategory);
@@ -558,6 +606,7 @@ export const App: React.FC = () => {
     setActiveToolId('');
     setActiveCategoryView(null);
     window.history.pushState(null, '', blogTopicPath(topic));
+    navDepth.current += 1;
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -624,8 +673,58 @@ export const App: React.FC = () => {
     return <PdfMergeToolLazy />;
   };
 
+  const appMode = useAppMode();
+  const [appMenuOpen, setAppMenuOpen] = useState(false);
+  const appBack = () => {
+    if (navDepth.current > 0) window.history.back();
+    else goHome();
+  };
+  // Tab roots show the brand; everything else gets a back arrow and a title.
+  const appIsRoot = currentView === 'home' || currentView === 'all' || currentView === 'files' || currentView === 'settings';
+  const appTitle =
+    currentView === 'home' ? 'NextTool'
+    : currentView === 'all' ? 'All tools'
+    : currentView === 'files' ? 'History'
+    : currentView === 'settings' ? 'Settings'
+    : currentView === 'tool' ? (activeTool?.name ?? 'Tool')
+    : currentView === 'category' ? (ALL_CATEGORIES.find(c => c.id === activeCategoryView)?.name ?? 'Category')
+    : currentView === 'blog' ? (activeBlogSlug ? 'Guide' : 'Guides')
+    : currentView === 'page' ? (getStaticPage(activePageId)?.title ?? 'NextTool')
+    : 'Not found';
+
   return (
     <div className="relative min-h-screen flex flex-col text-foreground">
+      {appMode ? (
+        <>
+          <AppTopBar
+            title={appTitle}
+            isRoot={appIsRoot}
+            onBack={appBack}
+            onOpenSearch={() => setIsSearchOpen(true)}
+            onOpenMenu={() => setAppMenuOpen(true)}
+            resolvedDark={resolvedDark}
+            onThemeChange={setTheme}
+            actions={currentView === 'tool' && activeTool && !activeTool.isComingSoon
+              ? <FavoriteButton toolId={activeTool.id} toolName={activeTool.name} size="md" />
+              : undefined}
+          />
+          <NavDrawer
+            isOpen={appMenuOpen}
+            onClose={() => setAppMenuOpen(false)}
+            onSelectCategory={(c) => { setAppMenuOpen(false); openCategory(c); }}
+            onOpenSearch={() => { setAppMenuOpen(false); setIsSearchOpen(true); }}
+            onGoHome={() => { setAppMenuOpen(false); goHome(); }}
+            onOpenPage={(id) => { setAppMenuOpen(false); openPage(id); }}
+            onOpenBlog={() => { setAppMenuOpen(false); openBlog(); }}
+            onOpenHistory={() => { setAppMenuOpen(false); openHistory(); }}
+            onOpenSettings={() => { setAppMenuOpen(false); openSettings(); }}
+            currentView={currentView}
+            theme={theme}
+            resolvedDark={resolvedDark}
+            onThemeChange={setTheme}
+          />
+        </>
+      ) : (
       <Header
         onOpenSearch={() => setIsSearchOpen(true)}
         theme={theme}
@@ -638,9 +737,12 @@ export const App: React.FC = () => {
         activePageId={currentView === 'page' ? activePageId : undefined}
         onOpenCategories={scrollToCategories}
         onOpenAllTools={openAllTools}
+        onOpenHistory={openHistory}
+        onOpenSettings={openSettings}
         onSelectCategory={openCategory}
         currentView={currentView}
       />
+      )}
       <CommandPalette
         isOpen={isSearchOpen}
         onClose={() => setIsSearchOpen(false)}
@@ -648,6 +750,7 @@ export const App: React.FC = () => {
       />
 
       <main className="flex-1">
+        <RouteErrorBoundary key={`${currentView}:${activeToolId}:${activeBlogSlug}:${activePageId}:${activeCategoryView ?? ''}`} onGoHome={goHome}>
         <React.Suspense fallback={<ToolViewSkeleton />}>
         {currentView === 'notfound'
           ? <NotFound
@@ -671,7 +774,7 @@ export const App: React.FC = () => {
                 : <Blog onBack={goHome} onOpenPost={openBlog} topic={activeBlogTopic} onSelectTopic={openBlogTopic} />;
             })()
           : currentView === 'tool'
-          ? <ToolView activeTool={activeTool} onBack={goHome} renderTool={renderTool} categories={ALL_CATEGORIES}
+          ? <ToolView appMode={appMode} activeTool={activeTool} onBack={goHome} renderTool={renderTool} categories={ALL_CATEGORIES} onOpenHistory={openHistory}
               onOpenPage={openPage} onOpenBlog={openBlog} onSelectTool={openTool} onSelectCategory={openCategory} onGoHome={goHome} onOpenFaq={scrollToFaq} onOpenCategories={scrollToCategories} />
           : currentView === 'category' && activeCategoryView
           ? <CategoryView cat={activeCategoryView} onSelectTool={openTool} onBack={goHome} categories={ALL_CATEGORIES} onOpenBlog={openBlog} />
@@ -680,16 +783,28 @@ export const App: React.FC = () => {
           : currentView === 'files'
           ? <MyFiles onBrowseTools={openAllTools} onOpenTool={openTool} />
           : currentView === 'settings'
-          ? <Settings theme={theme} onThemeChange={setTheme} />
+          ? <Settings theme={theme} onThemeChange={setTheme} onOpenHistory={openHistory} onOpenPage={openPage} onOpenBlog={() => openBlog()} />
+          : appMode
+          ? <AppHome onSelectTool={openTool} onSelectCategory={openCategory} onOpenSearch={() => setIsSearchOpen(true)} />
           : <HomeView onSelectTool={openTool} onSelectCategory={openCategory} />
         }
         </React.Suspense>
+        </RouteErrorBoundary>
       </main>
 
-      {currentView !== 'tool' && (
+      {currentView !== 'tool' && !appMode && (
         <Footer onOpenPage={openPage} onOpenBlog={openBlog} onSelectTool={openTool} onSelectCategory={openCategory} onGoHome={goHome} onOpenFaq={scrollToFaq} onOpenCategories={scrollToCategories} />
       )}
 
+      {appMode && <MobileTabBar
+        currentView={currentView}
+        onGoHome={goHome}
+        onOpenAllTools={openAllTools}
+        onOpenSearch={() => setIsSearchOpen(true)}
+        onOpenHistory={openHistory}
+        onOpenSettings={openSettings}
+      />}
+      <PwaPrompts />
     </div>
   );
 };
@@ -1005,12 +1120,15 @@ const CategoryView: React.FC<{
   const guides = postsForToolCategory(tools.map(t => t.id), 4);
 
   return (
-    <div className="max-w-[1560px] mx-auto px-4 sm:px-6 py-8 fade-in">
-      <button onClick={onBack} className="btn-ghost mb-6 text-[13px]">
+    <div className="max-w-[1560px] mx-auto px-4 sm:px-6 pt-4 pb-8 sm:py-8 fade-in">
+      <button onClick={onBack} className="web-only btn-ghost mb-6 text-[13px]">
         <ArrowLeft className="w-4 h-4" /> Back
       </button>
 
-      <div className="flex items-center gap-3 mb-8">
+      {cat === 'convert' ? (
+        <ConverterDirectory tagline={content?.tagline} intro={content?.intro} onSelectTool={onSelectTool} />
+      ) : (<>
+      <div className="web-only flex items-center gap-3 mb-8">
         <div className={`cat-icon ${conf?.iconBg}`}>
           <Icon className={conf?.iconColor} style={{ width: 20, height: 20 }} />
         </div>
@@ -1023,7 +1141,7 @@ const CategoryView: React.FC<{
       </div>
 
       {content && (
-        <p className="max-w-3xl text-[14px] leading-relaxed text-muted-foreground mb-8">
+        <p className="web-only max-w-3xl text-[14px] leading-relaxed text-muted-foreground mb-8">
           {content.intro}
         </p>
       )}
@@ -1047,14 +1165,15 @@ const CategoryView: React.FC<{
                 icon={catConf?.icon ?? FileText}
                 iconColor={catConf?.iconColor}
                 iconBg={catConf?.iconBg}
-                categoryLabel={catConf?.name}
                 onSelect={onSelectTool}
                 showPopularBadge={tool.isPopular}
+                headingLevel={2}
               />
             );
           })}
         </div>
       )}
+      </>)}
 
       {content && (
         <div className="mt-14 max-w-3xl space-y-12">
@@ -1116,9 +1235,13 @@ const CategoryView: React.FC<{
 
 // ─── TOOL VIEW ───────────────────────────────────────────────
 const ToolView: React.FC<{
+  /** Installed-app layout: the app bar carries the title, back and favourite,
+      and the long-form website sections are left out. */
+  appMode?: boolean;
   activeTool: (typeof TOOLS)[0] | undefined;
   onBack: () => void;
   renderTool: () => React.ReactNode;
+  onOpenHistory: () => void;
   categories: typeof ALL_CATEGORIES;
   onOpenPage: (id: StaticPageId) => void;
   onOpenBlog: (slug?: string) => void;
@@ -1127,7 +1250,7 @@ const ToolView: React.FC<{
   onGoHome: () => void;
   onOpenFaq: () => void;
   onOpenCategories: () => void;
-}> = ({ activeTool, onBack, renderTool, categories, onOpenPage, onOpenBlog, onSelectTool, onSelectCategory, onGoHome, onOpenFaq, onOpenCategories }) => {
+}> = ({ appMode = false, activeTool, onBack, renderTool: renderToolBare, categories, onOpenHistory, onOpenPage, onOpenBlog, onSelectTool, onSelectCategory, onGoHome, onOpenFaq, onOpenCategories }) => {
   const conf = categories.find(c => c.id === activeTool?.category);
   const CategoryIcon = conf?.icon ?? FileText;
   const Icon = activeTool ? resolveToolIcon(activeTool.icon, CategoryIcon) : CategoryIcon;
@@ -1139,6 +1262,11 @@ const ToolView: React.FC<{
   // being a one-way funnel that nothing links back into.
   const guides = activeTool ? postsForTool(activeTool.id) : [];
   const [learnMoreOpen, setLearnMoreOpen] = useState(true);
+
+  // Every tool is wrapped so its edits land in the local history.
+  const renderTool = () => activeTool && !activeTool.isComingSoon
+    ? <ToolActivityTracker key={activeTool.id} toolId={activeTool.id} toolName={activeTool.name}>{renderToolBare()}</ToolActivityTracker>
+    : renderToolBare();
 
   if (activeTool?.id === 'image-editor') return <>{renderTool()}</>;
 
@@ -1152,6 +1280,22 @@ const ToolView: React.FC<{
 
       {activeTool && (
         <>
+          {appMode ? (
+            // Title, back and favourite live in the app bar; this row keeps the
+            // tool's own controls (history, live pill) and its category.
+            <div className="flex items-center justify-between gap-2 -mt-1">
+              <AppLink href={`/category/${activeTool.category}`} onNavigate={() => onSelectCategory(activeTool.category)}
+                className={`badge capitalize border-transparent ${conf?.iconBg} ${conf?.iconColor}`}>
+                {conf?.name}
+              </AppLink>
+              <div className="flex items-center gap-2">
+                {LIVE_DEV_TOOL_IDS.has(activeTool.id) && <DevRunPill />}
+                {!activeTool.isComingSoon && (
+                  <ToolHistoryButton toolId={activeTool.id} toolName={activeTool.name} onOpenAllHistory={onOpenHistory} />
+                )}
+              </div>
+            </div>
+          ) : (<>
           {/* Breadcrumb */}
           <nav className="flex items-center gap-1.5 text-[12px] flex-wrap" aria-label="Breadcrumb">
             <button onClick={onBack} className="text-muted-foreground hover:text-foreground transition-colors">
@@ -1168,7 +1312,7 @@ const ToolView: React.FC<{
 
           {/* Tool header, sits directly on the page background, separated by a border */}
           <div className="flex flex-wrap items-start justify-between gap-5 pb-6 border-b border-border">
-            <div className="flex gap-4 items-start min-w-0">
+            <div className="relative flex gap-4 items-start min-w-0">
               <div className={`cat-icon ${conf?.iconBg} w-[50px] h-[50px] rounded-[15px] shrink-0`}>
                 <Icon className={conf?.iconColor} style={{ width: 24, height: 24 }} />
               </div>
@@ -1178,7 +1322,9 @@ const ToolView: React.FC<{
                     {activeTool.name}
                   </h1>
                   {!activeTool.isComingSoon && TOOL_EXPLANATIONS[activeTool.id] && (
-                    <span className="relative inline-flex group/info">
+                    // Static below sm, so the popover anchors to the whole header row
+                    // and spans the screen instead of running off its right edge.
+                    <span className="sm:relative inline-flex group/info">
                       <button
                         type="button"
                         tabIndex={0}
@@ -1187,7 +1333,7 @@ const ToolView: React.FC<{
                       >
                         <Info className="w-3.5 h-3.5" />
                       </button>
-                      <div className="pointer-events-none absolute z-20 top-full left-0 mt-2 w-72 max-w-[80vw] opacity-0 scale-95 origin-top-left transition-all duration-150 group-hover/info:opacity-100 group-hover/info:scale-100 group-focus-within/info:opacity-100 group-focus-within/info:scale-100">
+                      <div className="pointer-events-none absolute z-20 top-full left-0 right-0 sm:right-auto mt-2 sm:w-72 max-w-[80vw] max-sm:max-w-none opacity-0 scale-95 origin-top-left transition-all duration-150 group-hover/info:opacity-100 group-hover/info:scale-100 group-focus-within/info:opacity-100 group-focus-within/info:scale-100">
                         <div className="rounded-xl border border-border bg-card shadow-float p-3.5">
                           <p className="text-[11px] font-bold text-foreground mb-1.5">How to use</p>
                           <p className="text-[12px] text-muted-foreground leading-relaxed">
@@ -1220,16 +1366,20 @@ const ToolView: React.FC<{
             </div>
             <div className="shrink-0 flex items-center gap-2">
               {LIVE_DEV_TOOL_IDS.has(activeTool.id) && <DevRunPill />}
+              {!activeTool.isComingSoon && (
+                <ToolHistoryButton toolId={activeTool.id} toolName={activeTool.name} onOpenAllHistory={onOpenHistory} />
+              )}
               <FavoriteButton toolId={activeTool.id} toolName={activeTool.name} size="md" />
             </div>
           </div>
+          </>)}
 
           <div className="flex flex-wrap items-start gap-4 sm:gap-6">
             {/* Main column, tool body sits first, so the sidebar aligns beside it from the top */}
             <div className={stacked ? 'w-full flex flex-col gap-4 sm:gap-5' : 'flex-1 min-w-[300px] basis-[560px] flex flex-col gap-4 sm:gap-5'}>
               {renderTool()}
 
-              {!activeTool.isComingSoon && seo?.useCases && seo.useCases.length > 0 && (
+              {!appMode && !activeTool.isComingSoon && seo?.useCases && seo.useCases.length > 0 && (
                 <div className="rounded-2xl border bg-card border-border p-5 sm:p-6 shadow-card">
                   <span className="section-kicker mb-3">When to use this</span>
                   <ul className="space-y-2 mt-3">
@@ -1247,7 +1397,7 @@ const ToolView: React.FC<{
                   enough that the page would otherwise be mostly chrome. Always
                   expanded: it is the part of the page worth reading, and
                   collapsing it would hide it from both readers and crawlers. */}
-              {!activeTool.isComingSoon && seo?.deepDive && (
+              {!appMode && !activeTool.isComingSoon && seo?.deepDive && (
                 <section className="rounded-2xl border bg-card border-border p-6 sm:p-7">
                   <h2 className="font-heading text-[17px] sm:text-[18.5px] font-extrabold tracking-[-0.01em] text-foreground mb-4">
                     {seo.deepDive.heading}
@@ -1263,16 +1413,16 @@ const ToolView: React.FC<{
               )}
 
               {/* Privacy note */}
-              <div className="flex items-center gap-2.5 px-4 py-3 rounded-xl bg-success/5 border border-success/20">
+              {!appMode && <div className="flex items-center gap-2.5 px-4 py-3 rounded-xl bg-success/5 border border-success/20">
                 <ShieldCheck className="w-4 h-4 text-success shrink-0" />
                 <p className="text-xs text-success leading-relaxed">
                   <strong>Free and private.</strong> Everything runs on your own device, with no account and no uploads.
                 </p>
-              </div>
+              </div>}
 
               {/* Learn more / FAQs, lives in the main column so it fills the space below the
                   privacy note instead of leaving a gap when the sidebar runs taller. */}
-              {!activeTool.isComingSoon && seo && (
+              {!appMode && !activeTool.isComingSoon && seo && (
                 <div className="rounded-2xl border bg-card border-border p-6 sm:p-7">
                   <button
                     onClick={() => setLearnMoreOpen(o => !o)}
@@ -1310,7 +1460,7 @@ const ToolView: React.FC<{
             <div className={stacked
               ? 'w-full flex flex-wrap gap-4 sm:gap-5'
               : 'w-full lg:w-[340px] shrink-0 flex flex-col gap-4 sm:gap-5 lg:sticky lg:top-[82px] lg:self-start'}>
-              {!activeTool.isComingSoon && seo?.steps && seo.steps.length > 0 && (
+              {!appMode && !activeTool.isComingSoon && seo?.steps && seo.steps.length > 0 && (
                 <div className={sidebarCardCls}>
                   <span className="section-kicker mb-3">How it works</span>
                   <ol className="space-y-3 mt-3">
@@ -1363,7 +1513,7 @@ const ToolView: React.FC<{
               )}
 
               {/* Guides that cover this tool */}
-              {guides.length > 0 && (
+              {!appMode && guides.length > 0 && (
                 <div className={sidebarCardCls}>
                   <span className="section-kicker mb-3">
                     <BookOpen className="w-3 h-3 shrink-0" />
@@ -1389,7 +1539,7 @@ const ToolView: React.FC<{
                 </div>
               )}
 
-              {!activeTool.isComingSoon && seo?.tips && seo.tips.length > 0 && (
+              {!appMode && !activeTool.isComingSoon && seo?.tips && seo.tips.length > 0 && (
                 <div className={sidebarCardCls}>
                   <span className="section-kicker mb-3">
                     <Lightbulb className="w-3 h-3 shrink-0" />
@@ -1412,7 +1562,7 @@ const ToolView: React.FC<{
       )}
 
       <AdBanner type="footer" />
-      <Footer onOpenPage={onOpenPage} onOpenBlog={onOpenBlog} onSelectTool={onSelectTool} onSelectCategory={onSelectCategory} onGoHome={onGoHome} onOpenFaq={onOpenFaq} onOpenCategories={onOpenCategories} />
+      {!appMode && <Footer onOpenPage={onOpenPage} onOpenBlog={onOpenBlog} onSelectTool={onSelectTool} onSelectCategory={onSelectCategory} onGoHome={onGoHome} onOpenFaq={onOpenFaq} onOpenCategories={onOpenCategories} />}
     </div>
   );
 };

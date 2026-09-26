@@ -37,7 +37,7 @@
   --tertiary-foreground: 255 255 255;
   --tertiary-container:  252 228 243;
   --on-tertiary-container: 131 20 92;
-  --success:             14 159 110;
+  --success:             4 120 87;
   --success-foreground:  255 255 255;
   --warning:             180 83 9;
   --warning-foreground:  255 255 255;
@@ -427,10 +427,12 @@ input[type="range"].range-progress:focus-visible {
   @apply bg-primary/10 border-primary/25 text-primary;
 }
 .badge-success {
-  @apply bg-success/10 border-success/25 text-success;
+  /* 11px text on a 10% tint: the base token lands at 4.49:1, so the light
+     theme steps one shade darker to clear AA. */
+  @apply bg-success/10 border-success/25 text-emerald-800 dark:text-success;
 }
 .badge-warning {
-  @apply bg-warning/10 border-warning/25 text-warning;
+  @apply bg-warning/10 border-warning/25 text-amber-800 dark:text-warning;
 }
 
 /* ══════════════════════════════════════════════════════════
@@ -457,7 +459,9 @@ input[type="range"].range-progress:focus-visible {
   from { opacity: 0; }
   to   { opacity: 1; }
 }
-.fade-in { animation: fade-in 0.3s ease forwards; }
+/* No `forwards`: a filled opacity animation keeps a stacking context alive, which
+   traps full-screen editors (z-60) under the sticky header (z-50). */
+.fade-in { animation: fade-in 0.3s ease; }
 
 @keyframes slide-down {
   from { opacity: 0; transform: translateY(-8px); }
@@ -609,6 +613,79 @@ input[type="range"].range-progress:focus-visible {
   to   { opacity: 1; transform: translateY(0) scale(1); }
 }
 .toast-in { animation: toast-in 0.2s cubic-bezier(0.22, 0.68, 0, 1.2) forwards; }
+
+@keyframes sheet-up {
+  from { transform: translateY(100%); }
+  to   { transform: translateY(0); }
+}
+.sheet-up { animation: sheet-up 0.28s var(--ease-out) both; }
+
+@keyframes drawer-in {
+  from { transform: translateX(100%); }
+  to   { transform: translateX(0); }
+}
+.drawer-in { animation: drawer-in 0.26s var(--ease-out) both; }
+@media (min-width: 640px) {
+  .sheet-up { animation: toast-in 0.2s var(--ease-out) both; }
+}
+
+/* ══════════════════════════════════════════════════════════
+   MOBILE APP SHELL (PWA)
+   In app mode (html.app-mode: installed, phone/tablet width; see
+   src/lib/pwa.ts) the app gets a bottom tab bar (MobileTabBar). Its
+   height, plus the home-indicator safe area, is published as
+   --app-bottom-inset so the page, the footer, toasts and the
+   install / update cards all clear it with one variable.
+══════════════════════════════════════════════════════════ */
+:root {
+  --tabbar-h: 60px;
+  --app-bottom-inset: 0px;
+}
+.app-mode {
+  --app-bottom-inset: calc(var(--tabbar-h) + env(safe-area-inset-bottom, 0px));
+}
+.app-mode body { padding-bottom: var(--app-bottom-inset); }
+/* Website-only chrome (breadcrumbs, long-form SEO sections, back links the
+   app bar replaces). Still rendered, so crawlers and browsers keep it. */
+.app-mode .web-only { display: none !important; }
+.mobile-tabbar {
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+/* viewport-fit=cover lets the page run under the notch in landscape;
+   keep content inside the safe area on the sides. */
+body {
+  padding-left: env(safe-area-inset-left, 0px);
+  padding-right: env(safe-area-inset-right, 0px);
+}
+
+/* Touch devices: no grey flash on tap, no double-tap-zoom delay on controls. */
+@media (hover: none) and (pointer: coarse) {
+  html { -webkit-tap-highlight-color: transparent; }
+  a, button, [role="button"], label, summary, input, select, textarea { touch-action: manipulation; }
+}
+
+/* iOS Safari zooms the page when a field under 16px gets focus, and does not
+   zoom back out. 16px on touch iOS only; desktop keeps the designed sizes. */
+@supports (-webkit-touch-callout: none) {
+  @media (pointer: coarse) {
+    input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="color"]):not([type="file"]),
+    select,
+    textarea,
+    [contenteditable="true"] {
+      font-size: max(16px, 1em) !important;
+    }
+  }
+}
+
+/* Installed app: behave like a native app, not a web page. */
+.pwa-standalone body {
+  overscroll-behavior-y: none;   /* no rubber-band past the header / tab bar */
+}
+.pwa-standalone .pwa-hide { display: none !important; }
 
 /* ══════════════════════════════════════════════════════════
    BLOG PROSE — styles the HTML that marked generates from the

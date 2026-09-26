@@ -1172,7 +1172,7 @@ export const DrawingTool: React.FC = () => {
           <div className="rounded-2xl border   bg-card border-border p-5 space-y-4">
             <div className="flex items-center gap-2.5">
               <div className="w-8 h-8 rounded-lg dark:bg-pink-500/15 bg-pink-100 flex items-center justify-center">
-                <ImageIcon className="w-4 h-4 text-pink-500" />
+                <ImageIcon className="w-4 h-4 text-pink-700 dark:text-pink-400" />
               </div>
               <div>
                 <h3 className="text-[13px] font-semibold  text-foreground">Start from a photo</h3>
@@ -1232,7 +1232,7 @@ export const DrawingTool: React.FC = () => {
                 'Export to PNG, JPG or WebP',
               ].map(item => (
                 <div key={item} className="flex items-center gap-2 text-[11px]  text-muted-foreground">
-                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500 shrink-0" />
+                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-700 dark:text-emerald-400 shrink-0" />
                   <span>{item}</span>
                 </div>
               ))}
@@ -1270,7 +1270,7 @@ export const DrawingTool: React.FC = () => {
 
         <div className="min-w-0 flex-1 flex items-center gap-2.5">
           <div className="w-7 h-8 rounded-md overflow-hidden  bg-card border  border-border flex items-center justify-center shrink-0">
-            <ImageIcon className="w-3.5 h-3.5 text-pink-500" />
+            <ImageIcon className="w-3.5 h-3.5 text-pink-700 dark:text-pink-400" />
           </div>
           <div className="min-w-0">
             <div className="text-xs font-semibold  text-foreground truncate">{canvasName}</div>
@@ -1288,7 +1288,7 @@ export const DrawingTool: React.FC = () => {
         </HdrBtn>
         {confirmClear ? (
           <div className="flex items-center gap-1.5 shrink-0 rounded-lg border dark:border-rose-500/40 border-rose-300 dark:bg-rose-500/10 bg-rose-50 px-1.5 py-1 fade-in">
-            <span className="text-[10px] font-semibold dark:text-rose-300 text-rose-600 pl-1 whitespace-nowrap">Clear everything?</span>
+            <span className="text-[10px] font-semibold dark:text-rose-300 text-rose-700 pl-1 whitespace-nowrap">Clear everything?</span>
             <button type="button" onClick={() => { clear(); setConfirmClear(false); }} className="h-7 px-2.5 rounded-md text-[11px] font-semibold bg-rose-600 hover:bg-rose-500 text-white transition-colors">Clear</button>
             <button type="button" onClick={() => setConfirmClear(false)} className="h-7 px-2.5 rounded-md text-[11px] font-medium dark:hover:bg-white/[0.06] hover:bg-muted  text-muted-foreground transition-colors">Cancel</button>
           </div>
@@ -1335,7 +1335,7 @@ export const DrawingTool: React.FC = () => {
           ))}
         </nav>
 
-        <main className="flex-1 min-w-0 min-h-0 flex flex-col">
+        <div className="flex-1 min-w-0 min-h-0 flex flex-col">
           <div ref={containerRef} className="flex-1 min-h-0 overflow-auto relative">
             <div className="min-w-full min-h-full flex">
               <div className="m-auto p-4">
@@ -1374,7 +1374,7 @@ export const DrawingTool: React.FC = () => {
             </p>
             <span className=" text-muted-foreground font-mono shrink-0">{objects.length} object{objects.length === 1 ? '' : 's'} · {zoomPct}</span>
           </div>
-        </main>
+        </div>
 
         {showOptions && (
           <div className="absolute lg:hidden inset-0 bg-black/50 z-30" onClick={() => setShowOptions(false)} />
@@ -1491,7 +1491,7 @@ export const DrawingTool: React.FC = () => {
                 <HdrBtn onClick={() => moveLayer(selectedObj.id, -1)} title="Send backward" className="h-8 px-2.5">
                   <ArrowDown className="w-3.5 h-3.5" />
                 </HdrBtn>
-                <HdrBtn onClick={deleteSelected} title="Delete (Del)" className="h-8 px-2.5 text-rose-500 dark:text-rose-400 hover:bg-rose-500/10 border-rose-500/30">
+                <HdrBtn onClick={deleteSelected} title="Delete (Del)" className="h-8 px-2.5 text-rose-700 dark:text-rose-400 hover:bg-rose-500/10 border-rose-500/30">
                   <Delete className="w-3.5 h-3.5" /> Delete
                 </HdrBtn>
               </div>
@@ -1591,7 +1591,7 @@ export const DrawingTool: React.FC = () => {
       )}
       {saved && (
         <div className="absolute bottom-12 left-1/2 -translate-x-1/2 z-50 flex items-center gap-2 px-4 py-2.5 rounded-xl border dark:bg-[#12121a] dark:border-emerald-500/30 bg-card border-emerald-200 shadow-lg fade-in">
-          <CheckCircle2 className="w-4 h-4 text-emerald-500" />
+          <CheckCircle2 className="w-4 h-4 text-emerald-700 dark:text-emerald-400" />
           <span className="text-xs font-medium  text-muted-foreground">Image exported successfully</span>
         </div>
       )}

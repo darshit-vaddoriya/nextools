@@ -85,6 +85,65 @@
 - [Meme Generator](https://nexttool.click/tool/meme-generator): Add top/bottom text to any image and create shareable memes in browser
 - [QR & Barcode Generator](https://nexttool.click/tool/qr-generator): Generate high-res QR codes and barcodes for URLs, Wi-Fi, vCards and more
 
+## convert tools
+
+- [File Converter](https://nexttool.click/tool/file-converter): Convert images, audio, video, spreadsheets and PDFs between 25+ formats, all in your browser
+- [PNG to JPG](https://nexttool.click/tool/png-to-jpg): Convert PNG images to JPG with a quality slider and a fill colour for transparency
+- [JPG to PNG](https://nexttool.click/tool/jpg-to-png): Convert JPG photos to lossless PNG files, individually or in a batch
+- [WebP to JPG](https://nexttool.click/tool/webp-to-jpg): Turn WebP images saved from the web into JPG files that open everywhere
+- [WebP to PNG](https://nexttool.click/tool/webp-to-png): Convert WebP images to PNG and keep their transparent background
+- [JPG to WebP](https://nexttool.click/tool/jpg-to-webp): Shrink JPG photos for the web by converting them to WebP
+- [PNG to WebP](https://nexttool.click/tool/png-to-webp): Convert PNG graphics and screenshots to much smaller WebP files with transparency
+- [HEIC to JPG](https://nexttool.click/tool/heic-to-jpg): Convert iPhone HEIC photos to JPG or PNG without uploading them anywhere
+- [AVIF to JPG](https://nexttool.click/tool/avif-to-jpg): Convert AVIF images to JPG or PNG for apps and editors that cannot open AVIF
+- [TIFF to JPG](https://nexttool.click/tool/tiff-to-jpg): Convert TIFF scans and camera exports to JPG, PNG or PDF in your browser
+- [Audio Converter](https://nexttool.click/tool/audio-converter): Convert WAV, FLAC, M4A, OGG and video soundtracks to MP3 or WAV locally
+- [MP4 to MP3](https://nexttool.click/tool/mp4-to-mp3): Extract the audio track from MP4, MOV or WebM video and save it as MP3
+- [WAV to MP3](https://nexttool.click/tool/wav-to-mp3): Compress large WAV recordings into MP3 at the bitrate you choose
+- [MP3 to WAV](https://nexttool.click/tool/mp3-to-wav): Decode MP3 into uncompressed 16-bit WAV for editing, CDs and audio software
+- [M4A to MP3](https://nexttool.click/tool/m4a-to-mp3): Convert M4A voice memos and iTunes audio into MP3 that plays on anything
+- [Video to GIF](https://nexttool.click/tool/video-to-gif): Turn a clip of an MP4, WebM or MOV video into an animated GIF
+- [Excel to CSV](https://nexttool.click/tool/excel-to-csv): Convert XLSX worksheets to CSV or TSV, one file per sheet if you want them all
+- [CSV to Excel](https://nexttool.click/tool/csv-to-excel): Turn CSV or TSV files into XLSX workbooks with numbers stored as numbers
+- [Excel to JSON](https://nexttool.click/tool/excel-to-json): Convert spreadsheet rows into JSON objects keyed by the header row
+- [JSON to Excel](https://nexttool.click/tool/json-to-excel): Flatten JSON arrays and nested objects into an Excel XLSX sheet
+- [PDF to Excel](https://nexttool.click/tool/pdf-to-excel): Pull tables out of text-based PDFs into Excel XLSX or CSV
+- [PSD to PNG](https://nexttool.click/tool/psd-to-png): Turn Photoshop PSD files into PNG, JPG or WebP without Photoshop installed
+- [RAW to JPG](https://nexttool.click/tool/raw-to-jpg): Extract the full-size JPG from camera RAW files: DNG, NEF, CR2, CR3, ARW, RAF and more
+- [SVG to PDF](https://nexttool.click/tool/svg-to-pdf): Convert SVG graphics into vector PDF files that stay sharp at any zoom
+- [Video Converter](https://nexttool.click/tool/video-converter): Convert videos between MP4, WebM, MOV and MKV using your device's video encoder
+- [Video Compressor](https://nexttool.click/tool/video-compressor): Shrink phone and screen recordings by lowering resolution and bitrate, without uploading
+- [MOV to MP4](https://nexttool.click/tool/mov-to-mp4): Convert iPhone and QuickTime MOV videos to MP4 that plays everywhere
+- [WebM to MP4](https://nexttool.click/tool/webm-to-mp4): Convert WebM screen recordings and downloads to widely supported MP4
+- [GIF to MP4](https://nexttool.click/tool/gif-to-mp4): Turn animated GIFs into MP4 or WebM videos that are a fraction of the size
+- [Excel to PDF](https://nexttool.click/tool/excel-to-pdf): Print spreadsheets as clean PDF tables with repeated headers and page numbers
+- [XLS to XLSX](https://nexttool.click/tool/xls-to-xlsx): Upgrade old Excel 97–2003 .xls workbooks to modern .xlsx files
+- [ODS to XLSX](https://nexttool.click/tool/ods-to-xlsx): Convert LibreOffice and OpenOffice spreadsheets to Excel XLSX or CSV
+- [XML to JSON](https://nexttool.click/tool/xml-to-json): Convert XML files to JSON with attributes, repeated elements and text preserved
+- [JSON to XML](https://nexttool.click/tool/json-to-xml): Turn JSON data into well-formed XML that round-trips back to the same JSON
+- [YAML to JSON](https://nexttool.click/tool/yaml-to-json): Convert YAML config files such as Kubernetes or GitHub Actions to JSON
+- [JSON to YAML](https://nexttool.click/tool/json-to-yaml): Convert JSON into readable YAML for config files and documentation
+- [Images to PPTX](https://nexttool.click/tool/images-to-pptx): Build a PowerPoint deck from your photos or screenshots, one picture per slide
+- [PDF to PPTX](https://nexttool.click/tool/pdf-to-pptx): Turn each PDF page into a PowerPoint slide, with the page text in the speaker notes
+- [EPUB to PDF](https://nexttool.click/tool/epub-to-pdf): Convert DRM-free EPUB e-books to PDF, plain text or a single HTML page
+- [Font Converter](https://nexttool.click/tool/font-converter): Convert fonts between TTF, OTF, WOFF and WOFF2 without changing a single glyph
+- [TTF to WOFF2](https://nexttool.click/tool/ttf-to-woff2): Compress TTF and OTF fonts into WOFF2 web fonts for faster page loads
+- [WOFF2 to TTF](https://nexttool.click/tool/woff2-to-ttf): Unpack WOFF2 and WOFF web fonts back into installable TTF or OTF files
+- [RAR to ZIP](https://nexttool.click/tool/rar-to-zip): Repack RAR archives as ZIP files that open on any computer without extra software
+- [7Z to ZIP](https://nexttool.click/tool/7z-to-zip): Convert 7-Zip archives into ordinary ZIP files
+- [TAR to ZIP](https://nexttool.click/tool/tar-to-zip): Convert TAR, TAR.GZ, TGZ, TAR.BZ2 and TAR.XZ archives to ZIP
+- [ZIP to TAR.GZ](https://nexttool.click/tool/zip-to-tar): Repack ZIP, 7z or RAR archives as TAR or TAR.GZ for Linux and servers
+- [JPG to AVIF](https://nexttool.click/tool/jpg-to-avif): Convert JPG, PNG and WebP images to AVIF, the smallest widely supported web image format
+- [PNG to SVG](https://nexttool.click/tool/png-to-svg): Trace logos, icons and line art from PNG or JPG into scalable SVG vectors
+- [TIFF to PDF](https://nexttool.click/tool/tiff-to-pdf): Combine every page of a multi-page TIFF scan or fax into one PDF at its real print size
+- [AI to PDF](https://nexttool.click/tool/ai-to-pdf): Open Adobe Illustrator .ai files as PDF, PNG or JPG without Illustrator
+- [WAV to FLAC](https://nexttool.click/tool/wav-to-flac): Compress WAV and other audio into lossless FLAC, about half the size with no quality loss
+- [CSV to SQL](https://nexttool.click/tool/csv-to-sql): Turn CSV or Excel data into CREATE TABLE and INSERT statements for MySQL, PostgreSQL or SQLite
+- [Markdown to EPUB](https://nexttool.click/tool/markdown-to-epub): Build an EPUB e-book from Markdown, plain text or HTML, with chapters and a table of contents
+- [RTF to DOCX](https://nexttool.click/tool/rtf-to-docx): Convert RTF documents to Word DOCX, plain text or HTML, keeping bold, italic and paragraphs
+- [SRT to VTT](https://nexttool.click/tool/srt-to-vtt): Convert SRT subtitles to WebVTT for HTML5 video players and YouTube
+- [VTT to SRT](https://nexttool.click/tool/vtt-to-srt): Convert WebVTT captions to SRT for video editors, VLC and media players
+
 ## archive tools
 
 - [ZIP Extractor](https://nexttool.click/tool/zip-extractor): Extract files from ZIP archives entirely in browser, no upload needed

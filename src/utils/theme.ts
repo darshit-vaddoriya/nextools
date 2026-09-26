@@ -39,8 +39,11 @@ export function useTheme() {
   useEffect(() => {
     applyThemeClass(resolvedDark);
     try { localStorage.setItem(KEY, preference); } catch { /* ignore */ }
-    const meta = document.querySelector('meta[name="theme-color"]');
-    if (meta) meta.setAttribute('content', resolvedDark ? '#131313' : '#faf9ff');
+    // Colours the phone status bar / installed-app title bar. Matches --background.
+    document.querySelectorAll('meta[name="theme-color"]').forEach(meta => {
+      meta.removeAttribute('media');
+      meta.setAttribute('content', resolvedDark ? '#0b0d12' : '#f7f8fa');
+    });
   }, [resolvedDark, preference]);
 
   const setTheme = useCallback((t: ThemePreference) => setPreference(t), []);

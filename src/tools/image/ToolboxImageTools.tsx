@@ -200,7 +200,7 @@ export const IcoGeneratorTool: React.FC = () => {
       setResult(null);
       setError(null);
     } catch {
-      setError('Could not read that image.');
+      setError('Could not read that image. It may be damaged or in a format this browser can\'t open. Try a JPG, PNG or WebP.');
     }
   };
 
@@ -263,7 +263,7 @@ export const ImageToBase64Tool: React.FC = () => {
       setFileName(file.name);
       setError(null);
     } catch {
-      setError('Could not read that file.');
+      setError('Could not read that file. It may be damaged or still downloading. Try saving it again, then reopen it.');
     }
   };
 
@@ -393,7 +393,7 @@ export const ImageMetadataTool: React.FC = () => {
       setResult(null);
       setError(null);
     } catch {
-      setError('Could not read that image.');
+      setError('Could not read that image. It may be damaged or in a format this browser can\'t open. Try a JPG, PNG or WebP.');
     }
   };
 
@@ -438,7 +438,7 @@ export const ImageMetadataTool: React.FC = () => {
             <ul className="space-y-1">
               {meta?.fields.map((f, i) => (
                 <li key={i} className="text-xs flex items-center gap-2  text-muted-foreground">
-                  <ShieldOff className="w-3.5 h-3.5 text-rose-500 shrink-0" /> {f}
+                  <ShieldOff className="w-3.5 h-3.5 text-rose-700 dark:text-rose-400 shrink-0" /> {f}
                 </li>
               ))}
             </ul>
@@ -493,7 +493,7 @@ export const PaletteGeneratorTool: React.FC = () => {
       setPalette(extractPalette(canvas, 8));
       setError(null);
     } catch {
-      setError('Could not read that image.');
+      setError('Could not read that image. It may be damaged or in a format this browser can\'t open. Try a JPG, PNG or WebP.');
     }
   };
 

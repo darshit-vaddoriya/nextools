@@ -8,6 +8,7 @@ import { Select } from '../../components/Select';
 import { DarkPanel, WhitePanel, Segmented, SegmentedButton, StatusPill, CopyTextButton, ToolShell, useFullView } from '../../components/DevToolChrome';
 import { errorMessage } from '../../utils/errorMessage';
 import { lcsDiff, type DiffOp } from '../../lib/lcsDiff';
+import { useRecordTextResult } from '../../lib/results';
 import {
   AlertTriangle,
   CheckCircle,
@@ -29,7 +30,7 @@ import {
  * ──────────────────────────────────────────────────────────────────────── */
 
 const ErrorBanner: React.FC<{ message: string }> = ({ message }) => (
-  <div className="p-3 bg-rose-500/10 border border-rose-500/30 rounded-xl text-rose-500 dark:text-rose-400 text-xs flex items-center gap-2">
+  <div className="p-3 bg-rose-500/10 border border-rose-500/30 rounded-xl text-rose-700 dark:text-rose-400 text-xs flex items-center gap-2">
     <AlertTriangle className="w-4 h-4 shrink-0" />
     <span>{message}</span>
   </div>
@@ -123,6 +124,7 @@ function validateXml(xml: string): string | null {
 export const XmlFormatterTool: React.FC = () => {
   const [input, setInput] = useState('<root>\n<item id="1"><name>NextTool</name></item>\n</root>');
   const [output, setOutput] = useState('');
+  useRecordTextResult(output, 'formatted.xml', 'application/xml');
   const [indent, setIndent] = useState(2);
   const [error, setError] = useState<string | null>(null);
 
@@ -358,6 +360,7 @@ function stringifyYaml(value: YamlValue, indent = 0): string {
 export const YamlFormatterTool: React.FC = () => {
   const [input, setInput] = useState('app:\n  name: NextTool\n  version: 1.0.0\nfeatures:\n  - formatters\n  - encoders\n');
   const [output, setOutput] = useState('');
+  useRecordTextResult(output, 'formatted.yaml', 'text/yaml');
   const [error, setError] = useState<string | null>(null);
   const [mode, setMode] = useState<'format' | 'toJson' | 'fromJson'>('format');
 
@@ -488,6 +491,7 @@ export const SqlFormatterTool: React.FC = () => {
       return `-- Error formatting SQL: ${errorMessage(err, 'unknown error')}`;
     }
   }, [input, indent]);
+  useRecordTextResult(output, 'formatted.sql', 'text/plain;charset=utf-8');
 
   return (
     <div className="space-y-4">
@@ -578,6 +582,7 @@ function minifyHtml(html: string): string {
 export const HtmlFormatterTool: React.FC = () => {
   const [input, setInput] = useState('<div class="card"><h1>Hello</h1><p>Welcome to NextTool.</p></div>');
   const [output, setOutput] = useState('');
+  useRecordTextResult(output, 'formatted.html', 'text/html;charset=utf-8');
   const [indent, setIndent] = useState(2);
 
   const run = (mode: 'format' | 'minify') => {
@@ -694,6 +699,7 @@ function minifyCss(css: string): string {
 export const CssFormatterTool: React.FC = () => {
   const [input, setInput] = useState('.card{padding:1rem;border-radius:8px;} .card h1{font-size:1.25rem;color:#111;}');
   const [output, setOutput] = useState('');
+  useRecordTextResult(output, 'formatted.css', 'text/css');
   const [indent, setIndent] = useState(2);
 
   const run = (mode: 'format' | 'minify') => {
@@ -852,6 +858,7 @@ export const JsFormatterTool: React.FC = () => {
     "function greet(name) {\n  // say hello\n  console.log('Hello, ' + name);\n}\ngreet('NextTool');"
   );
   const [output, setOutput] = useState('');
+  useRecordTextResult(output, 'formatted.js', 'text/javascript');
   const [indent, setIndent] = useState(2);
 
   const run = (mode: 'prettify' | 'minify') => {
@@ -970,7 +977,7 @@ export const UrlEncoderTool: React.FC = () => {
         <Panel title="Decoded" right={<CopyButton text={decoded ?? ''} label="Copy" />}>
           <pre className="flex-1 p-3.5 overflow-auto font-mono text-xs text-success whitespace-pre-wrap break-all leading-relaxed select-text">
             {decoded === null ? (
-              <span className="text-rose-500 font-sans">Invalid encoded sequence for decoding.</span>
+              <span className="text-rose-700 dark:text-rose-400 font-sans">Invalid encoded sequence for decoding.</span>
             ) : (
               decoded || <span className="text-muted-foreground font-sans">, </span>
             )}
@@ -1266,9 +1273,9 @@ export const DiffCheckerTool: React.FC = () => {
 
   const summary = (
     <div className="flex items-center gap-3 text-[12px] font-mono font-bold">
-      <span className="text-emerald-600 dark:text-emerald-400">+{stats.added + stats.modified}</span>
-      <span className="text-rose-600 dark:text-rose-400">-{stats.removed + stats.modified}</span>
-      {stats.modified > 0 && <span className="text-amber-600 dark:text-amber-400">~{stats.modified}</span>}
+      <span className="text-emerald-700 dark:text-emerald-400">+{stats.added + stats.modified}</span>
+      <span className="text-rose-700 dark:text-rose-400">-{stats.removed + stats.modified}</span>
+      {stats.modified > 0 && <span className="text-amber-700 dark:text-amber-400">~{stats.modified}</span>}
     </div>
   );
 
@@ -1616,6 +1623,14 @@ const downloadBlob = (text: string, filename: string, type: string) => {
   URL.revokeObjectURL(url);
 };
 
+// marked emits GFM task items as bare <input type="checkbox">, which screen
+// readers announce as an unlabelled checkbox. Name each one by its item text.
+const labelTaskBoxes = (html: string) => html.replace(
+  /<li>(\s*)<input ((?:checked="" )?disabled="" type="checkbox")>\s*([^<]*)/g,
+  (_m, ws: string, attrs: string, text: string) =>
+    `<li>${ws}<input ${attrs} aria-label="${text.trim().replace(/"/g, '&quot;')}"> ${text}`,
+);
+
 export const MarkdownPreviewTool: React.FC = () => {
   // Sample starts at h2: an h1 here would render a second <h1> into the tool page,
   // competing with the page's real heading.
@@ -1780,7 +1795,7 @@ export const MarkdownPreviewTool: React.FC = () => {
             and centres itself instead of stretching across the whole screen. */}
         <div
           className={`blog-prose md-preview ${pane === 'preview' ? 'mx-auto max-w-[780px]' : ''}`}
-          dangerouslySetInnerHTML={{ __html: html }}
+          dangerouslySetInnerHTML={{ __html: labelTaskBoxes(html) }}
         />
       </div>
     </WhitePanel>

@@ -30,11 +30,12 @@ interface ConversionFlowProps {
   ordered?: boolean;
   dropLabel?: string;
   dropHint?: string;
-  /** Tool-specific settings, rendered on the Options step. */
-  options?: React.ReactNode;
+  /** Tool-specific settings, rendered on the Options step. A function
+   *  receives the queued files, for settings that depend on what was dropped. */
+  options?: React.ReactNode | ((files: File[]) => React.ReactNode);
   /** Label for the primary action, e.g. "Merge PDFs". Keep the verb
    *  consistent with the success message the user sees afterwards. */
-  actionLabel?: string;
+  actionLabel?: string | ((files: File[]) => string);
 }
 
 /** Compact duration readout: "8s", "1m 20s". */
@@ -67,6 +68,9 @@ export const ConversionFlow: React.FC<ConversionFlowProps> = ({
   const flow = useConversion({ toolId, toolName, run });
 
   const totalBytes = flow.files.reduce((sum, f) => sum + f.file.size, 0);
+  const queued = flow.files.map((f) => f.file);
+  const optionsNode = typeof options === 'function' ? options(queued) : options;
+  const action = typeof actionLabel === 'function' ? actionLabel(queued) : actionLabel;
 
   const handleDownload = () => {
     if (!flow.result || !flow.downloadUrl) return;
@@ -146,10 +150,10 @@ export const ConversionFlow: React.FC<ConversionFlowProps> = ({
             )}
           </section>
 
-          {options && (
+          {optionsNode && (
             <section className="rounded-[var(--radius-lg)] border border-border bg-card p-5 sm:p-6">
               <h2 className="mb-4 text-lg font-bold text-foreground">Settings</h2>
-              {options}
+              {optionsNode}
             </section>
           )}
 
@@ -158,7 +162,7 @@ export const ConversionFlow: React.FC<ConversionFlowProps> = ({
               Start over
             </Button>
             <Button size="lg" icon={Sparkles} onClick={flow.start} disabled={flow.files.length === 0}>
-              {actionLabel}
+              {action}
             </Button>
           </div>
         </div>

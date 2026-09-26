@@ -1,10 +1,11 @@
 import { TOOLS } from './tools';
+import { CONVERTER_TOOLS } from './converters';
 
 export const PLANNED_FEATURES: Record<string, string[]> = {
   // ─── PDF ─────────────────────────────────────────────────────────
   'pdf-to-word':          ['Reconstruct editable paragraphs and lists', 'Detect headings and apply Word styles', 'Extract tables with cell alignment', 'Download as .docx instantly'],
   'word-to-pdf':          ['Convert DOCX to PDF with layout preserved', 'Keep fonts, images and tables intact', 'Drag-and-drop multiple files', 'Batch convert and download'],
-  'pdf-to-excel':         ['Detect and extract tables automatically', 'Keep number and date formatting', 'Multi-sheet output for long PDFs', 'Download as .xlsx'],
+  'pdf-to-excel':         ['Rebuild table rows and columns from PDF text', 'One sheet per page or one combined sheet', 'XLSX or CSV output', 'Works on text-based PDFs, not scans'],
   'excel-to-pdf':         ['Turn worksheets into print-ready PDFs', 'Page-break and orientation control', 'Fit-to-width scaling options', 'Preserve cell formatting'],
   'pdf-to-ppt':           ['Rebuild slides from PDF pages', 'Extract text and images into placeholders', 'Editable PowerPoint output', 'Keep slide aspect ratio'],
   'ppt-to-pdf':           ['Convert slides to PDF with layout intact', 'Preserve fonts and embedded media', 'Portrait or landscape output', 'Fast in-browser conversion'],
@@ -22,8 +23,8 @@ export const PLANNED_FEATURES: Record<string, string[]> = {
   'pdf-viewer':           ['Fast page-by-page viewing', 'Zoom, rotate and search inside PDFs', 'Thumbnail sidebar navigation', 'Print-ready rendering'],
 
   // ─── EXCEL & CSV ─────────────────────────────────────────────────
-  'excel-to-csv':         ['Convert worksheets to CSV', 'Choose delimiter and encoding', 'Preserve number formatting', 'Batch export all sheets'],
-  'csv-to-excel':         ['CSV to formatted XLSX', 'Detect delimiters automatically', 'First-row header detection', 'Download instantly'],
+  'excel-to-csv':         ['Convert worksheets to CSV or TSV', 'Comma or semicolon separator', 'Dates exported as ISO dates', 'Export every sheet as its own file'],
+  'csv-to-excel':         ['CSV or TSV to XLSX', 'Detects the separator automatically', 'Bold, frozen header row', 'Keeps leading zeros as text'],
   'csv-viewer':           ['Clean table view of CSV data', 'Large-file handling', 'Sort columns on click', 'Search within rows'],
   'csv-editor':           ['Spreadsheet-style editing', 'Add, delete and reorder columns', 'Cell-level edits with undo', 'Export back to CSV'],
   'csv-cleaner':          ['Trim extra whitespace', 'Fix broken encodings', 'Remove malformed rows', 'Normalize date and number formats'],
@@ -95,7 +96,7 @@ export const PLANNED_FEATURES: Record<string, string[]> = {
   'video-metadata':       ['View codec, resolution and duration', 'Frame rate and bitrate info', 'Audio track details', 'Copy metadata as JSON'],
 
   // ─── AUDIO ───────────────────────────────────────────────────────
-  'audio-converter':      ['Convert MP3, WAV, OGG, FLAC, AAC and M4A', 'Adjustable bitrate and sample rate', 'Batch conversion', 'High-fidelity output'],
+  'audio-converter':      ['Read MP3, WAV, OGG, FLAC, AAC, M4A and video soundtracks', 'Write MP3 or 16-bit WAV', 'Adjustable bitrate, channels and sample rate', 'Batch conversion to one ZIP'],
   'audio-compressor':     ['Reduce size with bitrate control', 'VBR and CBR modes', 'Live file-size comparison', 'Preserve audio clarity'],
   'audio-cutter':         ['Trim with waveform visualization', 'Frame-precise start/end points', 'Split into multiple segments', 'Fade in/out transitions'],
   'audio-merge':          ['Concatenate audio files', 'Reorder clips before merging', 'Optional crossfade between tracks', 'Single output file'],
@@ -202,6 +203,7 @@ const IMPLEMENTED = [
   'text-to-pdf', 'pdf-ocr', 'pdf-extract-text', 'pdf-extract-images',
   'pdf-rotate', 'pdf-reorder', 'pdf-delete-pages', 'pdf-watermark',
   'pdf-page-numbers', 'pdf-sign', 'pdf-metadata', 'pdf-redact', 'pdf-page-extractor',
+  ...Object.keys(CONVERTER_TOOLS),
 ];
 
 const EXEMPT = [

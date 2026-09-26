@@ -70,7 +70,7 @@ export const PassphraseGeneratorTool: React.FC = () => {
   return (
     <div className="space-y-4">
       <div className="bg-card rounded-xl border border-border p-5 space-y-4">
-        <div className="bg-muted border border-border rounded-xl px-4 py-3.5 font-mono text-lg text-emerald-500 font-bold tracking-wide break-all select-all flex items-center justify-between gap-4">
+        <div className="bg-muted border border-border rounded-xl px-4 py-3.5 font-mono text-lg text-emerald-700 dark:text-emerald-400 font-bold tracking-wide break-all select-all flex items-center justify-between gap-4">
           <span className="truncate">{passphrase || '-'}</span>
           <CopyButton text={passphrase} label="Copy" className="shrink-0" />
         </div>
@@ -148,13 +148,13 @@ export const PasswordStrengthTool: React.FC = () => {
     const secondsToCrack = combinations / guessesPerSecond / 2; // average case
 
     let label = 'Very Weak';
-    let color = 'text-rose-500';
+    let color = 'text-rose-700 dark:text-rose-400';
     let bg = 'bg-rose-500';
     let width = 'w-1/5';
-    if (entropy > 28) { label = 'Weak'; color = 'text-orange-500'; bg = 'bg-orange-500'; width = 'w-2/5'; }
-    if (entropy > 45) { label = 'Fair'; color = 'text-amber-500'; bg = 'bg-amber-500'; width = 'w-3/5'; }
-    if (entropy > 65) { label = 'Good'; color = 'text-cyan-500'; bg = 'bg-cyan-500'; width = 'w-4/5'; }
-    if (entropy > 90) { label = 'Strong'; color = 'text-emerald-500'; bg = 'bg-emerald-500'; width = 'w-full'; }
+    if (entropy > 28) { label = 'Weak'; color = 'text-orange-700 dark:text-orange-400'; bg = 'bg-orange-500'; width = 'w-2/5'; }
+    if (entropy > 45) { label = 'Fair'; color = 'text-amber-700 dark:text-amber-400'; bg = 'bg-amber-500'; width = 'w-3/5'; }
+    if (entropy > 65) { label = 'Good'; color = 'text-cyan-700 dark:text-cyan-400'; bg = 'bg-cyan-500'; width = 'w-4/5'; }
+    if (entropy > 90) { label = 'Strong'; color = 'text-emerald-700 dark:text-emerald-400'; bg = 'bg-emerald-500'; width = 'w-full'; }
 
     return { entropy, secondsToCrack, label, color, bg, width };
   }, [password]);
@@ -292,7 +292,7 @@ export const FileChecksumTool: React.FC = () => {
               placeholder="Paste a hash to compare…"
             />
             {matchStatus !== null && (
-              <p className={`text-xs font-bold ${matchStatus ? 'text-emerald-500' : 'text-rose-500'}`}>
+              <p className={`text-xs font-bold ${matchStatus ? 'text-emerald-700 dark:text-emerald-400' : 'text-rose-700 dark:text-rose-400'}`}>
                 {matchStatus ? 'Match' : 'Mismatch'}
               </p>
             )}
@@ -508,7 +508,7 @@ export const SecureNotesTool: React.FC = () => {
             className="input-base font-mono"
             placeholder="Enter passphrase…"
           />
-          {error && <p className="text-xs text-rose-500">{error}</p>}
+          {error && <p className="text-xs text-rose-700 dark:text-rose-400">{error}</p>}
           <button onClick={handleUnlock} disabled={busy} className="btn-primary w-full justify-center py-2.5">
             <Unlock className="w-4 h-4" />
             {hasSavedNote ? 'Unlock' : 'Start'}

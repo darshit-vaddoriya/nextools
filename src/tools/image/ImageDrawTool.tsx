@@ -10,6 +10,11 @@ import {
   loadImage, canvasExport, downloadBlob, baseNameFrom, formatBytes,
 } from './ImageUtils';
 import { errorMessage } from '../../utils/errorMessage';
+import {
+  type TextObject, type TextStyle, DEFAULT_TEXT_STYLE, TEXT_PRESETS,
+  drawTextObject, textBounds, layoutText, resizeTextObject, ensureFontLoaded,
+  CanvasTextEditor, TextFloatingToolbar, TextStylePanel,
+} from './canvasText';
 
 const MAX_DIM = 4000;
 const HISTORY_LIMIT = 30;
@@ -41,7 +46,7 @@ const HINT_BY_TOOL: Record<ToolId, string> = {
   eraser: 'Click or drag over objects to erase them. Objects are removed as a whole.',
   shapes: 'Pick a shape on the right, then drag on the image to draw it.',
   arrow: 'Drag on the image to draw an arrow.',
-  text: 'Click anywhere on the image to place your text.',
+  text: 'Click empty space to add text. Click a text to edit it, or drag it to move; side handles wrap, corners scale. While typing, drag the grip to move.',
 };
 
 const COLOR_PRESETS = [
@@ -72,7 +77,7 @@ type DrawObject =
   | { id: string; type: 'stroke'; points: Point[]; color: string; size: number; opacity?: number }
   | { id: string; type: 'rect' | 'ellipse' | 'star'; x: number; y: number; w: number; h: number; color: string; fillColor: string; size: number; fill: boolean; opacity?: number }
   | { id: string; type: 'line' | 'arrow'; x1: number; y1: number; x2: number; y2: number; color: string; size: number; opacity?: number }
-  | { id: string; type: 'text'; x: number; y: number; text: string; color: string; size: number; opacity?: number };
+  | TextObject;
 
 let idCounter = 0;
 const nextId = () => `d${Date.now().toString(36)}-${(idCounter++).toString(36)}`;
@@ -164,7 +169,7 @@ const MenuItem: React.FC<{
     onClick={onClick}
     className={`w-full h-8 px-2.5 rounded-lg flex items-center gap-2.5 text-left text-xs transition-colors
       ${danger
-        ? 'text-rose-500 dark:text-rose-400 hover:bg-rose-500/10'
+        ? 'text-rose-700 dark:text-rose-400 hover:bg-rose-500/10'
         : 'text-muted-foreground hover:bg-muted dark:hover:bg-white/[0.06]'}
       disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-transparent`}
   >
@@ -312,25 +317,11 @@ function drawObject(ctx: CanvasRenderingContext2D, o: DrawObject, offsetX = 0, o
       }
       break;
     }
-    case 'text': {
-      ctx.fillStyle = o.color;
-      ctx.font = `bold ${o.size}px Arial, Helvetica, sans-serif`;
-      ctx.textBaseline = 'alphabetic';
-      ctx.fillText(o.text, o.x + offsetX, o.y + offsetY);
+    case 'text':
+      drawTextObject(ctx, o, offsetX, offsetY);
       break;
-    }
   }
   ctx.restore();
-}
-
-let measureCtx: CanvasRenderingContext2D | null = null;
-
-/** Real glyph width, so the selection box and handles hug the text. */
-function measureTextWidth(text: string, size: number): number {
-  if (!measureCtx) measureCtx = document.createElement('canvas').getContext('2d');
-  if (!measureCtx) return Math.max(20, text.length * size * 0.62);
-  measureCtx.font = `bold ${size}px Arial, Helvetica, sans-serif`;
-  return Math.max(8, measureCtx.measureText(text).width);
 }
 
 function objectBounds(o: DrawObject): { x: number; y: number; w: number; h: number } {
@@ -352,7 +343,7 @@ function objectBounds(o: DrawObject): { x: number; y: number; w: number; h: numb
     case 'arrow':
       return { x: Math.min(o.x1, o.x2), y: Math.min(o.y1, o.y2), w: Math.abs(o.x2 - o.x1), h: Math.abs(o.y2 - o.y1) };
     case 'text':
-      return { x: o.x, y: o.y - o.size, w: measureTextWidth(o.text, o.size), h: o.size * 1.3 };
+      return textBounds(o);
   }
 }
 
@@ -381,6 +372,13 @@ function handlesFor(o: DrawObject): { id: HandleId; x: number; y: number }[] {
   const b = objectBounds(o);
   const x1 = b.x - 4, y1 = b.y - 4, x2 = b.x + b.w + 4, y2 = b.y + b.h + 4;
   const mx = (x1 + x2) / 2, my = (y1 + y2) / 2;
+  if (o.type === 'text') {
+    // Sides set the wrap width, corners scale; top/bottom have no meaning for text.
+    return [
+      { id: 'nw', x: x1, y: y1 }, { id: 'ne', x: x2, y: y1 }, { id: 'e', x: x2, y: my },
+      { id: 'se', x: x2, y: y2 }, { id: 'sw', x: x1, y: y2 }, { id: 'w', x: x1, y: my },
+    ];
+  }
   return [
     { id: 'nw', x: x1, y: y1 }, { id: 'n', x: mx, y: y1 }, { id: 'ne', x: x2, y: y1 },
     { id: 'e', x: x2, y: my }, { id: 'se', x: x2, y: y2 }, { id: 's', x: mx, y: y2 },
@@ -388,11 +386,25 @@ function handlesFor(o: DrawObject): { id: HandleId; x: number; y: number }[] {
   ];
 }
 
+function translateObject(o: DrawObject, dx: number, dy: number): DrawObject {
+  switch (o.type) {
+    case 'stroke': return { ...o, points: o.points.map(pt => ({ x: pt.x + dx, y: pt.y + dy })) };
+    case 'line':
+    case 'arrow': return { ...o, x1: o.x1 + dx, y1: o.y1 + dy, x2: o.x2 + dx, y2: o.y2 + dy };
+    default: return { ...o, x: o.x + dx, y: o.y + dy };
+  }
+}
+
+const ARROW_STEP: Record<string, [number, number]> = {
+  ArrowLeft: [-1, 0], ArrowRight: [1, 0], ArrowUp: [0, -1], ArrowDown: [0, 1],
+};
+
 /** Rebuild `orig` so the dragged handle sits at `p`. Shift keeps a corner drag proportional. */
 function resizeObject(orig: DrawObject, handle: HandleId, p: Point, shift: boolean): DrawObject {
   if (orig.type === 'line' || orig.type === 'arrow') {
     return handle === 'p1' ? { ...orig, x1: p.x, y1: p.y } : { ...orig, x2: p.x, y2: p.y };
   }
+  if (orig.type === 'text') return resizeTextObject(orig, handle, p);
   const MIN = 4;
   const b = objectBounds(orig);
   let x1 = b.x, y1 = b.y, x2 = b.x + b.w, y2 = b.y + b.h;
@@ -403,7 +415,7 @@ function resizeObject(orig: DrawObject, handle: HandleId, p: Point, shift: boole
   if (x2 - x1 < MIN) { if (handle.includes('w')) x1 = x2 - MIN; else x2 = x1 + MIN; }
   if (y2 - y1 < MIN) { if (handle.includes('n')) y1 = y2 - MIN; else y2 = y1 + MIN; }
   const isCorner = handle.length === 2;
-  if ((shift || orig.type === 'text') && isCorner && b.w > 0 && b.h > 0) {
+  if (shift && isCorner && b.w > 0 && b.h > 0) {
     const nh = (x2 - x1) * (b.h / b.w);
     if (handle.includes('n')) y1 = y2 - nh; else y2 = y1 + nh;
   }
@@ -415,11 +427,6 @@ function resizeObject(orig: DrawObject, handle: HandleId, p: Point, shift: boole
     case 'ellipse':
     case 'star':
       return { ...orig, x: x1, y: y1, w: nw, h: nh };
-    case 'text': {
-      const factor = b.h > 0 ? nh / b.h : 1;
-      const size = Math.max(6, orig.size * factor);
-      return { ...orig, size, x: x1, y: y1 + size };
-    }
     case 'stroke': {
       const sx = b.w > 0 ? nw / b.w : 1;
       const sy = b.h > 0 ? nh / b.h : 1;
@@ -478,8 +485,9 @@ export const ImageDrawTool: React.FC = () => {
   const [size, setSize] = useState(6);
   const [fill, setFill] = useState(false);
   const [opacity, setOpacity] = useState(1);
-  const [fontSize, setFontSize] = useState(36);
-  const [textValue, setTextValue] = useState('Your text here');
+  const [textStyle, setTextStyle] = useState<TextStyle>(DEFAULT_TEXT_STYLE);
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [fontTick, setFontTick] = useState(0);
   const [objects, setObjects] = useState<DrawObject[]>([]);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [canUndo, setCanUndo] = useState(false);
@@ -523,14 +531,17 @@ export const ImageDrawTool: React.FC = () => {
   const redoRef = useRef<DrawObject[][]>([]);
   const penRef = useRef<{ points: Point[]; color: string; size: number; opacity: number } | null>(null);
   const previewRef = useRef<{ tool: 'rect' | 'ellipse' | 'star' | 'line' | 'arrow'; color: string; fillColor: string; size: number; fill: boolean; opacity: number; start: Point; cur: Point } | null>(null);
-  const moveRef = useRef<{ id: string; last: Point; totalX: number; totalY: number } | null>(null);
+  /** `editOnClick`: with the text tool, a press on a text that never turns into a drag opens it for typing. */
+  const moveRef = useRef<{ id: string; last: Point; totalX: number; totalY: number; editOnClick?: boolean } | null>(null);
   const resizeRef = useRef<{ id: string; handle: HandleId; orig: DrawObject } | null>(null);
   const resizeCommittedRef = useRef(false);
   const erasingRef = useRef(false);
   const moveCommittedRef = useRef(false);
   const eraseCommittedRef = useRef(false);
-  const textEditPushedRef = useRef(false);
+  /** The text box being typed into: whether it was just created, and whether an undo step was taken. */
+  const editRef = useRef<{ id: string; isNew: boolean; pushed: boolean } | null>(null);
   const objOpacityPushedRef = useRef(false);
+  const lastNudgeRef = useRef(0);
   const loadTickRef = useRef(0);
   const fitPendingRef = useRef(false);
   const zoomRef = useRef(1);
@@ -556,6 +567,8 @@ export const ImageDrawTool: React.FC = () => {
   }, []);
 
   const undo = useCallback(() => {
+    editRef.current = null;
+    setEditingId(null);
     const prev = undoRef.current.pop();
     if (prev === undefined) return;
     redoRef.current.push(objects);
@@ -566,6 +579,8 @@ export const ImageDrawTool: React.FC = () => {
   }, [objects]);
 
   const redo = useCallback(() => {
+    editRef.current = null;
+    setEditingId(null);
     const next = redoRef.current.pop();
     if (next === undefined) return;
     undoRef.current.push(objects);
@@ -585,6 +600,8 @@ export const ImageDrawTool: React.FC = () => {
     const pen = penRef.current;
     const preview = previewRef.current;
     for (const o of objects) {
+      // The text being edited is shown by the textarea overlay instead.
+      if (o.id === editingId) continue;
       drawObject(ctx, o);
     }
     if (pen && pen.points.length) {
@@ -600,7 +617,7 @@ export const ImageDrawTool: React.FC = () => {
       } as DrawObject);
     }
     const sel = objects.find(o => o.id === selectedId);
-    if (sel && !penRef.current && !previewRef.current) {
+    if (sel && sel.id !== editingId && !penRef.current && !previewRef.current) {
       const b = objectBounds(sel);
       const z = Math.max(zoom, 0.01);
       ctx.save();
@@ -609,7 +626,7 @@ export const ImageDrawTool: React.FC = () => {
       ctx.setLineDash([5 / z, 4 / z]);
       ctx.strokeRect(b.x - 4, b.y - 4, b.w + 8, b.h + 8);
       ctx.restore();
-      if (tool === 'select') {
+      if (tool === 'select' || (tool === 'text' && sel.type === 'text')) {
         // Handles are drawn at a constant on-screen size, whatever the zoom is.
         const hs = 9 / z;
         ctx.save();
@@ -630,14 +647,113 @@ export const ImageDrawTool: React.FC = () => {
         ctx.restore();
       }
     }
-  }, [objects, selectedId, zoom, tool]);
+  }, [objects, selectedId, zoom, tool, editingId]);
 
-  useEffect(() => { redraw(); }, [redraw]);
+  // fontTick: repaint once a web font finishes loading.
+  useEffect(() => { redraw(); }, [redraw, fontTick]);
 
   useEffect(() => {
-    textEditPushedRef.current = false;
     objOpacityPushedRef.current = false;
   }, [selectedId]);
+
+  // Canvas text never waits for a web font, so load every face in use and repaint.
+  const fontsInUse = Array.from(new Set(
+    [textStyle, ...objects.filter((o): o is TextObject => o.type === 'text')]
+      .map(o => `${o.font}|${o.bold}|${o.italic}`),
+  )).join(',');
+  useEffect(() => {
+    let alive = true;
+    Promise.all(fontsInUse.split(',').filter(Boolean).map(k => {
+      const [font, bold, italic] = k.split('|');
+      return ensureFontLoaded({ font, size: 32, bold: bold === 'true', italic: italic === 'true' });
+    })).then(() => { if (alive) setFontTick(t => t + 1); });
+    return () => { alive = false; };
+  }, [fontsInUse]);
+
+  // ── Text editing ─────────────────────────────────────────────
+  const startEdit = useCallback((id: string, isNew = false) => {
+    editRef.current = { id, isNew, pushed: isNew };
+    setSelectedId(id);
+    setEditingId(id);
+  }, []);
+
+  const commitEdit = useCallback(() => {
+    const ed = editRef.current;
+    editRef.current = null;
+    setEditingId(null);
+    if (!ed) return;
+    const obj = objectsRef.current.find(o => o.id === ed.id);
+    if (obj && obj.type === 'text' && !obj.text.trim()) {
+      // An empty box is dropped; a brand-new one leaves no undo step behind.
+      setObjects(prev => prev.filter(o => o.id !== ed.id));
+      setSelectedId(null);
+      if (ed.isNew) {
+        undoRef.current.pop();
+        setCanUndo(undoRef.current.length > 0);
+      }
+    }
+  }, []);
+
+  const changeEditingText = useCallback((text: string) => {
+    const ed = editRef.current;
+    if (!ed) return;
+    if (!ed.pushed) {
+      ed.pushed = true;
+      pushHistory(objectsRef.current);
+    }
+    setObjects(prev => prev.map(o => o.id === ed.id && o.type === 'text' ? { ...o, text } : o));
+  }, [pushHistory]);
+
+  /** The move grip on the text being typed: one undo step per drag. */
+  const startEditorMove = useCallback(() => pushHistory(objectsRef.current), [pushHistory]);
+  const moveEditingBy = useCallback((dx: number, dy: number) => {
+    const ed = editRef.current;
+    if (!ed) return;
+    setObjects(prev => prev.map(o => o.id === ed.id && o.type === 'text' ? { ...o, x: o.x + dx, y: o.y + dy } : o));
+  }, []);
+
+  /** Drop a new text box with its top-left at (x, y) and start typing into it. */
+  const addText = useCallback((x: number, y: number, text: string, style: Partial<TextStyle> = {}, centered = false) => {
+    const s = { ...textStyle, ...style };
+    let px = x, py = y;
+    if (centered) {
+      const l = layoutText({ ...s, text });
+      px = x - l.w / 2;
+      py = y - l.h / 2;
+    }
+    const obj: TextObject = { id: nextId(), type: 'text', x: px, y: py, text, color, opacity, ...s };
+    pushHistory(objectsRef.current);
+    setObjects(prev => [...prev, obj]);
+    startEdit(obj.id, true);
+  }, [textStyle, color, opacity, pushHistory, startEdit]);
+
+  /** Apply a style change to the selected text box, and make it the default for new ones. */
+  const applyTextStyle = useCallback((patch: Partial<TextStyle>) => {
+    setTextStyle(prev => ({ ...prev, ...patch }));
+    const sel = objectsRef.current.find(o => o.id === selectedId);
+    if (sel?.type !== 'text') return;
+    if (editRef.current?.id === sel.id) {
+      if (!editRef.current.pushed) { editRef.current.pushed = true; pushHistory(objectsRef.current); }
+    } else {
+      pushHistory(objectsRef.current);
+    }
+    setObjects(prev => prev.map(o => o.id === sel.id && o.type === 'text' ? { ...o, ...patch } : o));
+  }, [selectedId, pushHistory]);
+
+  const applyTextColor = useCallback((c: string) => {
+    setColor(c);
+    const sel = objectsRef.current.find(o => o.id === selectedId);
+    if (sel?.type !== 'text') return;
+    if (editRef.current?.id === sel.id) {
+      if (!editRef.current.pushed) { editRef.current.pushed = true; pushHistory(objectsRef.current); }
+    } else {
+      pushHistory(objectsRef.current);
+    }
+    setObjects(prev => prev.map(o => o.id === sel.id ? { ...o, color: c } : o));
+  }, [selectedId, pushHistory]);
+
+  // Switching tools finishes whatever was being typed.
+  useEffect(() => { commitEdit(); }, [tool, commitEdit]);
 
   useEffect(() => {
     const ring = cursorRingRef.current;
@@ -899,6 +1015,18 @@ export const ImageDrawTool: React.FC = () => {
         duplicate();
         return;
       }
+      const selText = objects.find(o => o.id === selectedId && o.type === 'text') as TextObject | undefined;
+      if (selText && mod && ['b', 'i', 'u'].includes(e.key.toLowerCase())) {
+        e.preventDefault();
+        const k = ({ b: 'bold', i: 'italic', u: 'underline' } as const)[e.key.toLowerCase() as 'b' | 'i' | 'u'];
+        applyTextStyle({ [k]: !selText[k] });
+        return;
+      }
+      if (selText && e.key === 'Enter') {
+        e.preventDefault();
+        startEdit(selText.id);
+        return;
+      }
       if (!mod) {
         const id = TOOL_KEYS[e.key.toLowerCase()];
         if (id) {
@@ -911,6 +1039,17 @@ export const ImageDrawTool: React.FC = () => {
         setSelectedId(null);
         return;
       }
+      const step = ARROW_STEP[e.key];
+      if (step && selectedId && !mod) {
+        // Arrow keys nudge the selection (Shift for 10px); a burst of presses is one undo step.
+        e.preventDefault();
+        const k = e.shiftKey ? 10 : 1;
+        const now = Date.now();
+        if (now - lastNudgeRef.current > 600) pushHistory(objects);
+        lastNudgeRef.current = now;
+        setObjects(prev => prev.map(o => o.id === selectedId ? translateObject(o, step[0] * k, step[1] * k) : o));
+        return;
+      }
       if ((e.key === 'Delete' || e.key === 'Backspace') && selectedId) {
         e.preventDefault();
         pushHistory(objects);
@@ -920,7 +1059,7 @@ export const ImageDrawTool: React.FC = () => {
     };
     document.addEventListener('keydown', onKey);
     return () => document.removeEventListener('keydown', onKey);
-  }, [undo, redo, duplicate, selectedId, objects, pushHistory]);
+  }, [undo, redo, duplicate, selectedId, objects, pushHistory, applyTextStyle, startEdit]);
 
   // ── Right-click menu ────────────────────────────────────────
   const openMenu = (e: React.MouseEvent<HTMLCanvasElement>) => {
@@ -996,6 +1135,12 @@ export const ImageDrawTool: React.FC = () => {
     setMenu(null);
     canvas.setPointerCapture(e.pointerId);
 
+    // A click on the canvas finishes the text being typed; with the text tool that is all it does.
+    if (editRef.current) {
+      commitEdit();
+      if (tool === 'text') return;
+    }
+
     const el = containerRef.current;
     if ((spaceDownRef.current || e.button === 1) && el) {
       panRef.current = { startX: e.clientX, startY: e.clientY, scrollLeft: el.scrollLeft, scrollTop: el.scrollTop };
@@ -1050,13 +1195,62 @@ export const ImageDrawTool: React.FC = () => {
     }
 
     if (tool === 'text') {
-      const text = textValue.trim();
-      if (!text) { setError('Type some text in the text box first.'); return; }
-      pushHistory(objects);
-      const obj: DrawObject = { id: nextId(), type: 'text', x: p.x, y: p.y, text, color, size: fontSize, opacity };
-      setObjects(prev => [...prev, obj]);
-      setSelectedId(obj.id);
+      moveCommittedRef.current = false;
+      const sel = objects.find(o => o.id === selectedId);
+      if (sel?.type === 'text') {
+        const tol = 9 / Math.max(zoomRef.current, 0.01);
+        const h = handlesFor(sel).find(hh => Math.abs(p.x - hh.x) <= tol && Math.abs(p.y - hh.y) <= tol);
+        if (h) {
+          resizeRef.current = { id: sel.id, handle: h.id, orig: JSON.parse(JSON.stringify(sel)) as DrawObject };
+          resizeCommittedRef.current = false;
+          return;
+        }
+      }
+      // Pressing a text grabs it: drag to move, or release in place to type into it.
+      const hit = [...objects].reverse().find(o => o.type === 'text' && hitObject(o, p.x, p.y));
+      if (hit) {
+        setSelectedId(hit.id);
+        moveRef.current = { id: hit.id, last: p, totalX: 0, totalY: 0, editOnClick: true };
+        return;
+      }
+      // Clicking away from a selected text only deselects it, same as finishing an edit.
+      if (sel?.type === 'text') {
+        setSelectedId(null);
+        return;
+      }
+      // The caret line is centred on the click, like placing a cursor.
+      addText(p.x, p.y - (textStyle.size * textStyle.lineHeight) / 2, 'Your text here');
     }
+  };
+
+  const onDoubleClick = (e: React.MouseEvent<HTMLCanvasElement>) => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const rect = canvas.getBoundingClientRect();
+    const px = (e.clientX - rect.left) * (canvas.width / rect.width);
+    const py = (e.clientY - rect.top) * (canvas.height / rect.height);
+    const hit = [...objects].reverse().find(o => o.type === 'text' && hitObject(o, px, py));
+    if (hit) startEdit(hit.id);
+  };
+
+  /** Canvas coordinates at the centre of what is currently visible. */
+  const viewCenter = (): Point => {
+    const canvas = canvasRef.current;
+    const c = containerRef.current;
+    if (!canvas || !c) return { x: imgW / 2, y: imgH / 2 };
+    const cr = c.getBoundingClientRect();
+    const r = canvas.getBoundingClientRect();
+    const sx = canvas.width / r.width;
+    const cx = Math.min(Math.max(cr.left + cr.width / 2, r.left), r.right);
+    const cy = Math.min(Math.max(cr.top + cr.height / 2, r.top), r.bottom);
+    return { x: (cx - r.left) * sx, y: (cy - r.top) * sx };
+  };
+
+  const addPreset = (preset: typeof TEXT_PRESETS[number]) => {
+    // Presets are sized for a ~1000px canvas; scale to the image so they look the same everywhere.
+    const scale = Math.max(0.4, Math.min(4, Math.max(imgW, imgH) / 1000));
+    const c = viewCenter();
+    addText(c.x, c.y, preset.text, { size: Math.round(preset.size * scale), bold: preset.bold, align: 'center' }, true);
   };
 
   const onPointerMove = (e: React.PointerEvent<HTMLCanvasElement>) => {
@@ -1098,14 +1292,17 @@ export const ImageDrawTool: React.FC = () => {
       return;
     }
 
-    // Hover feedback on the selection handles.
-    if (tool === 'select' && !moveRef.current && canvas) {
+    // Hover feedback on the selection handles (and, with the text tool, on texts that can be dragged).
+    if ((tool === 'select' || tool === 'text') && !moveRef.current && canvas) {
       const sel = objects.find(o => o.id === selectedId);
       let cursor = '';
-      if (sel) {
+      if (sel && (tool === 'select' || sel.type === 'text')) {
         const tol = 9 / Math.max(zoomRef.current, 0.01);
         const h = handlesFor(sel).find(hh => Math.abs(p.x - hh.x) <= tol && Math.abs(p.y - hh.y) <= tol);
         if (h) cursor = HANDLE_CURSOR[h.id];
+      }
+      if (!cursor && tool === 'text' && objects.some(o => o.type === 'text' && hitObject(o, p.x, p.y))) {
+        cursor = 'move';
       }
       canvas.style.cursor = cursor;
     }
@@ -1120,23 +1317,13 @@ export const ImageDrawTool: React.FC = () => {
       move.last = p;
       move.totalX += dx;
       move.totalY += dy;
-      if (!moveCommittedRef.current && (Math.abs(move.totalX) > 2 || Math.abs(move.totalY) > 2)) {
+      // Measured on screen, so a slightly shaky click still counts as a click at any zoom.
+      const slop = 3 / Math.max(zoomRef.current, 0.01);
+      if (!moveCommittedRef.current && (Math.abs(move.totalX) > slop || Math.abs(move.totalY) > slop)) {
         moveCommittedRef.current = true;
         pushHistory(objects);
       }
-      setObjects(prev => prev.map(o => {
-        if (o.id !== move.id) return o;
-        switch (o.type) {
-          case 'stroke': return { ...o, points: o.points.map(pt => ({ x: pt.x + dx, y: pt.y + dy })) };
-          case 'rect':
-          case 'ellipse':
-          case 'star': return { ...o, x: o.x + dx, y: o.y + dy };
-          case 'line':
-          case 'arrow': return { ...o, x1: o.x1 + dx, y1: o.y1 + dy, x2: o.x2 + dx, y2: o.y2 + dy };
-          case 'text': return { ...o, x: o.x + dx, y: o.y + dy };
-        }
-        return o;
-      }));
+      setObjects(prev => prev.map(o => o.id === move.id ? translateObject(o, dx, dy) : o));
       return;
     }
 
@@ -1176,8 +1363,16 @@ export const ImageDrawTool: React.FC = () => {
       resizeRef.current = null;
       return;
     }
-    if (moveRef.current) {
+    const move = moveRef.current;
+    if (move) {
       moveRef.current = null;
+      if (move.editOnClick && !moveCommittedRef.current) {
+        // Undo the sub-threshold jitter so a plain click never nudges the text.
+        if (move.totalX || move.totalY) {
+          setObjects(prev => prev.map(o => o.id === move.id ? translateObject(o, -move.totalX, -move.totalY) : o));
+        }
+        startEdit(move.id);
+      }
       return;
     }
     if (erasingRef.current) {
@@ -1322,6 +1517,8 @@ export const ImageDrawTool: React.FC = () => {
   }, [exportFormat, exportName]);
 
   const selectedObj = objects.find(o => o.id === selectedId) ?? null;
+  const selectedText = selectedObj?.type === 'text' ? selectedObj : null;
+  const editingObj = (objects.find(o => o.id === editingId && o.type === 'text') as TextObject | undefined) ?? null;
   const isShapeTool = shapeTools.includes(tool);
   const isPenTool = tool === 'brush';
   const zoomPct = `${Math.round(zoom * 100)}%`;
@@ -1331,7 +1528,9 @@ export const ImageDrawTool: React.FC = () => {
       ? 'cursor-grab'
       : tool === 'select'
         ? 'cursor-move'
-        : 'cursor-crosshair';
+        : tool === 'text'
+          ? 'cursor-text'
+          : 'cursor-crosshair';
 
   if (!file) {
     return (
@@ -1350,9 +1549,9 @@ export const ImageDrawTool: React.FC = () => {
           <div className="w-14 h-14 rounded-2xl bg-primary/10 border border-primary/20 mx-auto flex items-center justify-center mb-4">
             <PenLine className="w-6 h-6 text-primary" />
           </div>
-          <h3 className="text-xl font-bold text-foreground">
+          <h2 className="text-xl font-bold text-foreground">
             Draw on images privately in your browser
-          </h3>
+          </h2>
           <p className="text-[13px] text-muted-foreground mt-1.5 max-w-md mx-auto leading-relaxed">
             Annotate with brush, shapes, arrows and text, then export, your image never leaves your device.
           </p>
@@ -1407,7 +1606,7 @@ export const ImageDrawTool: React.FC = () => {
         {error && <div className="mt-3"><ErrorNotice message={error} /></div>}
         {toast && (
           <div className="mt-3 flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl border bg-card border-emerald-200 dark:border-emerald-500/30 fade-in">
-            <CheckCircle2 className="w-4 h-4 text-emerald-500" />
+            <CheckCircle2 className="w-4 h-4 text-emerald-700 dark:text-emerald-400" />
             <span className="text-xs font-medium text-muted-foreground">{toast}</span>
           </div>
         )}
@@ -1437,7 +1636,7 @@ export const ImageDrawTool: React.FC = () => {
 
         <div className="min-w-0 flex-1 flex items-center gap-2.5">
           <div className="w-7 h-8 rounded-md overflow-hidden  bg-card border  border-border flex items-center justify-center shrink-0">
-            <ImageIcon className="w-3.5 h-3.5 text-pink-500" />
+            <ImageIcon className="w-3.5 h-3.5 text-pink-700 dark:text-pink-400" />
           </div>
           <div className="min-w-0">
             <div className="text-xs font-semibold  text-foreground truncate">{file.name}</div>
@@ -1455,7 +1654,7 @@ export const ImageDrawTool: React.FC = () => {
         </HdrBtn>
         {confirmClear ? (
           <div className="flex items-center gap-1.5 shrink-0 rounded-lg border dark:border-rose-500/40 border-rose-300 dark:bg-rose-500/10 bg-rose-50 px-1.5 py-1 fade-in">
-            <span className="text-[10px] font-semibold dark:text-rose-300 text-rose-600 pl-1 whitespace-nowrap">Clear everything?</span>
+            <span className="text-[10px] font-semibold dark:text-rose-300 text-rose-700 pl-1 whitespace-nowrap">Clear everything?</span>
             <button type="button" onClick={() => { clear(); setConfirmClear(false); }} className="h-7 px-2.5 rounded-md text-[11px] font-semibold bg-rose-600 hover:bg-rose-500 text-white transition-colors">Clear</button>
             <button type="button" onClick={() => setConfirmClear(false)} className="h-7 px-2.5 rounded-md text-[11px] font-medium dark:hover:bg-white/[0.06] hover:bg-muted  text-muted-foreground transition-colors">Cancel</button>
           </div>
@@ -1508,15 +1707,17 @@ export const ImageDrawTool: React.FC = () => {
           ))}
         </nav>
 
-        <main className="flex-1 min-w-0 min-h-0 flex flex-col">
+        <div className="flex-1 min-w-0 min-h-0 flex flex-col">
           <div ref={containerRef} className="flex-1 min-h-0 overflow-auto relative">
             <div className="min-w-full min-h-full flex">
               <div className="m-auto p-4">
+                <div className="relative">
                 <div
                   className="checkerboard rounded-lg overflow-hidden border shadow-lg dark:border-white/10 border-border"
                   style={{ width: Math.max(2, imgW * zoom), height: Math.max(2, imgH * zoom) }}
                 >
                   <canvas
+                    onDoubleClick={onDoubleClick}
                     ref={canvasRef}
                     style={{ width: imgW * zoom, height: imgH * zoom }}
                     onPointerDown={onPointerDown}
@@ -1531,6 +1732,40 @@ export const ImageDrawTool: React.FC = () => {
                     className={`block touch-none ${canvasCursor}`}
                     aria-label="Drawing canvas"
                   />
+                </div>
+                {/* Text overlays live outside the clipped frame so the toolbar can sit above the image. */}
+                <div className="absolute left-px top-px">
+                  {editingObj && (
+                    <CanvasTextEditor
+                      obj={editingObj}
+                      zoom={zoom}
+                      onChange={changeEditingText}
+                      onCommit={commitEdit}
+                      onToggle={(k) => applyTextStyle({ [k]: !editingObj[k] })}
+                      onMoveStart={startEditorMove}
+                      onMove={moveEditingBy}
+                      gripAbove={textBounds(editingObj).y * zoom < 60}
+                    />
+                  )}
+                  {selectedText && (tool === 'select' || tool === 'text') && !isPanning && (() => {
+                    const b = textBounds(selectedText);
+                    const below = b.y * zoom < 60;
+                    const half = 230;
+                    const vw = imgW * zoom;
+                    const cx = (b.x + b.w / 2) * zoom;
+                    return (
+                      <TextFloatingToolbar
+                        style={selectedText}
+                        color={selectedText.color}
+                        onStyle={applyTextStyle}
+                        onColor={applyTextColor}
+                        left={vw > half * 2 ? Math.min(Math.max(cx, half), vw - half) : cx}
+                        top={below ? (b.y + b.h) * zoom + 14 : b.y * zoom - 14}
+                        below={below}
+                      />
+                    );
+                  })()}
+                </div>
                 </div>
               </div>
             </div>
@@ -1549,7 +1784,7 @@ export const ImageDrawTool: React.FC = () => {
             </p>
             <span className=" text-muted-foreground font-mono shrink-0">{objects.length} object{objects.length === 1 ? '' : 's'} · {zoomPct}</span>
           </div>
-        </main>
+        </div>
 
         {showOptions && (
           <div className="absolute lg:hidden inset-0 bg-black/50 z-30" onClick={() => setShowOptions(false)} />
@@ -1635,21 +1870,31 @@ export const ImageDrawTool: React.FC = () => {
                 <span>Fill shape</span>
               </label>
             )}
-            {tool === 'text' && (
-              <>
-                <div className="mt-3">
-                  <FieldLabel>Text</FieldLabel>
-                  <input
-                    value={textValue}
-                    onChange={(e) => setTextValue(e.target.value)}
-                    onKeyDown={(e) => { if (e.key === 'Enter') e.currentTarget.blur(); }}
-                    className="w-full rounded-lg border px-3 py-2 text-xs focus:outline-none focus:ring-2 focus:ring-primary/25 focus:border-primary dark:bg-white/[0.07] dark:border-white/[0.14]  bg-card border-border text-foreground"
-                  />
-                </div>
-                <div className="mt-3">
-                  <RangeField label="Font size" value={fontSize} min={12} max={160} suffix="px" onChange={setFontSize} />
-                </div>
-              </>
+            {(tool === 'text' || selectedText) && (
+              <div className="mt-4">
+                {tool === 'text' && (
+                  <div className="flex flex-col gap-1.5 mb-4">
+                    {TEXT_PRESETS.map(p => (
+                      <button
+                        key={p.id}
+                        type="button"
+                        onClick={() => addPreset(p)}
+                        className="w-full text-left px-3 py-2 rounded-lg border border-border dark:border-white/[0.1] hover:bg-muted dark:hover:bg-white/[0.06] text-foreground transition-colors truncate"
+                        style={{ fontFamily: textStyle.font, fontWeight: p.bold ? 700 : 400, fontSize: p.id === 'heading' ? 18 : p.id === 'subheading' ? 14 : 12 }}
+                      >
+                        {p.label}
+                      </button>
+                    ))}
+                  </div>
+                )}
+                <FieldLabel>{selectedText ? 'Selected text' : 'New text style'}</FieldLabel>
+                <TextStylePanel
+                  style={selectedText ?? textStyle}
+                  color={selectedText?.color ?? color}
+                  onStyle={applyTextStyle}
+                  onColor={applyTextColor}
+                />
+              </div>
             )}
           </div>
 
@@ -1658,23 +1903,14 @@ export const ImageDrawTool: React.FC = () => {
               <h3 className="section-kicker mb-2.5 flex items-center gap-1.5 dark:text-primary/40 text-on-primary-container">
                 Selected {TYPE_META[selectedObj.type].label}
               </h3>
-              {selectedObj.type === 'text' && (
-                <div className="mb-2.5">
-                  <FieldLabel>Text content</FieldLabel>
-                  <input
-                    value={selectedObj.text}
-                    onFocus={() => { textEditPushedRef.current = false; }}
-                    onChange={(e) => {
-                      if (!textEditPushedRef.current) {
-                        textEditPushedRef.current = true;
-                        pushHistory(objects);
-                      }
-                      const id = selectedObj.id;
-                      setObjects(prev => prev.map(o => o.id === id && o.type === 'text' ? { ...o, text: e.target.value } : o));
-                    }}
-                    className="w-full rounded-lg border px-3 py-1.5 text-xs focus:outline-none focus:ring-2 focus:ring-primary/25 dark:bg-white/[0.07] dark:border-white/[0.14]  bg-card border-border text-foreground"
-                  />
-                </div>
+              {selectedObj.type === 'text' && editingId !== selectedObj.id && (
+                <button
+                  type="button"
+                  onClick={() => startEdit(selectedObj.id)}
+                  className="mb-2.5 w-full h-8 rounded-lg text-[11px] font-semibold border border-primary/40 text-primary hover:bg-primary/10 transition-colors inline-flex items-center justify-center gap-1.5"
+                >
+                  <Type className="w-3.5 h-3.5" /> Edit text (Enter or double-click)
+                </button>
               )}
               <RangeField label="Opacity" value={Math.round((selectedObj.opacity ?? 1) * 100)} min={5} max={100} suffix="%" onChange={(v) => setObjOpacity(v / 100)} />
               <div className="flex flex-wrap gap-1.5 mt-2.5">
@@ -1687,7 +1923,7 @@ export const ImageDrawTool: React.FC = () => {
                 <HdrBtn onClick={() => moveLayer(selectedObj.id, -1)} title="Send backward" className="h-8 px-2.5">
                   <ArrowDown className="w-3.5 h-3.5" />
                 </HdrBtn>
-                <HdrBtn onClick={deleteSelected} title="Delete (Del)" className="h-8 px-2.5 text-rose-500 dark:text-rose-400 hover:bg-rose-500/10 border-rose-500/30">
+                <HdrBtn onClick={deleteSelected} title="Delete (Del)" className="h-8 px-2.5 text-rose-700 dark:text-rose-400 hover:bg-rose-500/10 border-rose-500/30">
                   <Delete className="w-3.5 h-3.5" /> Delete
                 </HdrBtn>
               </div>
@@ -1754,7 +1990,7 @@ export const ImageDrawTool: React.FC = () => {
                             : 'dark:bg-white/[0.03] dark:border-white/[0.07] dark:hover:bg-white/[0.06]  bg-card border-border hover:bg-muted text-muted-foreground'}`}
                       >
                         <span className="w-2.5 h-2.5 rounded-full shrink-0 border dark:border-white/20 border-border" style={{ backgroundColor: o.color }} />
-                        <span className="text-[11px] truncate flex-1">{meta.label}</span>
+                        <span className="text-[11px] truncate flex-1">{o.type === 'text' ? `“${o.text.split('\n')[0] || ' '}”` : meta.label}</span>
                         <meta.Icon className="w-3 h-3  text-muted-foreground shrink-0" />
                       </button>
                       <button onClick={() => moveLayer(o.id, 1)} title="Bring forward" aria-label="Bring forward"
@@ -1984,7 +2220,7 @@ export const ImageDrawTool: React.FC = () => {
 
       {toast && (
         <div className="absolute bottom-12 left-1/2 -translate-x-1/2 z-50 flex items-center gap-2 px-4 py-2.5 rounded-xl border dark:bg-[#12121a] dark:border-emerald-500/30 bg-card border-emerald-200 shadow-lg fade-in">
-          <CheckCircle2 className="w-4 h-4 text-emerald-500" />
+          <CheckCircle2 className="w-4 h-4 text-emerald-700 dark:text-emerald-400" />
           <span className="text-xs font-medium  text-muted-foreground">{toast}</span>
         </div>
       )}

@@ -438,7 +438,7 @@ export const FindReplaceTool: React.FC = () => {
         </div>
       </div>
       {error && (
-        <div className="p-3 bg-rose-500/10 border border-rose-500/30 rounded-xl text-rose-500 dark:text-rose-400 text-xs flex items-center gap-2">
+        <div className="p-3 bg-rose-500/10 border border-rose-500/30 rounded-xl text-rose-700 dark:text-rose-400 text-xs flex items-center gap-2">
           <AlertTriangle className="w-4 h-4 shrink-0" /> {error}
         </div>
       )}
@@ -589,7 +589,7 @@ export const ExtractHashtagsTool: React.FC = () => {
           ) : (
             <div className="flex flex-wrap gap-1.5">
               {mentions.map((m, i) => (
-                <span key={i} className="px-2 py-1 rounded-md bg-muted border border-border text-xs font-mono text-cyan-500 dark:text-cyan-400">{m}</span>
+                <span key={i} className="px-2 py-1 rounded-md bg-muted border border-border text-xs font-mono text-cyan-700 dark:text-cyan-400">{m}</span>
               ))}
             </div>
           )}
@@ -655,15 +655,15 @@ export const TextDiffTool: React.FC = () => {
         <div className="flex items-center justify-between">
           <p className="section-label">Diff Result</p>
           <span className="text-xs text-muted-foreground">
-            <span className="text-emerald-500 font-semibold">+{stats.added}</span>{' '}
-            <span className="text-rose-500 font-semibold">-{stats.removed}</span>
+            <span className="text-emerald-700 dark:text-emerald-400 font-semibold">+{stats.added}</span>{' '}
+            <span className="text-rose-700 dark:text-rose-400 font-semibold">-{stats.removed}</span>
           </span>
         </div>
         <div className="bg-muted border border-border rounded-lg p-3 text-xs font-mono leading-relaxed whitespace-pre-wrap break-words">
           {tokens.map((t, idx) => {
             if (t.type === 'same') return <span key={idx}>{t.text}</span>;
-            if (t.type === 'add') return <span key={idx} className="bg-emerald-500/15 text-emerald-600 dark:text-emerald-400">{t.text}</span>;
-            return <span key={idx} className="bg-rose-500/15 text-rose-600 dark:text-rose-400 line-through">{t.text}</span>;
+            if (t.type === 'add') return <span key={idx} className="bg-emerald-500/15 text-emerald-700 dark:text-emerald-400">{t.text}</span>;
+            return <span key={idx} className="bg-rose-500/15 text-rose-700 dark:text-rose-400 line-through">{t.text}</span>;
           })}
         </div>
       </div>

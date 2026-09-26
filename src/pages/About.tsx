@@ -48,7 +48,7 @@ export const About: React.FC<AboutProps> = ({ onBack, onOpenContact }) => {
               <div className="w-10 h-10 rounded-xl bg-primary/10 text-primary flex items-center justify-center mb-3">
                 <Icon className="w-5 h-5" />
               </div>
-              <h3 className="text-[13px] font-bold text-foreground mb-1">{item.title}</h3>
+              <h2 className="text-[13px] font-bold text-foreground mb-1">{item.title}</h2>
               <p className="text-[12px] text-muted-foreground leading-relaxed">{item.desc}</p>
             </div>
           );

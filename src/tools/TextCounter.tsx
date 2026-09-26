@@ -17,14 +17,14 @@ export const TextCounter: React.FC = () => {
   const readingTime   = words === 0 ? '0 min' : words < 200 ? `${Math.max(1, Math.round((words / 200) * 60))} sec` : `${Math.ceil(words / 200)} min`;
 
   const stats = [
-    { icon: AlignLeft,  label: 'Words',              value: words,         color: 'text-indigo-500', bg: 'dark:bg-indigo-500/10 bg-indigo-50' },
-    { icon: Hash,       label: 'Characters',          value: chars,         color: 'text-emerald-500', bg: 'dark:bg-emerald-500/10 bg-emerald-50' },
-    { icon: Hash,       label: 'Chars (no spaces)',   value: charsNoSpaces, color: 'text-cyan-500', bg: 'dark:bg-cyan-500/10 bg-cyan-50' },
-    { icon: BarChart2,  label: 'Lines',               value: lines,         color: 'text-purple-500', bg: 'dark:bg-purple-500/10 bg-purple-50' },
-    { icon: FileText,   label: 'Sentences',           value: sentences,     color: 'text-amber-500', bg: 'dark:bg-amber-500/10 bg-amber-50' },
-    { icon: FileText,   label: 'Paragraphs',          value: paragraphs,    color: 'text-pink-500', bg: 'dark:bg-pink-500/10 bg-pink-50' },
-    { icon: Clock,      label: 'Reading Time',        value: readingTime, color: 'text-teal-500', bg: 'dark:bg-teal-500/10 bg-teal-50' },
-    { icon: BarChart2,  label: 'Avg Word Length',     value: words > 0 ? (charsNoSpaces / words).toFixed(1) : '0', color: 'text-rose-500', bg: 'dark:bg-rose-500/10 bg-rose-50' },
+    { icon: AlignLeft,  label: 'Words',              value: words,         color: 'text-indigo-700 dark:text-indigo-400', bg: 'dark:bg-indigo-500/10 bg-indigo-50' },
+    { icon: Hash,       label: 'Characters',          value: chars,         color: 'text-emerald-700 dark:text-emerald-400', bg: 'dark:bg-emerald-500/10 bg-emerald-50' },
+    { icon: Hash,       label: 'Chars (no spaces)',   value: charsNoSpaces, color: 'text-cyan-700 dark:text-cyan-400', bg: 'dark:bg-cyan-500/10 bg-cyan-50' },
+    { icon: BarChart2,  label: 'Lines',               value: lines,         color: 'text-purple-700 dark:text-purple-400', bg: 'dark:bg-purple-500/10 bg-purple-50' },
+    { icon: FileText,   label: 'Sentences',           value: sentences,     color: 'text-amber-700 dark:text-amber-400', bg: 'dark:bg-amber-500/10 bg-amber-50' },
+    { icon: FileText,   label: 'Paragraphs',          value: paragraphs,    color: 'text-pink-700 dark:text-pink-400', bg: 'dark:bg-pink-500/10 bg-pink-50' },
+    { icon: Clock,      label: 'Reading Time',        value: readingTime, color: 'text-teal-700 dark:text-teal-400', bg: 'dark:bg-teal-500/10 bg-teal-50' },
+    { icon: BarChart2,  label: 'Avg Word Length',     value: words > 0 ? (charsNoSpaces / words).toFixed(1) : '0', color: 'text-rose-700 dark:text-rose-400', bg: 'dark:bg-rose-500/10 bg-rose-50' },
   ];
 
   return (

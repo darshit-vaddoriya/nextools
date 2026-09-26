@@ -3,6 +3,7 @@ import { Upload, Download, Loader2, AlertTriangle, Image as ImageIcon, Maximize2
 import { formatBytes, type ProcessedImage } from './ImageUtils';
 import { Lightbox } from '../../components/ui/Lightbox';
 import { takeStagedFilesForRoute } from '../../lib/fileHandoff';
+import { useRecordResult } from '../../lib/results';
 
 interface DropZoneProps {
   onFiles: (files: File[]) => void;
@@ -57,7 +58,7 @@ export const DropZone: React.FC<DropZoneProps> = ({
         <Upload className="w-5 h-5 text-primary" />
       </div>
       <div>
-        <h3 className="text-[14px] font-bold text-foreground">{isDragging ? 'Drop files here' : label}</h3>
+        <p className="text-[14px] font-bold text-foreground">{isDragging ? 'Drop files here' : label}</p>
         <p className="text-[11px] text-muted-foreground mt-0.5">{hint}</p>
       </div>
       <button
@@ -92,6 +93,8 @@ interface ResultPanelProps {
 
 export const ResultPanel: React.FC<ResultPanelProps> = ({ result, onDownload, downloadLabel = 'Download Image', extraInfo }) => {
   const [isFull, setIsFull] = useState(false);
+  // Keep the result in History so it can be reopened without redoing the work.
+  useRecordResult(result?.blob, result?.fileName);
   if (!result) return null;
   return (
     <div className="rounded-2xl border border-border bg-card p-4 space-y-3 shadow-card">

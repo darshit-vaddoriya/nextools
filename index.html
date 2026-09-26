@@ -2,7 +2,9 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <!-- Before the theme script below, which rewrites it for a saved dark theme. -->
+    <meta name="theme-color" content="#f7f8fa" />
 
     <!--
       Google Analytics + AdSense are injected after the load event rather than
@@ -54,7 +56,26 @@
           // Light is the default regardless of OS preference; dark only
           // applies once the visitor picks it explicitly.
           var t = localStorage.getItem('nexttool-theme');
-          if (t === 'dark') document.documentElement.classList.add('dark');
+          var dark = t === 'dark' || (t === 'system' && matchMedia('(prefers-color-scheme: dark)').matches);
+          if (dark) document.documentElement.classList.add('dark');
+          // Status bar / title bar colour follows the chosen theme, not the OS.
+          var metas = document.querySelectorAll('meta[name="theme-color"]');
+          for (var i = 0; i < metas.length; i++) {
+            metas[i].removeAttribute('media');
+            metas[i].setAttribute('content', dark ? '#0b0d12' : '#f7f8fa');
+          }
+        } catch (e) {}
+        try {
+          // Set before first paint so the installed app never flashes the
+          // browser layout before the bottom tab bar's spacing applies.
+          var standalone = matchMedia('(display-mode: standalone)').matches || navigator.standalone === true;
+          if (standalone) document.documentElement.classList.add('pwa-standalone');
+          // App UI = installed (or ?mode=app preview) on a phone/tablet width.
+          // Mirrors computeAppMode() in src/lib/pwa.ts.
+          var mode = new URLSearchParams(location.search).get('mode');
+          var preview = mode === 'app' || (mode !== 'web' && localStorage.getItem('nexttool-app-preview') === '1');
+          if ((standalone || preview) && matchMedia('(max-width: 1023.98px)').matches)
+            document.documentElement.classList.add('app-mode');
         } catch (e) {}
       })();
     </script>
@@ -66,6 +87,14 @@
     <link rel="icon" href="/favicon.ico" sizes="32x32" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <link rel="manifest" href="/site.webmanifest" />
+
+    <!-- ── Installed-app (PWA) ────────────────────────────── -->
+    <meta name="application-name" content="NextTool" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-title" content="NextTool" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="format-detection" content="telephone=no" />
 
     <!-- ── Primary SEO ───────────────────────────────────── -->
     <title>NextTool - Free Online Tools</title>
@@ -158,9 +187,6 @@
     <!-- ── Fonts ──────────────────────────────────────────── -->
     <!-- Self-hosted via @fontsource (see src/main.tsx) — koi external CDN request nahi -->
 
-    <!-- ── Theme color ────────────────────────────────────── -->
-    <meta name="theme-color" content="#131313" media="(prefers-color-scheme: dark)" />
-    <meta name="theme-color" content="#faf9ff" media="(prefers-color-scheme: light)" />
   </head>
   <body class="font-sans antialiased">
     <div id="root"></div>

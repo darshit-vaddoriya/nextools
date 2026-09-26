@@ -482,10 +482,10 @@ export const BmiCalculatorTool: React.FC = () => {
 
   const category = useMemo(() => {
     if (bmi === null) return { label: '-', color: 'text-muted-foreground', markerBorder: 'border-t-muted-foreground' };
-    if (bmi < 18.5) return { label: 'Underweight', color: 'text-cyan-500', markerBorder: 'border-t-cyan-500' };
-    if (bmi < 25) return { label: 'Normal', color: 'text-emerald-500', markerBorder: 'border-t-emerald-500' };
-    if (bmi < 30) return { label: 'Overweight', color: 'text-amber-500', markerBorder: 'border-t-amber-500' };
-    return { label: 'Obese', color: 'text-rose-500', markerBorder: 'border-t-rose-500' };
+    if (bmi < 18.5) return { label: 'Underweight', color: 'text-cyan-700 dark:text-cyan-400', markerBorder: 'border-t-cyan-500' };
+    if (bmi < 25) return { label: 'Normal', color: 'text-emerald-700 dark:text-emerald-400', markerBorder: 'border-t-emerald-500' };
+    if (bmi < 30) return { label: 'Overweight', color: 'text-amber-700 dark:text-amber-400', markerBorder: 'border-t-amber-500' };
+    return { label: 'Obese', color: 'text-rose-700 dark:text-rose-400', markerBorder: 'border-t-rose-500' };
   }, [bmi]);
 
   const BMI_SCALE_MIN = 10;
@@ -568,10 +568,10 @@ export const BmiCalculatorTool: React.FC = () => {
             <span>{BMI_SCALE_MAX}+</span>
           </div>
           <div className="flex items-center justify-center gap-3 mt-2.5 flex-wrap text-[9.5px] font-medium">
-            <span className="inline-flex items-center gap-1 text-cyan-500"><span className="w-1.5 h-1.5 rounded-full bg-cyan-500" /> Underweight</span>
-            <span className="inline-flex items-center gap-1 text-emerald-500"><span className="w-1.5 h-1.5 rounded-full bg-emerald-500" /> Normal</span>
-            <span className="inline-flex items-center gap-1 text-amber-500"><span className="w-1.5 h-1.5 rounded-full bg-amber-500" /> Overweight</span>
-            <span className="inline-flex items-center gap-1 text-rose-500"><span className="w-1.5 h-1.5 rounded-full bg-rose-500" /> Obese</span>
+            <span className="inline-flex items-center gap-1 text-cyan-700 dark:text-cyan-400"><span className="w-1.5 h-1.5 rounded-full bg-cyan-500" /> Underweight</span>
+            <span className="inline-flex items-center gap-1 text-emerald-700 dark:text-emerald-400"><span className="w-1.5 h-1.5 rounded-full bg-emerald-500" /> Normal</span>
+            <span className="inline-flex items-center gap-1 text-amber-700 dark:text-amber-400"><span className="w-1.5 h-1.5 rounded-full bg-amber-500" /> Overweight</span>
+            <span className="inline-flex items-center gap-1 text-rose-700 dark:text-rose-400"><span className="w-1.5 h-1.5 rounded-full bg-rose-500" /> Obese</span>
           </div>
         </div>
       </div>
@@ -734,7 +734,7 @@ export const ScientificCalculatorTool: React.FC = () => {
     { label: 'sin', onClick: () => handleUnary((n) => Math.sin(n)) },
     { label: 'cos', onClick: () => handleUnary((n) => Math.cos(n)) },
     { label: 'tan', onClick: () => handleUnary((n) => Math.tan(n)) },
-    { label: 'C', onClick: clear, className: 'text-rose-500' },
+    { label: 'C', onClick: clear, className: 'text-rose-700 dark:text-rose-400' },
     { label: 'log', onClick: () => handleUnary((n) => Math.log10(n)) },
     { label: 'ln', onClick: () => handleUnary((n) => Math.log(n)) },
     { label: '√', onClick: () => handleUnary((n) => Math.sqrt(n)) },
@@ -848,7 +848,7 @@ export const GstCalculatorTool: React.FC = () => {
             <p className="text-xs text-muted-foreground font-medium">GST Amount</p>
           </div>
           <div className="bg-card rounded-xl border border-border p-4 text-center space-y-1">
-            <p className="text-lg font-extrabold text-emerald-500">{fmt(result.total)}</p>
+            <p className="text-lg font-extrabold text-emerald-700 dark:text-emerald-400">{fmt(result.total)}</p>
             <p className="text-xs text-muted-foreground font-medium">Total Amount</p>
           </div>
         </div>

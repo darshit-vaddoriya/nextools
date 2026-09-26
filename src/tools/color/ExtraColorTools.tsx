@@ -324,7 +324,7 @@ export const ContrastCheckerTool: React.FC = () => {
         </div>
         <div className="grid grid-cols-2 gap-2.5">
           {checks.map((c) => (
-            <div key={c.label} className={`px-3 py-2 rounded-lg border text-xs font-semibold flex items-center justify-between ${c.pass ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-500' : 'bg-rose-500/10 border-rose-500/30 text-rose-500'}`}>
+            <div key={c.label} className={`px-3 py-2 rounded-lg border text-xs font-semibold flex items-center justify-between ${c.pass ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-700 dark:text-emerald-400' : 'bg-rose-500/10 border-rose-500/30 text-rose-700 dark:text-rose-400'}`}>
               <span>{c.label}</span>
               <span>{c.pass ? 'Pass' : 'Fail'}</span>
             </div>

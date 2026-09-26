@@ -3,6 +3,7 @@ import { Check, Copy, Download, Search, WrapText, X } from 'lucide-react';
 import { Button } from './Button';
 import { countWords } from '../../lib/richText';
 import { formatBytes } from '../../lib/formats';
+import { useRecordResult } from '../../lib/results';
 
 interface TextPreviewProps {
   text: string;
@@ -31,6 +32,9 @@ export const TextPreview: React.FC<TextPreviewProps> = ({
   const [query, setQuery] = useState('');
   const [wrap, setWrap] = useState(true);
   const [copied, setCopied] = useState(false);
+  // Saved as a text file in History, so the extraction needn't be redone.
+  const asFile = useMemo(() => (text ? new Blob([text], { type: 'text/plain;charset=utf-8' }) : null), [text]);
+  useRecordResult(asFile, filename);
 
   const stats = useMemo(() => ({
     words: countWords(text),

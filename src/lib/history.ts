@@ -60,10 +60,21 @@ export function loadHistory(): JobRecord[] {
   return read();
 }
 
+/** Respects the "Keep a history" switch in Settings. */
+function enabled(): boolean {
+  try {
+    const raw = localStorage.getItem('nexttool-prefs');
+    return !raw || (JSON.parse(raw) as { keepHistory?: boolean }).keepHistory !== false;
+  } catch {
+    return true;
+  }
+}
+
 export function recordJobStart(
   job: Omit<JobRecord, 'id' | 'startedAt' | 'status'>,
 ): string {
   const id = `job_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
+  if (!enabled()) return id;
   write([{ ...job, id, startedAt: Date.now(), status: 'processing' }, ...read()]);
   return id;
 }

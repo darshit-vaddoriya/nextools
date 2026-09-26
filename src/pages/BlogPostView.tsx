@@ -84,7 +84,7 @@ export const BlogPostView: React.FC<BlogPostViewProps> = ({ post, onBackToBlog, 
   const primaryConfig = primaryTool ? ALL_CATEGORIES.find(category => category.id === primaryTool.category) : undefined;
   const PrimaryIcon = primaryConfig?.icon;
 
-  return <main className="mx-auto w-full max-w-[1320px] px-4 sm:px-6 py-7 sm:py-10 fade-in">
+  return <div className="mx-auto w-full max-w-[1320px] px-4 sm:px-6 py-7 sm:py-10 fade-in">
     {/* How far through you are. The one piece of feedback that makes a long
         article feel finishable rather than open-ended. */}
     <div aria-hidden className="fixed inset-x-0 top-0 z-40 h-[3px] bg-transparent">
@@ -98,7 +98,7 @@ export const BlogPostView: React.FC<BlogPostViewProps> = ({ post, onBackToBlog, 
         without the extra pixels going into unreadably long lines. */}
     <div className="grid gap-10 lg:grid-cols-[200px_minmax(0,1fr)_var(--aside)] lg:grid-rows-[auto_auto_auto] lg:gap-x-12 xl:gap-x-14 lg:items-start">
       <div className="order-1 lg:order-none lg:col-start-2 lg:row-start-1 min-w-0">
-        <nav className="flex items-center gap-1.5 text-[12px] flex-wrap mb-6" aria-label="Breadcrumb">
+        <nav className="web-only flex items-center gap-1.5 text-[12px] flex-wrap mb-6" aria-label="Breadcrumb">
           <AppLink href="/blog" onNavigate={onBackToBlog} className="text-muted-foreground hover:text-foreground transition-colors">Journal</AppLink>
           <ChevronRight className="w-3 h-3 text-border" />
           <AppLink href={blogTopicPath(post.category)} onNavigate={() => onSelectTopic(post.category)} className={`font-bold hover:underline ${meta.color}`}>
@@ -265,5 +265,5 @@ export const BlogPostView: React.FC<BlogPostViewProps> = ({ post, onBackToBlog, 
       </div>
 
     </div>
-  </main>;
+  </div>;
 };

@@ -83,7 +83,7 @@ export const ImageWatermarkTool: React.FC = () => {
       setResult(null);
       setError(null);
     } catch {
-      setError('Could not read that image.');
+      setError('Could not read that image. It may be damaged or in a format this browser can\'t open. Try a JPG, PNG or WebP.');
     }
   };
 
@@ -493,7 +493,7 @@ export const BatchRenameTool: React.FC = () => {
             {items.map((it, i) => (
               <div key={i} className="flex items-center gap-2">
                 <span className="truncate  text-muted-foreground">{it.name}</span>
-                <span className="text-emerald-500">→</span>
+                <span className="text-emerald-700 dark:text-emerald-400">→</span>
                 <span className="truncate">{newNames[i]}</span>
               </div>
             ))}
@@ -614,7 +614,7 @@ export const MemeGeneratorTool: React.FC = () => {
       setResult(null);
       setError(null);
     } catch {
-      setError('Could not read that image.');
+      setError('Could not read that image. It may be damaged or in a format this browser can\'t open. Try a JPG, PNG or WebP.');
     }
   };
 

@@ -79,4 +79,4 @@ export const getStaticPageByPath = (path: string): StaticPageMeta | undefined =>
 export const CONTACT_EMAIL = 'dk.coder7250@gmail.com';
 
 /** Human-readable date shown at the bottom of every policy page. */
-export const POLICY_LAST_UPDATED = 'September 9, 2026';
+export const POLICY_LAST_UPDATED = 'September 25, 2026';

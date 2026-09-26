@@ -6,7 +6,10 @@ import { ALL_CATEGORIES } from '../config/categories';
 import {
   X, Search, Home, Sun, Moon, MonitorSmartphone,
   ChevronRight, LayoutGrid, ShieldCheck, Check, Blocks, Heart, Info, Mail, Newspaper,
+  History, Settings, Download, CheckCircle2,
 } from 'lucide-react';
+import { usePwa, requestInstall } from '../lib/pwa';
+import type { HeaderView } from './Header';
 import { ThemePreference } from '../utils/theme';
 import { SUPPORT_URL } from '../config/support';
 import { StaticPageId, getStaticPage } from '../config/pages';
@@ -20,6 +23,9 @@ interface NavDrawerProps {
   onGoHome: () => void;
   onOpenPage: (id: StaticPageId) => void;
   onOpenBlog: () => void;
+  onOpenHistory: () => void;
+  onOpenSettings: () => void;
+  currentView: HeaderView;
   theme: ThemePreference;
   resolvedDark: boolean;
   onThemeChange: (t: ThemePreference) => void;
@@ -29,8 +35,10 @@ const navPath = (id: StaticPageId) => getStaticPage(id)?.path ?? '/';
 
 export const NavDrawer: React.FC<NavDrawerProps> = ({
   isOpen, onClose, onSelectCategory, onOpenSearch,
-  onGoHome, onOpenPage, onOpenBlog, theme, resolvedDark, onThemeChange,
+  onGoHome, onOpenPage, onOpenBlog, onOpenHistory, onOpenSettings, currentView,
+  theme, resolvedDark, onThemeChange,
 }) => {
+  const pwa = usePwa();
   useEffect(() => {
     if (!isOpen) return;
     const onKey = (e: KeyboardEvent) => {
@@ -57,7 +65,8 @@ export const NavDrawer: React.FC<NavDrawerProps> = ({
       />
       <aside
         className="fixed right-0 top-0 bottom-0 z-[75] w-[300px] max-w-[85vw] flex flex-col
-          bg-background border-l border-border shadow-2xl lg:hidden toast-in"
+          bg-background border-l border-border shadow-2xl lg:hidden drawer-in
+          pt-[env(safe-area-inset-top)] pr-[env(safe-area-inset-right)]"
         role="dialog"
         aria-modal="true"
         aria-label="Navigation menu"
@@ -89,7 +98,7 @@ export const NavDrawer: React.FC<NavDrawerProps> = ({
           >
             <Search className="w-4 h-4 shrink-0" />
             <span className="flex-1 text-left">Search tools…</span>
-            <kbd className="px-1.5 py-0.5 rounded text-[10px] font-mono bg-card border border-border text-muted-foreground">⌘K</kbd>
+            <kbd className="hidden [@media(hover:hover)]:inline px-1.5 py-0.5 rounded text-[10px] font-mono bg-card border border-border text-muted-foreground">⌘K</kbd>
           </button>
 
           {/* Primary nav */}
@@ -118,12 +127,40 @@ export const NavDrawer: React.FC<NavDrawerProps> = ({
                 target="_blank"
                 rel="noopener noreferrer"
                 onClick={onClose}
-                className="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-[13.5px] font-medium text-rose-500 hover:bg-rose-500/10 transition-colors"
+                className="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-[13.5px] font-medium text-rose-700 dark:text-rose-400 hover:bg-rose-500/10 transition-colors"
               >
                 <Heart className="w-4 h-4" fill="currentColor" /> Support NextTool
               </a>
             )}
           </nav>
+
+          {/* App: history, settings and install live here as well as in the tab bar */}
+          <p className="px-3 pt-5 pb-2 text-[10px] font-semibold uppercase tracking-[0.12em] text-muted-foreground">
+            Your app
+          </p>
+          <div className="space-y-0.5">
+            <AppLink href="/my-files" rel="nofollow" onNavigate={onOpenHistory} aria-current={currentView === 'files' ? 'page' : undefined}
+              className={`w-full flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-[13.5px] font-medium transition-colors ${
+                currentView === 'files' ? 'bg-primary/10 text-primary' : 'text-foreground hover:bg-muted'}`}>
+              <History className="w-4 h-4 opacity-70" /> History
+            </AppLink>
+            <AppLink href="/settings" rel="nofollow" onNavigate={onOpenSettings} aria-current={currentView === 'settings' ? 'page' : undefined}
+              className={`w-full flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-[13.5px] font-medium transition-colors ${
+                currentView === 'settings' ? 'bg-primary/10 text-primary' : 'text-foreground hover:bg-muted'}`}>
+              <Settings className="w-4 h-4 opacity-70" /> Settings
+            </AppLink>
+            {pwa.installable ? (
+              <button type="button" onClick={() => { onClose(); void requestInstall(); }}
+                className="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-[13.5px] font-semibold text-primary hover:bg-primary/10 transition-colors">
+                <Download className="w-4 h-4" /> Install app
+                <span className="ml-auto text-[10px] font-bold uppercase tracking-wide px-1.5 py-0.5 rounded bg-primary/10">Free</span>
+              </button>
+            ) : pwa.standalone && (
+              <p className="flex items-center gap-2.5 px-3 py-2.5 text-[13px] text-muted-foreground">
+                <CheckCircle2 className="w-4 h-4 text-success" /> Installed app
+              </p>
+            )}
+          </div>
 
           {/* Categories */}
           <p className="px-3 pt-5 pb-2 text-[10px] font-semibold uppercase tracking-[0.12em] text-muted-foreground">
@@ -153,7 +190,7 @@ export const NavDrawer: React.FC<NavDrawerProps> = ({
         </div>
 
         {/* Footer */}
-        <div className="px-3 py-3 border-t border-border shrink-0">
+        <div className="px-3 pt-3 pb-[calc(0.75rem+env(safe-area-inset-bottom))] border-t border-border shrink-0">
           <p className="px-3 pb-2 text-[10px] font-semibold uppercase tracking-[0.12em] text-muted-foreground">
             Theme
           </p>

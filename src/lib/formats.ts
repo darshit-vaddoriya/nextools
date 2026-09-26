@@ -93,13 +93,13 @@ export function formatOf(filenameOrExt: string): FormatMeta {
 /** Which tool categories can act on a given file kind. Powers the hero
  *  drop zone: drop a file, see only the tools that accept it. */
 export const KIND_TO_CATEGORIES: Record<FormatKind, string[]> = {
-  pdf:          ['pdf'],
+  pdf:          ['pdf', 'convert'],
   document:     ['word', 'pdf'],
-  spreadsheet:  ['excel', 'csv'],
+  spreadsheet:  ['excel', 'csv', 'convert'],
   presentation: ['powerpoint'],
-  image:        ['image', 'pdf'],
-  video:        ['video'],
-  audio:        ['audio'],
+  image:        ['image', 'pdf', 'convert'],
+  video:        ['video', 'convert'],
+  audio:        ['audio', 'convert'],
   archive:      ['archive'],
   code:         ['dev', 'text'],
   text:         ['text', 'dev'],

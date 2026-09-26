@@ -98,7 +98,7 @@ export const Contact: React.FC<ContactProps> = ({ onBack }) => {
             <div key={t.id} className="p-4 rounded-xl border border-border bg-muted/50">
               <div className="flex items-center gap-2 mb-1.5">
                 <Icon className="w-4 h-4 text-primary shrink-0" />
-                <h3 className="text-[13px] font-bold text-foreground">{t.label}</h3>
+                <h2 className="text-[13px] font-bold text-foreground">{t.label}</h2>
               </div>
               <p className="text-[12px] text-muted-foreground leading-relaxed">{t.desc}</p>
             </div>

@@ -51,7 +51,7 @@ export const PdfMergeTool: React.FC = () => {
   const addFiles = useCallback(async (files: File[]) => {
     const pdfs = files.filter(f => f.type === 'application/pdf' || f.name.toLowerCase().endsWith('.pdf'));
     if (pdfs.length === 0) {
-      setError('Please select valid PDF files.');
+      setError('Those files are not PDFs. Choose files that end in .pdf.');
       return;
     }
     setError(null);
@@ -152,9 +152,9 @@ export const PdfMergeTool: React.FC = () => {
           <Upload className="w-6 h-6 text-primary" />
         </div>
         <div>
-          <h3 className="text-[15px] font-bold text-foreground">
+          <p className="text-[15px] font-bold text-foreground">
             {isDragging ? 'Drop PDF files here' : 'Select or drag & drop PDF files'}
-          </h3>
+          </p>
           <p className="text-xs text-muted-foreground mt-1">
             Merged with real <span className="font-mono text-muted-foreground">pdf-lib</span>, right in your browser
           </p>

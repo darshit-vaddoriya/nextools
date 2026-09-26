@@ -31,6 +31,51 @@ export interface CategoryContent {
  * which one to reach for, and the questions people ask before using them.
  */
 export const CATEGORY_CONTENT: Partial<Record<ToolCategory, CategoryContent>> = {
+  convert: {
+    tagline: 'PNG to JPG, MOV to MP4, PDF to PPTX, RAR to ZIP and 40 more — converted on your device, never uploaded.',
+    intro:
+      'Most online converters work by uploading your file to a server, converting it there and sending it back, which is why they have queues, size tiers and privacy policies about deleting your files later. The converters here work the other way round: the browser already contains decoders for most image, audio and video formats, and the missing pieces — a HEIC decoder, an MP3 encoder, a Photoshop reader, a WOFF2 compressor, an archive library — are loaded into the page, and video is encoded by your device\'s own hardware through WebCodecs. The file is converted in memory and saved straight back to your disk, which also means there is no daily limit and nothing to wait for.',
+    guide: [
+      {
+        title: 'Lossy to lossless never restores quality',
+        body: 'Converting a JPG to PNG or an MP3 to WAV makes the file larger but not better: the detail the lossy format discarded is gone. Those conversions are for compatibility and editing. When the goal is a smaller file, go the other way — PNG to JPG or WebP, WAV to MP3.',
+      },
+      {
+        title: 'Every lossy re-encode costs a little',
+        body: 'WebP to JPG, M4A to MP3 and HEIC to JPG all decode one lossy format and encode another. Keep the quality or bitrate at or above the source and the loss is invisible, but avoid converting the same file back and forth — each round adds a generation of artefacts.',
+      },
+      {
+        title: 'Transparency survives only where the format has it',
+        body: 'PNG, WebP, GIF and ICO store transparency; JPG, BMP and PDF pages do not. When converting a cut-out or logo into one of those, pick the background colour deliberately rather than letting it default, or choose PNG or WebP to keep the see-through areas.',
+      },
+      {
+        title: 'Readable is not the same as writable',
+        body: 'Browsers decode AVIF and FLAC but cannot encode them, and RAR and 7z can be unpacked but not reliably written, so those formats appear here as inputs only. A few outputs depend on the browser: M4A needs an AAC encoder, which Chrome on Linux and Firefox lack. A local converter can only honestly offer what it can produce on your device.',
+      },
+    ],
+    faqs: [
+      {
+        question: 'How can a website convert files without uploading them?',
+        answer: 'The conversion code runs inside the page. Image and audio decoding use the engines built into your browser; formats the browser lacks are handled by WebAssembly and JavaScript libraries — libheif for HEIC, LAME for MP3, UTIF for TIFF, pdf.js for PDF. The file is read with the File API and the result is handed back as a download.',
+      },
+      {
+        question: 'Can I convert many files at once?',
+        answer: 'Yes. Every converter accepts a batch. Files are converted one after another and, if there is more than one result, downloaded together as a single ZIP.',
+      },
+      {
+        question: 'How can video be converted without a server?',
+        answer: 'Through WebCodecs, the browser interface to your device\'s own video encoder and decoder — usually dedicated hardware. That is far faster than the WebAssembly FFmpeg builds many sites use, and when only the container changes (an H.264 MOV to MP4, say) the video is copied without re-encoding at all. AVI and WMV are not supported because browsers cannot decode their codecs.',
+      },
+      {
+        question: 'Where are the Word converters?',
+        answer: 'Word conversions live in the PDF and Word & Office categories — PDF to Word, DOCX to PDF, DOCX to HTML and Markdown, and more. The File Converter links to them automatically when you drop a DOCX, Markdown or HTML file. PowerPoint output is here: Images to PPTX and PDF to PPTX.',
+      },
+      {
+        question: 'Do converted files keep their metadata?',
+        answer: 'Images are re-drawn through a canvas, so EXIF data such as camera model and GPS location is not carried over. That is usually what you want when sharing photos, and worth knowing if you need the metadata preserved.',
+      },
+    ],
+  },
   pdf: {
     tagline: 'Merge, split, compress, sign, convert and extract — without a PDF becoming an upload.',
     intro:

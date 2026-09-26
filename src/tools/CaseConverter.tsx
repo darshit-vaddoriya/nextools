@@ -16,15 +16,15 @@ export const CaseConverter: React.FC = () => {
 
   const cases = [
     { name: 'camelCase',  value: toCamelCase(text),      color: 'text-primary' },
-    { name: 'snake_case', value: toSnakeCase(text),       color: 'text-emerald-500 ' },
-    { name: 'kebab-case', value: toKebabCase(text),       color: 'text-cyan-500 dark:text-cyan-400' },
-    { name: 'PascalCase', value: toPascalCase(text),      color: 'text-purple-500 dark:text-purple-400' },
-    { name: 'Title Case', value: toTitleCase(text),       color: 'text-pink-500 dark:text-pink-400' },
-    { name: 'UPPERCASE',  value: text.toUpperCase(),      color: 'text-amber-500 dark:text-amber-400' },
-    { name: 'lowercase',  value: text.toLowerCase(),      color: 'text-teal-500 dark:text-teal-400' },
-    { name: 'CONSTANT_CASE', value: toSnakeCase(text).toUpperCase(), color: 'text-orange-500 dark:text-orange-400' },
-    { name: 'dot.case',   value: toDotCase(text),         color: 'text-indigo-500 dark:text-indigo-400' },
-    { name: 'Sentence case', value: toSentence(text),     color: 'text-rose-500 dark:text-rose-400' },
+    { name: 'snake_case', value: toSnakeCase(text),       color: 'text-emerald-700 dark:text-emerald-400 ' },
+    { name: 'kebab-case', value: toKebabCase(text),       color: 'text-cyan-700 dark:text-cyan-400' },
+    { name: 'PascalCase', value: toPascalCase(text),      color: 'text-purple-700 dark:text-purple-400' },
+    { name: 'Title Case', value: toTitleCase(text),       color: 'text-pink-700 dark:text-pink-400' },
+    { name: 'UPPERCASE',  value: text.toUpperCase(),      color: 'text-amber-700 dark:text-amber-400' },
+    { name: 'lowercase',  value: text.toLowerCase(),      color: 'text-teal-700 dark:text-teal-400' },
+    { name: 'CONSTANT_CASE', value: toSnakeCase(text).toUpperCase(), color: 'text-orange-700 dark:text-orange-400' },
+    { name: 'dot.case',   value: toDotCase(text),         color: 'text-indigo-700 dark:text-indigo-400' },
+    { name: 'Sentence case', value: toSentence(text),     color: 'text-rose-700 dark:text-rose-400' },
   ];
 
   return (

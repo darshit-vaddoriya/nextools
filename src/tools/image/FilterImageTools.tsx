@@ -48,7 +48,7 @@ export const ImageAdjustTool: React.FC = () => {
       setResult(null);
       setError(null);
     } catch {
-      setError('Could not read that image.');
+      setError('Could not read that image. It may be damaged or in a format this browser can\'t open. Try a JPG, PNG or WebP.');
     }
   };
 
@@ -148,7 +148,7 @@ export const ImageSharpenTool: React.FC = () => {
       setResult(null);
       setError(null);
     } catch {
-      setError('Could not read that image.');
+      setError('Could not read that image. It may be damaged or in a format this browser can\'t open. Try a JPG, PNG or WebP.');
     }
   };
 
@@ -230,7 +230,7 @@ export const NoiseReductionTool: React.FC = () => {
       setResult(null);
       setError(null);
     } catch {
-      setError('Could not read that image.');
+      setError('Could not read that image. It may be damaged or in a format this browser can\'t open. Try a JPG, PNG or WebP.');
     }
   };
 
@@ -313,7 +313,7 @@ export const BlurBackgroundTool: React.FC = () => {
       setResult(null);
       setError(null);
     } catch {
-      setError('Could not read that image.');
+      setError('Could not read that image. It may be damaged or in a format this browser can\'t open. Try a JPG, PNG or WebP.');
     }
   };
 

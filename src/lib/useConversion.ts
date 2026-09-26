@@ -9,7 +9,8 @@
  * object-URL cleanup, is handled here so tools stay small.
  */
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { recordJobEnd, recordJobStart } from './history';
+import { logActivity } from './activity';
+import { recordResult } from './results';
 import { takeStagedFiles } from './fileHandoff';
 import type { QueuedFile } from '../components/ui/FileList';
 
@@ -115,13 +116,6 @@ export function useConversion({ toolId, toolName, run, skipConfigure = false }: 
     setError('');
     setPhase('converting');
 
-    const jobId = recordJobStart({
-      toolId,
-      toolName,
-      fileNames: files.map((f) => f.file.name),
-      totalBytes: files.reduce((sum, f) => sum + f.file.size, 0),
-    });
-
     try {
       const output = await run(
         files.map((f) => f.file),
@@ -137,13 +131,20 @@ export function useConversion({ toolId, toolName, run, skipConfigure = false }: 
       setResult(output);
       setProgress(100);
       setPhase('done');
-      recordJobEnd(jobId, { status: 'done' });
+      // Saved with its source files, so History can show and re-download it later.
+      void recordResult({
+        output: output.blob, name: output.filename, inputs: files.map((f) => f.file),
+        toolId, toolName, durationMs: Date.now() - begun,
+      });
     } catch (err) {
       if (controller.signal.aborted) return;
       const message = err instanceof Error ? err.message : 'The conversion stopped unexpectedly.';
       setError(message);
       setPhase('error');
-      recordJobEnd(jobId, { status: 'failed', error: message });
+      logActivity({
+        toolId, toolName, kind: 'convert', label: 'Result', status: 'failed',
+        summary: `Failed on ${files.length === 1 ? files[0].file.name : `${files.length} files`}: ${message}`,
+      });
     } finally {
       abortRef.current = null;
     }

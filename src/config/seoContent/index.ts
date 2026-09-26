@@ -5,6 +5,8 @@ import { IMAGE_SEO_CONTENT } from './image';
 import { TEXT_DEV_SEO_CONTENT } from './textDev';
 import { SECURITY_UTILITY_WEB_SEO_CONTENT } from './securityUtilityWeb';
 import { DEV_PRO_SEO_CONTENT } from './devPro';
+import { CONVERTER_SEO_CONTENT } from './converters';
+import { CONVERTER_SEO_CONTENT_2 } from './converters2';
 import { TOOL_DEEP_DIVES } from './deepDives';
 
 const BASE_SEO_CONTENT: ToolSeoMap = {
@@ -14,6 +16,8 @@ const BASE_SEO_CONTENT: ToolSeoMap = {
   ...TEXT_DEV_SEO_CONTENT,
   ...SECURITY_UTILITY_WEB_SEO_CONTENT,
   ...DEV_PRO_SEO_CONTENT,
+  ...CONVERTER_SEO_CONTENT,
+  ...CONVERTER_SEO_CONTENT_2,
 };
 
 /**

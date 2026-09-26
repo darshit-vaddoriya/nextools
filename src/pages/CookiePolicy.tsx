@@ -20,6 +20,12 @@ const STORAGE_ROWS = [
   { key: 'nexttool-recent',          purpose: 'Lists the tools you opened most recently on this device.' },
   { key: 'nexttool-favorites',       purpose: 'Stores the tools you starred.' },
   { key: 'nexttool-seen-search-tip', purpose: 'Hides the first-visit search tip once you dismiss it.' },
+  { key: 'nexttool-recent-searches', purpose: 'Remembers your recent searches in the tool search box.' },
+  { key: 'nexttool-prefs',           purpose: 'Your Settings: whether History and saved files are on, and automatic downloads.' },
+  { key: 'nexttool-activity',        purpose: 'Your tool History: edits (with before / after text), options changed, files added, copies and downloads. Values from password fields and secret-handling tools are never kept.' },
+  { key: 'nexttool-history',         purpose: 'Your conversion History: file names, sizes, tool, status and time.' },
+  { key: 'secure-notes-v1',          purpose: 'A note you save in the Secure Notes tool, encrypted with your passphrase (AES-GCM) before it is stored.' },
+  { key: 'nexttool-files (IndexedDB)', purpose: 'Copies of the files you added and the results you downloaded, so History can show them again. Only when "Save files in history" is on. Oldest files are removed first.' },
 ];
 
 export const CookiePolicy: React.FC<CookiePolicyProps> = ({ onBack, onOpenPrivacy }) => (
@@ -77,8 +83,9 @@ export const CookiePolicy: React.FC<CookiePolicyProps> = ({ onBack, onOpenPrivac
 
       <PageSection title="Local storage we use">
         <p>
-          These keys are written by NextTool itself and stay on your device, they are never sent
-          to us or to anyone else. Clearing your browser's site data removes them.
+          These keys are written by NextTool itself and stay on your device. They are never sent
+          to us or to anyone else. You can turn History off or clear it in Settings, and clearing
+          your browser's site data removes all of them.
         </p>
         <div className="overflow-x-auto rounded-xl border border-border">
           <table className="w-full text-left text-[12.5px] min-w-[420px]">
@@ -116,7 +123,8 @@ export const CookiePolicy: React.FC<CookiePolicyProps> = ({ onBack, onOpenPrivac
           Every major browser lets you block or delete cookies from its settings, usually under
           Privacy or Site data. Blocking cookies does not break any tool on this site: everything
           still runs locally. You may simply see less relevant advertising, and your theme and
-          recent-tools preferences will reset if you also clear local storage.
+          recent-tools preferences, History and saved files will be removed if you also clear site
+          data.
         </p>
         <p>
           You can also opt out of Google Analytics entirely with the{' '}

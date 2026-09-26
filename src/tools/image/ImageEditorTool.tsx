@@ -2243,7 +2243,7 @@ export const ImageEditorTool: React.FC<{ onExit?: () => void }> = ({ onExit }) =
         </nav>
 
         {/* ── Canvas area ──────────────────────────────────── */}
-        <main className="flex-1 min-w-0 min-h-0 flex flex-col order-1 lg:order-2">
+        <div className="flex-1 min-w-0 min-h-0 flex flex-col order-1 lg:order-2">
           <div ref={containerRef} className="flex-1 min-h-0 overflow-auto relative bg-muted">
             <div className="min-w-full min-h-full flex">
               <div className="m-auto p-4 relative">
@@ -2313,8 +2313,8 @@ export const ImageEditorTool: React.FC<{ onExit?: () => void }> = ({ onExit }) =
           <div className="shrink-0 flex items-center justify-between gap-3 px-3 py-1.5 border-t bg-card border-border text-[11px]">
             <p className="text-muted-foreground truncate flex-1">
               {isPanning ? 'Dragging to pan…' : HINT_BY_TOOL[tool]}{' '}
-              <span className="hidden md:inline text-muted-foreground/70">· Ctrl+Z undo · Ctrl+Shift+Z redo · Ctrl+D duplicate · Del delete</span>
-              <span className="hidden sm:inline text-muted-foreground/70"> · Hold Space to pan</span>
+              <span className="hidden md:inline text-muted-foreground">· Ctrl+Z undo · Ctrl+Shift+Z redo · Ctrl+D duplicate · Del delete</span>
+              <span className="hidden sm:inline text-muted-foreground"> · Hold Space to pan</span>
             </p>
             <span className="hidden md:inline text-muted-foreground font-mono shrink-0">{objects.length} object{objects.length === 1 ? '' : 's'} · {imgW} × {imgH} · {zoomPct}</span>
             <div className="flex items-center gap-1.5 shrink-0">
@@ -2326,7 +2326,7 @@ export const ImageEditorTool: React.FC<{ onExit?: () => void }> = ({ onExit }) =
               </button>
             </div>
           </div>
-        </main>
+        </div>
 
         {/* ── Right sidebar ────────────────────────────────── */}
         {showSidebar && (
@@ -2552,7 +2552,7 @@ export const ImageEditorTool: React.FC<{ onExit?: () => void }> = ({ onExit }) =
                         <HdrBtn onClick={() => moveLayer(selectedObj.id, -1)} title="Send backward" className="h-8 px-2.5">
                           <ArrowDown className="w-3.5 h-3.5" />
                         </HdrBtn>
-                        <HdrBtn onClick={deleteSelected} title="Delete (Del)" className="h-8 px-2.5 text-rose-500 dark:text-rose-400 hover:bg-rose-500/10 border-rose-500/30">
+                        <HdrBtn onClick={deleteSelected} title="Delete (Del)" className="h-8 px-2.5 text-rose-700 dark:text-rose-400 hover:bg-rose-500/10 border-rose-500/30">
                           <Delete className="w-3.5 h-3.5" /> Delete
                         </HdrBtn>
                       </div>
@@ -2862,7 +2862,7 @@ export const ImageEditorTool: React.FC<{ onExit?: () => void }> = ({ onExit }) =
       )}
       {toast && (
         <div className="absolute bottom-12 left-1/2 -translate-x-1/2 z-50 flex items-center gap-2 px-4 py-2.5 rounded-xl border dark:dark:border-emerald-500/30 bg-card border-emerald-200 shadow-lg fade-in">
-          <CheckCircle2 className="w-4 h-4 text-emerald-500" />
+          <CheckCircle2 className="w-4 h-4 text-emerald-700 dark:text-emerald-400" />
           <span className="text-xs font-medium  text-muted-foreground">{toast}</span>
         </div>
       )}

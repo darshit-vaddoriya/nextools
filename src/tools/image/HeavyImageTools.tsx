@@ -464,7 +464,7 @@ export const OcrImageTool: React.FC = () => {
         <div className="rounded-2xl border   bg-card border-border p-4 space-y-3">
           <div className="flex items-center justify-between">
             <span className="text-xs font-semibold  text-muted-foreground flex items-center gap-1.5">
-              <ScanText className="w-4 h-4 text-emerald-500" /> Extracted text
+              <ScanText className="w-4 h-4 text-emerald-700 dark:text-emerald-400" /> Extracted text
             </span>
             <CopyButton text={text} label="Copy Text" />
           </div>
@@ -491,7 +491,7 @@ export const AiUpscalerTool: React.FC = () => {
       setResult(null);
       setError(null);
     } catch {
-      setError('Could not read that image.');
+      setError('Could not read that image. It may be damaged or in a format this browser can\'t open. Try a JPG, PNG or WebP.');
     }
   };
 

@@ -91,6 +91,7 @@ export const PasswordGenerator: React.FC = () => {
         <span className="text-[13px] font-bold text-muted-foreground shrink-0">Length</span>
         <input
           type="range" min={6} max={64} value={length}
+          aria-label="Password length"
           onChange={(e) => setLength(parseInt(e.target.value))}
           className="flex-1 accent-primary"
         />

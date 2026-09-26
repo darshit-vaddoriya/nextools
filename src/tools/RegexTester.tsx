@@ -163,7 +163,7 @@ export const RegexTester: React.FC = () => {
 
       {/* Error */}
       {error && (
-        <div className="p-3 bg-rose-500/10 border border-rose-500/30 rounded-xl text-rose-500 dark:text-rose-400 text-xs flex items-center gap-2">
+        <div className="p-3 bg-rose-500/10 border border-rose-500/30 rounded-xl text-rose-700 dark:text-rose-400 text-xs flex items-center gap-2">
           <AlertTriangle className="w-4 h-4 shrink-0" />
           {error}
         </div>
@@ -190,7 +190,7 @@ export const RegexTester: React.FC = () => {
             >
               {segments.map((s, i) =>
                 s.hit
-                  ? <mark key={i} className="bg-emerald-500/25 text-emerald-600 dark:text-emerald-300 rounded-[3px]">{s.text}</mark>
+                  ? <mark key={i} className="bg-emerald-500/25 text-emerald-700 dark:text-emerald-300 rounded-[3px]">{s.text}</mark>
                   : <span key={i}>{s.text}</span>,
               )}
               {/* trailing newline needs height or the last line clips */}
@@ -219,7 +219,7 @@ export const RegexTester: React.FC = () => {
           <div className="px-4 py-2.5  bg-muted border-b  border-border text-xs font-semibold  text-muted-foreground flex items-center justify-between">
             <span>Matches ({matches.length})</span>
             {matches.length > 0 && (
-              <span className="flex items-center gap-1 text-emerald-500  font-semibold">
+              <span className="flex items-center gap-1 text-emerald-700 dark:text-emerald-400  font-semibold">
                 <CheckCircle className="w-3.5 h-3.5" /> Found
               </span>
             )}
@@ -236,7 +236,7 @@ export const RegexTester: React.FC = () => {
                     <span className="text-[11px] font-bold text-primary">Match #{idx + 1}</span>
                     <CopyButton text={m[0]} label="Copy" />
                   </div>
-                  <div className="text-emerald-500  font-semibold break-all dark:bg-emerald-500/10 bg-emerald-50 px-2 py-1.5 rounded-lg border dark:border-emerald-500/20 border-emerald-200 text-[11.5px]">
+                  <div className="text-emerald-700 dark:text-emerald-400  font-semibold break-all dark:bg-emerald-500/10 bg-emerald-50 px-2 py-1.5 rounded-lg border dark:border-emerald-500/20 border-emerald-200 text-[11.5px]">
                     "{m[0]}"
                   </div>
                   {m.length > 1 && (
@@ -244,7 +244,7 @@ export const RegexTester: React.FC = () => {
                       <span className=" text-muted-foreground font-sans font-semibold">Capture Groups:</span>
                       {Array.from(m).slice(1).map((group, gIdx) => (
                         <div key={gIdx} className=" text-muted-foreground pl-2">
-                          Group ${gIdx + 1}: <span className="text-cyan-500 dark:text-cyan-400 font-semibold">"{group}"</span>
+                          Group ${gIdx + 1}: <span className="text-cyan-700 dark:text-cyan-400 font-semibold">"{group}"</span>
                         </div>
                       ))}
                     </div>

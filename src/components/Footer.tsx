@@ -47,7 +47,9 @@ export const Footer: React.FC<FooterProps> = ({
     );
 
   return (
-    <footer className="border-t border-border bg-card mt-auto">
+    // pwa-hide: the installed app navigates by its tab bar and reaches these
+    // pages from Settings → About & legal. Browsers (and crawlers) keep it.
+    <footer className="pwa-hide border-t border-border bg-card mt-auto">
       <div className="max-w-[1560px] mx-auto px-4 sm:px-6 py-10 sm:py-14">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-x-6 gap-y-9">
 
@@ -104,7 +106,7 @@ export const Footer: React.FC<FooterProps> = ({
 
           {/* Product */}
           <div>
-            <h4 className="section-label mb-3.5">Product</h4>
+            <h3 className="section-label mb-3.5">Product</h3>
             <ul className="space-y-2.5">
               <Row href="/all-tools" go={() => onSelectCategory('all')} icon={LayoutGrid}>All Tools</Row>
               <Row href="/#categories-section" go={onOpenCategories} icon={FolderTree}>Categories</Row>
@@ -116,7 +118,7 @@ export const Footer: React.FC<FooterProps> = ({
 
           {/* Resources */}
           <div>
-            <h4 className="section-label mb-3.5">Resources</h4>
+            <h3 className="section-label mb-3.5">Resources</h3>
             <ul className="space-y-2.5">
               <Row href="/#faq-heading" go={onOpenFaq} icon={Sparkles}>FAQ</Row>
               <Row href="/blog" go={() => onOpenBlog()} icon={Newspaper}>Blog</Row>
@@ -139,7 +141,7 @@ export const Footer: React.FC<FooterProps> = ({
 
           {/* Company */}
           <div>
-            <h4 className="section-label mb-3.5">Company</h4>
+            <h3 className="section-label mb-3.5">Company</h3>
             <ul className="space-y-2.5">
               <Row href={pagePath('about')} go={() => onOpenPage('about')} icon={Info}>About Us</Row>
               <Row href={pagePath('contact')} go={() => onOpenPage('contact')} icon={Mail}>Contact Us</Row>
@@ -151,7 +153,7 @@ export const Footer: React.FC<FooterProps> = ({
 
           {/* Legal */}
           <div>
-            <h4 className="section-label mb-3.5">Legal</h4>
+            <h3 className="section-label mb-3.5">Legal</h3>
             <ul className="space-y-2.5">
               <Row href={pagePath('privacy')} go={() => onOpenPage('privacy')} icon={ShieldCheck}>Privacy Policy</Row>
               <Row href={pagePath('terms')} go={() => onOpenPage('terms')} icon={Scale}>Terms of Service</Row>
@@ -172,7 +174,7 @@ export const Footer: React.FC<FooterProps> = ({
                 href={SUPPORT_URL}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 text-[13px] font-semibold text-rose-500 hover:brightness-110 transition-all duration-150"
+                className="inline-flex items-center gap-1.5 text-[13px] font-semibold text-rose-700 dark:text-rose-500 hover:brightness-110 transition-all duration-150"
               >
                 <Heart className="w-3.5 h-3.5" /> Support NextTool
               </a>

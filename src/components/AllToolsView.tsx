@@ -45,21 +45,21 @@ export const AllToolsView: React.FC<AllToolsViewProps> = ({ onSelectTool, onBack
       : categories.find(c => c.id === activeCat)?.name ?? '';
 
   return (
-    <div className="max-w-[1560px] mx-auto px-4 sm:px-6 py-8 fade-in">
+    <div className="max-w-[1560px] mx-auto px-4 sm:px-6 pt-4 pb-8 sm:py-8 fade-in">
       {/* ── Breadcrumb + title ─────────────────────────────── */}
-      <div className="flex items-center gap-1.5 text-[12.5px] mb-4">
+      <div className="web-only flex items-center gap-1.5 text-[12.5px] mb-4">
         <button onClick={onBack} className="text-primary hover:underline font-medium">Home</button>
         <span className="text-border">/</span>
-        <span className="text-muted-foreground/70">All Tools</span>
+        <span className="text-muted-foreground">All Tools</span>
       </div>
 
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 pb-6 border-b border-border">
+      <div className="web-only flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 pb-6 border-b border-border">
         <div className="flex items-center gap-4">
-          <div className="cat-icon bg-primary/10 w-[50px] h-[50px] rounded-[15px] shrink-0">
+          <div className="web-only cat-icon bg-primary/10 w-[50px] h-[50px] rounded-[15px] shrink-0">
             <Layers className="text-primary" style={{ width: 24, height: 24 }} />
           </div>
           <div>
-            <h1 className="font-heading font-extrabold text-[22px] sm:text-[27px] leading-tight tracking-[-0.02em] text-foreground">All Tools</h1>
+            <h1 className="web-only font-heading font-extrabold text-[22px] sm:text-[27px] leading-tight tracking-[-0.02em] text-foreground">All Tools</h1>
             <p className="text-[13px] text-muted-foreground mt-1">
               {filtered.length} of {TOOLS.length} tools · every one runs in your browser
             </p>
@@ -94,7 +94,7 @@ export const AllToolsView: React.FC<AllToolsViewProps> = ({ onSelectTool, onBack
               </button>
             )}
           </label>
-          <div className="flex items-center gap-1 text-[12px] text-muted-foreground/70 shrink-0">
+          <div className="flex items-center gap-1 text-[12px] text-muted-foreground shrink-0">
             <span className="hidden sm:inline">Filter by category</span>
             <span className="sm:hidden">Category</span>
           </div>
@@ -194,6 +194,7 @@ export const AllToolsView: React.FC<AllToolsViewProps> = ({ onSelectTool, onBack
                   categoryLabel={catConf?.name}
                   onSelect={onSelectTool}
                   showPopularBadge={tool.isPopular}
+                  headingLevel={2}
                   className="fade-up"
                   style={{ animationDelay: `${Math.min(idx, 12) * 30}ms` }}
                 />
@@ -203,7 +204,7 @@ export const AllToolsView: React.FC<AllToolsViewProps> = ({ onSelectTool, onBack
         </>
       )}
 
-      <button onClick={onBack} className="btn-ghost mt-8 text-[13px]">
+      <button onClick={onBack} className="web-only btn-ghost mt-8 text-[13px]">
         <ArrowLeft className="w-4 h-4" /> Back to home
       </button>
     </div>

@@ -16,13 +16,16 @@ interface ToolCardProps {
   showLocalBadge?: boolean;
   style?: React.CSSProperties;
   className?: string;
+  /** h2 when the grid sits directly under the page's h1, h3 under a section h2. */
+  headingLevel?: 2 | 3;
 }
 
 export const ToolCard: React.FC<ToolCardProps> = ({
   tool, icon: fallbackIcon, iconColor = 'text-muted-foreground', iconBg = 'bg-muted',
   categoryLabel, onSelect, showPopularBadge = false, showLocalBadge = false,
-  style, className = '',
+  style, className = '', headingLevel = 3,
 }) => {
+  const Heading = headingLevel === 2 ? 'h2' : 'h3';
   const Icon = resolveToolIcon(tool.icon, fallbackIcon);
 
   return (
@@ -42,7 +45,7 @@ export const ToolCard: React.FC<ToolCardProps> = ({
         </div>
         <div className="flex items-center gap-1">
           {categoryLabel && (
-            <span className="code-font text-[10px] font-medium uppercase tracking-[0.06em] text-muted-foreground/80 mr-0.5">
+            <span className="code-font text-[10px] font-medium uppercase tracking-[0.06em] text-muted-foreground mr-0.5">
               {categoryLabel}
             </span>
           )}
@@ -67,7 +70,7 @@ export const ToolCard: React.FC<ToolCardProps> = ({
           </span>
         </div>
       </div>
-      <h3 className="text-[15px] font-bold text-foreground leading-snug mb-1.5 tracking-[-0.01em] group-hover:text-primary transition-colors">
+      <Heading className="text-[15px] font-bold text-foreground leading-snug mb-1.5 tracking-[-0.01em] group-hover:text-primary transition-colors">
         {/*
           The card's clickable surface is this anchor, stretched over the whole
           article via ::after. That keeps one real crawlable <a href> per tool, with the tool name as anchor text, instead of a click handler that
@@ -80,7 +83,7 @@ export const ToolCard: React.FC<ToolCardProps> = ({
         >
           {tool.name}
         </AppLink>
-      </h3>
+      </Heading>
       <p className="text-[12.5px] text-muted-foreground leading-relaxed line-clamp-2 flex-1">
         {tool.description}
       </p>

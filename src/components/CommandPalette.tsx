@@ -110,7 +110,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({ isOpen, onClose,
   const hasQuery = query.trim().length > 0;
 
   return (
-    <div className="fixed inset-0 z-[60] flex items-start justify-center pt-[12vh] px-4" onClick={onClose}>
+    <div className="fixed inset-0 z-[60] flex items-start justify-center pt-[calc(env(safe-area-inset-top)+0.75rem)] sm:pt-[12vh] px-3 sm:px-4" onClick={onClose}>
       <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" />
 
       <div
@@ -136,14 +136,14 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({ isOpen, onClose,
           <kbd className="kbd hidden sm:flex items-center gap-1">
             <Command className="w-2.5 h-2.5" />K
           </kbd>
-          <button onClick={onClose} className="p-1.5 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted transition-colors" aria-label="Close search">
+          <button onClick={onClose} className="p-2.5 -mr-1.5 sm:p-1.5 sm:mr-0 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted transition-colors" aria-label="Close search">
             <X className="w-4 h-4" />
           </button>
         </div>
 
         {/* Body */}
         {!hasQuery ? (
-          <div className="max-h-[400px] overflow-y-auto p-3 space-y-5">
+          <div className="max-h-[min(400px,calc(100dvh-9rem))] overflow-y-auto overscroll-contain p-3 space-y-5">
             {recentSearches.length > 0 && (
               <section aria-label="Recent searches">
                 <div className="flex items-center justify-between px-2 mb-2">
@@ -231,7 +231,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({ isOpen, onClose,
             </p>
           </div>
         ) : (
-          <div ref={listRef} className="max-h-[400px] overflow-y-auto p-2" role="listbox" aria-label="Search results">
+          <div ref={listRef} className="max-h-[min(400px,calc(100dvh-9rem))] overflow-y-auto overscroll-contain p-2" role="listbox" aria-label="Search results">
             {results.map((tool, idx) => {
               const isActive = idx === activeIndex;
               const conf = catConf(tool.category);
@@ -275,7 +275,8 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({ isOpen, onClose,
 
         {/* Footer */}
         <div className="px-4 py-2.5 border-t border-border bg-muted/50 flex items-center justify-between text-[11px] text-muted-foreground">
-          <div className="flex items-center gap-3">
+          {/* Keyboard hints mean nothing on a touch screen */}
+          <div className="flex items-center gap-3 [@media(hover:none)]:hidden">
             <span><kbd className="kbd">↑↓</kbd> Navigate</span>
             <span><kbd className="kbd">↵</kbd> Select</span>
             <span><kbd className="kbd">Esc</kbd> Close</span>

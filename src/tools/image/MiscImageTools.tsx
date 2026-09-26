@@ -9,6 +9,7 @@ import { CopyButton } from '../../components/CopyButton';
 import { Select } from '../../components/Select';
 import { errorMessage } from '../../utils/errorMessage';
 import { ToolSteps } from '../../components/ui/ToolSteps';
+import { useRecordResult, useRecordTextResult } from '../../lib/results';
 
 // ─── ICO GENERATOR ─────────────────────────────────────────────
 const ICO_SIZES = [16, 32, 48, 64];
@@ -59,6 +60,7 @@ export const IcoGeneratorTool: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [icoUrl, setIcoUrl] = useState<string | null>(null);
   const [icoBlob, setIcoBlob] = useState<Blob | null>(null);
+  useRecordResult(icoBlob, 'icon.ico');
 
   const handleFiles = async (files: File[]) => {
     try {
@@ -67,7 +69,7 @@ export const IcoGeneratorTool: React.FC = () => {
       setIcoBlob(null);
       setError(null);
     } catch {
-      setError('Could not read that image.');
+      setError('Could not read that image. It may be damaged or in a format this browser can\'t open. Try a JPG, PNG or WebP.');
     }
   };
 
@@ -135,6 +137,7 @@ export const ImageToBase64Tool: React.FC = () => {
   const [dataUrl, setDataUrl] = useState('');
   const [fileName, setFileName] = useState('');
   const [error, setError] = useState<string | null>(null);
+  useRecordTextResult(dataUrl, `${baseNameFrom(fileName || 'image')}-base64.txt`);
 
   const handleFiles = (files: File[]) => {
     const file = files[0];
@@ -143,7 +146,7 @@ export const ImageToBase64Tool: React.FC = () => {
     setFileName(file.name);
     const reader = new FileReader();
     reader.onload = () => setDataUrl(String(reader.result));
-    reader.onerror = () => setError('Could not read that file.');
+    reader.onerror = () => setError('Could not read that file. It may be damaged or still downloading. Try saving it again, then reopen it.');
     reader.readAsDataURL(file);
   };
 
@@ -233,6 +236,7 @@ export const ImageCollageTool: React.FC = () => {
   const [result, setResult] = useState<{ url: string; blob: Blob } | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
+  useRecordResult(result?.blob, result ? `collage.${result.blob.type.split('/')[1]?.replace('jpeg', 'jpg') || 'png'}` : null);
 
   const handleFiles = async (files: File[]) => {
     const slice = files.slice(0, 9);
@@ -332,6 +336,7 @@ export const MemeGeneratorTool: React.FC = () => {
   const [result, setResult] = useState<{ url: string; blob: Blob } | null>(null);
   const [error, setError] = useState<string | null>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  useRecordResult(result?.blob, 'meme.png');
 
   const handleFiles = async (files: File[]) => {
     try {
@@ -339,7 +344,7 @@ export const MemeGeneratorTool: React.FC = () => {
       setResult(null);
       setError(null);
     } catch {
-      setError('Could not read that image.');
+      setError('Could not read that image. It may be damaged or in a format this browser can\'t open. Try a JPG, PNG or WebP.');
     }
   };
 

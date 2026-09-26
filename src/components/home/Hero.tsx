@@ -7,6 +7,7 @@ import { TOOLS } from '../../config/tools';
 import { ALL_CATEGORIES } from '../../config/categories';
 import { KIND_TO_CATEGORIES, formatBytes, formatOf } from '../../lib/formats';
 import { stageFiles } from '../../lib/fileHandoff';
+import { CONVERTER_TOOLS, converterToolsAccepting, detectFormat } from '../../config/converters';
 import { resolveToolIcon } from '../../utils/toolIcons';
 import type { ToolCategory } from '../../types';
 
@@ -14,6 +15,9 @@ interface HeroProps {
   onSelectTool: (toolId: string) => void;
   onSelectCategory: (cat: ToolCategory | 'all') => void;
   onBrowseAll: () => void;
+  /** 'app': the installed app's home, which has its own greeting, so no
+      heading block, tighter padding and a shorter drop zone. */
+  variant?: 'web' | 'app';
 }
 
 /**
@@ -39,7 +43,8 @@ const HERO_STEPS: Step[] = [
  * Below it, category shortcuts give people who aren't holding a file
  * somewhere concrete to go, so the hero is never a dead end.
  */
-export const Hero: React.FC<HeroProps> = ({ onSelectTool, onSelectCategory, onBrowseAll }) => {
+export const Hero: React.FC<HeroProps> = ({ onSelectTool, onSelectCategory, onBrowseAll, variant = 'web' }) => {
+  const app = variant === 'app';
   const [dropped, setDropped] = useState<File | null>(null);
 
   const meta = dropped ? formatOf(dropped.name) : null;
@@ -59,47 +64,61 @@ export const Hero: React.FC<HeroProps> = ({ onSelectTool, onSelectCategory, onBr
   const matches = useMemo(() => {
     if (!meta) return [];
     const categories = KIND_TO_CATEGORIES[meta.kind];
+    // Converters are grouped as one category but each reads specific formats:
+    // a PNG should surface "PNG to JPG", not "HEIC to JPG".
+    const converters = dropped ? new Set(converterToolsAccepting(dropped)) : new Set<string>();
+    // A converter built for this exact format answers "what can I do with it?"
+    // most directly, so pair pages lead, then the open converter, then the rest.
+    const format = dropped ? detectFormat(dropped) : null;
+    const rank = (id: string) => {
+      if (!converters.has(id)) return 3;
+      if (CONVERTER_TOOLS[id].inputs[0] === format && id !== 'file-converter') return 0;
+      return id === 'file-converter' ? 1 : 2;
+    };
     return available
-      .filter((t) => categories.includes(t.category))
-      .sort((a, b) => Number(Boolean(b.isPopular)) - Number(Boolean(a.isPopular)))
+      .filter((t) => (t.category === 'convert' ? converters.has(t.id) : categories.includes(t.category)))
+      .sort((a, b) => rank(a.id) - rank(b.id) || Number(Boolean(b.isPopular)) - Number(Boolean(a.isPopular)))
       .slice(0, 8);
-  }, [meta, available]);
+  }, [meta, available, dropped]);
 
   return (
-    <section className="px-4 sm:px-6 lg:px-8 pt-12 pb-12 sm:pt-16">
-      <div className="mx-auto max-w-3xl flex flex-col items-center text-center gap-5">
-        <h1 className="text-4xl sm:text-5xl font-extrabold tracking-tight text-foreground text-balance">
-          File conversion and developer tools, all in your browser.
+    <section className={app ? '' : 'px-4 sm:px-6 lg:px-8 pt-6 pb-10 sm:pt-16 sm:pb-12'}>
+      {!app && (
+      <div className="mx-auto max-w-3xl flex flex-col items-center text-center gap-2.5 sm:gap-4">
+        <h1 className="text-[28px] leading-[1.15] sm:text-5xl sm:leading-tight font-extrabold tracking-tight text-foreground text-balance">
+          File conversion &amp; dev tools in your browser.
         </h1>
-        <p className="max-w-[58ch] text-lg leading-relaxed text-muted-foreground">
-          {available.length} free tools for PDF, image and document conversion, code formatting,
-          calculators and more. Nothing is uploaded, ever.
+        <p className="max-w-[46ch] text-[15px] sm:text-lg leading-relaxed text-muted-foreground text-balance">
+          {available.length} free tools for PDF, images, docs and code. Nothing is uploaded.
         </p>
       </div>
+      )}
 
-      <div className="mx-auto mt-9 max-w-2xl">
+      <div className={app ? '' : 'mx-auto mt-5 sm:mt-9 max-w-2xl'}>
         {/* Rendered in both states, at a fixed height, so advancing from
             "Choose file" to "Pick a tool" updates the rail without shifting
-            the drop zone underneath it. */}
+            the drop zone underneath it. On phones the rail only appears once
+            a file is chosen, so the drop zone fits on the first screen. */}
         <Stepper
           steps={HERO_STEPS}
           current={dropped ? 1 : 0}
           onStepClick={dropped ? (i) => { if (i === 0) setDropped(null); } : undefined}
-          className="mb-6"
+          className={`mb-6 ${dropped ? '' : 'max-sm:hidden'}`}
         />
 
         {!dropped ? (
           <>
             <DropZone
-              size="hero"
+              size={app ? 'row' : 'hero'}
               onFiles={(files) => setDropped(files[0] ?? null)}
-              label="Choose a file"
-              hint="or drop it here, any format"
+              label={app ? 'Open a file' : 'Choose a file'}
+              hint={app ? 'Any format. See what you can do with it.' : 'or drop it here, any format'}
             />
 
             {/* Two claims that actually differ: speed, and privacy. */}
-            <div className="mt-5 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-sm text-muted-foreground">
-              <span className="inline-flex items-center gap-2">
+            {!app && <div className="mt-4 sm:mt-5 flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-[13px] sm:text-sm text-muted-foreground">
+              {/* The drop zone's own chip already says this on phones. */}
+              <span className="max-sm:hidden inline-flex items-center gap-2">
                 <ShieldCheck className="w-4 h-4 shrink-0 text-success" aria-hidden="true" />
                 Files never leave your device
               </span>
@@ -107,7 +126,7 @@ export const Hero: React.FC<HeroProps> = ({ onSelectTool, onSelectCategory, onBr
                 <Zap className="w-4 h-4 shrink-0 text-warning" aria-hidden="true" />
                 No account, no watermarks
               </span>
-            </div>
+            </div>}
           </>
         ) : (
           <div className="rounded-[var(--radius-xl)] border border-border bg-card p-5 sm:p-6 shadow-raised">
@@ -202,7 +221,7 @@ export const Hero: React.FC<HeroProps> = ({ onSelectTool, onSelectCategory, onBr
 
       {/* ── Category shortcuts ──────────────────────────────────────
           A path forward for anyone who doesn't have a file to hand. */}
-      {!dropped && (
+      {!dropped && !app && (
         <nav aria-label="Tool categories" className="mx-auto mt-12 max-w-[1100px]">
           <ul className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3" role="list">
             {shortcuts.map((category) => (

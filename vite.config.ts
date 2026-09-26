@@ -1,7 +1,7 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import path from 'path';
-import { writeFileSync, mkdirSync } from 'fs';
+import { writeFileSync, mkdirSync, readFileSync, copyFileSync, readdirSync, statSync, existsSync } from 'fs';
 import { TOOLS } from './src/config/tools';
 import { STATIC_PAGES } from './src/config/pages';
 import { BLOG_POSTS, BLOG_CATEGORIES, postsInCategory } from './src/config/blog';
@@ -118,8 +118,104 @@ ${u.lastmod ? `    <lastmod>${u.lastmod}</lastmod>\n` : ''}    <changefreq>${u.c
   };
 }
 
+/**
+ * Stamps public/sw.js (as copied to dist/) with a build id and the app-shell
+ * precache list: the entry chunk, its static imports and their CSS, i.e.
+ * exactly what the homepage needs to boot offline. Tool chunks are not
+ * precached (the full build is ~36 MB); the worker caches each one the first
+ * time that tool is opened.
+ */
+const APP_SCREENS = /src\/(pages\/(Settings|MyFiles|StaticPageView|NotFound|Blog)|components\/AllToolsView)\.tsx$/;
+
+function pwaPlugin() {
+  const shell = new Set<string>();
+  return {
+    name: 'pwa-service-worker',
+    apply: 'build' as const,
+    generateBundle(_: unknown, bundle: Record<string, {
+      type: string; fileName: string; isEntry?: boolean; imports?: string[]; facadeModuleId?: string | null;
+      viteMetadata?: { importedCss?: Set<string> };
+    }>) {
+      const visit = (fileName: string) => {
+        if (shell.has(fileName)) return;
+        const chunk = bundle[fileName];
+        if (!chunk || chunk.type !== 'chunk') return;
+        shell.add(fileName);
+        chunk.viteMetadata?.importedCss?.forEach(css => shell.add(css));
+        chunk.imports?.forEach(visit);
+      };
+      Object.values(bundle).filter(c => c.type === 'chunk' && c.isEntry).forEach(c => visit(c.fileName));
+      // The app's own screens are small and reachable from the tab bar, so they
+      // must open offline even if never visited. Tools stay on-demand.
+      Object.values(bundle)
+        .filter(c => c.type === 'chunk' && APP_SCREENS.test(c.facadeModuleId ?? ''))
+        .forEach(c => visit(c.fileName));
+    },
+    closeBundle() {
+      const swPath = 'dist/sw.js';
+      const src = readFileSync(swPath, 'utf8');
+      const precache = [
+        ...[...shell].map(f => `/${f}`),
+        '/site.webmanifest', '/favicon.svg', '/icons/icon-192.png', '/icons/icon-512.png',
+      ];
+      const buildId = Date.now().toString(36);
+      writeFileSync(swPath, src
+        .replace('__BUILD_ID__', buildId)
+        .replace('/*__PRECACHE__*/ []', JSON.stringify(precache)));
+      console.log(`✓ sw.js — build ${buildId}, ${precache.length} shell files precached`);
+
+      // offline-manifest.json: every file the tools need, for "Download for
+      // offline" (see the CACHE_ALL handler in sw.js). The onnxruntime .wasm
+      // (~23 MB) is left out: it only serves the AI background remover, which
+      // must fetch its model from a CDN anyway, so it cannot run offline.
+      const walk = (dir: string): string[] => readdirSync(dir, { withFileTypes: true })
+        .flatMap(e => e.isDirectory() ? walk(`${dir}/${e.name}`) : [`${dir}/${e.name}`]);
+      const files = [
+        ...walk('dist/assets').filter(f => /\.(js|mjs|css|woff2?)$/.test(f)),
+        // Unhashed worker files (libarchive) that tools load by fixed URL.
+        ...(existsSync('dist/vendor') ? walk('dist/vendor') : []),
+      ].map(f => ({ url: f.slice('dist'.length), bytes: statSync(f).size }));
+      const bytes = files.reduce((n, f) => n + f.bytes, 0);
+      writeFileSync('dist/offline-manifest.json', JSON.stringify({ build: buildId, bytes, files }));
+      console.log(`✓ offline-manifest.json — ${files.length} files, ${(bytes / 1048576).toFixed(1)} MB`);
+    },
+  };
+}
+
+/**
+ * libarchive.js runs in a worker that fetches its .wasm from its own folder,
+ * so both files must keep their names and sit side by side — which a bundler's
+ * hashed asset names would break. Served from node_modules in dev and copied
+ * verbatim into dist/vendor/libarchive/ on build.
+ */
+function vendorPlugin() {
+  const files = [
+    { src: 'node_modules/libarchive.js/dist/worker-bundle.js', url: '/vendor/libarchive/worker-bundle.js', type: 'text/javascript' },
+    { src: 'node_modules/libarchive.js/dist/libarchive.wasm', url: '/vendor/libarchive/libarchive.wasm', type: 'application/wasm' },
+  ];
+  return {
+    name: 'vendor-files',
+    configureServer(server: { middlewares: { use: (fn: (req: { url?: string }, res: { setHeader: (k: string, v: string) => void; end: (b: Buffer) => void }, next: () => void) => void) => void } }) {
+      server.middlewares.use((req, res, next) => {
+        const hit = files.find(f => req.url?.split('?')[0] === f.url);
+        if (!hit) return next();
+        res.setHeader('Content-Type', hit.type);
+        res.end(readFileSync(hit.src));
+      });
+    },
+    closeBundle() {
+      for (const f of files) {
+        const dest = path.join('dist', f.url);
+        mkdirSync(path.dirname(dest), { recursive: true });
+        copyFileSync(f.src, dest);
+      }
+    },
+  };
+}
+
 export default defineConfig({
-  plugins: [react(), sitemapPlugin()],
+  // pwaPlugin last: its offline manifest lists files the others write to dist/.
+  plugins: [react(), sitemapPlugin(), vendorPlugin(), pwaPlugin()],
   server: {
     port: process.env.PORT ? Number(process.env.PORT) : 5173,
   },

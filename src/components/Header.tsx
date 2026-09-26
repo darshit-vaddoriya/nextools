@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ShieldCheck, Menu, Blocks, Heart } from 'lucide-react';
+import { ShieldCheck, Menu, Blocks, Heart, History } from 'lucide-react';
 import { NavDrawer } from './NavDrawer';
 import { ThemeMenu } from './ThemeMenu';
 import { ToolCategory } from '../types';
@@ -23,6 +23,8 @@ interface HeaderProps {
   isBlogActive?: boolean;
   onOpenCategories: () => void;
   onOpenAllTools: () => void;
+  onOpenHistory: () => void;
+  onOpenSettings: () => void;
   onSelectCategory: (cat: ToolCategory | 'all') => void;
   currentView: HeaderView;
   /** Which static page is open, so the nav can highlight it */
@@ -31,7 +33,7 @@ interface HeaderProps {
 
 export const Header: React.FC<HeaderProps> = ({
   onOpenSearch, theme, resolvedDark, onThemeChange,
-  onGoHome, onOpenPage, onOpenBlog, onOpenCategories, onOpenAllTools,
+  onGoHome, onOpenPage, onOpenBlog, onOpenCategories, onOpenAllTools, onOpenHistory, onOpenSettings,
   onSelectCategory, currentView, activePageId, isBlogActive
 }) => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
@@ -55,12 +57,13 @@ export const Header: React.FC<HeaderProps> = ({
     }`;
 
   return (
-    <header className={`sticky top-0 z-50 transition-shadow duration-300 ${
+    <>
+    <header className={`sticky top-0 z-50 pt-[env(safe-area-inset-top)] glass transition-shadow duration-300 ${
       scrolled ? 'shadow-card' : ''
     }`}>
       <div className={`border-b transition-colors duration-300 ${
         scrolled ? 'border-outline-variant' : 'border-outline-variant/50'
-      } glass`}>
+      }`}>
         <div className="max-w-[1560px] mx-auto px-4 sm:px-8 h-[52px] flex items-center gap-2 sm:gap-4">
 
           {/* ── LOGO + BRAND NAME ──────────────────────────────── */}
@@ -128,6 +131,22 @@ export const Header: React.FC<HeaderProps> = ({
               Private &amp; local
             </div>
 
+            {/* History, stored locally */}
+            <AppLink
+              href="/my-files"
+              onNavigate={onOpenHistory}
+              aria-label="History"
+              title="History (stored only in this browser)"
+              rel="nofollow"
+              className={`flex w-9 h-9 items-center justify-center rounded-xl border transition-all duration-150
+                focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 ${
+                currentView === 'files'
+                  ? 'border-primary/50 bg-primary/10 text-primary'
+                  : 'border-outline-variant text-on-surface-variant hover:bg-surface-container hover:text-on-surface hover:border-primary/40'}`}
+            >
+              <History className="w-[18px] h-[18px]" />
+            </AppLink>
+
             {/* Theme */}
             <ThemeMenu theme={theme} resolvedDark={resolvedDark} onThemeChange={onThemeChange} />
 
@@ -139,18 +158,17 @@ export const Header: React.FC<HeaderProps> = ({
                 rel="noopener noreferrer"
                 aria-label="Support NextTool"
                 title="Support NextTool"
-                className="group inline-flex items-center gap-1.5 h-8 px-3 rounded-xl text-[12.5px] font-semibold
-                  bg-gradient-to-b from-rose-500 to-rose-600 text-white
-                  ring-1 ring-inset ring-white/15 shadow-[0_2px_8px_-2px_rgba(244,63,94,0.5)]
-                  hover:shadow-[0_4px_14px_-2px_rgba(244,63,94,0.6)] hover:-translate-y-px
-                  active:translate-y-0 active:scale-[0.98] transition-all duration-150
-                  focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-400"
+                className="group inline-flex items-center justify-center gap-1.5 w-9 h-9 sm:w-auto sm:h-8 sm:px-2.5
+                  rounded-xl text-[12px] font-semibold
+                  border border-rose-500/25 bg-rose-500/[0.08] text-rose-600 dark:text-rose-400
+                  hover:bg-rose-500/[0.14] hover:border-rose-500/40 active:scale-95 transition-all duration-150
+                  focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-400/60"
               >
                 <Heart
-                  className="w-3.5 h-3.5 transition-transform duration-200 group-hover:scale-110"
+                  className="w-4 h-4 sm:w-3.5 sm:h-3.5 transition-transform duration-200 group-hover:scale-110"
                   fill="currentColor"
                 />
-                <span>Support</span>
+                <span className="hidden sm:inline">Support</span>
               </a>
             )}
 
@@ -170,6 +188,10 @@ export const Header: React.FC<HeaderProps> = ({
         </div>
       </div>
 
+    </header>
+
+    {/* Outside <header>: its backdrop-filter would otherwise become the
+        containing block for the drawer's position:fixed and clip it. */}
       <NavDrawer
         isOpen={isDrawerOpen}
         onClose={() => setIsDrawerOpen(false)}
@@ -178,10 +200,13 @@ export const Header: React.FC<HeaderProps> = ({
         onGoHome={() => { setIsDrawerOpen(false); onGoHome(); }}
         onOpenPage={(id) => { setIsDrawerOpen(false); onOpenPage(id); }}
         onOpenBlog={() => { setIsDrawerOpen(false); onOpenBlog(); }}
+        onOpenHistory={() => { setIsDrawerOpen(false); onOpenHistory(); }}
+        onOpenSettings={() => { setIsDrawerOpen(false); onOpenSettings(); }}
+        currentView={currentView}
         theme={theme}
         resolvedDark={resolvedDark}
         onThemeChange={onThemeChange}
       />
-    </header>
+    </>
   );
 };

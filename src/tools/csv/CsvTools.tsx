@@ -6,6 +6,7 @@ import {
 import { CopyButton } from '../../components/CopyButton';
 import { Select } from '../../components/Select';
 import { downloadBlob } from '../image/ImageUtils';
+import { useRecordTextResult } from '../../lib/results';
 import { takeStagedFilesForRoute } from '../../lib/fileHandoff';
 import { errorMessage } from '../../utils/errorMessage';
 import { ToolSteps } from '../../components/ui/ToolSteps';
@@ -250,6 +251,10 @@ export const CsvEditorTool: React.FC = () => {
   const addColumn = () => setRows((prev) => prev.map((row, i) => [...row, i === 0 ? `col${row.length + 1}` : '']));
   const removeColumn = (c: number) => setRows((prev) => prev.map((row) => row.filter((_, i) => i !== c)));
 
+  // Latest table saved to History (after the user changes the sample).
+  const editedCsv = useMemo(() => toDelimited(rows, delimiter), [rows, delimiter]);
+  useRecordTextResult(editedCsv, 'edited.csv', 'text/csv;charset=utf-8');
+
   const exportCsv = () => {
     const csv = toDelimited(rows, delimiter);
     downloadBlob(new Blob([csv], { type: 'text/csv;charset=utf-8' }), 'edited.csv');
@@ -321,6 +326,9 @@ export const CsvCleanerTool: React.FC = () => {
     return { rows, removedCount: before - rows.length };
   }, [text, delimiter, trim, removeEmpty, normalizeEol]);
 
+  const cleanedCsv = useMemo(() => (cleaned.rows.length ? toDelimited(cleaned.rows, delimiter) : ''), [cleaned, delimiter]);
+  useRecordTextResult(cleanedCsv, 'cleaned.csv', 'text/csv;charset=utf-8');
+
   const download = () => {
     const csv = toDelimited(cleaned.rows, delimiter);
     downloadBlob(new Blob([csv], { type: 'text/csv;charset=utf-8' }), 'cleaned.csv');
@@ -378,6 +386,7 @@ export const CsvToJsonTool: React.FC = () => {
     }
   }, [text, delimiter]);
 
+  useRecordTextResult(json, 'data.json', 'application/json');
   const download = () => downloadBlob(new Blob([json], { type: 'application/json' }), 'data.json');
 
   return (
@@ -400,7 +409,7 @@ export const CsvToJsonTool: React.FC = () => {
             <button onClick={download} className="btn-secondary text-[11px] px-2.5 py-1"><Download className="w-3.5 h-3.5" /> Download</button>
           </div>
         </div>
-        <textarea readOnly value={json} rows={10} className="textarea-base font-mono h-64" />
+        <textarea readOnly value={json} rows={10} aria-label="JSON output" className="textarea-base font-mono h-64" />
       </div>
     </div>
   );
@@ -426,6 +435,7 @@ export const JsonToCsvTool: React.FC = () => {
     }
   }, [text, delimiter]);
 
+  useRecordTextResult(csv, 'data.csv', 'text/csv;charset=utf-8');
   const download = () => downloadBlob(new Blob([csv], { type: 'text/csv;charset=utf-8' }), 'data.csv');
 
   return (
@@ -493,6 +503,8 @@ export const TsvConverterTool: React.FC = () => {
     }
   }, [text, from, to]);
 
+  useRecordTextResult(result, `converted.${to === 'json' ? 'json' : to}`, to === 'json' ? 'application/json' : 'text/csv;charset=utf-8');
+
   const download = () => {
     const ext = to === 'json' ? 'json' : to;
     const mime = to === 'json' ? 'application/json' : 'text/csv;charset=utf-8';
@@ -544,6 +556,7 @@ export const DelimiterConverterTool: React.FC = () => {
     return toDelimited(rows, to);
   }, [text, from, to]);
 
+  useRecordTextResult(result, 'converted.txt');
   const download = () => downloadBlob(new Blob([result], { type: 'text/plain;charset=utf-8' }), 'converted.txt');
 
   return (
@@ -600,6 +613,8 @@ export const RemoveDuplicateRowsTool: React.FC = () => {
     return { rows: [header, ...kept], removedCount: removed };
   }, [text, delimiter]);
 
+  const dedupedCsv = useMemo(() => (rows.length ? toDelimited(rows, delimiter) : ''), [rows, delimiter]);
+  useRecordTextResult(dedupedCsv, 'deduplicated.csv', 'text/csv;charset=utf-8');
   const download = () => downloadBlob(new Blob([toDelimited(rows, delimiter)], { type: 'text/csv;charset=utf-8' }), 'deduplicated.csv');
 
   return (
@@ -663,6 +678,9 @@ export const MergeCsvTool: React.FC = () => {
     }
   };
 
+  const mergedCsv = useMemo(() => (merged ? toDelimited(merged.rows, ',') : ''), [merged]);
+  useRecordTextResult(mergedCsv, 'merged.csv', 'text/csv;charset=utf-8');
+
   const download = () => {
     if (!merged) return;
     downloadBlob(new Blob([toDelimited(merged.rows, ',')], { type: 'text/csv;charset=utf-8' }), 'merged.csv');
@@ -699,7 +717,7 @@ export const MergeCsvTool: React.FC = () => {
       {error && <p className="text-xs text-danger">{error}</p>}
       {merged && (
         <div className="space-y-2">
-          {merged.warning && <p className="text-xs text-amber-500 dark:text-amber-400">{merged.warning}</p>}
+          {merged.warning && <p className="text-xs text-amber-700 dark:text-amber-400">{merged.warning}</p>}
           <div className="flex items-center justify-between text-[11px] text-muted-foreground">
             <span>{merged.rows.length - 1} total rows merged</span>
             <button onClick={download} className="btn-primary text-[11px] px-3 py-1.5"><Download className="w-3.5 h-3.5" /> Download merged CSV</button>

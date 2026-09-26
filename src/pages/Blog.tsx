@@ -52,16 +52,18 @@ const SubjectBadge: React.FC<{ category: BlogCategory; size?: 'sm' | 'md' }> = (
  * row; the meta line is pinned to the bottom with `mt-auto` rather than
  * floating under whatever length the excerpt happened to be.
  */
-const PostCard: React.FC<{ post: BlogPost; onOpen: (slug: string) => void; showSubject?: boolean }> = ({ post, onOpen, showSubject = true }) => (
+const PostCard: React.FC<{ post: BlogPost; onOpen: (slug: string) => void; showSubject?: boolean; headingLevel?: 2 | 3 }> = ({ post, onOpen, showSubject = true, headingLevel = 3 }) => {
+  const Heading = headingLevel === 2 ? 'h2' : 'h3';
+  return (
   <AppLink
     href={`/blog/${post.slug}`}
     onNavigate={() => onOpen(post.slug)}
     className="group flex h-full flex-col rounded-[18px] border border-border bg-card p-5 shadow-card transition-[box-shadow,border-color,transform] duration-200 hover:-translate-y-0.5 hover:border-primary/40 hover:shadow-pop"
   >
     {showSubject && <SubjectBadge category={post.category} />}
-    <h3 className={`${showSubject ? 'mt-3.5' : ''} font-heading text-[17px] font-extrabold leading-[1.22] tracking-[-.025em] text-foreground transition-colors group-hover:text-primary`}>
+    <Heading className={`${showSubject ? 'mt-3.5' : ''} font-heading text-[17px] font-extrabold leading-[1.22] tracking-[-.025em] text-foreground transition-colors group-hover:text-primary`}>
       {post.title}
-    </h3>
+    </Heading>
     <p className="mt-2.5 text-[13.5px] leading-[1.6] text-muted-foreground line-clamp-3">{post.excerpt}</p>
     <div className="mt-auto pt-5 flex items-center gap-2 text-[11.5px] text-muted-foreground">
       <time dateTime={post.published}>{formatPostDate(post.published)}</time>
@@ -70,7 +72,8 @@ const PostCard: React.FC<{ post: BlogPost; onOpen: (slug: string) => void; showS
       <ArrowUpRight className="ml-auto w-4 h-4 text-primary opacity-0 -translate-x-1 transition-all duration-150 group-hover:opacity-100 group-hover:translate-x-0" />
     </div>
   </AppLink>
-);
+  );
+};
 
 export const Blog: React.FC<BlogProps> = ({ onBack, onOpenPost, topic, onSelectTopic }) => {
   const [query, setQuery] = useState('');
@@ -114,10 +117,10 @@ export const Blog: React.FC<BlogProps> = ({ onBack, onOpenPost, topic, onSelectT
 
   const reset = () => { setQuery(''); onSelectTopic(null); };
 
-  return <main className="max-w-[1180px] mx-auto px-4 sm:px-6 py-7 sm:py-10 fade-in">
+  return <div className="max-w-[1180px] mx-auto px-4 sm:px-6 py-7 sm:py-10 fade-in">
     {topicMeta
       ? <AppLink href="/blog" onNavigate={() => onSelectTopic(null)} className="btn-ghost mb-6 -ml-2"><ArrowLeft className="w-4 h-4" /> All guides</AppLink>
-      : <AppLink href="/" onNavigate={onBack} className="btn-ghost mb-6 -ml-2"><ArrowLeft className="w-4 h-4" /> Back to tools</AppLink>}
+      : <AppLink href="/" onNavigate={onBack} className="web-only btn-ghost mb-6 -ml-2"><ArrowLeft className="w-4 h-4" /> Back to tools</AppLink>}
 
     {/* Masthead. On a topic hub the claim is replaced by that topic's own
         heading, so each of the hub URLs has a heading and a standfirst that
@@ -285,7 +288,7 @@ export const Blog: React.FC<BlogProps> = ({ onBack, onOpenPost, topic, onSelectT
           </p>
           <div className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {/* Inside a hub every row would carry the same badge, which is noise */}
-            {listed.map(post => <PostCard key={post.slug} post={post} onOpen={onOpenPost} showSubject={!topic} />)}
+            {listed.map(post => <PostCard key={post.slug} post={post} onOpen={onOpenPost} showSubject={!topic} headingLevel={topic ? 2 : 3} />)}
           </div>
         </div>
     )}
@@ -297,5 +300,5 @@ export const Blog: React.FC<BlogProps> = ({ onBack, onOpenPost, topic, onSelectT
         Show all {BLOG_POSTS.length} guides <ArrowUpRight className="w-3.5 h-3.5" />
       </button>
     </div>}
-  </main>;
+  </div>;
 };

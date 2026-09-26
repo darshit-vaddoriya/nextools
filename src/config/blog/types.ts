@@ -61,7 +61,7 @@ export const BLOG_CATEGORY_META: Record<BlogCategory, {
 }> = {
   pdf: {
     label: 'PDF', icon: FileText,
-    color: 'text-red-600 dark:text-red-400', bg: 'bg-red-100 dark:bg-red-500/15',
+    color: 'text-red-700 dark:text-red-400', bg: 'bg-red-100 dark:bg-red-500/15',
     heading: 'Working with PDFs',
     description: 'Why PDFs refuse to shrink, what a merge quietly breaks, how redaction actually works, and what OCR can and cannot read off a scan.',
     intro:
@@ -69,7 +69,7 @@ export const BLOG_CATEGORY_META: Record<BlogCategory, {
   },
   docs: {
     label: 'Documents', icon: FileType2,
-    color: 'text-blue-600 dark:text-blue-400', bg: 'bg-blue-100 dark:bg-blue-500/15',
+    color: 'text-blue-700 dark:text-blue-400', bg: 'bg-blue-100 dark:bg-blue-500/15',
     heading: 'Word documents and Markdown',
     description: 'Reading a DOCX without Word, what survives a conversion to PDF and back, and using Markdown as the source your documents are generated from.',
     intro:
@@ -77,7 +77,7 @@ export const BLOG_CATEGORY_META: Record<BlogCategory, {
   },
   image: {
     label: 'Images', icon: Image,
-    color: 'text-pink-600 dark:text-pink-400', bg: 'bg-pink-100 dark:bg-pink-500/15',
+    color: 'text-pink-700 dark:text-pink-400', bg: 'bg-pink-100 dark:bg-pink-500/15',
     heading: 'Images and file formats',
     description: 'Choosing between JPEG, PNG, WebP and AVIF, the difference between resizing and compressing, and how to get a photo small without making it look it.',
     intro:
@@ -85,7 +85,7 @@ export const BLOG_CATEGORY_META: Record<BlogCategory, {
   },
   media: {
     label: 'Video & Audio', icon: Video,
-    color: 'text-purple-600 dark:text-purple-400', bg: 'bg-purple-100 dark:bg-purple-500/15',
+    color: 'text-purple-700 dark:text-purple-400', bg: 'bg-purple-100 dark:bg-purple-500/15',
     heading: 'Video and audio files',
     description: 'What a codec is and why MP4 is not one, how to make a video smaller without ruining it, trimming without re-encoding, and getting audio or subtitles out of a clip.',
     intro:
@@ -101,7 +101,7 @@ export const BLOG_CATEGORY_META: Record<BlogCategory, {
   },
   numbers: {
     label: 'Numbers & Time', icon: Calculator,
-    color: 'text-amber-600 dark:text-amber-400', bg: 'bg-amber-100 dark:bg-amber-500/15',
+    color: 'text-amber-700 dark:text-amber-400', bg: 'bg-amber-100 dark:bg-amber-500/15',
     heading: 'Dates, units and the maths behind the calculators',
     description: 'Unix timestamps and the off-by-one-hour bug, how loan EMI and GST are actually computed, and why unit conversion is less obvious than it looks.',
     intro:
@@ -109,7 +109,7 @@ export const BLOG_CATEGORY_META: Record<BlogCategory, {
   },
   security: {
     label: 'Security', icon: Shield,
-    color: 'text-emerald-600 dark:text-emerald-400', bg: 'bg-emerald-100 dark:bg-emerald-500/15',
+    color: 'text-emerald-700 dark:text-emerald-400', bg: 'bg-emerald-100 dark:bg-emerald-500/15',
     heading: 'Passwords, hashing and verification',
     description: 'What makes a password strong, how hashing differs from encryption, how to verify a download, and what a digital signature really proves.',
     intro:
@@ -117,7 +117,7 @@ export const BLOG_CATEGORY_META: Record<BlogCategory, {
   },
   data: {
     label: 'Data & CSV', icon: FileSpreadsheet,
-    color: 'text-green-600 dark:text-green-400', bg: 'bg-green-100 dark:bg-green-500/15',
+    color: 'text-green-700 dark:text-green-400', bg: 'bg-green-100 dark:bg-green-500/15',
     heading: 'Spreadsheets, CSV and messy data',
     description: 'Why Excel mangles your CSV, how delimiters, quoting and encoding break files, and a repeatable order of operations for cleaning a dataset.',
     intro:
@@ -125,7 +125,7 @@ export const BLOG_CATEGORY_META: Record<BlogCategory, {
   },
   privacy: {
     label: 'Privacy', icon: Lock,
-    color: 'text-indigo-600 dark:text-indigo-400', bg: 'bg-indigo-100 dark:bg-indigo-500/15',
+    color: 'text-indigo-700 dark:text-indigo-400', bg: 'bg-indigo-100 dark:bg-indigo-500/15',
     heading: 'What your files give away',
     description: 'What happens to a file you upload to a free online tool, what metadata your photos and documents carry, and what tracking you can actually control.',
     intro:

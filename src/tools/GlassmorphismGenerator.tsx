@@ -53,7 +53,7 @@ export const GlassmorphismGenerator: React.FC = () => {
             <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center shadow-md">
               <Sparkles className="w-4.5 h-4.5 text-white" />
             </div>
-            <h4 className="font-bold text-[15px]">Glassmorphism</h4>
+            <p className="font-bold text-[15px]">Glassmorphism</p>
           </div>
           <p className="text-xs text-white/70 leading-relaxed">
             Real-time frosted glass preview using CSS <code className="text-white/90 font-mono">backdrop-filter</code>.
@@ -78,6 +78,7 @@ export const GlassmorphismGenerator: React.FC = () => {
               </div>
               <input
                 type="range"
+                aria-label={s.label}
                 min={s.min}
                 max={s.max}
                 value={s.value}

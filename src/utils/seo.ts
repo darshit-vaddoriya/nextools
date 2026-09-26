@@ -20,6 +20,7 @@ const DEFAULT_KEYWORDS =
 
 const CATEGORY_NAMES: Record<ToolCategory, string> = {
   pdf: 'PDF Tools',
+  convert: 'File Converters',
   word: 'Word & Office',
   excel: 'Excel & CSV',
   powerpoint: 'PowerPoint',
@@ -293,12 +294,36 @@ export function updateToolMeta(toolId: string) {
   }
 }
 
+/**
+ * Category landing-page titles lead with the task a searcher types, not the
+ * site's own section name: "PDF Tools | NextTool" was 20 characters and said
+ * nothing a result snippet could compete on. Long-tail on purpose — several
+ * other sites share the NextTool name, so head terms are not winnable.
+ */
+const CATEGORY_SEO: Partial<Record<ToolCategory, { title: string; noun: string; tasks: string }>> = {
+  convert:  { title: 'Free File Converter, No Upload: Image, Video, PDF', noun: 'file converters', tasks: 'convert PNG to JPG, HEIC to JPG, MOV to MP4, MP4 to MP3, PDF to PPTX, Excel to PDF, RAR to ZIP and TTF to WOFF2' },
+  pdf:      { title: 'Free PDF Tools, No Upload: Merge, Split, Compress', noun: 'PDF tools', tasks: 'merge, split, compress, sign, OCR and convert PDFs' },
+  word:     { title: 'Free Word & DOCX Converters, No Upload', noun: 'Word and DOCX tools', tasks: 'convert .docx to PDF, HTML, Markdown or text, and compare documents' },
+  excel:    { title: 'Free CSV & Excel Tools: Clean, Convert, Merge', noun: 'CSV and spreadsheet tools', tasks: 'view, edit, clean, merge and convert CSV, Excel and JSON' },
+  image:    { title: 'Free Image Tools: Compress, Resize, Convert', noun: 'image tools', tasks: 'compress, resize, crop, convert, remove backgrounds and annotate' },
+  dev:      { title: 'Free Developer Tools: JSON, Base64, JWT, Regex', noun: 'developer tools', tasks: 'format JSON, decode JWTs, test regex, diff code and convert data' },
+  security: { title: 'Free Password Generator, Hash & Checksum Tools', noun: 'security tools', tasks: 'generate passwords and passphrases, hash text and verify file checksums' },
+  text:     { title: 'Free Text Tools: Word Counter, Case Converter', noun: 'text tools', tasks: 'count words, change case, sort lines, remove duplicates and extract data' },
+  color:    { title: 'Free Color Converter, Gradient & Contrast Checker', noun: 'color and CSS tools', tasks: 'convert HEX, RGB and HSL, build gradients and check WCAG contrast' },
+  utility:  { title: 'Free Calculators: Units, EMI, GST, Age, BMI', noun: 'calculators', tasks: 'convert units and time zones, and work out EMI, GST, age and percentages' },
+  web:      { title: 'Free Web Tools: URL Encoder, Parser, Entities', noun: 'web tools', tasks: 'encode and parse URLs, inspect user agents and convert HTML entities' },
+  archive:  { title: 'Free ZIP Tools: Create & Extract Archives', noun: 'archive tools', tasks: 'create ZIP files and extract ZIP, TAR and 7z archives' },
+};
+
 export function updateCategoryMeta(cat: ToolCategory) {
   clearPageSchema();
   const name = CATEGORY_NAMES[cat] ?? cat;
   const count = TOOLS.filter(t => t.category === cat).length;
-  const title = `${name} | NextTool`;
-  const desc = `Free ${name.toLowerCase()} that run in your browser without uploading your files anywhere.`;
+  const seo = CATEGORY_SEO[cat];
+  const title = seo ? `${seo.title} | NextTool` : `${name} | NextTool`;
+  const desc = seo
+    ? `${count} free ${seo.noun} in your browser: ${seo.tasks}. No upload, no sign-up.`
+    : `Free ${name} that run in your browser without uploading your files anywhere.`;
   const url = `${SITE}/category/${cat}`;
 
   document.title = title;
@@ -367,7 +392,7 @@ export function updatePageMeta(pageId: StaticPageId) {
 
 export function updateAllToolsMeta() {
   clearPageSchema();
-  const title = 'All Tools | NextTool';
+  const title = `All ${TOOLS.length} Free Online Tools, No Upload | NextTool`;
   const desc = 'Browse all free NextTool utilities, from PDF and image tools to developer and AI helpers. Everything runs on your device.';
   const url = `${SITE}/all-tools`;
 
@@ -393,7 +418,7 @@ export function updateAllToolsMeta() {
 
 export function updateBlogIndexMeta() {
   clearPageSchema();
-  const title = 'Blog | NextTool';
+  const title = 'Guides to PDFs, Images, Data & Privacy | NextTool';
   const desc = 'Practical guides to file formats, compression, encoding, security and privacy, the reasoning behind every tool on NextTool.';
   const url = `${SITE}/blog`;
 

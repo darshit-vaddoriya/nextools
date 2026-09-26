@@ -11,6 +11,7 @@ import {
   baseName, downloadBlobAs, downloadText,
 } from './WordShared';
 import { htmlToDocxBlob, textToDocxBlob } from './htmlToDocx';
+import { useRecordResult, useRecordTextResult } from '../../lib/results';
 
 /* ── Shared chrome ───────────────────────────────────────────── */
 
@@ -43,9 +44,12 @@ const ActionButton: React.FC<{
   </button>
 );
 
-const DownloadBar: React.FC<{ label: string; onDownload: () => void; note?: string }> = ({
-  label, onDownload, note,
-}) => (
+const DownloadBar: React.FC<{ label: string; onDownload: () => void; note?: string; blob?: Blob }> = ({
+  label, onDownload, note, blob,
+}) => {
+  // Saved to History as soon as it's ready, so it can be downloaded later without redoing it.
+  useRecordResult(blob, label);
+  return (
   <div className="p-4 rounded-2xl border border-success/30 bg-success/10 text-xs space-y-2.5">
     <div className="flex items-center gap-2 text-success font-bold">
       <CheckCircle className="w-4 h-4" /> <span>Ready</span>
@@ -58,7 +62,8 @@ const DownloadBar: React.FC<{ label: string; onDownload: () => void; note?: stri
       <Download className="w-4 h-4" /> {label}
     </button>
   </div>
-);
+  );
+};
 
 const OutputPanel: React.FC<{
   title: string; value: string; mono?: boolean; rows?: number; right?: React.ReactNode;
@@ -129,6 +134,7 @@ export const DocxToHtmlTool: React.FC = () => {
     // makes the output reviewable before it is pasted into a CMS.
     return parsed.html.replace(/></g, '>\n<');
   }, [parsed, pretty]);
+  useRecordTextResult(html, file ? `${baseName(file.name)}.html` : 'document.html', 'text/html;charset=utf-8', false);
 
   return (
     <div className="space-y-4">
@@ -173,6 +179,7 @@ export const DocxToMarkdownTool: React.FC = () => {
   const { file, parsed, error, busy, load, clear } = useSingleDocx();
   const [markdown, setMarkdown] = useState('');
   const [converting, setConverting] = useState(false);
+  useRecordTextResult(markdown, file ? `${baseName(file.name)}.md` : 'document.md', 'text/markdown;charset=utf-8', false);
 
   React.useEffect(() => {
     let cancelled = false;
@@ -225,6 +232,7 @@ export const DocxToMarkdownTool: React.FC = () => {
 
 export const DocxToTxtTool: React.FC = () => {
   const { file, parsed, error, busy, load, clear } = useSingleDocx();
+  useRecordTextResult(parsed?.text, file ? `${baseName(file.name)}.txt` : 'document.txt', undefined, false);
 
   const stats = useMemo(() => {
     if (!parsed) return null;
@@ -351,6 +359,7 @@ export const DocxToPdfTool: React.FC = () => {
                   label={result.name}
                   note="Generated locally — the document never left this browser."
                   onDownload={() => downloadBlobAs(result.blob, result.name)}
+                  blob={result.blob}
                 />
               )}
             </>
@@ -612,6 +621,7 @@ export const WordRemoveFormatTool: React.FC = () => {
                   label={result.name}
                   note="Plain paragraphs in Word's default style — no inherited fonts, colours or tracked changes."
                   onDownload={() => downloadBlobAs(result.blob, result.name)}
+                  blob={result.blob}
                 />
               )}
             </>
@@ -700,6 +710,7 @@ export const WordCompareTool: React.FC = () => {
     ];
     return lines.join('\n');
   }, [rows, left, right]);
+  useRecordTextResult(reportText, 'document-comparison.txt', undefined, false);
 
   return (
     <div className="space-y-4">
@@ -854,6 +865,7 @@ const SourceToDocx: React.FC<{
           label={result.name}
           note="Opens in Microsoft Word, Google Docs and LibreOffice."
           onDownload={() => downloadBlobAs(result.blob, result.name)}
+                  blob={result.blob}
         />
       )}
       <ErrorBox message={error} />

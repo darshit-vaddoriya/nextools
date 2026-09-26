@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { CopyButton } from '../components/CopyButton';
+import { useRecordTextResult } from '../lib/results';
 import { errorMessage } from '../utils/errorMessage';
 import {
   Play, Minimize2, Trash2, AlertTriangle, Sparkles,
@@ -50,6 +51,8 @@ export const JsonFormatter: React.FC = () => {
     }
   });
   const [indent, setIndent] = useState<number>(2);
+  // Latest formatted JSON saved to History once the user works on their own input.
+  useRecordTextResult(output, 'formatted.json', 'application/json');
   const [error, setError] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<'formatted' | 'tree'>('formatted');
   const [fullscreen, setFullscreen] = useState(false);
@@ -109,7 +112,7 @@ export const JsonFormatter: React.FC = () => {
       const isArray = Array.isArray(data);
       return (
         <details open className="ml-3 my-0.5 text-xs font-mono">
-          <summary className="cursor-pointer text-amber-500 font-semibold select-none">
+          <summary className="cursor-pointer text-amber-700 dark:text-amber-400 font-semibold select-none">
             {keyName ? <span className="text-muted-foreground mr-1">{keyName}:</span> : null}
             <span className="text-muted-foreground">{isArray ? `Array(${data.length}) [` : 'Object {'}</span>
           </summary>
@@ -123,10 +126,10 @@ export const JsonFormatter: React.FC = () => {
       );
     }
 
-    let valColor = 'text-emerald-500';
-    if (typeof data === 'number') valColor = 'text-sky-500 dark:text-sky-400';
-    if (typeof data === 'boolean') valColor = 'text-purple-500 dark:text-purple-400';
-    if (data === null) valColor = 'text-rose-500 dark:text-rose-400';
+    let valColor = 'text-emerald-700 dark:text-emerald-400';
+    if (typeof data === 'number') valColor = 'text-sky-700 dark:text-sky-400';
+    if (typeof data === 'boolean') valColor = 'text-purple-700 dark:text-purple-400';
+    if (data === null) valColor = 'text-rose-700 dark:text-rose-400';
 
     return (
       <div className="ml-3 text-xs font-mono">
@@ -212,7 +215,7 @@ export const JsonFormatter: React.FC = () => {
   );
 
   const errorBanner = error ? (
-    <div className="flex items-center gap-2 p-3 bg-rose-500/10 border border-rose-500/30 rounded-xl text-rose-500 dark:text-rose-400 text-xs">
+    <div className="flex items-center gap-2 p-3 bg-rose-500/10 border border-rose-500/30 rounded-xl text-rose-700 dark:text-rose-400 text-xs">
       <AlertTriangle className="w-4 h-4 shrink-0" />
       <span>{error}</span>
     </div>

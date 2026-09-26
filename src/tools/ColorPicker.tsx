@@ -50,8 +50,8 @@ export const ColorPicker: React.FC = () => {
 
   const formats = [
     { label: 'HEX', value: hex.toUpperCase(), color: 'text-primary' },
-    { label: 'RGB', value: rgbString, color: 'text-emerald-500 ' },
-    { label: 'HSL', value: hslString, color: 'text-purple-500 dark:text-purple-400' },
+    { label: 'RGB', value: rgbString, color: 'text-emerald-700 dark:text-emerald-400 ' },
+    { label: 'HSL', value: hslString, color: 'text-purple-700 dark:text-purple-400' },
   ];
 
   return (
@@ -83,6 +83,7 @@ export const ColorPicker: React.FC = () => {
                 onChange={(e) => setHex(e.target.value.toUpperCase())}
                 className="w-12 h-10 rounded-lg  bg-muted border  border-border cursor-pointer p-0.5 transition-colors"
                 title="Pick color"
+                aria-label="Pick color"
               />
               <input
                 type="text"

@@ -9,6 +9,7 @@ import { errorMessage } from '../../utils/errorMessage';
 import { downloadBlob, formatBytes } from '../image/ImageUtils';
 import { takeStagedFilesForRoute } from '../../lib/fileHandoff';
 import { ResultPreviewThumb } from '../../components/ui/ResultPreviewThumb';
+import { useRecordResult } from '../../lib/results';
 
 // ─── Small helpers ──────────────────────────────────────────────
 export const baseName = (name: string) => name.replace(/\.[^.]+$/, '');
@@ -152,9 +153,9 @@ export const PdfDropzone: React.FC<PdfDropzoneProps> = ({
         <Upload className="w-6 h-6 text-primary" />
       </div>
       <div>
-        <h3 className="text-[15px] font-bold text-foreground">
+        <p className="text-[15px] font-bold text-foreground">
           {isDragging ? 'Drop PDF files here' : label}
-        </h3>
+        </p>
         <p className="text-xs text-muted-foreground mt-1">{hint}</p>
       </div>
       <button
@@ -276,7 +277,11 @@ export const ResultCard: React.FC<{
   /** When supplied, shows a click-to-fullscreen preview above the download button. */
   blob?: Blob;
   filename?: string;
-}> = ({ title, subtitle, onDownload, downloadLabel = 'Download PDF', blob, filename }) => (
+}> = ({ title, subtitle, onDownload, downloadLabel = 'Download PDF', blob, filename }) => {
+  // Keep the result in History so it can be reopened without redoing the work.
+  // Older call sites pass no filename; the button label is usually the file name.
+  useRecordResult(blob, filename ?? (/\.\w{2,5}$/.test(downloadLabel) ? downloadLabel : blob ? `result.${blob.type === 'application/pdf' ? 'pdf' : 'bin'}` : null));
+  return (
   <div className="p-4 rounded-2xl border border-success/30 bg-success/10 text-xs space-y-3">
     <div className="flex items-center gap-2 text-success font-bold">
       <CheckCircle className="w-4 h-4" />
@@ -299,7 +304,8 @@ export const ResultCard: React.FC<{
       <span>{downloadLabel}</span>
     </button>
   </div>
-);
+  );
+};
 
 // ─── Page range parsing ("1-3,5,7-9") ───────────────────────────
 export function parsePageRanges(input: string, pageCount: number): number[] {

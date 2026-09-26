@@ -405,4 +405,173 @@ export const TOOL_EXPLANATIONS: Record<string, string> = {
 
   'batch-resize':
     'Resizes many images at once to the same exact dimensions or the same percentage scale, then bundles all the results into a single downloadable ZIP file.',
+
+  // File converters
+  'file-converter':
+    'Converts files between formats on your own device. Drop images, audio, video, spreadsheets or PDFs, pick the output format from the list of formats your files can become, adjust the settings, and download. Several files come back as one ZIP.',
+
+  'png-to-jpg':
+    'Turns PNG images into much smaller JPG files. Drop your PNGs, set the quality, pick a colour to fill any transparent areas, then convert and download.',
+
+  'jpg-to-png':
+    'Saves JPG photos as lossless PNG files, so further editing does not add compression damage. Drop your JPGs, optionally set a width, and convert.',
+
+  'webp-to-jpg':
+    'Converts WebP images, the format most websites serve, into JPG files that open in any app. Drop the WebP files, keep quality high, and download the JPGs.',
+
+  'webp-to-png':
+    'Converts WebP images to PNG and keeps their transparent background. Drop the WebP files and download lossless PNGs.',
+
+  'jpg-to-webp':
+    'Makes JPG photos 25–35% smaller for websites by converting them to WebP. Drop the photos, set quality around 80, optionally resize, and download.',
+
+  'png-to-webp':
+    'Shrinks PNG screenshots and graphics by converting them to WebP while keeping transparency. Drop the PNGs, choose a quality, and download.',
+
+  'heic-to-jpg':
+    'Converts iPhone HEIC photos to JPG or PNG so they open on Windows, Android and upload forms. Drop the photos, pick JPG or PNG, and download. Nothing is uploaded.',
+
+  'avif-to-jpg':
+    'Converts AVIF images into JPG or PNG for software that cannot open AVIF yet. Drop the files, choose the output, and download.',
+
+  'tiff-to-jpg':
+    'Converts large TIFF scans and camera files to JPG, PNG or a PDF page. Drop the TIFFs, pick an output, optionally resize big scans, and download.',
+
+  'audio-converter':
+    'Converts audio files, and the soundtrack of videos, to MP3 or WAV. Drop the files, choose the format, bitrate, channels and sample rate, and download.',
+
+  'mp4-to-mp3':
+    'Extracts the sound from an MP4, MOV or WebM video and saves it as an MP3. Drop the video, pick a bitrate, and download the audio.',
+
+  'wav-to-mp3':
+    'Compresses big WAV recordings into MP3 at the bitrate you choose. Drop the WAV files, pick a bitrate and stereo or mono, and download.',
+
+  'mp3-to-wav':
+    'Decodes MP3 into uncompressed 16-bit WAV for audio editors, CD burning and speech tools. Drop the MP3s, pick a sample rate, and download.',
+
+  'm4a-to-mp3':
+    'Converts M4A files such as iPhone Voice Memos into MP3 that plays everywhere. Drop the M4A files, pick a bitrate, and download.',
+
+  'video-to-gif':
+    'Turns a short part of a video into an animated GIF. Drop an MP4, WebM or MOV, set the start time, length, frame rate and width, and download the GIF.',
+
+  'excel-to-csv':
+    'Converts Excel XLSX worksheets into CSV or TSV files. Drop the workbook, choose the first sheet or all sheets, pick the separator, and download.',
+
+  'csv-to-excel':
+    'Turns a CSV or TSV file into an Excel workbook with numbers stored correctly and leading zeros kept. Drop the CSV and download the XLSX.',
+
+  'excel-to-json':
+    'Converts spreadsheet rows into JSON objects named by the header row. Drop the XLSX, choose sheets and record shape, and download the JSON.',
+
+  'json-to-excel':
+    'Flattens JSON records into an Excel sheet, one row per record and one column per key. Drop the JSON file and download the XLSX.',
+
+  'pdf-to-excel':
+    'Rebuilds tables from a text-based PDF into an Excel sheet or CSV. Drop the PDF, choose one sheet per page or one combined sheet, and download. Scanned PDFs need OCR first.',
+
+  'psd-to-png':
+    'Turns a Photoshop PSD into a flat PNG, JPG or WebP image without Photoshop. Drop the PSD, pick a format, optionally resize, and download.',
+
+  'raw-to-jpg':
+    'Pulls the full-size JPG preview out of camera RAW files such as DNG, NEF, CR2, CR3 and ARW. Drop the RAW files, choose JPG, PNG or TIFF, and download.',
+
+  'svg-to-pdf':
+    'Converts SVG drawings into vector PDF files that stay sharp at any size. Drop the SVGs and download one PDF page per drawing.',
+
+  'video-converter':
+    "Changes a video between MP4, WebM, MOV and MKV using your device's own video encoder. Drop the video, pick a format and quality, and download.",
+
+  'video-compressor':
+    'Makes videos smaller by lowering resolution and bitrate. Drop the video, choose a resolution and quality, and download the smaller MP4.',
+
+  'mov-to-mp4':
+    'Converts MOV videos from iPhones and Macs to MP4, usually without re-encoding. Drop the MOV and download the MP4.',
+
+  'webm-to-mp4':
+    'Converts WebM screen recordings and downloads into MP4 that plays on any device. Drop the WebM, choose a quality, and download.',
+
+  'gif-to-mp4':
+    'Turns animated GIFs into much smaller MP4 or WebM videos. Drop the GIF, pick MP4 or WebM, and download.',
+
+  'excel-to-pdf':
+    'Prints an Excel, ODS or CSV sheet as a tidy PDF table with a repeated header row. Drop the spreadsheet, choose the sheets, and download the PDF.',
+
+  'xls-to-xlsx':
+    'Upgrades old Excel 97–2003 .xls files to modern .xlsx or CSV. Drop the .xls file, choose the sheets and format, and download.',
+
+  'ods-to-xlsx':
+    'Converts LibreOffice and OpenOffice .ods spreadsheets to Excel .xlsx or CSV. Drop the file, choose the sheets, and download.',
+
+  'xml-to-json':
+    'Converts XML into JSON or YAML, keeping attributes and repeated elements. Drop the XML file, choose the indentation, and download.',
+
+  'json-to-xml':
+    'Turns JSON into well-formed XML. Drop the JSON file, choose the indentation, and download the XML.',
+
+  'yaml-to-json':
+    'Converts YAML config files into JSON or XML so you can see exactly how they parse. Drop the YAML file and download.',
+
+  'json-to-yaml':
+    'Converts JSON into clean, readable YAML. Drop the JSON file, choose the indentation, and download.',
+
+  'images-to-pptx':
+    'Builds a PowerPoint deck with one image per slide. Drop your images, put them in order, choose the slide shape, and download the PPTX.',
+
+  'pdf-to-pptx':
+    'Turns every PDF page into a PowerPoint slide, with the page text in the speaker notes. Drop the PDF and download the PPTX.',
+
+  'epub-to-pdf':
+    'Converts DRM-free EPUB e-books into PDF, plain text or one HTML page. Drop the EPUB, pick the format, and download.',
+
+  'font-converter':
+    'Converts fonts between TTF, OTF, WOFF and WOFF2 without changing them. Drop the font files, pick a format, and download.',
+
+  'ttf-to-woff2':
+    'Compresses TTF and OTF fonts into small WOFF2 web fonts. Drop the fonts and download the WOFF2 files for your website.',
+
+  'woff2-to-ttf':
+    'Unpacks WOFF2 and WOFF web fonts into TTF or OTF files you can install. Drop the web fonts and download.',
+
+  'rar-to-zip':
+    'Repacks RAR archives as ZIP files that open anywhere. Drop the RAR file and download the ZIP.',
+
+  '7z-to-zip':
+    'Converts 7-Zip archives into standard ZIP files. Drop the .7z file and download the ZIP.',
+
+  'tar-to-zip':
+    'Converts TAR, TAR.GZ, TAR.BZ2 and TAR.XZ archives into ZIP. Drop the archive and download the ZIP.',
+
+  'zip-to-tar':
+    'Repacks ZIP, 7z or RAR archives as TAR.GZ or TAR for Linux. Drop the archive, choose the format, and download.',
+
+  'jpg-to-avif':
+    'Converts JPG, PNG and WebP images to AVIF, which is usually half the size of JPG at the same quality. Drop the images, set the quality, and download.',
+
+  'png-to-svg':
+    'Traces logos, icons and line art into SVG vectors that scale to any size. Drop the image, choose the number of colours and the detail level, and download.',
+
+  'tiff-to-pdf':
+    'Puts every page of a multi-page TIFF, such as a scan or a fax, into one PDF. Drop the TIFF and download the PDF.',
+
+  'ai-to-pdf':
+    'Opens Adobe Illustrator .ai files as PDF, PNG or JPG without Illustrator. Drop the .ai file, pick the format, and download.',
+
+  'wav-to-flac':
+    'Compresses audio into lossless FLAC, about half the size of WAV with identical sound. Drop the audio files and download the FLAC files.',
+
+  'csv-to-sql':
+    'Turns a CSV or Excel sheet into SQL CREATE TABLE and INSERT statements. Drop the file, choose your database, and download the .sql script.',
+
+  'markdown-to-epub':
+    'Builds an EPUB e-book from a Markdown, text or HTML file, with a chapter for each heading. Drop the file and download the EPUB.',
+
+  'rtf-to-docx':
+    'Converts RTF documents to Word DOCX, plain text or HTML, keeping paragraphs, bold, italic and underline. Drop the RTF and download.',
+
+  'srt-to-vtt':
+    'Converts SRT subtitle files to WebVTT for web video players. Drop the SRT and download the VTT.',
+
+  'vtt-to-srt':
+    'Converts WebVTT caption files to SRT for editors and media players. Drop the VTT and download the SRT.',
 };

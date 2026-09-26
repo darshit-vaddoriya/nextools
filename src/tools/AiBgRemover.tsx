@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { AdBanner } from '../components/AdBanner';
 import { DropZone, ErrorNotice } from './image/ImageShared';
+import { recordResult } from '../lib/results';
 import { Download, Cpu, Loader2, RotateCcw } from 'lucide-react';
 
 type Phase = 'idle' | 'running' | 'done' | 'error';
@@ -169,6 +170,8 @@ export const AiBgRemover: React.FC = () => {
       if (gen !== genRef.current) return;
       fullResBlobRef.current = blob;
       setNewResult(blob);
+      // Full-resolution cut-out goes to History with its source photo.
+      void recordResult({ output: blob, name: `${file.name.replace(/\.[^.]+$/, '')}-no-bg.png`, inputs: [file] });
       setProgress(100);
       setStageLabel('Done');
       stopTimer();

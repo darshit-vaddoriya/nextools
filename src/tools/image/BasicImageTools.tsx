@@ -154,7 +154,7 @@ export const ImageRotateTool: React.FC = () => {
       setResult(null);
       setError(null);
     } catch {
-      setError('Could not read that image.');
+      setError('Could not read that image. It may be damaged or in a format this browser can\'t open. Try a JPG, PNG or WebP.');
     }
   };
 
@@ -287,7 +287,7 @@ export const ImageFlipTool: React.FC = () => {
       setResult(null);
       setError(null);
     } catch {
-      setError('Could not read that image.');
+      setError('Could not read that image. It may be damaged or in a format this browser can\'t open. Try a JPG, PNG or WebP.');
     }
   };
 
@@ -524,7 +524,7 @@ export const ImageCompressorTool: React.FC = () => {
       setResult(null);
       setError(null);
     } catch {
-      setError('Could not read that image.');
+      setError('Could not read that image. It may be damaged or in a format this browser can\'t open. Try a JPG, PNG or WebP.');
     }
   };
 
@@ -564,7 +564,7 @@ export const ImageCompressorTool: React.FC = () => {
             </div>
             <div className="rounded-xl border  border-border bg-muted  p-3 text-center">
               <p className="text-[10px] uppercase tracking-wider  text-muted-foreground font-semibold mb-1">Compressed</p>
-              <p className="font-mono text-[13px] dark:text-emerald-500 text-emerald-600">{result ? formatBytes(result.blob.size) : '…'}</p>
+              <p className="font-mono text-[13px] dark:text-emerald-500 text-emerald-700">{result ? formatBytes(result.blob.size) : '…'}</p>
               <p className="font-mono text-[10px]  text-muted-foreground">{result ? `${savings}% saved` : 'waiting'}</p>
             </div>
           </div>
@@ -625,7 +625,7 @@ export const ImageCropTool: React.FC = () => {
       setResult(null);
       setError(null);
     } catch {
-      setError('Could not read that image.');
+      setError('Could not read that image. It may be damaged or in a format this browser can\'t open. Try a JPG, PNG or WebP.');
     }
   };
 

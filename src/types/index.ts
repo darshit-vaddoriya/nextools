@@ -1,5 +1,6 @@
 export type ToolCategory =
   | 'pdf'
+  | 'convert'
   | 'word'
   | 'excel'
   | 'powerpoint'

@@ -4,7 +4,7 @@ import { TOOLS } from '../config/tools';
 import {
   FileText, FileSpreadsheet, Image, Video, Music, Archive, Type,
   Code, Shield, Palette, Calculator, Globe, Sparkles, Layers,
-  ChevronRight, FileCode, ChevronDown, Zap
+  ChevronRight, FileCode, ChevronDown, Zap, RefreshCw
 } from 'lucide-react';
 
 interface SidebarProps {
@@ -25,6 +25,7 @@ const CATEGORIES: {
   activeText: string;
 }[] = [
   { id: 'all',      name: 'All Tools',      icon: Layers,          color: 'text-indigo-400',  activeBg: 'dark:bg-indigo-500/10 bg-indigo-50',   activeText: 'dark:text-indigo-300 text-indigo-700' },
+  { id: 'convert',  name: 'File Converters', icon: RefreshCw,      color: 'text-teal-400',    activeBg: 'dark:bg-teal-500/10 bg-teal-50',       activeText: 'dark:text-teal-300 text-teal-700' },
   { id: 'pdf',      name: 'PDF Tools',      icon: FileText,        color: 'text-red-400',     activeBg: 'dark:bg-red-500/10 bg-red-50',         activeText: 'dark:text-red-300 text-red-700' },
   { id: 'word',      name: 'Word & Office',  icon: FileCode,        color: 'text-blue-400',    activeBg: 'dark:bg-blue-500/10 bg-blue-50',       activeText: 'dark:text-blue-300 text-blue-700' },
   { id: 'excel',    name: 'Excel & CSV',    icon: FileSpreadsheet, color: 'text-emerald-400', activeBg: 'dark:bg-emerald-500/10 bg-emerald-50', activeText: 'dark:text-emerald-300 text-emerald-700' },
@@ -119,7 +120,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                       >
                         <span className="truncate">{tool.name}</span>
                         {isToolActive && (
-                          <ChevronRight className="w-3 h-3 shrink-0 dark:text-indigo-400 text-indigo-500" />
+                          <ChevronRight className="w-3 h-3 shrink-0 dark:text-indigo-400 text-indigo-700" />
                         )}
                       </button>
                     );

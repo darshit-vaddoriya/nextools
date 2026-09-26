@@ -50,7 +50,7 @@ export const StatusPill: React.FC<{ valid: boolean; validLabel: string; invalidL
 }) => (
   <span
     className={`px-3 py-1.5 rounded-full text-[12.5px] font-bold font-mono ${
-      valid ? 'bg-success/10 text-success' : 'bg-danger/10 text-danger'
+      valid ? 'bg-success/10 text-emerald-800 dark:text-success' : 'bg-danger/10 text-red-800 dark:text-danger'
     }`}
   >
     {valid ? validLabel : invalidLabel}
@@ -147,7 +147,7 @@ export const CopyTextButton: React.FC<{ onClick: () => void; children?: React.Re
   <button
     type="button"
     onClick={onClick}
-    className="text-[12.5px] font-bold text-primary hover:text-primary/80 transition-colors"
+    className="text-[12.5px] font-bold text-indigo-300 hover:text-indigo-200 transition-colors"
   >
     {children}
   </button>

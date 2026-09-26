@@ -3,6 +3,7 @@ import { Check, Download, Maximize2, Package } from 'lucide-react';
 import { Button } from './Button';
 import { Lightbox } from './Lightbox';
 import { formatBytes } from '../../lib/formats';
+import { useRecordResults } from '../../lib/results';
 
 export interface ResultItem {
   blob: Blob;
@@ -31,6 +32,8 @@ export const SelectableResults: React.FC<SelectableResultsProps> = ({
   const [selected, setSelected] = useState<Set<number>>(() => new Set(items.map((_, i) => i)));
   const [openIndex, setOpenIndex] = useState<number | null>(null);
   const [isZipping, setIsZipping] = useState(false);
+  // The whole batch goes to History as one result.
+  useRecordResults(items);
 
   /* Object URLs are created and revoked inside one effect so the two always
      pair up. Splitting them (memo to create, effect to revoke) breaks under

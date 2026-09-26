@@ -51,7 +51,7 @@ export const UrlParserTool: React.FC = () => {
       </Panel>
 
       {error && (
-        <div className="p-3 bg-rose-500/10 border border-rose-500/30 rounded-xl text-rose-500 dark:text-rose-400 text-xs flex items-center gap-2">
+        <div className="p-3 bg-rose-500/10 border border-rose-500/30 rounded-xl text-rose-700 dark:text-rose-400 text-xs flex items-center gap-2">
           <AlertTriangle className="w-4 h-4 shrink-0" /> {error}
         </div>
       )}
@@ -456,7 +456,7 @@ export const BinaryConverterTool: React.FC = () => {
     const num = parseInt(cleanedInput, radix);
     if (!Number.isFinite(num) || Number.isNaN(num)) {
       setValues((prev) => ({ ...prev, [key]: raw }));
-      setError('Invalid number for this base');
+      setError('That number has a digit this base does not use. Binary takes 0–1, octal 0–7, hex 0–9 and A–F.');
       return;
     }
     setError(null);
@@ -492,7 +492,7 @@ export const BinaryConverterTool: React.FC = () => {
           ))}
         </div>
         {error && (
-          <div className="p-2.5 bg-rose-500/10 border border-rose-500/30 rounded-lg text-rose-500 dark:text-rose-400 text-xs flex items-center gap-2">
+          <div className="p-2.5 bg-rose-500/10 border border-rose-500/30 rounded-lg text-rose-700 dark:text-rose-400 text-xs flex items-center gap-2">
             <AlertTriangle className="w-4 h-4 shrink-0" /> {error}
           </div>
         )}

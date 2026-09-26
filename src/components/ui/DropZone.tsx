@@ -6,8 +6,9 @@ interface DropZoneProps {
   /** `accept` attribute, e.g. "application/pdf,.pdf". Omit to accept anything. */
   accept?: string;
   multiple?: boolean;
-  /** `hero` is the oversized homepage target; `panel` sits inside a tool. */
-  size?: 'hero' | 'panel';
+  /** `hero` is the oversized homepage target; `panel` sits inside a tool;
+      `row` is a single-line card for the installed app's home screen. */
+  size?: 'hero' | 'panel' | 'row';
   label?: string;
   hint?: string;
   disabled?: boolean;
@@ -41,6 +42,7 @@ export const DropZone: React.FC<DropZoneProps> = ({
   }, [onFiles]);
 
   const isHero = size === 'hero';
+  const isRow = size === 'row';
 
   return (
     <div className={className}>
@@ -68,13 +70,17 @@ export const DropZone: React.FC<DropZoneProps> = ({
           emit(e.dataTransfer.files);
         }}
         className={[
-          'group relative w-full flex flex-col items-center justify-center text-center',
+          isRow
+            ? 'group relative w-full flex flex-row items-center text-left'
+            : 'group relative w-full flex flex-col items-center justify-center text-center',
           'border-2 border-dashed transition-all duration-[var(--motion-base)] ease-[var(--ease)]',
           'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2',
           'focus-visible:ring-offset-background disabled:opacity-50 disabled:pointer-events-none',
           isHero
-            ? 'rounded-[var(--radius-xl)] px-6 py-12 sm:py-16 gap-4'
-            : 'rounded-[var(--radius-lg)] px-5 py-10 gap-3',
+            ? 'rounded-[var(--radius-xl)] px-5 py-7 sm:px-6 sm:py-16 gap-3 sm:gap-4'
+            : isRow
+              ? 'rounded-2xl p-3.5 gap-3.5'
+              : 'rounded-[var(--radius-lg)] px-5 py-10 gap-3',
           isDragging
             ? 'border-primary bg-primary/[0.06] scale-[1.01] motion-reduce:scale-100'
             : 'border-border bg-card hover:border-primary/50 hover:bg-surface-container-low',
@@ -83,23 +89,37 @@ export const DropZone: React.FC<DropZoneProps> = ({
         <span
           className={[
             'grid place-items-center rounded-full transition-colors duration-[var(--motion-base)]',
-            isHero ? 'w-16 h-16' : 'w-12 h-12',
+            isHero ? 'w-14 h-14 sm:w-16 sm:h-16' : 'w-12 h-12',
             isDragging ? 'bg-primary text-primary-foreground' : 'bg-primary-container text-on-primary-container',
           ].join(' ')}
         >
-          <UploadCloud className={isHero ? 'w-8 h-8' : 'w-6 h-6'} aria-hidden="true" />
+          <UploadCloud className={isHero ? 'w-7 h-7 sm:w-8 sm:h-8' : 'w-6 h-6'} aria-hidden="true" />
         </span>
 
-        <span className="flex flex-col gap-1">
-          <span className={isHero ? 'text-xl sm:text-2xl font-bold text-foreground' : 'text-base font-bold text-foreground'}>
+        <span className={isRow ? 'flex-1 min-w-0 flex flex-col gap-0.5' : 'flex flex-col gap-1'}>
+          <span className={isHero ? 'text-lg sm:text-2xl font-bold text-foreground' : 'text-base font-bold text-foreground'}>
             {isDragging ? 'Drop to add' : label}
           </span>
-          <span className="text-sm text-muted-foreground">{hint}</span>
+          <span className={isRow ? 'text-[12.5px] leading-snug text-muted-foreground' : 'text-sm text-muted-foreground'}>{hint}</span>
         </span>
+        {isRow && (
+          <span aria-hidden="true" className="shrink-0 h-9 px-3.5 rounded-xl bg-primary text-primary-foreground text-[13px] font-bold inline-flex items-center">
+            Open
+          </span>
+        )}
+
+        {/* A visible button, so on a phone the box reads as tappable. The whole
+            zone is already the <button>; this is presentation only. */}
+        {isHero && (
+          <span aria-hidden="true" className="inline-flex items-center gap-2 h-11 px-6 rounded-xl bg-primary text-primary-foreground
+            text-[15px] font-bold shadow-[0_6px_16px_-6px_rgb(var(--primary)/0.6)] transition-transform group-active:scale-[0.97]">
+            <UploadCloud className="w-[18px] h-[18px]" /> Browse files
+          </span>
+        )}
 
         {/* The product's actual differentiator, stated where the decision happens. */}
         {isHero && (
-          <span className="mt-2 inline-flex items-center gap-2 rounded-full bg-success/10 px-3 py-1.5 text-xs font-semibold text-success">
+          <span className="mt-1 sm:mt-2 inline-flex items-center gap-2 rounded-full bg-success/10 px-3 py-1.5 text-xs font-semibold text-success">
             <ShieldCheck className="w-4 h-4" aria-hidden="true" />
             Nothing uploads. Files stay on your device.
           </span>

@@ -1,15 +1,50 @@
 {
-  "name": "NextTool",
+  "id": "/",
+  "name": "NextTool - Free Online Tools",
   "short_name": "NextTool",
   "description": "Free browser-based tools for PDF, image, document and developer tasks. Every tool runs on your own device — files are never uploaded.",
-  "start_url": "/",
+  "lang": "en",
+  "dir": "ltr",
+  "start_url": "/?source=pwa",
   "scope": "/",
   "display": "standalone",
-  "background_color": "#faf9ff",
-  "theme_color": "#131313",
+  "display_override": ["standalone", "minimal-ui"],
+  "orientation": "any",
+  "background_color": "#f7f8fa",
+  "theme_color": "#f7f8fa",
+  "categories": ["productivity", "utilities", "developer"],
+  "prefer_related_applications": false,
   "icons": [
-    { "src": "/favicon-32.png", "sizes": "32x32", "type": "image/png" },
-    { "src": "/apple-touch-icon.png", "sizes": "180x180", "type": "image/png" },
-    { "src": "/favicon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+    { "src": "/icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "/icons/maskable-192.png", "sizes": "192x192", "type": "image/png", "purpose": "maskable" },
+    { "src": "/icons/maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" },
+    { "src": "/favicon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }
+  ],
+  "shortcuts": [
+    {
+      "name": "Merge PDF",
+      "short_name": "Merge PDF",
+      "url": "/tool/pdf-merge?source=pwa-shortcut",
+      "icons": [{ "src": "/icons/shortcut-pdf.png", "sizes": "96x96", "type": "image/png" }]
+    },
+    {
+      "name": "Compress Image",
+      "short_name": "Compress",
+      "url": "/tool/image-compressor?source=pwa-shortcut",
+      "icons": [{ "src": "/icons/shortcut-image.png", "sizes": "96x96", "type": "image/png" }]
+    },
+    {
+      "name": "JSON Formatter",
+      "short_name": "JSON",
+      "url": "/tool/json-formatter?source=pwa-shortcut",
+      "icons": [{ "src": "/icons/shortcut-code.png", "sizes": "96x96", "type": "image/png" }]
+    },
+    {
+      "name": "All Tools",
+      "short_name": "All Tools",
+      "url": "/all-tools?source=pwa-shortcut",
+      "icons": [{ "src": "/icons/shortcut-all.png", "sizes": "96x96", "type": "image/png" }]
+    }
   ]
 }

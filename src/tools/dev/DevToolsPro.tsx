@@ -21,7 +21,7 @@ const Hint: React.FC<{ children: React.ReactNode }> = ({ children }) => (
 );
 
 const ErrorLine: React.FC<{ message: string }> = ({ message }) => (
-  <div className="flex items-center gap-2 p-3 bg-rose-500/10 border border-rose-500/30 rounded-xl text-rose-500 dark:text-rose-400 text-xs">
+  <div className="flex items-center gap-2 p-3 bg-rose-500/10 border border-rose-500/30 rounded-xl text-rose-700 dark:text-rose-400 text-xs">
     <AlertTriangle className="w-4 h-4 shrink-0" />
     <span>{message}</span>
   </div>
@@ -442,7 +442,7 @@ export const CronParserTool: React.FC = () => {
             <div key={f.label} className="text-center rounded-lg bg-muted/70 py-2 px-1">
               <p className="font-mono text-[15px] font-bold text-foreground">{fields[i] ?? '—'}</p>
               <p className="text-[10.5px] font-semibold uppercase tracking-[0.04em] text-muted-foreground mt-0.5">{f.label}</p>
-              <p className="text-[10px] text-muted-foreground/70 font-mono">{f.min}-{f.max}</p>
+              <p className="text-[10px] text-muted-foreground font-mono">{f.min}-{f.max}</p>
             </div>
           ))}
         </div>
@@ -1012,11 +1012,11 @@ const HTTP_STATUSES: StatusEntry[] = [
 ];
 
 const STATUS_CLASSES = [
-  { id: '1', label: '1xx Informational', tone: 'text-sky-600 dark:text-sky-400 bg-sky-500/10' },
-  { id: '2', label: '2xx Success', tone: 'text-emerald-600 dark:text-emerald-400 bg-emerald-500/10' },
-  { id: '3', label: '3xx Redirect', tone: 'text-amber-600 dark:text-amber-400 bg-amber-500/10' },
-  { id: '4', label: '4xx Client error', tone: 'text-orange-600 dark:text-orange-400 bg-orange-500/10' },
-  { id: '5', label: '5xx Server error', tone: 'text-rose-600 dark:text-rose-400 bg-rose-500/10' },
+  { id: '1', label: '1xx Informational', tone: 'text-sky-700 dark:text-sky-400 bg-sky-500/10' },
+  { id: '2', label: '2xx Success', tone: 'text-emerald-700 dark:text-emerald-400 bg-emerald-500/10' },
+  { id: '3', label: '3xx Redirect', tone: 'text-amber-700 dark:text-amber-400 bg-amber-500/10' },
+  { id: '4', label: '4xx Client error', tone: 'text-orange-700 dark:text-orange-400 bg-orange-500/10' },
+  { id: '5', label: '5xx Server error', tone: 'text-rose-700 dark:text-rose-400 bg-rose-500/10' },
 ];
 
 export const HttpStatusTool: React.FC = () => {

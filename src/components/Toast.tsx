@@ -67,7 +67,7 @@ export const ToastProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       <div
         aria-live="polite"
         aria-atomic="false"
-        className="fixed bottom-4 right-4 left-4 sm:left-auto z-[80] flex flex-col items-stretch sm:items-end gap-2 pointer-events-none"
+        className="fixed bottom-[calc(var(--app-bottom-inset)+1rem)] right-4 left-4 sm:left-auto z-[80] flex flex-col items-stretch sm:items-end gap-2 pointer-events-none"
       >
         {toasts.map(t => {
           const conf = VARIANT_STYLES[t.variant];

@@ -58,7 +58,7 @@ export const JwtDecoder: React.FC = () => {
 
       {/* Error */}
       {error && (
-        <div className="p-3 bg-rose-500/10 border border-rose-500/30 rounded-xl text-rose-500 dark:text-rose-400 text-xs flex items-center gap-2">
+        <div className="p-3 bg-rose-500/10 border border-rose-500/30 rounded-xl text-rose-700 dark:text-rose-400 text-xs flex items-center gap-2">
           <AlertTriangle className="w-4 h-4 shrink-0" />
           {error}
         </div>
@@ -68,7 +68,7 @@ export const JwtDecoder: React.FC = () => {
       {expInfo && (
         <div className={`p-3 rounded-xl border text-xs flex items-center gap-2 font-medium ${
           expInfo.isExpired
-            ? 'bg-rose-500/10 border-rose-500/30 text-rose-500 dark:text-rose-400'
+            ? 'bg-rose-500/10 border-rose-500/30 text-rose-700 dark:text-rose-400'
             : 'bg-emerald-500/10 border-emerald-500/30 text-success'
         }`}>
           {expInfo.isExpired
@@ -78,7 +78,7 @@ export const JwtDecoder: React.FC = () => {
           <span>
             Expiration: <strong>{expInfo.dateString}</strong>
             <span className={`ml-2 px-2 py-0.5 rounded-full text-[10px] font-bold ${
-              expInfo.isExpired ? 'bg-rose-500/20 text-rose-400' : 'bg-emerald-500/20 text-emerald-400'
+              expInfo.isExpired ? 'bg-rose-500/20 text-rose-800 dark:text-rose-300' : 'bg-emerald-500/20 text-emerald-800 dark:text-emerald-300'
             }`}>
               {expInfo.isExpired ? 'EXPIRED' : 'ACTIVE'}
             </span>
@@ -109,7 +109,7 @@ export const JwtDecoder: React.FC = () => {
             <div className="flex items-center gap-2">
               {expInfo && (
                 <span className={`text-[11.5px] font-bold px-2.5 py-0.5 rounded-full ${
-                  expInfo.isExpired ? 'bg-danger/10 text-danger' : 'bg-success/10 text-success'
+                  expInfo.isExpired ? 'bg-danger/10 text-red-800 dark:text-danger' : 'bg-success/10 text-emerald-800 dark:text-success'
                 }`}>
                   {expInfo.isExpired ? 'EXPIRED' : 'ACTIVE'}
                 </span>
