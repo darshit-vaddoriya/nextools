@@ -37,7 +37,12 @@
           'https://www.googletagmanager.com/gtag/js?id=G-M60L9W8G3B',
           'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3383457039703768',
         ];
+        var done = false;
+        var EVENTS = ['pointerdown', 'keydown', 'touchstart', 'scroll', 'mousemove'];
         function load() {
+          if (done) return;
+          done = true;
+          for (var e = 0; e < EVENTS.length; e++) removeEventListener(EVENTS[e], load, true);
           for (var i = 0; i < TAGS.length; i++) {
             var s = document.createElement('script');
             s.async = true;
@@ -46,12 +51,22 @@
             document.head.appendChild(s);
           }
         }
-        // Wait for a genuinely idle main thread where possible, so the tags do
-        // not simply pile onto the load event. The timeout caps how long an
-        // always-busy page can postpone them.
+        // The first sign of a visitor (scroll, tap, key, mouse) loads the tags
+        // straight away. Otherwise they wait until 5 s after the load event.
+        // Loading them on idle right after load was not enough: on desktop
+        // that still landed ~420 KB of Google script evaluation inside the
+        // page's first seconds, where Lighthouse measured 510 ms of Total
+        // Blocking Time, almost all of it show_ads_impl, gtag and
+        // FundingChoices. The timer still makes sure both tags run on every
+        // page, which AdSense site review and analytics need.
+        for (var e = 0; e < EVENTS.length; e++) {
+          addEventListener(EVENTS[e], load, { capture: true, passive: true, once: true });
+        }
         function schedule() {
-          if (window.requestIdleCallback) requestIdleCallback(load, { timeout: 3000 });
-          else setTimeout(load, 1200);
+          setTimeout(function () {
+            if (window.requestIdleCallback) requestIdleCallback(load, { timeout: 2000 });
+            else load();
+          }, 5000);
         }
         if (document.readyState === 'complete') schedule();
         else window.addEventListener('load', schedule);

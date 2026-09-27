@@ -160,7 +160,7 @@ export const Header: React.FC<HeaderProps> = ({
                 title="Support NextTool"
                 className="group inline-flex items-center justify-center gap-1.5 w-9 h-9 sm:w-auto sm:h-8 sm:px-2.5
                   rounded-xl text-[12px] font-semibold
-                  border border-rose-500/25 bg-rose-500/[0.08] text-rose-600 dark:text-rose-400
+                  border border-rose-500/25 bg-rose-500/[0.08] text-rose-700 dark:text-rose-400
                   hover:bg-rose-500/[0.14] hover:border-rose-500/40 active:scale-95 transition-all duration-150
                   focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-400/60"
               >
