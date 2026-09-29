@@ -73,7 +73,7 @@ Converting between them is a re-encode unless you are only rewrapping, so going 
 4. Nothing opens at all → the container is unsupported. Remux; do not re-encode.
 5. Plays but is too big → bit rate, then resolution, then frame rate.
 
-Reading metadata and converting a clip are both things the browser can do with the file sitting on your disk. Reading a container's stream list is something a player or a local inspector such as \`ffprobe\`, MediaInfo or VLC's codec panel will tell you in seconds, without the file going anywhere. That matters when the clip is a recording of an internal meeting that should not be uploaded to a stranger's server just to find out which codec it uses.`,
+When the diagnosis points at the container, [MOV to MP4](/tool/mov-to-mp4) and [WebM to MP4](/tool/webm-to-mp4) turn the two most common problem files into MP4, and the [video converter](/tool/video-converter) covers the other combinations between MP4, WebM, MOV and MKV. Reading a container's stream list is something a player or a local inspector such as \`ffprobe\`, MediaInfo or VLC's codec panel will tell you in seconds, without the file going anywhere. That matters when the clip is a recording of an internal meeting that should not be uploaded to a stranger's server just to find out which codec it uses.`,
   'compressing-a-video-without-ruining-it': `An upload rejects your file at 25 MB and the recording is 200 MB. The temptation is to run a "compress" button until something fits. That works, but it usually gives up far more quality than it had to, because the three dials that make a video smaller do not degrade it equally.
 
 ## The arithmetic
@@ -92,7 +92,7 @@ total kbps = 25 × 8 × 1000 ÷ 240 ≈ 833 kbps
 
 Leave 96 kbps for audio and the video gets roughly 730 kbps. Now the question is a concrete one — does this footage look acceptable at 730 kbps — instead of a vague one about how much to compress.
 
-At that budget, 1080p will look soft and blocky on movement. 720p will look reasonable. 480p will look clean but small. That is the trade being made, and making it deliberately beats discovering it after the upload. The underlying principle is the one [image compression](/blog/how-image-compression-works) runs on: quality is what you spend bits on, and fewer pixels means fewer bits to spend. If the target is an email rather than an upload form, [attachment limits](/blog/email-attachment-size-limits) are stricter than the number they advertise.
+At that budget, 1080p will look soft and blocky on movement. 720p will look reasonable. 480p will look clean but small. That is the trade being made, and making it deliberately beats discovering it after the upload. The underlying principle is the one [image compression](/blog/how-image-compression-works) runs on: quality is what you spend bits on, and fewer pixels means fewer bits to spend. If the target is an email rather than an upload form, attachment limits are stricter than the number they advertise.
 
 ## Which dial, in which order
 
@@ -141,70 +141,10 @@ For speech, 64–96 kbps AAC mono is clean. For music, 128–192 kbps stereo. If
 5. Reduce frame rate only if the content is static and you are still over.
 6. Encode once, from the original.
 
-Whichever tool you reach for, prefer one that works on the file where it already sits. A recording of an internal call should be cut down to an attachable size without leaving the machine on the way, and a local encoder is the only arrangement that guarantees it.`,
-  'trimming-and-cropping-video': `Two edits that sound equally trivial behave completely differently. Cutting the first ten seconds off a clip can finish instantly with no quality change. Cropping ten pixels off the edge cannot. The reason is worth knowing, because it tells you which edits are free.
-
-## Why some cuts are free
-
-A compressed video is not a sequence of complete pictures. It is occasional complete frames — keyframes, or I-frames — followed by frames that describe only what changed since the last one.
-
-To show the frame at 00:10, the decoder finds the most recent keyframe before it and replays the changes forward. Nothing at 00:10 is independently meaningful. Cropping is a different matter entirely, and the compositional questions it raises are the same ones that apply to [cropping a still image](/blog/cropping-well) — aspect ratio, safe areas, and what the frame is actually for.
-
-So if your cut lands exactly on a keyframe, the encoder can throw away everything before it and copy the rest of the stream untouched. No decoding, no re-compression, no quality loss, and it finishes as fast as the disk can write.
-
-If your cut lands between keyframes, there are two options: move the cut to the nearest keyframe, or decode and re-encode the segment so a new keyframe exists where you asked. The first is instant but lands up to a few seconds away from your mark. The second is exact but costs a full re-encode.
-
-> [!NOTE]
-> Keyframe spacing is a choice made when the file was encoded, typically one every 2–10 seconds. Screen recorders often use very long intervals, which is exactly why trimming a screen recording frequently snaps further from your mark than trimming camera footage does.
-
-## What each edit actually costs
-
-**Trim / cut.** Free if you accept keyframe-aligned boundaries. A trimming tool that offers both a fast and an exact mode is exposing precisely this choice.
-
-**Rotate.** Often free. MP4 and MOV carry a rotation flag in the container, and setting it tells the player to turn the picture without touching a single pixel. Some players ignore the flag, which is why a clip can appear upright on a phone and sideways on a laptop. When the flag is not respected, the pixels have to be rotated for real, which is a re-encode.
-
-**Flip.** Never free. Mirroring has no metadata equivalent, so every frame is decoded and re-encoded.
-
-**Crop.** Never free. Changing the frame dimensions changes what every macroblock contains, so the whole stream is rebuilt.
-
-**Speed change.** For video, a re-encode. Changing playback speed also resamples audio, and doing that without the pitch shifting is a separate operation again.
-
-**Merge.** Free only if the clips are genuinely compatible: same codec, same resolution, same frame rate, same audio codec and sample rate. Concatenating two files that differ in any of those requires re-encoding at least one of them to match. This is why joining clips from two different phones is slow and joining two exports from the same editor is instant.
-
-## The sideways video problem
-
-This one deserves its own section because it wastes so much time.
-
-Phones record with the sensor in a fixed orientation and record how the phone was held as a rotation flag. A conforming player reads the flag and rotates on playback. A non-conforming one — some browsers, some older editors, plenty of upload pipelines — ignores it and shows the raw sensor orientation, which is sideways.
-
-So the video is not broken. It is upright with an instruction attached, and something dropped the instruction.
-
-The correct fix depends on the destination. If the destination respects the flag, changing the flag is instant and lossless. If it does not, you have to rotate the pixels and accept the re-encode, because nothing else survives the trip.
-
-> [!WARNING]
-> Rotating a file that already has a rotation flag can double-apply the rotation and leave the clip upside down. Check what the metadata says before rotating; if the flag is already set, clearing it may be the entire fix.
-
-## Cropping for a platform
-
-Cropping is destructive in the sense that the removed pixels are gone, so it is worth getting the target aspect ratio right in one pass rather than cropping twice.
-
-The common targets: 16:9 for standard landscape video, 9:16 for vertical feeds, 1:1 for square posts, 4:5 for the tallest frame most feeds will show without letterboxing.
-
-Cropping 16:9 footage to 9:16 discards roughly 70% of the width, so the subject has to be centred or the crop has to follow it. If the subject moves, a static crop will lose them — which is when the honest answer is to letterbox rather than crop.
-
-## Practical order
-
-When several edits are needed, sequence them so you re-encode once:
-
-1. Trim first — everything afterwards then works on less footage.
-2. Do all pixel-level edits (crop, flip, speed) in one pass.
-3. Set rotation as metadata at the end if the destination honours it.
-4. Compress last, from the edited master, in a single encode.
-
-Because these edits chain, the intermediate files multiply quickly. Doing them with a local editor rather than a round trip through an upload keeps every half-finished version of an unreleased clip on your own machine, and saves the upload time between each step.`,
+The [video compressor](/tool/video-compressor) covers steps 4 and 6: it scales the resolution down (never up) and sets the quality, working on the file in the browser tab, so a recording of an internal call gets down to an attachable size without leaving the machine. It does not trim, so if the clip needs cutting, do step 1 first in whatever recorded it.`,
   'extracting-audio-from-video': `You have a recorded call, a lecture or an interview as a video file, and what you actually want is the sound. Maybe for a podcast cut, maybe to transcribe it, maybe because a 900 MB video of a static slide is absurd when the content is a voice.
 
-The audio is already a separate stream inside the container, so getting it out is more like unpacking than converting — as long as you ask for the right output. It is worth knowing this before reaching for an online converter, because [uploading a file to one](/blog/what-happens-when-you-upload-a-file) hands over a recording that a copy operation could have produced locally in seconds.
+The audio is already a separate stream inside the container, so getting it out is more like unpacking than converting — as long as you ask for the right output. It is worth knowing this before reaching for an online converter, because uploading a file to one hands over a recording that a copy operation could have produced locally in seconds.
 
 ## Copy or convert
 
@@ -263,12 +203,12 @@ That is also the safe way to handle a recording with a sensitive few seconds: st
 4. Going to transcribe it → trim to the relevant part, extract mono at 64–96 kbps, transcribe.
 5. Need the video without sound → strip the track, do not re-encode the video.
 
-Extraction, trimming and conversion here all happen in the tab against the local file, which is the difference between preparing an internal recording for transcription and uploading an internal recording to a third party to find out what is in it.`,
+[MP4 to MP3](/tool/mp4-to-mp3) covers recipes 2 and 4: it takes the soundtrack from an MP4, MOV or WebM file, lets you choose the bit rate and mix down to mono, and works on the local file in the tab. It exports the whole soundtrack, so trim in an audio editor afterwards if you only need a section. For recipe 3, the [audio converter](/tool/audio-converter) writes WAV from a video's soundtrack too. Keeping this local is the difference between preparing an internal recording for transcription and uploading an internal recording to a third party to find out what is in it.`,
   'subtitles-srt-and-burned-in-captions': `Captions arrive in three quite different forms, and the choice between them is usually made by accident at the point of export. It is worth making on purpose, because one of the three is permanent.
 
 ## The three forms
 
-**Sidecar file.** A separate \`.srt\` or \`.vtt\` alongside the video. The player loads it and draws the text. It can be switched off, replaced, corrected, translated and read by search engines. This is the form that keeps every option open, and the one that does the [accessibility work](/blog/alt-text-and-accessible-documents) properly rather than decoratively. Being a plain text file, it is also subject to the usual [encoding traps](/blog/unicode-utf8-and-mojibake): an SRT saved as Windows-1252 and read as UTF-8 turns every accented character into noise.
+**Sidecar file.** A separate \`.srt\` or \`.vtt\` alongside the video. The player loads it and draws the text. It can be switched off, replaced, corrected, translated and read by search engines. This is the form that keeps every option open, and the one that does the accessibility work properly rather than decoratively. Being a plain text file, it is also subject to the usual [encoding traps](/blog/unicode-utf8-and-mojibake): an SRT saved as Windows-1252 and read as UTF-8 turns every accented character into noise.
 
 **Embedded track.** The subtitles live inside the container as their own stream, the way audio does. One file to move around, still switchable off in players that support it. MKV handles this well, MP4 support is patchier, and browsers mostly ignore embedded subtitle tracks entirely.
 
@@ -342,5 +282,7 @@ These are accessibility requirements as much as style preferences: captions exis
 4. Ship the SRT as a sidecar wherever it is supported.
 5. Produce a burned-in version, from the master, only for platforms that need it.
 
-Transcription is the step worth thinking hardest about, because the output is a searchable text copy of everything that was said. If the recording is an internal meeting, a local transcription model is worth the extra setup: the alternative leaves a full transcript of that meeting sitting on someone else's server.`,
+Transcription is the step worth thinking hardest about, because the output is a searchable text copy of everything that was said. If the recording is an internal meeting, a local transcription model is worth the extra setup: the alternative leaves a full transcript of that meeting sitting on someone else's server.
+
+The sidecar is the part that most often needs converting. HTML5 players and YouTube expect WebVTT, while video editors and desktop players expect SRT, and the two differ mainly in the header and the decimal separator in each timestamp. [SRT to VTT](/tool/srt-to-vtt) and [VTT to SRT](/tool/vtt-to-srt) convert between them in the browser, so the transcript stays on your machine.`,
 };

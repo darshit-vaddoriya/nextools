@@ -7,6 +7,7 @@ import { SECURITY_UTILITY_WEB_SEO_CONTENT } from './securityUtilityWeb';
 import { DEV_PRO_SEO_CONTENT } from './devPro';
 import { CONVERTER_SEO_CONTENT } from './converters';
 import { CONVERTER_SEO_CONTENT_2 } from './converters2';
+import { CONVERTER_SEO_CONTENT_3 } from './converters3';
 import { TOOL_DEEP_DIVES } from './deepDives';
 
 const BASE_SEO_CONTENT: ToolSeoMap = {
@@ -18,6 +19,7 @@ const BASE_SEO_CONTENT: ToolSeoMap = {
   ...DEV_PRO_SEO_CONTENT,
   ...CONVERTER_SEO_CONTENT,
   ...CONVERTER_SEO_CONTENT_2,
+  ...CONVERTER_SEO_CONTENT_3,
 };
 
 /**

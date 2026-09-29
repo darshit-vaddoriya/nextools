@@ -79,7 +79,7 @@ export const About: React.FC<AboutProps> = ({ onBack, onOpenContact }) => {
             items={[
               <><strong className="text-foreground">Local first.</strong> If a feature cannot be built client-side, we would rather not ship it than start uploading your files.</>,
               <><strong className="text-foreground">No dark patterns.</strong> No forced sign-ups, no fake progress bars, no "your download is ready, install this app" detours.</>,
-              <><strong className="text-foreground">Honest labelling.</strong> Tools that are still in progress are marked as coming soon rather than dressed up as finished.</>,
+              <><strong className="text-foreground">Honest labelling.</strong> A tool is only listed once it works, and its page says what it cannot do as well as what it can.</>,
               <><strong className="text-foreground">Ads never see your files.</strong> Advertising pays for the site, but ad networks never receive the files or text you work on, because those never leave your browser.</>,
             ]}
           />

@@ -8,7 +8,7 @@ export const SECURITY_POSTS: BlogPost[] = [
     excerpt: 'P@ssw0rd! satisfies every complexity rule ever written and is one of the first things any cracking tool tries. Here is what the maths actually says.',
     category: 'security',
     tags: ['passwords', 'entropy', 'authentication'],
-    published: '2026-08-09',
+    published: '2026-09-09',
     relatedTools: ['password-generator', 'passphrase-gen', 'password-strength', 'random-string'],
     takeaways: [
       'Entropy is length multiplied by the log of the alphabet size, so length dominates and complexity rules barely register.',
@@ -26,7 +26,7 @@ export const SECURITY_POSTS: BlogPost[] = [
     excerpt: 'If a system can email you your existing password, it is not hashing them. That single observation tells you a lot about how a service is built.',
     category: 'security',
     tags: ['hashing', 'encryption', 'bcrypt', 'sha-256'],
-    published: '2026-08-17',
+    published: '2026-09-09',
     relatedTools: ['hash-generator', 'file-checksum', 'base64', 'password-strength'],
     takeaways: [
       'Encoding is reversible by anyone, encryption is reversible with a key, and hashing is not reversible at all.',
@@ -44,7 +44,7 @@ export const SECURITY_POSTS: BlogPost[] = [
     excerpt: 'Checking a hash takes fifteen seconds and catches both a truncated download and a compromised mirror. It does not catch everything, here is the boundary.',
     category: 'security',
     tags: ['checksum', 'sha-256', 'integrity'],
-    published: '2026-08-24',
+    published: '2026-09-09',
     relatedTools: ['file-checksum', 'hash-generator', 'zip-extractor'],
     takeaways: [
       'A matching checksum proves the bytes you have are the bytes that were published, and nothing more.',
@@ -56,49 +56,13 @@ export const SECURITY_POSTS: BlogPost[] = [
   },
 
   {
-    slug: 'password-manager-and-2fa-setup',
-    title: 'Password managers and 2FA: the setup that actually protects an account',
-    description: 'Unique passwords everywhere and a second factor on the accounts that matter. Which second factors are worth using, and which are close to theatre.',
-    excerpt: 'Two changes cover most realistic account-takeover risk. Both take an afternoon, and one of them is far more important than the other.',
-    category: 'security',
-    tags: ['2fa', 'password-manager', 'passkeys', 'totp'],
-    published: '2026-08-30',
-    relatedTools: ['password-generator', 'passphrase-gen', 'password-strength', 'secure-notes'],
-    takeaways: [
-      'A manager is the only practical way to have a unique high-entropy password on several hundred services.',
-      'Second factors are not equal: passkeys and hardware keys resist phishing, TOTP does not, and SMS is the weakest.',
-      'Set it up in order: manager first, then its own 2FA, then email, then everything that can be reset through email.',
-      'Recovery codes belong on paper somewhere else, because a manager on a dead laptop is not available.',
-    ],
-    words: 736,
-  },
-
-  {
-    slug: 'web-crypto-in-plain-english',
-    title: 'What browsers can encrypt on their own: the Web Crypto API in plain English',
-    description: 'Modern browsers ship a real cryptographic library. Understanding what it offers explains how tools can encrypt and hash without a server.',
-    excerpt: 'Every current browser includes AES, SHA-2, key derivation and a proper random number generator. That is why client-side tools stopped being a compromise.',
-    category: 'security',
-    tags: ['web-crypto', 'aes', 'browsers', 'encryption'],
-    published: '2026-09-06',
-    relatedTools: ['secure-notes', 'hash-generator', 'password-generator', 'file-checksum'],
-    takeaways: [
-      'getRandomValues is the cryptographically secure random source; crypto.subtle is everything else.',
-      'It is called subtle because the details are where it goes wrong, not because the API is clever.',
-      'MD5 and SHA-1 are deliberately not offered, and reusing an initialisation vector with AES-GCM breaks the encryption entirely.',
-      'It removes the need to trust a server with your plaintext. It does not remove the need to trust the code you are running.',
-    ],
-    words: 729,
-  },
-
-  {
     slug: 'signing-a-pdf-what-it-proves',
     title: 'Signing a PDF: what a signature image proves, and what it does not',
     description: 'Pasting a picture of your signature onto a PDF and applying a digital signature are unrelated operations. One is a drawing; the other is cryptography.',
     excerpt: 'Most documents people call "signed" contain a JPEG of a name. That is often fine, and it is worth knowing exactly what it is, because it proves almost nothing on its own.',
     category: 'security',
     tags: ['pdf', 'signatures', 'verification'],
-    published: '2026-09-10',
+    published: '2026-09-16',
     relatedTools: ['pdf-sign', 'pdf-flatten', 'file-checksum', 'pdf-redact'],
     takeaways: [
       'A signature image is a picture. It proves nothing about who placed it or whether the text above it changed afterwards.',
@@ -116,7 +80,7 @@ export const SECURITY_POSTS: BlogPost[] = [
     excerpt: 'Two generators produce strings that look equally random. One of them lets an attacker predict every future value after seeing a few.',
     category: 'security',
     tags: ['randomness', 'tokens', 'entropy'],
-    published: '2026-09-12',
+    published: '2026-09-16',
     relatedTools: ['random-string', 'password-generator', 'uuid-generator', 'hash-generator'],
     takeaways: [
       'Math.random is a predictable algorithm. Observing enough output reveals its state and every value it will produce next.',
@@ -127,75 +91,4 @@ export const SECURITY_POSTS: BlogPost[] = [
     words: 835,
   },
 
-  {
-    slug: 'spotting-a-dangerous-link',
-    title: 'Reading a link before you click it',
-    description: 'Almost every malicious link gives itself away in the hostname. Knowing where to look takes a couple of seconds.',
-    excerpt: 'The dangerous part of a URL is not the long random string. It is the handful of characters immediately before the first single slash.',
-    category: 'security',
-    tags: ['phishing', 'urls', 'verification'],
-    published: '2026-09-09',
-    relatedTools: ['url-parser', 'url-encoder', 'file-checksum', 'mime-checker'],
-    takeaways: [
-      'Read right to left from the first single slash. The two labels before it are the real domain; everything earlier is decoration.',
-      'A padlock means the connection is encrypted, not that the site is honest. Phishing sites have certificates too.',
-      'Punycode domains render as familiar letters, so paypaI.com with a capital i is indistinguishable at a glance.',
-      'If you did not initiate the interaction, do not use the link at all. Navigate to the site yourself.',
-    ],
-    words: 905,
-  },
-
-  {
-    slug: 'keeping-secrets-out-of-git',
-    title: 'Keeping API keys out of your repository, and what to do when one leaks',
-    description: 'A key committed once is in the history forever. Deleting the line does not remove it, and rotation is the only real fix.',
-    excerpt: 'Scanners find public keys within minutes of a push. Deleting the line in the next commit changes nothing, because the old commit still has it.',
-    category: 'security',
-    tags: ['secrets', 'api-keys', 'git', 'environment'],
-    published: '2026-09-13',
-    relatedTools: ['random-string', 'secure-notes', 'hash-generator', 'password-generator'],
-    takeaways: [
-      'Git stores every commit, so removing a key in a later commit leaves it fully readable in history.',
-      'Once a key has been pushed anywhere public, assume it is compromised and rotate it. Nothing else fixes it.',
-      'Environment variables keep secrets out of source, but they are visible to the process and often to logs.',
-      'Commit an example config with placeholder values so nobody has to guess what to set.',
-    ],
-    words: 804,
-  },
-
-  {
-    slug: 'public-wifi-and-vpns',
-    title: 'Public Wi-Fi: what HTTPS already protects, and what a VPN adds',
-    description: 'The coffee shop threat model is not what it was in 2010. Knowing what changed tells you what a VPN is actually buying you.',
-    excerpt: 'Most of the danger of public Wi-Fi was fixed by HTTPS becoming universal. A VPN moves who can watch you, rather than removing them.',
-    category: 'security',
-    tags: ['wifi', 'vpn', 'https', 'network'],
-    published: '2026-09-14',
-    relatedTools: ['url-parser', 'file-checksum', 'user-agent-parser'],
-    takeaways: [
-      'HTTPS encrypts the content of your traffic, so someone on the same network cannot read what you send.',
-      'They can still see which domains you connect to, because DNS and the certificate name are visible.',
-      'A VPN moves that visibility from the local network to the VPN provider. It does not remove it.',
-      'A VPN does nothing about tracking, cookies or fingerprinting, whatever the advertising says.',
-    ],
-    words: 804,
-  },
-
-  {
-    slug: 'after-a-data-breach',
-    title: 'Your details were in a breach: what actually helps, in order',
-    description: 'A breach notification is vague by design. The useful response depends on what was taken, and password reuse is the real exposure.',
-    excerpt: 'The risk is rarely the breached site. It is every other account where you used the same password.',
-    category: 'security',
-    tags: ['breach', 'credential-stuffing', 'passwords', '2fa'],
-    published: '2026-09-14',
-    relatedTools: ['password-generator', 'password-strength', 'passphrase-gen', 'hash-generator'],
-    takeaways: [
-      'Change the breached password everywhere you reused it, not just on the site that was breached.',
-      'Credential stuffing is the actual mechanism: attackers replay your email and password against hundreds of other services.',
-      'Hashed passwords are not automatically safe. Unsalted MD5 or SHA-1 is cracked in bulk.',
-      'Turn on two-factor authentication on email first, because every other account can be reset through it.',
-    ],
-    words: 771,
-  },
 ];

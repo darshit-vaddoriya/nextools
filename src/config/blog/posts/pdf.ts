@@ -8,7 +8,7 @@ export const PDF_POSTS: BlogPost[] = [
     excerpt: 'Every "compress PDF" button does roughly four things. Understanding them tells you in advance whether your 40 MB file will drop to 3 MB or stubbornly stay at 39 MB.',
     category: 'pdf',
     tags: ['pdf', 'compression', 'file-size'],
-    published: '2026-08-06',
+    published: '2026-09-09',
     relatedTools: ['pdf-compress', 'pdf-metadata', 'pdf-to-jpg'],
     takeaways: [
       'Text streams in a PDF are already deflated, which is why a text-only document will barely shrink no matter what you do.',
@@ -26,7 +26,7 @@ export const PDF_POSTS: BlogPost[] = [
     excerpt: 'Merging looks trivial until a signed form comes out blank or a 3 MB and 4 MB file produce a 12 MB result. Both have the same cause.',
     category: 'pdf',
     tags: ['pdf', 'merge', 'forms'],
-    published: '2026-08-12',
+    published: '2026-09-09',
     relatedTools: ['pdf-merge', 'pdf-reorder', 'pdf-page-extractor', 'pdf-flatten'],
     takeaways: [
       'Page content, fonts, images and page sizes survive a merge intact, because nothing is re-rendered.',
@@ -44,7 +44,7 @@ export const PDF_POSTS: BlogPost[] = [
     excerpt: 'Courts, police departments and law firms have all published documents whose "redacted" passages could be read by selecting the text and pasting it elsewhere. The mistake is always the same.',
     category: 'pdf',
     tags: ['pdf', 'redaction', 'privacy'],
-    published: '2026-08-20',
+    published: '2026-09-09',
     relatedTools: ['pdf-redact', 'pdf-flatten', 'pdf-metadata', 'pdf-to-jpg'],
     takeaways: [
       'A black rectangle is a drawing on top. The text underneath stays selectable, searchable and copyable.',
@@ -62,7 +62,7 @@ export const PDF_POSTS: BlogPost[] = [
     excerpt: 'A scanned PDF is a stack of photographs. OCR is what turns those photographs back into words, when the input gives it a fair chance.',
     category: 'pdf',
     tags: ['ocr', 'pdf', 'scanning'],
-    published: '2026-08-28',
+    published: '2026-09-09',
     relatedTools: ['pdf-ocr', 'ocr-image', 'pdf-extract-text', 'image-adjust'],
     takeaways: [
       'OCR adds an invisible text layer under the page image. The picture is unchanged; the document becomes searchable.',
@@ -80,7 +80,7 @@ export const PDF_POSTS: BlogPost[] = [
     excerpt: 'When a portal rejects your document at 1.2 MB against a 1 MB cap, panic-compressing to the lowest setting is the wrong move. There is a better order to try things in.',
     category: 'pdf',
     tags: ['pdf', 'file-size', 'compression'],
-    published: '2026-09-04',
+    published: '2026-09-09',
     relatedTools: ['pdf-compress', 'pdf-page-extractor', 'pdf-to-jpg', 'jpg-to-pdf', 'image-compressor'],
     takeaways: [
       'Find out what is heavy first. If text highlights when you select it, images are not the problem and compression will disappoint.',
@@ -98,7 +98,7 @@ export const PDF_POSTS: BlogPost[] = [
     excerpt: 'Three buttons that look like the same operation. The difference is how many files come out and what happens to everything you did not select.',
     category: 'pdf',
     tags: ['pdf', 'pages', 'extract'],
-    published: '2026-09-13',
+    published: '2026-09-16',
     relatedTools: ['pdf-split', 'pdf-delete-pages', 'pdf-extract-images', 'pdf-viewer'],
     takeaways: [
       'Split makes many files, extract makes one file from a range, delete makes one file with pages removed. Pick by what you want out.',
@@ -116,7 +116,7 @@ export const PDF_POSTS: BlogPost[] = [
     excerpt: 'A PDF page has four different boundaries and a rotation value that does not move any content. Both explain why stamped text lands in odd places.',
     category: 'pdf',
     tags: ['pdf', 'layout', 'print'],
-    published: '2026-09-13',
+    published: '2026-09-16',
     relatedTools: ['pdf-page-numbers', 'pdf-header-footer', 'pdf-crop', 'pdf-rotate'],
     takeaways: [
       'A PDF page has several boxes. Cropping changes the visible one and does not delete anything outside it.',
@@ -134,7 +134,7 @@ export const PDF_POSTS: BlogPost[] = [
     excerpt: 'A web page has no pages. Turning one into a PDF means inventing page breaks, and where they land is the whole problem.',
     category: 'pdf',
     tags: ['pdf', 'html', 'forms'],
-    published: '2026-09-14',
+    published: '2026-09-16',
     relatedTools: ['html-to-pdf', 'text-to-pdf', 'pdf-fill-forms', 'pdf-watermark', 'pdf-repair'],
     takeaways: [
       'A web page is one continuous column with no page breaks, so converting it to PDF means inventing them.',
@@ -152,7 +152,7 @@ export const PDF_POSTS: BlogPost[] = [
     excerpt: 'Twelve photos of pages is not a document until something gives them an order, a page size and a sensible resolution.',
     category: 'pdf',
     tags: ['pdf', 'scanning', 'compare'],
-    published: '2026-09-14',
+    published: '2026-09-16',
     relatedTools: ['jpg-to-pdf', 'pdf-reorder', 'pdf-compare', 'pdf-merge'],
     takeaways: [
       'Set a page size when building a PDF from photos, or every page inherits the dimensions of its image and the document prints inconsistently.',
@@ -164,49 +164,13 @@ export const PDF_POSTS: BlogPost[] = [
   },
 
   {
-    slug: 'preparing-files-for-print',
-    title: 'Sending a file to a printer: bleed, DPI and why the colours shift',
-    description: 'Screens emit light and mix colours additively; ink absorbs it and mixes subtractively. That one difference explains most print disappointments.',
-    excerpt: 'The blue on your screen cannot be reproduced in ink. Knowing which of your colours are out of gamut before you print saves the reprint.',
-    category: 'pdf',
-    tags: ['print', 'dpi', 'colour', 'bleed'],
-    published: '2026-09-12',
-    relatedTools: ['pdf-crop', 'image-resize', 'color-converter', 'pdf-page-numbers'],
-    takeaways: [
-      'Print resolution is 300 DPI at final size, so a 6 inch wide image needs about 1800 pixels.',
-      'Bleed means extending artwork past the trim line, usually 3mm, because guillotines are not exact.',
-      'Screens are RGB and additive; ink is CMYK and subtractive, so vivid screen colours have no ink equivalent.',
-      'Pure black text should be 100% K, not a mix of all four inks, or it will look fuzzy where the plates misalign.',
-    ],
-    words: 911,
-  },
-
-  {
-    slug: 'pdf-a-and-long-term-archiving',
-    title: 'PDF/A: making a document still readable in twenty years',
-    description: 'An ordinary PDF depends on fonts and software that may not exist later. PDF/A is the version that carries everything it needs.',
-    excerpt: 'A PDF that renders perfectly today can open wrong in a decade, because it borrowed a font from your machine and that machine is gone.',
-    category: 'pdf',
-    tags: ['pdf-a', 'archiving', 'compliance', 'fonts'],
-    published: '2026-09-09',
-    relatedTools: ['pdf-metadata', 'pdf-compress', 'pdf-ocr', 'pdf-flatten'],
-    takeaways: [
-      'PDF/A requires every font to be embedded, because a font referenced but not included is the main way old PDFs break.',
-      'It forbids JavaScript, external links to content, encryption and audio or video, so the file is self-contained.',
-      'A scanned page saved as PDF/A is still just an image unless OCR has added a text layer.',
-      'Conversion does not validate itself. A file can claim PDF/A conformance and fail a real check.',
-    ],
-    words: 867,
-  },
-
-  {
     slug: 'getting-tables-out-of-a-pdf',
     title: 'Getting a table out of a PDF without retyping it',
     description: 'PDFs have no tables, only text positioned in a grid. That is why extraction produces jumbled columns, and what to do about it.',
     excerpt: 'A table in a PDF is not a table. It is text at coordinates that happens to line up, which is why copying it gives you one long column.',
     category: 'pdf',
     tags: ['pdf', 'tables', 'extraction', 'csv'],
-    published: '2026-09-10',
+    published: '2026-09-16',
     relatedTools: ['pdf-extract-text', 'pdf-ocr', 'csv-editor', 'csv-cleaner'],
     takeaways: [
       'PDF has no table structure. Extraction infers columns from x-coordinates, which is why merged cells and wrapped text break it.',
@@ -215,23 +179,5 @@ export const PDF_POSTS: BlogPost[] = [
       'Always check totals after extracting. A shifted column produces numbers that look plausible and are wrong.',
     ],
     words: 812,
-  },
-  {
-    slug: 'password-protecting-a-pdf',
-    title: 'Password-protecting a PDF, and what the password actually stops',
-    description: 'PDF has two passwords doing two different jobs, and only one of them is real encryption. The other is a request that viewers may ignore.',
-    excerpt: 'A PDF can be locked so it cannot be opened, or locked so it cannot be printed. Only the first is enforced by mathematics.',
-    category: 'pdf',
-    tags: ['pdf', 'encryption', 'permissions', 'security'],
-    published: '2026-09-15',
-    updated: '2026-09-20',
-    relatedTools: ['pdf-flatten', 'pdf-redact'],
-    takeaways: [
-      'A user password encrypts the content: without it there is nothing to read. An owner password only sets permission flags that viewers are asked to respect.',
-      'Permissions like "no printing" and "no copying" are honoured by well-behaved viewers and ignored by others. They are not a security control.',
-      'Modern PDFs use AES-256; the strength then depends entirely on the password, because the file can be attacked offline forever.',
-      'Encryption does not hide metadata, does not remove content under a black box, and is undone the moment the recipient saves a decrypted copy.',
-    ],
-    words: 787,
   },
 ];

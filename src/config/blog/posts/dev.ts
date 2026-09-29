@@ -8,7 +8,7 @@ export const DEV_POSTS: BlogPost[] = [
     excerpt: 'When "café" arrives as "cafÃ©", the bytes are fine, something decoded them with the wrong assumption. The garbled output tells you which assumption.',
     category: 'dev',
     tags: ['unicode', 'utf-8', 'encoding'],
-    published: '2026-08-05',
+    published: '2026-09-09',
     relatedTools: ['unicode-converter', 'ascii-converter', 'text-cleaner', 'binary-converter'],
     takeaways: [
       'Unicode is a catalogue of characters; an encoding is a rule for turning them into bytes. Most bugs are two systems disagreeing about the rule.',
@@ -26,7 +26,7 @@ export const DEV_POSTS: BlogPost[] = [
     excerpt: 'JSON is a deliberately tiny format. Most parse errors come from writing JavaScript object syntax and expecting a JSON parser to accept it.',
     category: 'dev',
     tags: ['json', 'parsing', 'api'],
-    published: '2026-08-08',
+    published: '2026-09-09',
     relatedTools: ['json-formatter', 'json-to-csv', 'csv-to-json', 'yaml-formatter'],
     takeaways: [
       'Trailing commas, single quotes, unquoted keys and comments are all legal JavaScript and all illegal JSON.',
@@ -44,7 +44,7 @@ export const DEV_POSTS: BlogPost[] = [
     excerpt: 'Base64 shows up in data URIs, email attachments, JWTs and API payloads. It also shows up in security incident reports, because people mistake it for protection.',
     category: 'dev',
     tags: ['base64', 'encoding', 'binary'],
-    published: '2026-08-15',
+    published: '2026-09-09',
     relatedTools: ['base64', 'image-to-base64', 'base64-to-image', 'jwt-decoder'],
     takeaways: [
       'Base64 turns three bytes into four characters, a fixed 33% increase that no implementation avoids.',
@@ -62,7 +62,7 @@ export const DEV_POSTS: BlogPost[] = [
     excerpt: 'A diff tool has no idea what your code means. It is solving a sequence-matching problem, which is why moved blocks look like a delete plus an unrelated insert.',
     category: 'dev',
     tags: ['diff', 'git', 'algorithms'],
-    published: '2026-08-16',
+    published: '2026-09-09',
     relatedTools: ['diff-checker', 'diff-text', 'word-compare', 'pdf-compare'],
     takeaways: [
       'A diff finds the longest common subsequence, so it is fast on similar files and slow on dissimilar ones.',
@@ -80,7 +80,7 @@ export const DEV_POSTS: BlogPost[] = [
     excerpt: 'Anyone holding a JWT can read every claim in it. That is by design, and it is the single most misunderstood thing about the format.',
     category: 'dev',
     tags: ['jwt', 'auth', 'security'],
-    published: '2026-08-23',
+    published: '2026-09-09',
     relatedTools: ['jwt-decoder', 'base64', 'hash-generator'],
     takeaways: [
       'A JWT is base64url encoded, not encrypted. Anyone holding one can read the payload.',
@@ -98,7 +98,7 @@ export const DEV_POSTS: BlogPost[] = [
     excerpt: 'Most regex frustration comes from three things: forgetting anchors, not knowing greedy matching exists, and trying to validate email addresses.',
     category: 'dev',
     tags: ['regex', 'text-processing', 'validation'],
-    published: '2026-08-27',
+    published: '2026-09-09',
     relatedTools: ['regex-tester', 'find-replace', 'extract-emails', 'extract-urls', 'text-cleaner'],
     takeaways: [
       'Without anchors a pattern matches anywhere in the string, which is the most common reason a validation passes when it should not.',
@@ -116,7 +116,7 @@ export const DEV_POSTS: BlogPost[] = [
     excerpt: 'v4 is 122 random bits and has served well for twenty years. v7 fixes the one place it hurts: as a primary key in a B-tree index.',
     category: 'dev',
     tags: ['uuid', 'databases', 'identifiers'],
-    published: '2026-09-03',
+    published: '2026-09-09',
     relatedTools: ['uuid-generator', 'random-string', 'timestamp-converter'],
     takeaways: [
       'A v4 UUID is entirely random, so inserts land all over a B-tree index and the write path suffers as the table grows.',
@@ -134,7 +134,7 @@ export const DEV_POSTS: BlogPost[] = [
     excerpt: 'Low-contrast text is the most common accessibility failure on the web, and one of the easiest to fix, once you know which number you are aiming at and why.',
     category: 'dev',
     tags: ['accessibility', 'wcag', 'colour', 'css'],
-    published: '2026-09-08',
+    published: '2026-09-09',
     relatedTools: ['contrast-checker', 'color-converter', 'palette-color', 'gradient-generator', 'glassmorphism'],
     takeaways: [
       'The ratio compares relative luminance, not perceived brightness, so two colours can look distinct and still fail.',
@@ -152,7 +152,7 @@ export const DEV_POSTS: BlogPost[] = [
     excerpt: 'There is no database behind a QR code. Everything it knows is printed in the squares, which is why a long URL makes a code nobody can scan.',
     category: 'dev',
     tags: ['qr', 'encoding', 'url'],
-    published: '2026-09-10',
+    published: '2026-09-16',
     relatedTools: ['qr-generator', 'url-parser', 'url-encoder', 'slug-generator'],
     takeaways: [
       'A QR code contains the text itself, not a lookup key. Shorter text means fewer modules and an easier scan.',
@@ -170,7 +170,7 @@ export const DEV_POSTS: BlogPost[] = [
     excerpt: 'A formatter throws your whitespace away and prints the syntax tree again. Everything surprising about formatters follows from that.',
     category: 'dev',
     tags: ['formatting', 'minify', 'tooling'],
-    published: '2026-09-11',
+    published: '2026-09-16',
     relatedTools: ['html-formatter', 'css-formatter', 'js-formatter', 'sql-formatter', 'xml-formatter'],
     takeaways: [
       'A formatter parses the code to a syntax tree and prints it fresh. Your original whitespace is discarded, not adjusted.',
@@ -188,7 +188,7 @@ export const DEV_POSTS: BlogPost[] = [
     excerpt: 'The same ampersand needs three different treatments depending on where it is going. Getting them confused is how &amp;amp;amp; ends up on a page.',
     category: 'dev',
     tags: ['encoding', 'url', 'html', 'mime'],
-    published: '2026-09-13',
+    published: '2026-09-16',
     relatedTools: ['url-encoder', 'html-entity', 'mime-checker', 'url-parser'],
     takeaways: [
       'Percent-encoding protects characters from a URL parser. Entity encoding protects them from an HTML parser. They are not interchangeable.',
@@ -206,7 +206,7 @@ export const DEV_POSTS: BlogPost[] = [
     excerpt: 'Removing duplicates before trimming whitespace leaves you with duplicates. Most text-cleaning frustration is an ordering problem, not a tool problem.',
     category: 'dev',
     tags: ['text', 'cleanup', 'case'],
-    published: '2026-09-14',
+    published: '2026-09-16',
     relatedTools: ['text-cleaner', 'remove-duplicates-text', 'sort-lines', 'remove-empty-lines', 'case-converter', 'word-counter', 'lorem-ipsum', 'reverse-text', 'extract-phones', 'extract-hashtags'],
     takeaways: [
       'Trim whitespace before deduplicating, or two identical lines with different trailing spaces both survive.',
@@ -224,7 +224,7 @@ export const DEV_POSTS: BlogPost[] = [
     excerpt: 'YAML turns the country code NO into the boolean false. That is not a bug report, it is in the specification, and it is why config formats need choosing carefully.',
     category: 'dev',
     tags: ['yaml', 'json', 'tsv', 'config'],
-    published: '2026-09-12',
+    published: '2026-09-16',
     relatedTools: ['yaml-formatter', 'json-to-csv', 'tsv-converter', 'json-formatter'],
     takeaways: [
       'YAML 1.1 reads unquoted no, off and n as false, which silently corrupts country codes and short answers.',
@@ -242,7 +242,7 @@ export const DEV_POSTS: BlogPost[] = [
     excerpt: 'Blend blue into yellow and you get a muddy grey halfway. That is not your eye, it is the colour space doing arithmetic that does not match perception.',
     category: 'dev',
     tags: ['colour', 'gradients', 'css'],
-    published: '2026-09-13',
+    published: '2026-09-16',
     relatedTools: ['gradient-generator', 'palette-color', 'color-converter', 'contrast-checker'],
     takeaways: [
       'Interpolating in sRGB passes through desaturated grey. Interpolating in OKLCH stays vivid.',
@@ -260,7 +260,7 @@ export const DEV_POSTS: BlogPost[] = [
     excerpt: 'Replace all instances of "cat" and you have just changed "category", "concatenate" and "location". Word boundaries exist for a reason.',
     category: 'dev',
     tags: ['regex', 'text', 'extraction'],
-    published: '2026-09-14',
+    published: '2026-09-16',
     relatedTools: ['find-replace', 'regex-tester', 'extract-hashtags', 'extract-emails', 'extract-urls', 'reverse-text'],
     takeaways: [
       'Plain find and replace matches inside words. Use word boundaries unless you want to change "category" while replacing "cat".',
@@ -272,32 +272,15 @@ export const DEV_POSTS: BlogPost[] = [
   },
 
   {
-    slug: 'alt-text-and-accessible-documents',
-    title: 'Alt text, headings and the accessibility work that also helps search',
-    description: 'The things that make a page or a document usable with a screen reader are largely the same things that make it legible to a crawler.',
-    excerpt: 'Alt text is not a caption and not a keyword bin. Getting it right takes one question: what would a sighted reader lose if the image vanished?',
-    category: 'dev',
-    tags: ['accessibility', 'alt-text', 'headings'],
-    published: '2026-09-11',
-    relatedTools: ['pdf-ocr', 'docx-to-html', 'contrast-checker', 'html-formatter'],
-    takeaways: [
-      'Alt text answers what a reader would lose if the image failed to load, not what the image contains.',
-      'A purely decorative image needs alt="" so screen readers skip it. Omitting the attribute reads the filename instead.',
-      'Heading levels are an outline, not sizes. Skipping from h2 to h4 breaks navigation for screen reader users.',
-      'A scanned PDF is unreadable to a screen reader and to a crawler for exactly the same reason: it has no text.',
-    ],
-    words: 847,
-  },
-
-  {
     slug: 'http-status-codes-that-matter',
     title: 'HTTP status codes: the handful that decide what search engines do',
     description: 'A 301 and a 302 look the same to a visitor and mean opposite things to a crawler. So do a 404 and a soft 404.',
     excerpt: 'Moving a page with the wrong redirect code throws away everything that page had earned. The difference is one digit.',
     category: 'dev',
     tags: ['http', 'status-codes', 'redirects', 'seo'],
-    published: '2026-09-12',
-    relatedTools: ['url-parser', 'mime-checker', 'user-agent-parser', 'url-encoder'],
+    published: '2026-09-16',
+    updated: '2026-09-29',
+    relatedTools: ['http-status-codes', 'url-parser', 'mime-checker', 'user-agent-parser'],
     takeaways: [
       'A 301 is permanent and passes ranking to the new URL. A 302 is temporary and keeps the old one indexed.',
       'A soft 404 is a missing page that returns 200 with a friendly message, and it keeps dead URLs in the index.',
@@ -314,8 +297,9 @@ export const DEV_POSTS: BlogPost[] = [
     excerpt: 'A schedule that should fire monthly fires every Monday as well. The two day fields are combined with OR, not AND.',
     category: 'dev',
     tags: ['cron', 'scheduling', 'timezones', 'automation'],
-    published: '2026-09-12',
-    relatedTools: ['timestamp-converter', 'timezone-converter', 'regex-tester', 'unit-converter'],
+    published: '2026-09-16',
+    updated: '2026-09-29',
+    relatedTools: ['cron-parser', 'timestamp-converter', 'timezone-converter'],
     takeaways: [
       'The five fields are minute, hour, day of month, month, day of week, in that order.',
       'If both day fields are restricted, most implementations run when either matches, not when both do.',
@@ -332,7 +316,7 @@ export const DEV_POSTS: BlogPost[] = [
     excerpt: 'The link you copied from your address bar may identify you to everyone you send it to, and occasionally log them in as you.',
     category: 'dev',
     tags: ['urls', 'tracking', 'privacy', 'sharing'],
-    published: '2026-09-13',
+    published: '2026-09-16',
     relatedTools: ['url-parser', 'url-encoder', 'extract-urls', 'slug-generator'],
     takeaways: [
       'Everything after ? is parameters, and utm_, fbclid and gclid can all be deleted without breaking the link.',
@@ -349,7 +333,7 @@ export const DEV_POSTS: BlogPost[] = [
     excerpt: 'An upload rejects your PNG for not being a PNG. The extension says one thing, the first eight bytes say another, and the server believes the bytes.',
     category: 'dev',
     tags: ['mime', 'file-formats', 'uploads'],
-    published: '2026-09-16',
+    published: '2026-09-17',
     relatedTools: ['mime-checker', 'image-convert', 'zip-extractor'],
     takeaways: [
       'A file extension is a naming convention, not a fact about the contents. Renaming .webp to .png converts nothing.',
@@ -366,7 +350,7 @@ export const DEV_POSTS: BlogPost[] = [
     excerpt: 'Every browser claims to be Mozilla. The string is part identification, part historical fiction, and it is a weaker signal every year.',
     category: 'dev',
     tags: ['user-agent', 'browsers', 'privacy'],
-    published: '2026-09-15',
+    published: '2026-09-17',
     relatedTools: ['user-agent-parser', 'url-parser'],
     takeaways: [
       'Every mainstream browser begins its user agent with "Mozilla/5.0" for compatibility with 1990s server sniffing. It carries no information.',

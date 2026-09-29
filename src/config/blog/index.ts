@@ -96,16 +96,17 @@ export function relatedPosts(post: BlogPost, limit = 3): BlogPost[] {
  * articles they never render. A reader opening one guide now downloads only
  * that guide's topic.
  */
+const merge = (...chunks: Promise<Record<string, string>>[]) =>
+  Promise.all(chunks).then(parts => Object.assign({}, ...parts) as Record<string, string>);
+
+// Each topic still has its own body files; the four topics folded into another
+// (see BlogCategory) are read alongside the one they joined.
 const BODY_LOADERS: Record<BlogCategory, () => Promise<Record<string, string>>> = {
-  pdf:      () => import('./bodies/pdf').then(m => m.PDF_BODIES),
-  docs:     () => import('./bodies/docs').then(m => m.DOCS_BODIES),
-  image:    () => import('./bodies/image').then(m => m.IMAGE_BODIES),
-  media:    () => import('./bodies/media').then(m => m.MEDIA_BODIES),
+  pdf:      () => merge(import('./bodies/pdf').then(m => m.PDF_BODIES), import('./bodies/docs').then(m => m.DOCS_BODIES)),
+  image:    () => merge(import('./bodies/image').then(m => m.IMAGE_BODIES), import('./bodies/media').then(m => m.MEDIA_BODIES)),
   dev:      () => import('./bodies/dev').then(m => m.DEV_BODIES),
-  security: () => import('./bodies/security').then(m => m.SECURITY_BODIES),
-  data:     () => import('./bodies/data').then(m => m.DATA_BODIES),
-  numbers:  () => import('./bodies/numbers').then(m => m.NUMBERS_BODIES),
-  privacy:  () => import('./bodies/privacy').then(m => m.PRIVACY_BODIES),
+  security: () => merge(import('./bodies/security').then(m => m.SECURITY_BODIES), import('./bodies/privacy').then(m => m.PRIVACY_BODIES)),
+  data:     () => merge(import('./bodies/data').then(m => m.DATA_BODIES), import('./bodies/numbers').then(m => m.NUMBERS_BODIES)),
 };
 
 export async function loadPostBody(post: BlogPost): Promise<string> {

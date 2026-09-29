@@ -160,8 +160,9 @@ const walk = (dir: string): string[] => readdirSync(dir, { withFileTypes: true }
  */
 function stampServiceWorker() {
   const toUrl = (f: string) => f.slice(dist.length).split(path.sep).join('/');
+  // dist/index.html is the homepage, dist/tool/x.html is /tool/x.
   const pageUrl = (f: string) => {
-    const u = toUrl(f).replace(/\/index\.html$/, '');
+    const u = toUrl(f).replace(/(\/index)?\.html$/, '');
     return u === '' ? '/' : u;
   };
 
@@ -191,7 +192,7 @@ function stampServiceWorker() {
   // leaving them out saves ~40% of the download. Guides someone has opened are
   // still kept by the worker's visited-pages cache.
   const pages = walk(dist)
-    .filter(f => f.endsWith(`${path.sep}index.html`))
+    .filter(f => f.endsWith('.html') && !/\/(assets|vendor)\//.test(toUrl(f)) && toUrl(f) !== '/404.html')
     .map(f => ({ url: pageUrl(f), bytes: statSync(f).size }))
     .filter(p => p.url !== '/blog' && !p.url.startsWith('/blog/'));
   const files = [...pages, ...assets];
@@ -204,11 +205,15 @@ export default defineConfig({
   site: SITE,
   srcDir: './src/site',
   outDir: './dist',
-  // Same file layout the Puppeteer prerender produced (dist/tool/x/index.html),
-  // so Netlify serves every existing URL exactly as before.
+  // Every URL the site publishes (canonical, og:url, sitemap, internal links)
+  // has no trailing slash, so each page must be served at exactly that path.
+  // With 'directory' (dist/tool/x/index.html) Netlify 301s /tool/x to
+  // /tool/x/, whose canonical points back at /tool/x: Google saw a redirect
+  // on every sitemap URL and indexed 5 pages out of ~325. With 'file'
+  // (dist/tool/x.html) Netlify answers /tool/x itself with a 200.
   trailingSlash: 'ignore',
   build: {
-    format: 'directory',
+    format: 'file',
     // Keep bundles under /assets, where netlify.toml sets immutable caching.
     assets: 'assets',
   },

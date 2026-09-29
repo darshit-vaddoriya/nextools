@@ -997,67 +997,6 @@ It is also a decent demonstration of the grapheme problem: reversing a string by
 4. Keep the original.
 
 All of this is string processing on text already in the page, which is why [find and replace](/tool/find-replace), the [regex tester](/tool/regex-tester) and every extractor here run locally. The text people paste into online tools to pull addresses out of is, almost by definition, a list of other people's contact details.`,
-  'alt-text-and-accessible-documents': `A screen reader encounters an image with no \`alt\` attribute. Having nothing else to work with, it reads the filename: "I M G underscore two zero two six zero nine one one underscore final two dot j p g".
-
-That is the actual experience of a missing attribute, and it is worse than useless. The fix is small, and it happens to be the same work that makes a page legible to a crawler.
-
-## Alt text is not a description
-
-The common instruction, "describe the image", produces bad alt text, because it invites an inventory of what is in the picture.
-
-The better question is: **if this image failed to load, what would a sighted reader lose?** The answer depends entirely on the image's job.
-
-| The image is | Alt text should be |
-|---|---|
-| A photo illustrating an article | The information it carries, briefly |
-| A chart | The conclusion, not the axis labels |
-| A logo linking home | The destination, e.g. "NextTool home" |
-| A button or icon | The action, e.g. "Close dialog" |
-| Purely decorative | Empty: \`alt=""\` |
-
-That last row is the one people get wrong in the other direction. A decorative flourish with descriptive alt text forces a screen reader user to listen to something that adds nothing. \`alt=""\` tells the reader to skip it entirely, which is different from omitting the attribute, which makes it fall back to the filename.
-
-A chart is worth dwelling on. Alt text reading "bar chart showing quarterly revenue" tells the reader there is a chart and nothing else. "Revenue grew 40% in Q3, the largest quarterly rise of the year" gives them what the chart was for. If the underlying numbers matter, put them in a table near the image rather than trying to fit them into an attribute.
-
-Two things to leave out: the phrase "image of" or "photo of", because the reader already announced it is an image, and keyword stuffing, which was pointless for ranking long before it became an accessibility problem.
-
-## Headings are an outline, not a type scale
-
-\`<h1>\` through \`<h6>\` describe document structure. They are not sizes, and using an \`<h4>\` because the text should be small is the most common structural mistake there is. Screen reader users navigate by jumping between headings, so the levels are a table of contents they are stepping through.
-
-The rules are short:
-
-- **One \`<h1>\` per page**, the page's actual title.
-- **Do not skip levels.** \`h2\` to \`h4\` leaves a hole in the outline.
-- **Style with CSS**, so a heading's level reflects its place in the structure and its size reflects the design.
-
-Running a page through an [HTML formatter](/tool/html-formatter) makes the nesting visible, which is often enough to spot a section that has drifted a level.
-
-## Links and buttons
-
-"Click here" and "read more" are meaningless out of context, and out of context is exactly how they are encountered, because screen readers can list all links on a page as a set. Twelve entries saying "read more" is a dead end.
-
-Make the link text say where it goes. This is the same reason descriptive anchor text helps search: the text of a link is the clearest signal available about what is on the other end of it.
-
-## Contrast
-
-The WCAG minimum for body text is a 4.5:1 ratio against its background, and 3:1 for large text. This is not only a disability issue: it is what makes a screen readable in sunlight, on a cheap laptop panel, or by anyone over about forty.
-
-A [contrast checker](/tool/contrast-checker) gives the ratio and the AA/AAA verdict for any pair. Check the states people forget, which are placeholder text, disabled controls, text over images, and anything on a tinted or frosted panel where the background is not a fixed colour.
-
-## Documents, not just web pages
-
-The same ideas apply to files, and the failures are starker.
-
-> [!WARNING]
-> A scanned PDF is an image of a page. It contains no text, so a screen reader can read nothing at all from it, and a search engine can index nothing. This is one condition with two consequences, and it is why so many published reports are effectively invisible.
-
-[Running OCR](/tool/pdf-ocr) generates a text layer under the image, which makes the document readable, searchable and quotable. It is the single highest-value accessibility fix available for an archive of scanned material.
-
-For Word documents, use the real heading styles rather than bold text at a larger size, because those styles are what exports into a tagged PDF and what [converting to HTML](/tool/docx-to-html) turns into actual \`<h2>\` elements. A document formatted by hand looks identical and converts into a flat wall of paragraphs.
-
-> [!TIP]
-> There is a fast sanity check for any of this. Disable images in the browser and read the page. Then navigate it with the Tab key alone. Whatever is confusing or unreachable in those two passes is what needs fixing, and you will find more in five minutes than most checklists surface.`,
   'http-status-codes-that-matter': `You restructure a site, set up redirects, and traffic drops. The pages all load, the redirects all work, and a visitor would notice nothing. A crawler noticed a digit.
 
 ## The redirects
@@ -1110,6 +1049,8 @@ And the header can be wrong about the file itself. As covered in [three kinds of
 ## Checking a URL before you debug it
 
 Before assuming a status code is wrong, confirm you are requesting what you think you are. Trailing slashes, query parameters, protocol and subdomain all produce different URLs that redirect differently, and a [URL parser](/tool/url-parser) showing the components separately resolves that faster than reading the string.
+
+For the codes this page does not cover, the [HTTP status code reference](/tool/http-status-codes) is searchable by number or name and explains each one in the same plain terms.
 
 Two habits that prevent most of this:
 
@@ -1189,7 +1130,7 @@ Avoid scheduling anything between 01:00 and 03:00 local time if you cannot use U
 
 The reliable method is to go field by field, left to right, and say each one out loud. Minute, hour, day of month, month, day of week.
 
-Then check the two questions that catch people: are both day fields restricted, and does the step value divide its range evenly? If the answer to either is yes, the expression probably does not mean what its author thought.
+Then check the two questions that catch people: are both day fields restricted, and does the step value divide its range evenly? If the answer to either is yes, the expression probably does not mean what its author thought. A [cron expression parser](/tool/cron-parser) does the field-by-field reading for you and lists the next few run times, which is the quickest way to spot both problems.
 
 And for anything that runs infrequently, check the [timestamps](/tool/timestamp-converter) in your job logs against what you expected rather than trusting the expression. A monthly job has eleven chances a year to be wrong before anyone notices.`,
   'cleaning-a-url-before-sharing': `You copy a link from your address bar and paste it into a group chat. What you pasted is 180 characters long, about 90 of which describe where you came from, which campaign brought you there, and a session identifier.
@@ -1240,7 +1181,7 @@ The rule that follows: **an unguessable URL is a reasonable pattern for a share 
 
 ## Shortened links
 
-A shortener replaces the destination with an opaque code, which removes your ability to read any of the above. That is the entire point of it, and it is why an unexpected shortened link deserves suspicion, as covered in [reading a link before you click it](/blog/spotting-a-dangerous-link).
+A shortener replaces the destination with an opaque code, which removes your ability to read any of the above. That is the entire point of it, and it is why an unexpected shortened link deserves suspicion.
 
 Most shorteners will reveal the target if you append \`+\` to the URL. The habit worth having is expanding before clicking rather than after.
 
@@ -1257,7 +1198,7 @@ Browsers are starting to do some of this. Firefox strips known tracking paramete
 
 When you are producing links rather than consuming them, two things make them worth sharing.
 
-Keep the path readable. A [slug](/tool/slug-generator) made of lowercase words and hyphens survives being pasted into a chat, an email and a document without becoming percent-encoded noise, for the same reasons that apply to [file names](/blog/naming-files-that-survive).
+Keep the path readable. A [slug](/tool/slug-generator) made of lowercase words and hyphens survives being pasted into a chat, an email and a document without becoming percent-encoded noise, for the same reasons that apply to file names.
 
 And encode parameter values properly. A value containing an ampersand silently splits into two parameters unless it is percent-encoded, which is the distinction between the two JavaScript encoding functions covered in [three kinds of escaping](/blog/three-kinds-of-escaping). A [URL encoder](/tool/url-encoder) settles what a value should look like before it goes into a link you publish.
 
@@ -1374,7 +1315,7 @@ The replacement is Client Hints: the browser sends a low-entropy set by default 
 The practical consequence is that user-agent-derived analytics get vaguer every year, and code that compares version numbers gets more fragile. Both arguments point the same way: detect capabilities.
 
 > [!WARNING]
-> Changing your user agent does not make you anonymous. An unusual string is *more* identifying, not less, because very few people have it. Fingerprinting works on the combination of signals — fonts, screen size, timezone, GPU — and a mismatched user agent adds one more distinguishing feature. See [what your browser announces](/blog/what-your-browser-announces) for the rest of the surface.
+> Changing your user agent does not make you anonymous. An unusual string is *more* identifying, not less, because very few people have it. Fingerprinting works on the combination of signals — fonts, screen size, timezone, GPU — and a mismatched user agent adds one more distinguishing feature.
 
 ## Reading one quickly
 

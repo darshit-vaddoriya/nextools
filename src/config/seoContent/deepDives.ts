@@ -282,4 +282,137 @@ export const TOOL_DEEP_DIVES: DeepDiveMap = {
       'Two areas reliably need a manual pass. Merged table cells cannot be represented in Markdown table syntax at all, so a table using them will need restructuring or converting to HTML. And images are extracted as references rather than embedded, since Markdown links to image files rather than carrying them — so the files have to be saved alongside the document and the paths corrected. If the destination is GitHub, a static site generator or an app like Obsidian, running the output through a Markdown linter afterwards will catch the remaining flavour differences quickly.',
     ],
   },
+  'rar-to-zip': {
+    heading: 'Why a RAR has to be unpacked before it can become a ZIP',
+    paragraphs: [
+      'RAR and ZIP both bundle files and compress them, but they do it with different algorithms and different on-disk layouts, so there is no way to rename or re-label one as the other. Conversion is two separate steps: every file is extracted from the RAR, then the extracted files are packed into a new ZIP. The files themselves come out byte-for-byte identical to what went into the RAR; only the wrapper around them changes. The folder structure and file names are carried across as they were.',
+      'Reading happens with libarchive, the open-source library behind the bsdtar command and the archive handling in macOS, compiled to WebAssembly so it runs in the page. Writing the ZIP uses the standard Deflate method at a middle compression level, which every operating system can open without extra software. That is the whole reason to convert: Windows, macOS, Android and iOS all open ZIP natively, while RAR still needs a separate app on most of them.',
+      'The ZIP usually ends up a little larger than the RAR it came from. RAR can compress a whole archive as one continuous stream, which finds repetition across files, while ZIP compresses each file on its own. For photos, videos and PDFs, which are already compressed, the difference is small. For folders of text or source code it can be noticeable, and that is the trade for a format anyone can open.',
+    ],
+  },
+
+  'images-to-pptx': {
+    heading: 'How the photos are placed on each slide',
+    paragraphs: [
+      'Every image becomes its own slide, in the order you added them, and is scaled to fit inside the slide without cropping or stretching. A photo whose shape differs from the slide gets white or black bars at the sides or top, whichever background you picked, rather than losing its edges. That is the same "contain" rule a photo viewer uses, and it is the safe default for slides, because a cropped face or a cut-off chart label is a worse outcome than a margin.',
+      'The slide shape is the main decision. 16:9 matches modern projectors, laptops and video calls. 4:3 matches older projectors and printed handouts. "Match" sizes the deck to the first image, which suits a set of photos that all share one shape, such as screenshots from the same device, where any fixed slide shape would add bars to every one.',
+      'JPG and PNG images are placed in the deck exactly as they are, with no re-compression. Other formats are converted first, because PowerPoint cannot display them: GIF, SVG and PSD files become PNG, and everything else, including iPhone HEIC photos and WebP, becomes a high-quality JPG. The deck opens in PowerPoint, Keynote, Google Slides and LibreOffice, and each picture remains a normal image object you can move, crop or replace.',
+    ],
+  },
+
+  'csv-editor': {
+    heading: 'What happens to your data between opening and exporting',
+    paragraphs: [
+      'A CSV file has no types, no formatting and no formulas, only text split into cells. This editor shows it exactly that way: every cell is plain text, and nothing is converted to a number or a date behind your back. That matters more than it sounds. A spreadsheet application opening the same file might strip the leading zeros from a postcode or turn "3-4" into a date. Here, what you see in a cell is the exact text that will be written back.',
+      'The delimiter setting controls both how the file is read and how it is written. Comma is the default. Semicolon is what Excel produces in most of Europe, where the comma is the decimal mark. Choose the one your file uses before editing, or every row will appear as one long cell. On export, any value that contains the delimiter, a quote or a line break is wrapped in quotes and inner quotes are doubled, following the RFC 4180 convention, so the file reads back correctly in any tool.',
+      'Everything is held in this browser tab while you work. There is no automatic save, so export before closing the page. For files with many thousands of rows, a spreadsheet application or the CSV viewer is more comfortable. This editor suits the common job of opening a file, fixing some cells, adding or removing a column, and saving a clean copy.',
+    ],
+  },
+
+  'excel-to-pdf': {
+    heading: 'How a spreadsheet is laid out as pages',
+    paragraphs: [
+      'A worksheet has no pages; it is a grid that runs as far right and as far down as the data goes. Turning it into a PDF means deciding where the page breaks fall, and this converter does that automatically. Each column is sized by its content, the header row is repeated at the top of every page so a long table stays readable, and a sheet with more than six columns is printed in landscape to give it room.',
+      'What reaches the PDF is the value in each cell, not its formatting. A formula shows the result Excel last calculated and saved in the file, so if a workbook was never recalculated after its inputs changed, the PDF shows the stale result, exactly as Excel would until you pressed recalculate. Dates stored as Excel serial numbers are recognised from their number format and printed as dates rather than as five-digit numbers.',
+      'The PDF uses the standard Helvetica font, which covers English and most Western European languages. Characters outside that set, such as Hindi, Arabic or Chinese text, are printed as a question mark, and the converter says so rather than failing silently. For a workbook in those scripts, printing to PDF from Excel, LibreOffice or Google Sheets, which have the right fonts installed, gives a better result.',
+    ],
+  },
+
+  'mov-to-mp4': {
+    heading: 'Container versus codec: why most MOV files convert in seconds',
+    paragraphs: [
+      'MOV and MP4 are both containers, boxes that hold a video stream, an audio stream and some timing information. The streams inside are what actually determine quality, and an iPhone or QuickTime MOV very often already contains H.264 video and AAC audio, which MP4 supports directly. When that is the case, the converter copies the streams into an MP4 box without decoding or re-encoding a single frame. The result is identical in quality, and the conversion takes about as long as copying the file.',
+      'Newer iPhones record in HEVC, also called H.265, by default. MP4 can hold HEVC too, but not every browser can decode it: Safari usually can, while Chrome on Windows often needs hardware support to do so. If the browser cannot read the video stream, the conversion stops with a message saying so, rather than producing a broken file.',
+      'Re-encoding only happens when you ask for it, by choosing a lower resolution or quality. It then uses the video encoder built into your browser, which is usually hardware accelerated, so a minute of 1080p video takes seconds rather than minutes. The clip stays on your device throughout, which matters for family videos and for recordings of work meetings alike.',
+    ],
+  },
+
+  'video-compressor': {
+    heading: 'The two settings that decide the file size',
+    paragraphs: [
+      'A video file\'s size is roughly its bit rate multiplied by its length, so there are only two ways to make it smaller without cutting it: spend fewer bits per second, or give those bits fewer pixels to describe. The compressor exposes both. Resolution scales the picture down, never up, to 1080p, 720p, 480p or 360p. The quality setting tells the encoder how much detail to keep in each frame. It starts at 720p and medium quality, because that combination reliably shrinks a phone recording while keeping it comfortable to watch on a phone or laptop.',
+      'Resolution usually gives the biggest saving with the least visible cost. Halving the width and height leaves a quarter of the pixels, and on a phone screen or in a chat window 720p is hard to tell apart from 1080p. Lowering quality at full resolution instead tends to show as blockiness on movement and smearing in dark areas, which people notice sooner than softness.',
+      'The encoding runs on your device with the browser\'s own encoder, which is usually hardware accelerated. The compressor cannot aim at an exact target size such as 25 MB, because the final size depends on how much motion the clip contains. A talking-head recording compresses far more than a football match at the same settings. If the first attempt is still too large, step the resolution down once more before lowering the quality.',
+    ],
+  },
+
+  'pdf-to-pptx': {
+    heading: 'Why each slide is a picture of the page',
+    paragraphs: [
+      'A PDF records where marks go on a page, not which of them form a title, a bullet list or a chart. PowerPoint needs exactly that structure to make text editable. Rebuilding it from a PDF means guessing, and the guesses go wrong in ways that are worse than useless: text boxes that overlap, fonts substituted, lines broken in the middle of sentences. So this converter makes the other choice. Each page is rendered as a sharp image, about 1600 pixels wide at typical page sizes, and placed on its own slide, so every slide looks exactly like the page it came from.',
+      'The text is not lost. For each page that contains real text, the text is also copied into that slide\'s speaker notes. You can present from the images, read from the notes, and copy any sentence you need into a new text box. A scanned PDF has no text layer, so its slides have no notes until the PDF has been through OCR first.',
+      'Slides take the shape of the page itself, so an A4 portrait document produces tall slides and a landscape deck exported to PDF produces widescreen ones, with nothing cropped or letterboxed. This is the conversion you want when the goal is to present a PDF inside PowerPoint or Google Slides, or to add your own slides around it. If you need to edit the original content, go back to the file the PDF was made from.',
+    ],
+  },
+
+  'epub-to-pdf': {
+    heading: 'Reflowable text becomes fixed pages',
+    paragraphs: [
+      'An EPUB does not have pages. It is a ZIP of XHTML chapters that an e-reader reflows to fit whatever screen and font size you choose, which is why the same book shows a different page count on a phone and on a tablet. A PDF is the opposite: every line sits at a fixed position on a fixed page. Converting means choosing a page size and laying the text out once. This converter uses 6 × 9 inches, a common paperback trim size, with the book\'s title and author on the first page and each chapter following in reading order.',
+      'Structure is carried across: headings, paragraphs, bold and italic. Visual styling from the e-book\'s own stylesheet is not, because it was written for reflowing screens rather than fixed pages. The result reads like a plainly typeset book, which suits printing, annotating on a tablet or sending to someone without an e-reader.',
+      'Two limits come from the source rather than the converter. Books bought from a store are usually protected with DRM, which encrypts the text, and this tool cannot and will not remove that protection. DRM-free EPUBs, such as those from Project Gutenberg or your own exported manuscripts, convert normally. And the PDF uses standard Latin fonts, so a book mostly in Hindi, Arabic or Chinese is refused with an explanation instead of being printed as question marks.',
+    ],
+  },
+
+  'webp-to-jpg': {
+    heading: 'Why WebP exists, and when JPG is still the better file',
+    paragraphs: [
+      'Google introduced WebP in 2010 to make web pages lighter. At the same visual quality, a WebP photo is typically noticeably smaller than a JPG, which is why most large sites now serve WebP automatically, and why an image you save from a browser so often arrives as .webp even if the site uploaded a JPG. Browsers all display it, but plenty of other software does not: older photo editors, some print shops, government upload forms and many email and document workflows still expect JPG.',
+      'Converting decodes the WebP and encodes a new JPG at the quality you choose. That is a second round of lossy compression, so for the cleanest result keep the quality high, around 90%, which is visually indistinguishable from the WebP for photographs. JPG has no transparency, so any see-through areas in the WebP are filled with the background colour you pick, white by default.',
+      'Do not be surprised if the JPG is larger than the WebP you started with. That is WebP doing its job, not the converter doing something wrong. If the image is going back onto a website, keep the WebP. Convert when the destination demands JPG, which is exactly what this tool is for.',
+    ],
+  },
+
+  'excel-to-csv': {
+    heading: 'What a workbook loses on its way to CSV, and why',
+    paragraphs: [
+      'An XLSX file is a ZIP of XML parts: sheet data, shared strings, styles, formulas and sometimes charts. CSV can hold exactly one thing, a single grid of text. So converting keeps each cell\'s value and drops everything else. Formulas become the result Excel last saved, colours and number formatting disappear, and merged cells become one value followed by empty cells. None of that is a flaw in the converter; CSV simply has nowhere to put it.',
+      'Dates need special care, because Excel stores them as numbers: 1 January 2024 is 45292, a count of days from a starting point in 1899. Written to CSV naively, a date column becomes a column of five-digit numbers. This converter reads each cell\'s number format, recognises which ones Excel displays as dates, and writes those as ISO dates such as 2024-01-01, which every database and programming language reads unambiguously. Workbooks created on older Macs, which count from 1904 instead, are detected and handled too.',
+      'A workbook with several sheets produces one CSV per sheet, or just the first sheet if that is all you need. The file is written as UTF-8 with a byte order mark, which is what makes Excel reopen accented and non-Latin characters correctly. Choose semicolons instead of commas if the file is going to someone whose Excel uses a comma as the decimal separator, as it does in much of Europe.',
+    ],
+  },
+
+  'ocr-image': {
+    heading: 'What happens to the image before the text is read',
+    paragraphs: [
+      'The recognition runs on Tesseract, an open-source OCR engine originally developed at HP and later maintained with Google\'s support, compiled to WebAssembly so it works inside the page. Before recognition, the image is prepared the way OCR engines prefer. It is converted to greyscale and its contrast is raised, so faint text separates from the background. Small images, where the shorter side is under 900 pixels, are enlarged up to twice their size, because Tesseract reads characters much more reliably when each one is at least a couple of dozen pixels tall. Very large images are scaled down to keep recognition fast.',
+      'The layout setting tells Tesseract what kind of page it is looking at, and it changes results more than most people expect. Auto suits a normal document page. Single block suits one paragraph. Single line suits a caption or a number plate. Sparse suits screenshots of apps and websites, where short labels are scattered around the screen, and it recovers text that the document modes skip.',
+      'Language matters because the engine recognises words, not just shapes. English, Hindi, Spanish, French and German are available, as is combined English and Hindi for mixed documents. The first time you use a language its model is downloaded; after that it is cached and works offline. Printed text in a clear photo usually comes out close to perfect; handwriting, heavy stylised fonts and text on busy backgrounds are where every OCR engine struggles.',
+    ],
+  },
+
+  'gradient-generator': {
+    heading: 'How a CSS gradient is built, and why some go grey in the middle',
+    paragraphs: [
+      'A CSS gradient is a list of colour stops, each a colour at a position from 0 to 100%, and the browser blends between neighbouring stops. A linear gradient blends along a line at the angle you set: 90° runs left to right, 180° top to bottom. A radial gradient blends outwards from the centre in a circle. The generator writes exactly that as one background declaration you can paste into any stylesheet, and every current browser supports it without prefixes.',
+      'Browsers blend gradients in the sRGB colour space by default, and that is why a gradient between two saturated opposites, such as blue and yellow or red and green, often passes through a dull grey in the middle. Halfway between the two in sRGB numbers is a colour that looks muddy to the eye. The practical fix is to add a third stop in the middle with a bright colour that sits between them in hue, for example a teal between blue and yellow. The result reads as a smooth, vivid transition.',
+      'Stop positions control where a transition happens, not just which colours appear. Two stops close together make a sharp band. Stops spread evenly make a gentle wash. Placing the same colour at two neighbouring positions creates a solid stripe with no blending at all. The generator sorts stops by position before writing the CSS, so you can add them in any order.',
+    ],
+  },
+  'ai-to-pdf': {
+    heading: 'Why an Illustrator file can open without Illustrator',
+    paragraphs: [
+      'An .ai file saved by Illustrator 9 or later usually contains two things side by side: Illustrator\'s own private editing data, which only Illustrator understands, and a complete PDF rendering of the artwork. The PDF part is there because the "Create PDF Compatible File" option is switched on by default when saving. It lets other applications preview and place the file, and it is what this tool reads.',
+      'Getting a PDF out is therefore not really a conversion at all. The tool checks the start of the file for the PDF signature and, if it is present, hands you the file as a .pdf. Nothing is redrawn, so vectors stay vectors, colours are exactly as saved and the result is safe to send to a printer. PNG and JPG output renders that same PDF to pixels, one image per page, which is what you want for a slide, a document or a website.',
+      'If the check fails, the file was saved with PDF compatibility turned off, or by Illustrator 8 or older, and it is PostScript rather than PDF. No browser can render that, so the tool says so instead of producing a blank page. The fix is on the designer\'s side: re-save from Illustrator with the option ticked. That is also worth asking for whenever you receive .ai files, since it is what lets anyone without Adobe software view them.',
+    ],
+  },
+
+  'jpg-to-avif': {
+    heading: 'Where AVIF\'s smaller files come from',
+    paragraphs: [
+      'AVIF stores a single frame of AV1, a video codec developed by the Alliance for Open Media, whose members include Google, Mozilla, Microsoft, Apple and Netflix. Video codecs are built to describe images far more efficiently than JPEG, which dates from 1992. AV1 predicts each block of the picture from its neighbours, can use large and irregular block sizes on smooth areas such as sky, and filters out the blocky edges JPEG is known for. The practical effect is that AVIF holds more detail in fewer bytes, especially at the smaller sizes websites care about.',
+      'The trade-off is encoding time. Finding that efficient description takes a lot of searching, so AVIF encodes much more slowly than JPG. This converter uses a middle speed setting, which is the usual balance between file size and waiting time. Decoding is fast, so visitors to a site never pay that cost; only the person converting does, once.',
+      'AVIF also supports transparency and higher bit depths, so it can replace both JPG photos and PNG graphics on a website. For a site that still needs to support very old browsers, serve AVIF inside a <picture> element with a JPG fallback, and every browser will pick the best format it understands.',
+    ],
+  },
+
+  'png-to-svg': {
+    heading: 'How tracing turns pixels into shapes',
+    paragraphs: [
+      'Tracing works in three stages, and knowing them explains every result the tool produces. First, the image is reduced to the number of colours you choose, so every pixel belongs to one of, say, four flat colours. Second, the edge of each coloured region is followed around its boundary, producing an outline made of tiny pixel steps. Third, straight lines and curves are fitted to those steps, turning a staircase of pixels into smooth vector paths.',
+      'The two settings map onto those stages. Colours controls the first: too few and details merge together, too many and gentle shading splits into dozens of separate blobs. Detail controls the third: Smooth ignores tiny specks and rounds corners, which suits logos and scanned signatures, while Detailed follows every corner, which suits sharp icons and pixel art. The engine is ImageTracer, an open-source tracing library that runs entirely in the page.',
+      'The source matters more than any setting. Tracing can only follow the edges it is given, so a small, blurry or heavily compressed image produces wobbly outlines no matter what. Start from the largest, cleanest version available, ideally one with a plain background, and a logo usually traces into a clean SVG in a few seconds.',
+    ],
+  },
 };

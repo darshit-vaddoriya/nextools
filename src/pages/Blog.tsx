@@ -152,12 +152,13 @@ export const Blog: React.FC<BlogProps> = ({ onBack, onOpenPost, topic, onSelectT
         {/* On a topic hub the standfirst is the meta description, which has to
             stay short. This paragraph is the page's own opening: it says what
             the subject keeps getting wrong, so the hub is a piece of writing
-            rather than a heading sitting on top of a grid of cards. */}
-        {topicMeta && (
-          <p className="mt-5 max-w-[72ch] text-[14px] sm:text-[15px] leading-relaxed text-muted-foreground">
-            {topicMeta.intro}
-          </p>
-        )}
+            rather than a heading sitting on top of a grid of cards. The index
+            gets the same treatment, describing what a guide here is. */}
+        <p className="mt-5 max-w-[72ch] text-[14px] sm:text-[15px] leading-relaxed text-muted-foreground">
+          {topicMeta
+            ? topicMeta.intro
+            : 'Each guide takes one job people do with files, such as getting a PDF under an upload limit, opening a CSV in Excel without losing leading zeros, or working out what a JWT actually proves, and explains the decision behind it: what the format does, where the usual method goes wrong, and what to check afterwards. Every guide is written for this site and ends at a tool here that does the job in your browser, so you can try the advice on your own file straight away. When a guide is corrected, the page shows the date it was updated next to the date it was first published.'}
+        </p>
 
         {/* Search sits under the standfirst with the counts beside it, so the
             masthead is one block instead of a headline floating next to a box. */}

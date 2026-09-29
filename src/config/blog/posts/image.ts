@@ -8,7 +8,7 @@ export const IMAGE_POSTS: BlogPost[] = [
     excerpt: 'Saving a screenshot as JPEG makes the text fuzzy. Saving a photo as PNG makes the file eight times larger. Both mistakes come from the same gap in knowledge.',
     category: 'image',
     tags: ['formats', 'jpeg', 'png', 'webp', 'avif'],
-    published: '2026-08-07',
+    published: '2026-09-09',
     relatedTools: ['image-convert', 'image-compressor', 'svg-converter', 'image-metadata'],
     takeaways: [
       'Text, sharp edges and flat colour want PNG. Photographs want JPEG or WebP. The mismatch costs either size or quality.',
@@ -26,7 +26,7 @@ export const IMAGE_POSTS: BlogPost[] = [
     excerpt: 'The number in the quality box is not a percentage of anything. Knowing what it really controls explains most of the odd results people get.',
     category: 'image',
     tags: ['compression', 'quality', 'jpeg'],
-    published: '2026-08-14',
+    published: '2026-09-09',
     relatedTools: ['image-compressor', 'image-convert', 'batch-resize'],
     takeaways: [
       'Lossless finds redundancy and keeps every pixel. Lossy discards detail the eye is least likely to miss.',
@@ -44,7 +44,7 @@ export const IMAGE_POSTS: BlogPost[] = [
     excerpt: 'A 300 DPI setting does nothing for an image on a website. Pixels are the only unit the screen understands, and understanding that fixes a lot of frustration.',
     category: 'image',
     tags: ['resize', 'compression', 'dpi'],
-    published: '2026-08-21',
+    published: '2026-09-09',
     relatedTools: ['image-resize', 'image-compressor', 'batch-resize', 'image-crop'],
     takeaways: [
       'File size scales with pixel count, so halving both dimensions removes about three quarters of the data before any compression.',
@@ -62,7 +62,7 @@ export const IMAGE_POSTS: BlogPost[] = [
     excerpt: 'The model is not "finding the person". It is assigning every pixel a probability of being foreground, which explains exactly why hair and glass give it trouble.',
     category: 'image',
     tags: ['ai', 'background-removal', 'segmentation'],
-    published: '2026-08-29',
+    published: '2026-09-09',
     relatedTools: ['ai-bg-remover', 'image-convert', 'image-crop', 'image-editor'],
     takeaways: [
       'The model predicts an alpha value per pixel, so the output is a soft mask rather than a yes-or-no cutout.',
@@ -80,7 +80,7 @@ export const IMAGE_POSTS: BlogPost[] = [
     excerpt: 'Most pages ship images several times larger than they display, in a format from 1992, with no dimensions set. Fixing those three things is most of the work.',
     category: 'image',
     tags: ['performance', 'web', 'core-web-vitals'],
-    published: '2026-09-05',
+    published: '2026-09-09',
     relatedTools: ['image-compressor', 'batch-resize', 'image-convert', 'svg-converter'],
     takeaways: [
       'Serving an image far larger than it is displayed is the single biggest waste, and the most common one.',
@@ -98,7 +98,7 @@ export const IMAGE_POSTS: BlogPost[] = [
     excerpt: 'The advice online still lists a dozen icon sizes from 2014. Four files cover essentially everything today, and one of them is not an icon at all.',
     category: 'image',
     tags: ['favicon', 'icons', 'svg'],
-    published: '2026-09-10',
+    published: '2026-09-16',
     relatedTools: ['ico-generator', 'svg-converter', 'image-resize', 'image-convert'],
     takeaways: [
       'Four files cover modern browsers: an SVG, a 32px PNG, a 180px Apple touch icon and a 512px PNG for installs.',
@@ -116,7 +116,7 @@ export const IMAGE_POSTS: BlogPost[] = [
     excerpt: 'Whether you are marking a proof, redacting a screenshot or building a comparison, you are doing the same operation with very different stakes.',
     category: 'image',
     tags: ['watermark', 'annotation', 'collage'],
-    published: '2026-09-11',
+    published: '2026-09-16',
     relatedTools: ['image-watermark', 'image-draw', 'image-collage', 'meme-generator', 'drawing'],
     takeaways: [
       'Compositing is destructive. The output is a flat picture, so keep the original separately.',
@@ -134,7 +134,7 @@ export const IMAGE_POSTS: BlogPost[] = [
     excerpt: 'Your phone photo appears sideways on the web but upright in the gallery. Nothing is broken, and the fix is one byte.',
     category: 'image',
     tags: ['rotate', 'exif', 'sharpen'],
-    published: '2026-09-12',
+    published: '2026-09-16',
     relatedTools: ['image-rotate', 'image-flip', 'image-sharpen', 'image-adjust'],
     takeaways: [
       'A photo that looks sideways on the web is usually upright with an EXIF orientation tag that something ignored.',
@@ -152,7 +152,7 @@ export const IMAGE_POSTS: BlogPost[] = [
     excerpt: 'A data URI embeds the picture in the markup. That is occasionally the right call and usually a way to make a page slower.',
     category: 'image',
     tags: ['base64', 'data-uri', 'performance'],
-    published: '2026-09-12',
+    published: '2026-09-16',
     relatedTools: ['image-to-base64', 'base64-to-image', 'image-compressor', 'svg-converter'],
     takeaways: [
       'Base64 encodes 3 bytes as 4 characters, so an inlined image is always about 33% larger than the file.',
@@ -170,7 +170,7 @@ export const IMAGE_POSTS: BlogPost[] = [
     excerpt: 'Every platform re-crops your image to its own ratio. If you do not decide where the subject sits, an algorithm will decide for you.',
     category: 'image',
     tags: ['crop', 'aspect-ratio', 'editing'],
-    published: '2026-09-13',
+    published: '2026-09-16',
     relatedTools: ['image-crop', 'image-editor', 'image-resize', 'batch-resize'],
     takeaways: [
       'Cropping discards pixels permanently. Resizing rescales them. Doing both in the wrong order loses resolution you needed.',
@@ -182,85 +182,13 @@ export const IMAGE_POSTS: BlogPost[] = [
   },
 
   {
-    slug: 'passport-and-id-photo-specs',
-    title: 'Getting a passport or visa photo to pass the checker',
-    description: 'Photo rejections are nearly always dimensions, head ratio or background. Each one is measurable before you submit.',
-    excerpt: 'Portals reject photos for reasons they rarely explain. Four measurements account for almost all of it, and you can check every one yourself.',
-    category: 'image',
-    tags: ['photo', 'resize', 'crop', 'passport'],
-    published: '2026-09-09',
-    relatedTools: ['image-crop', 'image-resize', 'image-convert', 'image-compressor'],
-    takeaways: [
-      'Head height as a proportion of the frame is the specification people miss, and it is the most common rejection.',
-      'Crop to the required aspect ratio first, then resize to the pixel dimensions. The other order wastes resolution.',
-      'A file-size cap is met by lowering JPEG quality, not by shrinking dimensions below the stated minimum.',
-      'Never upscale. If the source is smaller than the required dimensions, retake the photo.',
-    ],
-    words: 820,
-  },
-
-  {
-    slug: 'social-preview-images',
-    title: 'Why your link preview looks wrong when you share it',
-    description: 'Open Graph images get cropped differently by every platform. Designing for the safe area is what stops your title being cut in half.',
-    excerpt: 'You set an image, share the link, and the preview crops your logo off. The image was right; the safe area was not.',
-    category: 'image',
-    tags: ['open-graph', 'social', 'images'],
-    published: '2026-09-09',
-    relatedTools: ['image-resize', 'image-crop', 'image-convert', 'image-compressor'],
-    takeaways: [
-      '1200x630 is the right default, but every platform re-crops it, so keep text well inside the middle.',
-      'og:image needs an absolute URL. A relative path silently produces no preview at all.',
-      'Previews are cached hard, so a corrected image usually needs a new filename before it shows up.',
-      'Use JPEG or PNG rather than WebP here, because social scrapers are less consistent about it than browsers.',
-    ],
-    words: 677,
-  },
-
-  {
-    slug: 'why-colours-look-different-on-each-screen',
-    title: 'Why the same image looks different on every screen',
-    description: 'Colour profiles decide how stored numbers become visible colour. Strip one and your careful red becomes somebody else orange.',
-    excerpt: 'The photo that looked right on your laptop is washed out on the client phone. The pixels are identical; the interpretation is not.',
-    category: 'image',
-    tags: ['colour', 'srgb', 'profiles', 'display'],
-    published: '2026-09-11',
-    relatedTools: ['image-convert', 'color-converter', 'image-metadata', 'image-compressor'],
-    takeaways: [
-      'A pixel value is a coordinate, not a colour. The profile is what says which colour that coordinate means.',
-      'Stripping the profile from a wide-gamut image makes it look dull or oversaturated, because it is then read as sRGB.',
-      'Export to sRGB for the web. It is the one profile every browser and device agrees about.',
-      'Editing metadata is not the same as converting. Assigning a profile relabels; converting recalculates the pixels.',
-    ],
-    words: 826,
-  },
-
-  {
-    slug: 'product-photos-for-listings',
-    title: 'Product photos that pass a marketplace listing check',
-    description: 'Amazon, Etsy and Shopify each impose minimum pixels, background rules and aspect ratios. The overlap between them is a single workable spec.',
-    excerpt: 'Listings get rejected for three things: too few pixels, the wrong background, and a product that fills too little of the frame.',
-    category: 'image',
-    tags: ['ecommerce', 'product-photos', 'resize', 'background'],
-    published: '2026-09-11',
-    relatedTools: ['ai-bg-remover', 'image-crop', 'image-resize', 'image-compressor'],
-    takeaways: [
-      'Most marketplaces want at least 1600px on the long edge so their zoom feature works; some accept 1000px without zoom.',
-      'A pure white background is a hard requirement on main images for several platforms, not a style preference.',
-      'The product should fill about 85% of the frame. Too much empty space is a common rejection.',
-      'Shoot on white, remove the background, then crop and resize. Doing it in that order avoids halo edges.',
-    ],
-    words: 737,
-  },
-
-  {
     slug: 'screenshots-for-bug-reports',
     title: 'Screenshots that actually help: annotation, redaction and what leaks',
     description: 'A screenshot sent for support often contains more than the bug. Browser tabs, notifications and the clipboard all end up in frame.',
     excerpt: 'A black box over text in a screenshot really does delete it, unlike in a PDF. Blurring, on the other hand, has been reversed.',
     category: 'image',
     tags: ['screenshots', 'annotation', 'redaction', 'privacy'],
-    published: '2026-09-12',
+    published: '2026-09-16',
     relatedTools: ['image-draw', 'image-crop', 'image-metadata', 'image-compressor'],
     takeaways: [
       'A solid black box over pixels is genuine removal, because the original values are overwritten.',
@@ -277,9 +205,9 @@ export const IMAGE_POSTS: BlogPost[] = [
     excerpt: 'A five-second clip becomes a 40 MB GIF and a 900 KB MP4 of identical quality. GIF is not a video format, and that is the whole explanation.',
     category: 'image',
     tags: ['gif', 'video', 'compression', 'formats'],
-    published: '2026-09-16',
-    updated: '2026-09-20',
-    relatedTools: [],
+    published: '2026-09-17',
+    updated: '2026-09-29',
+    relatedTools: ['video-to-gif', 'gif-to-mp4', 'video-compressor'],
     takeaways: [
       'GIF stores at most 256 colours per frame and cannot compress across frames the way a video codec does, so photographic content explodes in size.',
       'Duration, frame rate and dimensions each multiply the size. Cut length first, then width, then frames per second.',
@@ -295,7 +223,7 @@ export const IMAGE_POSTS: BlogPost[] = [
     excerpt: 'The difference between 99% and 80% accuracy is usually the photo, not the engine. Most of the fix happens before any text is recognised.',
     category: 'image',
     tags: ['ocr', 'text', 'scanning'],
-    published: '2026-09-15',
+    published: '2026-09-17',
     relatedTools: ['ocr-image', 'image-adjust', 'image-crop'],
     takeaways: [
       'OCR wants roughly 300 DPI of text. A phone photo of a page from a distance is often below that, and no engine recovers detail that was never captured.',
