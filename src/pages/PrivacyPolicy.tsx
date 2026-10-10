@@ -11,7 +11,7 @@ interface PrivacyPolicyProps {
 const PILLARS = [
   { icon: Cpu, title: 'Tools Run on Your Device', desc: 'Every tool (PDF, image, WASM AI, code formatters) runs locally in your browser using JavaScript and WebAssembly.' },
   { icon: Lock, title: 'Zero File Upload', desc: 'Your files, PDFs, images and code are never sent to an external server. They stay in your browser while you work.' },
-  { icon: HardDrive, title: 'No Account Needed', desc: 'No registration, sign-up or email address is ever required. NextTool is free and accessible instantly.' },
+  { icon: HardDrive, title: 'No Account Needed', desc: 'No registration, sign-up or email address is ever required. NextTool is free to use.' },
   { icon: History, title: 'History Stays Local', desc: 'Your optional tool history and saved files live only in this browser. You can turn them off or clear them at any time.' },
 ];
 

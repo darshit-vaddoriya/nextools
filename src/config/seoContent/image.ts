@@ -3,7 +3,7 @@ import { ToolSeoMap } from './types';
 export const IMAGE_SEO_CONTENT: ToolSeoMap = {
   'image-compressor': {
     intro:
-      'Large photos slow down websites, bloat email attachments, and eat into mobile data plans, and this compressor shrinks JPEG, PNG, WebP, and AVIF files while letting you preview the quality tradeoff before you commit. Web developers use it to hit Core Web Vitals targets, while sellers and bloggers use it to keep product photos crisp but light. Every pixel is processed in your browser using the Canvas API, so the original file never leaves your device.',
+      'Large photos slow down websites, bloat email attachments, and eat into mobile data plans, and this compressor shrinks JPEG, PNG, WebP, and AVIF files while letting you preview the quality tradeoff before you commit. Every pixel is processed in your browser using the Canvas API, so the original file never leaves your device.',
     steps: [
       { title: 'Add your image', description: 'Drag a JPEG, PNG, WebP, or AVIF file onto the drop zone, or click to browse and select one.' },
       { title: 'Adjust the quality slider', description: 'Drag the compression slider and watch the live before/after file size update in real time.' },
@@ -13,7 +13,7 @@ export const IMAGE_SEO_CONTENT: ToolSeoMap = {
     faqs: [
       { question: 'Will compressing my image reduce its quality?', answer: 'Some quality is traded for smaller file size, but the tool uses lossy compression with a live preview so you can pick the point where savings are worthwhile without visible artifacts.' },
       { question: 'Which formats are supported?', answer: 'JPEG, PNG, WebP, and AVIF are all supported for both input and compressed output.' },
-      { question: 'Is there a file size limit?', answer: 'The tool runs entirely in your browser, so the practical limit is your device memory rather than a server upload cap, most photos up to tens of megabytes compress instantly.' },
+      { question: 'Is there a file size limit?', answer: 'The tool runs entirely in your browser, so the practical limit is your device memory rather than a server upload cap, most photos up to tens of megabytes take a second or two.' },
       { question: 'Does it work on mobile browsers?', answer: 'Yes, the compressor works on modern mobile browsers, though very large images may take a moment longer to process than on desktop.' },
     ],
     useCases: [
@@ -30,7 +30,7 @@ export const IMAGE_SEO_CONTENT: ToolSeoMap = {
   },
   'image-resize': {
     intro:
-      'Whether you need a product photo at an exact 1200x1200 pixel square for a marketplace listing or a banner scaled to 50% for a faster-loading blog post, this tool resizes images by exact pixel dimensions or by percentage without installing any software. Designers, students preparing assignments, and social media managers all use it to match platform-specific size requirements. Resizing happens instantly in your browser, so nothing is ever sent to a server.',
+      'A marketplace wants a 1200 × 1200 product photo; a blog loads faster with the banner at half size. This tool resizes images by exact pixel dimensions or by percentage without installing any software. Resizing happens in your browser, so the image is not sent to a server.',
     steps: [
       { title: 'Upload an image', description: 'Drop or select the image you want to resize.' },
       { title: 'Choose a resize mode', description: 'Switch between exact pixel width/height or percentage scaling.' },
@@ -113,7 +113,7 @@ export const IMAGE_SEO_CONTENT: ToolSeoMap = {
   },
   'image-flip': {
     intro:
-      'Mirroring a photo horizontally to correct a reversed selfie, or flipping a graphic vertically for a design mockup, is a one-click job here rather than something that requires opening a full photo editor. It is commonly used by designers building symmetrical layouts and by everyday users fixing camera-flipped selfies before sharing them. The flip transform runs instantly on-device using canvas operations, with no upload step involved.',
+      'Mirroring a photo horizontally to correct a reversed selfie, or flipping a graphic vertically for a design mockup, is a one-click job here rather than something that requires opening a full photo editor. The flip transform runs on-device using canvas operations, with no upload step involved.',
     steps: [
       { title: 'Upload an image', description: 'Choose the photo you want to mirror.' },
       { title: 'Pick a flip direction', description: 'Select horizontal flip to mirror left-right, or vertical flip to mirror top-bottom.' },
@@ -220,7 +220,7 @@ export const IMAGE_SEO_CONTENT: ToolSeoMap = {
   },
   'ai-bg-remover': {
     intro:
-      'Cutting a subject out from its background used to require a subscription tool or careful manual masking in Photoshop, but this tool detects the foreground automatically using an AI segmentation model that runs on-device through WebGPU or WASM. E-commerce sellers use it to create clean white-background product shots, and social media users use it to place themselves onto new backgrounds. A before/after slider lets you check the mask quality, and because the model runs locally, your photo never leaves your device even though it is being processed by an AI network.',
+      'Cutting a subject out from its background used to require a subscription tool or careful manual masking in Photoshop, but this tool detects the foreground automatically using an AI segmentation model that runs on-device through WebGPU or WASM. A before/after slider lets you check the mask quality, and because the model runs locally, your photo never leaves your device even though it is being processed by an AI network.',
     steps: [
       { title: 'Upload your photo', description: 'Drop in the image containing the subject you want to isolate.' },
       { title: 'Let the AI model process it', description: 'Wait while the on-device segmentation model runs and generates a transparency mask.' },
@@ -247,44 +247,17 @@ export const IMAGE_SEO_CONTENT: ToolSeoMap = {
       'Photos with high contrast between subject and background produce cleaner masks than busy or low-contrast scenes',
     ],
   },
-  'image-sharpen': {
-    intro:
-      'A slightly soft or blurry photo, from a shaky phone shot or a resized image that lost some crispness, can often be improved with an edge-enhancement filter, and this tool applies an adjustable sharpening kernel entirely in your browser. It is popular with photographers doing quick touch-ups and sellers wanting product photos to look crisper on a listing page. You control the sharpening strength and preview the effect before exporting.',
-    steps: [
-      { title: 'Upload the photo', description: 'Select the image you want to sharpen.' },
-      { title: 'Adjust the sharpen intensity', description: 'Move the slider to increase or decrease the strength of edge enhancement.' },
-      { title: 'Preview the effect', description: 'Compare the sharpened preview against the original to avoid over-sharpening artifacts.' },
-      { title: 'Download', description: 'Export the sharpened image once you are happy with the result.' },
-    ],
-    faqs: [
-      { question: 'Can sharpening fix a very blurry photo?', answer: 'Sharpening enhances existing edges and fine detail, but it cannot recover detail that was never captured, so very out-of-focus photos will still look soft, just with more contrast at existing edges.' },
-      { question: 'Can I over-sharpen an image?', answer: 'Yes, pushing the intensity too high can introduce visible halos and noise around edges, so it is best adjusted while watching the live preview.' },
-      { question: 'What formats can I sharpen?', answer: 'JPEG, PNG, and WebP images are all supported.' },
-      { question: 'Is this done with AI?', answer: 'No, sharpening uses a standard convolution filter applied via canvas, so it is fast and works on any device without a GPU.' },
-    ],
-    useCases: [
-      'Crisping up a slightly soft phone photo before posting it online',
-      'Sharpening a product photo so texture and detail read clearly on a listing page',
-      'Restoring some perceived detail to an image that lost crispness after resizing',
-      'Punching up edge definition on a scanned image before printing it',
-    ],
-    tips: [
-      'Increase intensity gradually and check the preview closely, overshooting introduces visible halos around edges',
-      'Apply sharpening as the last step in your workflow, after resizing or compressing, since those operations can soften edges again',
-      'Skip heavy sharpening on already-noisy or high-ISO photos, since it tends to amplify grain along with detail',
-    ],
-  },
   'image-adjust': {
     intro:
-      'Fine-tuning brightness, contrast, saturation, hue, and sharpness is often all a photo needs before it is ready to share, and this tool provides live sliders for each so you can see the effect update in real time without opening a full editor. Photographers correcting exposure and social media users punching up color both find this quicker than a desktop app. Every adjustment is rendered with canvas filters directly in your browser.',
+      'Fine-tuning brightness, contrast, saturation and hue is often all a photo needs before it is ready to share, and this tool provides live sliders for each so you can see the effect update in real time without opening a full editor. Photographers correcting exposure and social media users punching up color both find this quicker than a desktop app. Every adjustment is rendered with canvas filters directly in your browser.',
     steps: [
       { title: 'Upload an image', description: 'Choose the photo you want to adjust.' },
-      { title: 'Move the adjustment sliders', description: 'Tune brightness, contrast, saturation, hue, and sharpness individually.' },
+      { title: 'Move the adjustment sliders', description: 'Tune brightness, contrast, saturation and hue individually. For crispness, use the Sharpen Image tool.' },
       { title: 'Watch the live preview', description: 'Check the updated image as you drag each slider.' },
       { title: 'Export the edited image', description: 'Download the adjusted photo once it looks right.' },
     ],
     faqs: [
-      { question: 'Can I adjust multiple properties at once?', answer: 'Yes, brightness, contrast, saturation, hue, and sharpness can all be combined in a single edit.' },
+      { question: 'Can I adjust multiple properties at once?', answer: 'Yes, brightness, contrast, saturation and hue can all be combined in a single edit.' },
       { question: 'Can I reset to the original if I go too far?', answer: 'Yes, sliders can be dragged back to their default position to undo an adjustment.' },
       { question: 'Does this work on PNG images with transparency?', answer: 'Yes, transparency is preserved while color and tonal adjustments are applied to the visible pixels.' },
       { question: 'Is there a quality loss from adjusting the image?', answer: 'The adjustments themselves are non-destructive until export, at which point the format and quality setting you choose determine final file size.' },
@@ -303,7 +276,7 @@ export const IMAGE_SEO_CONTENT: ToolSeoMap = {
   },
   'image-to-base64': {
     intro:
-      'Developers embedding small icons directly into CSS or HTML, or needing to paste image data into JSON/API payloads, often need a Base64 data URL representation of an image, and this tool converts any image file into that string instantly. It is a common step when inlining images to avoid extra HTTP requests, or when testing an API that expects Base64-encoded image data. The encoding happens locally using the browser FileReader API, so the file is never transmitted anywhere.',
+      'Developers embedding small icons directly into CSS or HTML, or needing to paste image data into JSON/API payloads, often need a Base64 data URL representation of an image, and this tool converts any image file into that string. It is a common step when inlining images to avoid extra HTTP requests, or when testing an API that expects Base64-encoded image data. The encoding happens locally using the browser FileReader API, so the file is never transmitted anywhere.',
     steps: [
       { title: 'Upload the image', description: 'Select the image file you want to encode.' },
       { title: 'View the generated Base64 string', description: 'The full data URL is generated automatically after upload.' },
@@ -355,7 +328,7 @@ export const IMAGE_SEO_CONTENT: ToolSeoMap = {
   },
   'ocr-image': {
     intro:
-      'Scanned documents, screenshots of text, photographed whiteboards, or receipts can all be turned into editable, searchable text using Tesseract.js OCR running entirely in your browser. Students digitizing handwritten or printed notes and professionals extracting text from screenshots both rely on this instead of typing everything manually. Because the OCR engine runs client-side via WebAssembly, the image content is never sent to an external OCR API.',
+      'Scanned documents, screenshots of text, photographed whiteboards, or receipts can all be turned into editable, searchable text using Tesseract.js OCR running entirely in your browser. Because the OCR engine runs client-side via WebAssembly, the image content is never sent to an external OCR API.',
     steps: [
       { title: 'Upload the image', description: 'Select a photo or screenshot containing text.' },
       { title: 'Run text recognition', description: 'Start the OCR process and wait while Tesseract.js analyzes the image locally.' },
@@ -405,33 +378,6 @@ export const IMAGE_SEO_CONTENT: ToolSeoMap = {
     tips: [
       'Use Tile for proofs and previews, and a corner mark for finished work you are happy to share.',
       'Keep the original unmarked file; a watermark cannot be removed cleanly once it is part of the image.',
-    ],
-  },
-  'image-draw': {
-    intro:
-      'Sometimes you need to mark up a screenshot or photo directly, circling a bug in a UI, highlighting a detail for a client, or annotating a diagram, and this tool lets you upload an image and draw over it with a pen, eraser, and color picker. Support teams annotating bug reports and teachers marking up diagrams for students both find this faster than opening a full editor. Everything is drawn onto an in-browser canvas layered over your image, with nothing uploaded to a server.',
-    steps: [
-      { title: 'Upload the image', description: 'Drop in the photo or screenshot you want to annotate.' },
-      { title: 'Pick a tool and color', description: 'Choose the pen or eraser and select a drawing color.' },
-      { title: 'Draw on the image', description: 'Click and drag over the canvas to mark up the areas you want to highlight.' },
-      { title: 'Save your annotated image', description: 'Export the image with your drawings merged in.' },
-    ],
-    faqs: [
-      { question: 'Can I erase mistakes while drawing?', answer: 'Yes, an eraser tool is available to remove parts of your annotation without affecting the underlying photo.' },
-      { question: 'Can I change the pen color and thickness?', answer: 'Yes, color and brush size can both be adjusted before or during drawing.' },
-      { question: 'Does the annotation permanently alter the original file?', answer: 'The original upload is untouched in memory; a new merged file is only created when you export, so you can redo the annotation as many times as needed before saving.' },
-      { question: 'What file formats can I annotate?', answer: 'JPEG, PNG, and WebP images can all be uploaded and annotated.' },
-    ],
-    useCases: [
-      'Circling a bug in a UI screenshot before sending it to a developer',
-      'Highlighting a specific detail in a photo for a client review',
-      'Annotating a diagram with arrows and notes for a classroom lesson',
-      'Marking up a floor plan or map image with instructions before sharing it',
-    ],
-    tips: [
-      'Choose a bright, high-contrast pen color like red or yellow so annotations stand out clearly against the photo',
-      'Increase brush thickness for annotations meant to be viewed at a glance, and reduce it for precise detail markup',
-      'Use the eraser to clean up stray marks before exporting rather than starting the whole annotation over',
     ],
   },
   'image-editor': {
@@ -493,7 +439,7 @@ export const IMAGE_SEO_CONTENT: ToolSeoMap = {
   },
   'image-metadata': {
     intro:
-      'Photos taken on phones and cameras often embed EXIF metadata like GPS coordinates, device model, and timestamps, which can be a privacy risk before sharing online, and this tool strips that metadata while leaving the visible image untouched. Privacy-conscious users posting to social media and journalists protecting source location data both use it before publishing photos. Metadata removal is performed locally by re-encoding the image in your browser, so the stripped data never has a chance to leave your device in the first place.',
+      'Photos taken on phones and cameras often embed EXIF metadata like GPS coordinates, device model, and timestamps, which can be a privacy risk before sharing online, and this tool strips that metadata while leaving the visible image untouched. Metadata removal is performed locally by re-encoding the image in your browser, so the stripped data never has a chance to leave your device in the first place.',
     steps: [
       { title: 'Upload the image', description: 'Select the photo you want to clean of metadata.' },
       { title: 'Review detected metadata', description: 'See what EXIF and other metadata fields were found, if shown.' },
@@ -545,60 +491,6 @@ export const IMAGE_SEO_CONTENT: ToolSeoMap = {
       'Double check a couple of results from the batch before trusting the whole set, especially if source images have mixed dimensions',
     ],
   },
-  'image-collage': {
-    intro:
-      'Combining several photos into one shareable image, a grid of vacation snapshots, a before/after comparison, or a product collage for a listing, is done here by arranging multiple uploaded images into a collage layout and exporting them as a single file. Social media users creating photo grids and sellers combining multiple product angles into one image both use this instead of a dedicated design app. The layout is composed on canvas locally, so your photos are combined without ever being uploaded.',
-    steps: [
-      { title: 'Upload multiple images', description: 'Add all the photos you want to include in the collage.' },
-      { title: 'Choose a layout', description: 'Pick a grid or arrangement style for how the images will be placed.' },
-      { title: 'Adjust spacing and order', description: 'Rearrange images and tweak spacing between them if supported.' },
-      { title: 'Export the collage', description: 'Download the combined collage as a single image file.' },
-    ],
-    faqs: [
-      { question: 'How many photos can I combine into one collage?', answer: 'The tool supports combining several images at once into grid-style layouts, generally enough for typical social media or comparison collages.' },
-      { question: 'Can I control the order of images in the collage?', answer: 'Yes, you can arrange which image appears in which position within the chosen layout.' },
-      { question: 'What file format is the exported collage?', answer: 'The combined collage is exported as a single JPEG or PNG image.' },
-      { question: 'Does image quality suffer when combined into a collage?', answer: 'Each source image is placed at the resolution the layout allows, so very small collage cells will show less detail than the original full-size photo.' },
-    ],
-    useCases: [
-      'Building a grid of vacation photos to share as a single image on social media',
-      'Creating a before/after comparison image from two related photos',
-      'Combining multiple angles of a product into one collage for a marketplace listing',
-      'Putting together a photo grid announcement image for an event or celebration',
-    ],
-    tips: [
-      'Use similarly sized and oriented source photos for the cleanest-looking grid layout',
-      'Keep the collage to a handful of images if you want each one to stay large enough to show real detail',
-      'Export as PNG if any source images have transparency you want preserved in the final collage',
-    ],
-  },
-  'meme-generator': {
-    intro:
-      'Adding the classic bold top and bottom caption text to any image for a shareable meme takes seconds here, with control over font size, color, and stroke so the text stays readable over any background. It is a quick tool for anyone reacting to a trending image or making an inside joke for a group chat without opening a design app. The text is rendered onto the image using canvas locally, and the finished meme is exported directly to your device.',
-    steps: [
-      { title: 'Upload the base image', description: 'Choose the photo or picture you want to turn into a meme.' },
-      { title: 'Enter top and bottom text', description: 'Type your caption text for the top and bottom of the image.' },
-      { title: 'Style the text', description: 'Adjust font size, color, and outline so the caption stays legible.' },
-      { title: 'Download the meme', description: 'Export the finished meme image to share.' },
-    ],
-    faqs: [
-      { question: 'Can I use any image as the meme base?', answer: 'Yes, any JPEG, PNG, or WebP image you upload can be used as the meme background.' },
-      { question: 'Can I adjust the font and text size?', answer: 'Yes, font size and text color can be adjusted so captions fit and remain readable over different backgrounds.' },
-      { question: 'Does the meme text get baked into the image?', answer: 'Yes, the text is rendered permanently onto the image pixels when you export, so it displays correctly wherever you share it.' },
-      { question: 'Is there a limit on how much text I can add?', answer: 'Longer captions will wrap or shrink to fit within the top and bottom caption areas, but very long text can start to look cramped.' },
-    ],
-    useCases: [
-      'Reacting to a trending image with a quick top/bottom caption for a group chat',
-      'Making an inside joke image to share with friends without opening a design app',
-      'Turning a screenshot into a meme format for a social media post',
-      'Adding classic meme-style captions to a reaction image on short notice',
-    ],
-    tips: [
-      'Use a thick text outline/stroke so captions stay readable over busy or light-colored backgrounds',
-      'Keep captions short, long text will wrap or shrink and can start to look cramped in the caption area',
-      'Bump the font size up for images meant to be viewed small, like in a chat thumbnail, so the text stays legible',
-    ],
-  },
   'qr-generator': {
     intro:
       'A QR code stores its content directly in the pattern of squares, so the code works for as long as the content does, with no account and nothing that can expire. This generator makes codes for a web link, plain text, Wi-Fi network details, a contact card (vCard), or a UPI payment request that any UPI app can scan, with the size, colours and error-correction level you choose.',
@@ -626,6 +518,33 @@ export const IMAGE_SEO_CONTENT: ToolSeoMap = {
       'Check a UPI code by scanning it with your own UPI app before printing: the name it shows should be yours.',
       'Raise the error-correction level to Q or H for codes printed small, laminated or with a logo placed over the middle.',
       'Keep dark squares on a light background. Inverted or low-contrast colour schemes look good and fail on many phone cameras.',
+    ],
+  },
+  'image-sharpen': {
+    intro:
+      'A slightly soft or blurry photo, from a shaky phone shot or a resized image that lost some crispness, can often be improved with an edge-enhancement filter, and this tool applies an adjustable sharpening kernel entirely in your browser. You control the sharpening strength and preview the effect before exporting.',
+    steps: [
+      { title: 'Upload the photo', description: 'Select the image you want to sharpen.' },
+      { title: 'Adjust the sharpen intensity', description: 'Move the slider to increase or decrease the strength of edge enhancement.' },
+      { title: 'Preview the effect', description: 'Compare the sharpened preview against the original to avoid over-sharpening artifacts.' },
+      { title: 'Download', description: 'Export the sharpened image once you are happy with the result.' },
+    ],
+    faqs: [
+      { question: 'Can sharpening fix a very blurry photo?', answer: 'Sharpening enhances existing edges and fine detail, but it cannot recover detail that was never captured, so very out-of-focus photos will still look soft, just with more contrast at existing edges.' },
+      { question: 'Can I over-sharpen an image?', answer: 'Yes, pushing the intensity too high can introduce visible halos and noise around edges, so it is best adjusted while watching the live preview.' },
+      { question: 'What formats can I sharpen?', answer: 'JPEG, PNG, and WebP images are all supported.' },
+      { question: 'Is this done with AI?', answer: 'No, sharpening uses a standard convolution filter applied via canvas, so it is fast and works on any device without a GPU.' },
+    ],
+    useCases: [
+      'Crisping up a slightly soft phone photo before posting it online',
+      'Sharpening a product photo so texture and detail read clearly on a listing page',
+      'Restoring some perceived detail to an image that lost crispness after resizing',
+      'Punching up edge definition on a scanned image before printing it',
+    ],
+    tips: [
+      'Increase intensity gradually and check the preview closely, overshooting introduces visible halos around edges',
+      'Apply sharpening as the last step in your workflow, after resizing or compressing, since those operations can soften edges again',
+      'Skip heavy sharpening on already-noisy or high-ISO photos, since it tends to amplify grain along with detail',
     ],
   },
 };

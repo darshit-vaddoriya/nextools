@@ -47,7 +47,7 @@ The rule that avoids both: do arithmetic in UTC, convert for display. "Add one d
 
 When the question is "what time is the call for everyone", the answer is not arithmetic on offsets, because the offsets on the day of the meeting may not be the offsets today.
 
-A [time zone converter](/tool/timezone-converter) that works from zone names rather than fixed offsets applies the rules for the actual date, which is why it can tell you that the London to New York gap is five hours for most of the year but four for about three weeks in March and one week around the start of November, because the US and UK change their clocks on different dates. That gap genuinely exists, it catches recurring meetings every spring, and no amount of offset arithmetic predicts it.
+A [time zone converter](/tool/timezone-converter) that works from zone names rather than fixed offsets applies the rules for the actual date, which is why it can tell you that the London to New York gap is five hours for most of the year but four for about three weeks in March and one week around the start of November, because the US and UK change their clocks on different dates. That gap exists, it catches recurring meetings every spring, and no amount of offset arithmetic predicts it.
 
 ## Date arithmetic is not subtraction
 
@@ -108,7 +108,7 @@ An equated monthly instalment is a fixed payment covering interest on the outsta
 EMI = P × r × (1 + r)^n / ((1 + r)^n − 1)
 \`\`\`
 
-\`P\` is the principal, \`n\` the number of months, and \`r\` the **monthly** rate, which is the annual rate divided by 12 and then by 100. Using the annual rate here is the usual error and produces a wildly wrong figure. An [EMI calculator](/tool/emi-calculator) does this correctly and, more usefully, shows the amortisation schedule underneath; the exponentiation is awkward enough by hand that a [scientific calculator](/tool/scientific-calc) is the minimum if you want to check it yourself.
+\`P\` is the principal, \`n\` the number of months, and \`r\` the **monthly** rate, which is the annual rate divided by 12 and then by 100. Using the annual rate here is the usual error and produces a wildly wrong figure. An [EMI calculator](/tool/emi-calculator) does this correctly and, more usefully, shows the amortisation schedule underneath; the exponentiation is awkward enough by hand that a scientific calculator, such as the one on any phone, is the minimum if you want to check it yourself.
 
 The payment is constant. Its composition is not, and that is the part worth understanding:
 
@@ -143,12 +143,12 @@ Two that come up more than you would expect:
 
 [Number to words](/tool/number-to-words) exists because cheques, contracts and invoices require the amount spelled out. The reason is fraud prevention: digits can be altered with a pen, words cannot be extended convincingly. Note that the Indian system groups in lakhs and crores rather than thousands and millions, so the same figure is written differently depending on the convention.
 
-[Roman numerals](/tool/roman-numerals) follow a subtractive rule where a smaller value before a larger one is subtracted: \`IV\` is 4, \`IX\` is 9, \`XL\` is 40. Only powers of ten are subtracted, and only from the next two values up, which is why \`IC\` is not a valid way to write 99. It is \`XCIX\`.
+Roman numerals follow a subtractive rule where a smaller value before a larger one is subtracted: \`IV\` is 4, \`IX\` is 9, \`XL\` is 40. Only powers of ten are subtracted, and only from the next two values up, which is why \`IC\` is not a valid way to write 99. It is \`XCIX\`.
 
 Every calculation here is arithmetic on numbers you typed, so none of it needs a server. That is worth having for the loan and tax cases in particular, where the figures being entered are salary, outstanding debt and turnover.`,
-  'unit-conversion-and-its-assumptions': `Unit conversion looks like the most solved problem in arithmetic. It is also the cause of one of the most expensive software failures on record — the Mars Climate Orbiter, lost because one system produced pound-force seconds and another consumed newton-seconds — and of a steady stream of smaller errors in recipes, invoices and engineering spreadsheets.
+  'unit-conversion-and-its-assumptions': `Unit conversion looks like the most solved problem in arithmetic. It is also the cause of one of the most expensive software failures on record (the Mars Climate Orbiter, lost because one system produced pound-force seconds and another consumed newton-seconds) and of a steady stream of smaller errors in recipes, invoices and engineering spreadsheets.
 
-The reason is that "convert units" covers several genuinely different operations.
+The reason is that "convert units" covers several different operations.
 
 ## Ratio scales: a single factor
 
@@ -164,7 +164,7 @@ The first two are exact because the inch and the yard were redefined in terms of
 
 ## Interval scales: a factor and an offset
 
-Celsius and Fahrenheit have arbitrary zeros. Zero degrees is not the absence of temperature, so ratios are meaningless — 20 °C is not twice as hot as 10 °C in any physical sense.
+Celsius and Fahrenheit have arbitrary zeros. Zero degrees is not the absence of temperature, so ratios are meaningless: 20 °C is not twice as hot as 10 °C in any physical sense.
 
 \`\`\`
 °F = °C × 9/5 + 32
@@ -179,13 +179,13 @@ Kelvin is the exception: it has a true zero, so it is a ratio scale and 200 K re
 
 Several unit names mean different quantities depending on where you are:
 
-- **Gallon.** US 3.785 L, imperial 4.546 L — about 20% apart.
+- **Gallon.** US 3.785 L, imperial 4.546 L: about 20% apart.
 - **Fluid ounce.** US 29.57 mL, imperial 28.41 mL.
 - **Ton.** Short 907 kg, long 1,016 kg, metric 1,000 kg.
 - **Pint.** US 473 mL, imperial 568 mL.
 - **Billion.** Now 10⁹ almost everywhere, but older European documents use 10¹².
 
-None of these is signalled by the unit name, so a fuel-economy or shipping-weight figure copied between two documents can be 10–20% wrong with nothing to flag it. A [unit converter](/tool/unit-converter) that names the system explicitly — US liquid gallon, not "gallon" — is not being pedantic; it is the only way the answer is defined.
+None of these is signalled by the unit name, so a fuel-economy or shipping-weight figure copied between two documents can be 10–20% wrong with nothing to flag it. A [unit converter](/tool/unit-converter) that names the system explicitly (US liquid gallon, not "gallon") is not being pedantic; it is the only way the answer is defined.
 
 > [!NOTE]
 > Fuel economy is a double trap: miles per gallon is distance ÷ volume, litres per 100 km is volume ÷ distance. They are reciprocals, so converting is not a factor at all, and a higher number is better in one and worse in the other.
@@ -200,10 +200,10 @@ Some "conversions" are not unit conversions:
 
 **Data rate to transfer time** requires the actual throughput, not the advertised one. And bits versus bytes is a factor of eight that connection speeds and file sizes deliberately state differently.
 
-**KB versus KiB.** 1 kB is 1,000 bytes; 1 KiB is 1,024. Storage manufacturers use the first, operating systems historically used the second, and the gap grows with scale — about 7% at the gigabyte level and 10% at the terabyte level, which is exactly why a "2 TB" drive shows as 1.81 TB.
+**KB versus KiB.** 1 kB is 1,000 bytes; 1 KiB is 1,024. Storage manufacturers use the first, operating systems historically used the second, and the gap grows with scale: about 7% at the gigabyte level and 10% at the terabyte level, which is exactly why a "2 TB" drive shows as 1.81 TB.
 
 > [!WARNING]
-> Round once, at the end. Converting inches to centimetres, rounding to a whole number, then converting to metres and rounding again produces an error several times larger than doing the full chain at full precision and rounding the final figure. In spreadsheets, be sure you are rounding the value rather than only its display — the two behave very differently downstream.
+> Round once, at the end. Converting inches to centimetres, rounding to a whole number, then converting to metres and rounding again produces an error several times larger than doing the full chain at full precision and rounding the final figure. In spreadsheets, be sure you are rounding the value rather than only its display: the two behave very differently downstream.
 
 ## Practical rules
 
@@ -213,5 +213,5 @@ Some "conversions" are not unit conversions:
 4. Treat temperature differences separately from temperature values.
 5. Round at the end, once.
 
-Check figures with the [unit converter](/tool/unit-converter), which names the system for every ambiguous unit, and use the [scientific calculator](/tool/scientific-calc) to carry a chain of conversions at full precision before rounding once at the end.`,
+Check figures with the [unit converter](/tool/unit-converter), which names the system for every ambiguous unit, and carry any chain of conversions at full precision, rounding once at the end.`,
 };

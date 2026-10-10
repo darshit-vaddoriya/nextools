@@ -3,7 +3,7 @@
 
 export const TOOL_EXPLANATIONS: Record<string, string> = {
   'json-formatter':
-    'Makes messy JSON easy to read by adding proper spacing and indentation. You can also shrink it to save space, check if it is valid, and explore it as a tree. Paste your JSON in the box and the formatted version appears instantly. Use the buttons to copy, download, or switch between tree and code view.',
+    'Makes messy JSON easy to read by adding proper spacing and indentation. You can also shrink it to save space, check if it is valid, and explore it as a tree. Paste your JSON in the box and the formatted version appears. Use the buttons to copy, download, or switch between tree and code view.',
 
   'base64':
     'Converts text or files into Base64, and converts Base64 back into the original data. Base64 is commonly used to send data safely inside emails, URLs, or JSON. Type your text or pick a file, then choose Encode or Decode. The result can be copied with one click.',
@@ -15,7 +15,7 @@ export const TOOL_EXPLANATIONS: Record<string, string> = {
     'Reformats YAML with consistent indentation, and converts between YAML and JSON in either direction. Handy for editing config files like docker-compose or CI pipelines. Paste your YAML or JSON, pick the direction you need, and copy the output. Anchors, tags and multi-document files are not supported.',
 
   'sql-formatter':
-    'Beautifies SQL queries by capitalizing keywords and putting each major clause, SELECT, FROM, WHERE, JOIN, GROUP BY, on its own indented line, so long queries are easier to read and review. Paste your query and the formatted version appears instantly.',
+    'Beautifies SQL queries by capitalizing keywords and putting each major clause, SELECT, FROM, WHERE, JOIN, GROUP BY, on its own indented line, so long queries are easier to read and review. Paste your query and the formatted version appears.',
 
   'html-formatter':
     'Prettifies HTML with clean, consistent indentation, or minifies it into a single compact line to shrink file size. Useful for tidying up scraped markup or shrinking a page before deploying it. Paste your HTML, choose Format or Minify, and copy the result.',
@@ -39,7 +39,7 @@ export const TOOL_EXPLANATIONS: Record<string, string> = {
     'Converts HTML into clean Markdown, or Markdown into HTML, in either direction. Useful for pulling content out of a web page to paste into a README, or turning written Markdown notes into HTML for a page. Paste your source, pick the direction, and copy the converted result.',
 
   'hash-generator':
-    'Turns any text into a fixed-length fingerprint using MD5, SHA-1, SHA-256 or SHA-512. Hashes help you check that data has not been changed, or store passwords safely. Type or paste your text, choose a hash type, and the result appears instantly. Hashes are one-way, so they cannot be converted back to the original text.',
+    'Turns any text into a fixed-length fingerprint using MD5, SHA-1, SHA-256 or SHA-512. Hashes help you check that data has not been changed. Type or paste your text, choose a hash type, and the result appears. Hashes are one-way, so they cannot be converted back to the original text.',
 
   'uuid-generator':
     'Creates random unique IDs (UUID v4) that are used to identify records, files, or users. Every generated ID is different, so you can use them without worrying about duplicates. Choose how many IDs you need and any formatting options, then copy the list or download it.',
@@ -48,13 +48,13 @@ export const TOOL_EXPLANATIONS: Record<string, string> = {
     'Creates strong random passwords that are hard to guess. You can control the length and choose which characters to include, such as uppercase letters, lowercase letters, numbers and symbols. Tick the options you want, adjust the length, and generate. The strength meter shows how secure the password is, and you can copy it in one click.',
 
   'regex-tester':
-    'Lets you test regular expressions against sample text and see matches highlighted instantly. It is great for validating emails or phone numbers, and for extracting parts of text. Type your pattern in the pattern box and your test text in the other box, pick the flags you need, and watch the matches update live.',
+    'Lets you test regular expressions against sample text and see matches highlighted. It is great for validating emails or phone numbers, and for extracting parts of text. Type your pattern in the pattern box and your test text in the other box, pick the flags you need, and watch the matches update live.',
 
   'case-converter':
     'Changes text between different naming styles such as camelCase, snake_case, kebab-case, PascalCase, UPPERCASE and lowercase. This is handy for programming variable names or cleaning up text. Paste your text, click the style you want, and copy the result.',
 
   'jwt-decoder':
-    'Decodes JWT tokens, the tokens used for logins and APIs, so you can see what is inside them. It splits the token into its header, payload and signature and shows them separately. Paste your JWT and it is decoded instantly, letting you inspect the claims and check the expiry time.',
+    'Decodes JWT tokens, the tokens used for logins and APIs, so you can see what is inside them. It splits the token into its header, payload and signature and shows them separately. Paste your JWT and it is decoded, letting you inspect the claims and check the expiry time.',
 
   'word-counter':
     'Counts words, characters, sentences and paragraphs, plus estimated reading time, word frequency and readability scores for any text. Useful for essays, articles, tweets and social media posts. Paste or type your text and the stats update live as you write.',
@@ -75,7 +75,7 @@ export const TOOL_EXPLANATIONS: Record<string, string> = {
     'Cuts an image down to a selected area and can lock the aspect ratio, for example 1:1 or 16:9. Upload your image, drag the crop box over the part you want to keep, choose an aspect ratio if you need one, and download the result.',
 
   'image-rotate':
-    'Rotates or flips an image by any angle. You can fix a sideways photo or flip it horizontally and vertically. Upload your image, use the rotate and flip buttons to get the orientation right, then download the result.',
+    'Rotates an image by any angle, for example to fix a sideways photo or straighten a tilted horizon. Upload your image, set the angle, then download the result. To mirror an image instead, use Flip Image.',
 
   'image-flip':
     'Mirrors an image horizontally or vertically, like looking at it in a reflection. Upload your image, choose flip horizontal or flip vertical, and download the mirrored version.',
@@ -87,10 +87,8 @@ export const TOOL_EXPLANATIONS: Record<string, string> = {
     'Reduces the file size of images without a visible drop in quality. This helps photos load faster on websites and fit within email limits. Drop your images, adjust the quality slider, and download the smaller versions. You can compare the before and after sizes.',
 
   'image-adjust':
-    'Adjusts the brightness, contrast, saturation, hue and sharpness of an image using simple sliders. Upload your image and move the sliders until it looks the way you want, then download the result.',
+    'Adjusts the brightness, contrast, saturation and hue of an image using simple sliders. Upload your image and move the sliders until it looks the way you want, then download the result.',
 
-  'image-sharpen':
-    'Makes blurry photos look crisper by increasing the detail at edges. Upload your image and adjust the sharpening strength until you are happy with the result, then download it.',
 
   'svg-converter':
     'Converts SVG vector images into PNG or JPG at any size. It is useful for turning logos and icons into image formats that work everywhere. Upload your SVG, set the resolution or scale you need, and download the converted image.',
@@ -155,11 +153,7 @@ export const TOOL_EXPLANATIONS: Record<string, string> = {
   'pdf-metadata':
     'Shows and lets you edit the hidden properties of a PDF, such as title, author, subject and keywords. Select your PDF to see its current metadata, change the fields you want, and click Save metadata to download a copy with the new properties.',
 
-  'pdf-page-extractor':
-    'Pulls out a specific range of pages from a PDF and saves them as a new document, leaving the original untouched. Type a range such as 1-3,5 or select pages from the grid, then click Extract. The extracted pages download as a new PDF.',
 
-  'image-draw':
-    'Lets you draw directly on top of an image you upload, using a pen, eraser, shapes, arrows and text. It is great for annotating screenshots, photos or designs. Upload your image, pick a tool and color from the panels, and draw on the image. Then download the annotated version.',
 
   'image-editor':
     'A full in-browser image editor that never uploads your photos. Open an image and use the left toolbar to draw, highlight, erase, add shapes, arrows and text, blur or pixelate regions, or sample colors. The Adjust tab lets you tweak brightness, contrast, saturation, hue and sharpness, the Resize tab changes dimensions, and the Rotate tab rotates or flips the canvas. Use the crop tool to trim edges with a resizable selection box. Every edit is undoable, layers stay editable, and you can export the result as PNG, JPG or WebP at current, original or custom size.',
@@ -185,14 +179,10 @@ export const TOOL_EXPLANATIONS: Record<string, string> = {
   'pdf-flatten':
     'Locks in form field values and annotations by merging them permanently into the page content, so the PDF can no longer be edited as a form. Upload the filled form and click Flatten to get a final, non-editable PDF.',
 
-  'pdf-repair':
-    'Attempts to fix a PDF that will not open properly, is missing pages, or shows as corrupted. Upload the damaged file and the tool rebuilds its internal structure where possible, letting you download a working copy.',
 
   'pdf-compare':
     'Compares two versions of a PDF side by side and highlights the text that was added, removed or changed between them. Upload both files and the differences are marked clearly, making it easy to spot edits in contracts or reports.',
 
-  'pdf-viewer':
-    'Opens and displays PDF files directly in your browser, with page navigation, zoom and search, no PDF reader software required. Drop in a file to start reading immediately, entirely on your own device.',
 
   'docx-to-pdf':
     'Converts a Microsoft Word DOCX file into a PDF while keeping the original formatting, fonts and layout intact. Upload your DOCX file and download a ready-to-share PDF in seconds.',
@@ -206,17 +196,13 @@ export const TOOL_EXPLANATIONS: Record<string, string> = {
   'docx-to-txt':
     'Strips all formatting, styles and images from a Word document and leaves just the plain text. Upload your DOCX file and download or copy the clean text output.',
 
-  'html-to-docx':
-    'Converts HTML markup into a formatted Word DOCX document, preserving headings, lists and basic styling. Paste your HTML, preview the result, and download it as a ready-to-edit Word file.',
 
   'markdown-to-docx':
     'Converts Markdown text into a properly formatted Word DOCX document, turning headings, lists and emphasis into native Word styles. Paste or upload your Markdown file and download the generated DOCX.',
 
   'word-viewer':
-    'Opens and displays DOCX files directly in your browser so you can read a Word document without installing Microsoft Word. Upload the file to view it instantly on any device.',
+    'Opens and displays DOCX files directly in your browser so you can read a Word document without installing Microsoft Word. Upload the file to view it on any device.',
 
-  'word-metadata':
-    'Shows the hidden properties stored inside a DOCX file, including author, creation and modification dates, and revision count. Upload a Word document to inspect its metadata at a glance.',
 
   'word-compare':
     'Compares two Word documents and highlights exactly which sentences, words or formatting changed between them. Upload both versions and the differences are shown clearly side by side.',
@@ -226,13 +212,11 @@ export const TOOL_EXPLANATIONS: Record<string, string> = {
 
   // ─── Text tools ───────────────────────────────────────────────
   'remove-duplicates-text':
-    'Removes repeated lines from a block of text, keeping only the first occurrence of each one. You can match case-sensitively or not, and sort the result afterward. Paste your text and the cleaned list appears instantly.',
+    'Removes repeated lines from a block of text, keeping only the first occurrence of each one. You can match case-sensitively or not, and sort the result afterward. Paste your text and the cleaned list appears.',
 
   'sort-lines':
     'Sorts the lines of any text alphabetically, numerically, by length, or in reverse order. Useful for tidying up lists, CSV columns pasted as text, or code. Paste your lines, pick a sort mode, and copy the result.',
 
-  'reverse-text':
-    'Reverses a string of text, either flipping every character or just reversing the order of the words. Paste your text, pick a mode, and copy the reversed result.',
 
   'lorem-ipsum':
     'Generates placeholder Lorem Ipsum text for mockups, designs and layout testing. Choose how many paragraphs, sentences or words you need and copy the generated text straight into your design.',
@@ -247,7 +231,7 @@ export const TOOL_EXPLANATIONS: Record<string, string> = {
     'Finds every match of a word, phrase or regular expression in your text and replaces it with something else, showing how many replacements were made. Great for quick bulk edits without opening a code editor.',
 
   'remove-empty-lines':
-    'Strips out blank or whitespace-only lines from a block of text, leaving only the lines that actually contain content. Paste your text and the cleaned version appears instantly.',
+    'Strips out blank or whitespace-only lines from a block of text, leaving only the lines that actually contain content. Paste your text and the cleaned version appears.',
 
   'extract-emails':
     'Scans a block of text and pulls out every email address it can find, so you do not have to search manually. Paste text from an inbox, document or webpage and copy the list of addresses found.',
@@ -258,15 +242,11 @@ export const TOOL_EXPLANATIONS: Record<string, string> = {
   'extract-phones':
     'Scans a block of text and finds phone-number-like patterns, including common international formats. Paste your text and get a clean list of the numbers found.',
 
-  'extract-hashtags':
-    'Pulls all #hashtags and @mentions out of social media text or captions, listing them separately so you can reuse or analyze them. Paste your post text and copy the extracted list.',
 
-  'diff-text':
-    'Compares two blocks of text word by word and highlights exactly what was added or removed between them. Paste the original in one box and the edited version in the other to see the changes.',
 
   // ─── Web tools ────────────────────────────────────────────────
   'url-parser':
-    'Breaks any URL down into its parts, protocol, host, port, path, query parameters and hash, displayed in an easy-to-read table. Paste a URL to instantly see everything it contains.',
+    'Breaks any URL down into its parts, protocol, host, port, path, query parameters and hash, displayed in an easy-to-read table. Paste a URL to see everything it contains.',
 
   'user-agent-parser':
     'Reads a browser User-Agent string and tells you the browser, version, operating system, rendering engine and device type behind it. Defaults to your own browser, or paste any User-Agent string to inspect it.',
@@ -283,24 +263,22 @@ export const TOOL_EXPLANATIONS: Record<string, string> = {
   'ascii-converter':
     'Converts text into space-separated ASCII/decimal character codes, or turns a list of codes back into readable text. Paste either format and copy the conversion.',
 
-  'binary-converter':
-    'Converts a number between binary, decimal, hexadecimal and octal, updating all four fields together as you type any one of them. Handy for quick number-base conversions while coding.',
 
   // ─── Utility / calculator tools ────────────────────────────────
   'unit-converter':
-    'Converts values between units of length, weight, temperature, area, volume and speed. Pick a category, choose the units you are converting between, and the result updates instantly as you type.',
+    'Converts values between units of length, weight, temperature, area, volume and speed. Pick a category, choose the units you are converting between, and the result updates as you type.',
 
   'timezone-converter':
     'Shows what a chosen date and time looks like across a list of common time zones around the world, using your browser\'s built-in time zone data. Pick a date/time and source zone to see the equivalent everywhere else.',
 
   'timestamp-converter':
-    'Converts a Unix timestamp (in seconds or milliseconds) into a human-readable date, or converts any date back into a timestamp. Includes a "now" button to grab the current timestamp instantly.',
+    'Converts a Unix timestamp (in seconds or milliseconds) into a human-readable date, or converts any date back into a timestamp. Includes a "now" button to grab the current timestamp.',
 
   'age-calculator':
-    'Calculates exact age in years, months and days (plus total days) from a birthdate to today. Enter a birthdate and the full breakdown appears instantly.',
+    'Calculates exact age in years, months and days (plus total days) from a birthdate to today. Enter a birthdate and the full breakdown appears.',
 
   'percentage-calc':
-    'Handles the three most common percentage questions: what is X% of Y, what percent X is of Y, and the percentage change between two numbers. Pick a calculator, enter your numbers, and get the answer instantly.',
+    'Handles the three most common percentage questions: what is X% of Y, what percent X is of Y, and the percentage change between two numbers. Pick a calculator, enter your numbers, and get the answer.',
 
   'bmi-calculator':
     'Calculates Body Mass Index from height and weight, in either metric or imperial units, along with the standard BMI category (underweight, normal, overweight, obese). Enter your measurements to see your result.',
@@ -308,8 +286,6 @@ export const TOOL_EXPLANATIONS: Record<string, string> = {
   'emi-calculator':
     'Calculates the monthly EMI for a loan from the principal, interest rate and tenure, along with the total interest and total amount payable over the loan\'s life, using the standard reducing-balance formula.',
 
-  'scientific-calc':
-    'A full scientific calculator supporting trigonometry, logarithms, powers, roots, factorials and memory functions (M+/M-/MR/MC), usable entirely with button clicks, just like a physical calculator.',
 
   'gst-calculator':
     'Calculates GST-inclusive and GST-exclusive amounts for an entered value, with quick presets for the common Indian GST slabs (5%, 12%, 18%, 28%). Enter an amount and rate to see the full breakdown.',
@@ -317,8 +293,6 @@ export const TOOL_EXPLANATIONS: Record<string, string> = {
   'number-to-words':
     'Writes any amount in English words, in the Indian system with lakh and crore or the international system with million and billion. Turn on rupees and paise for the cheque format, for example Rupees One Lakh Twenty-Five Thousand Only.',
 
-  'roman-numerals':
-    'Converts numbers to Roman numerals and Roman numerals back to numbers, both directions, with validation to catch invalid input. Type either format to see the conversion.',
 
   // ─── Security tools ─────────────────────────────────────────────
   'passphrase-gen':
@@ -333,8 +307,6 @@ export const TOOL_EXPLANATIONS: Record<string, string> = {
   'random-string':
     'Generates cryptographically secure random strings using your browser\'s crypto API, with configurable length, character set (letters, digits, symbols) and output count. Useful for API keys, tokens or temporary secrets.',
 
-  'secure-notes':
-    'Lets you write notes that are encrypted with a passphrase you choose (AES-GCM with PBKDF2 key derivation) before being saved in your browser\'s local storage, nothing is ever sent to a server. Losing the passphrase means losing the note, so keep it somewhere safe.',
 
   // ─── Color tools ──────────────────────────────────────────────
   'gradient-generator':
@@ -346,8 +318,6 @@ export const TOOL_EXPLANATIONS: Record<string, string> = {
   'contrast-checker':
     'Checks the contrast ratio between a foreground and background color against WCAG accessibility guidelines, showing pass/fail for AA and AAA levels on both normal and large text, with a live text preview.',
 
-  'glassmorphism':
-    'Visually designs a frosted-glass ("glassmorphism") UI panel, blur, transparency, border and shadow, with a live preview, then gives you the ready-to-use CSS to copy into your project.',
 
   // ─── Archive tools ──────────────────────────────────────────────
   'zip-extractor':
@@ -356,8 +326,6 @@ export const TOOL_EXPLANATIONS: Record<string, string> = {
   'zip-creator':
     'Bundles multiple files you select or drag in into a single downloadable ZIP archive, built entirely in your browser.',
 
-  'batch-zip':
-    'Zips each of several uploaded files individually rather than combining them into one archive, then bundles those individual zips together for a single download, handy when you need separate archives per file.',
 
   // ─── Excel / CSV tools ───────────────────────────────────────────
   'csv-viewer':
@@ -379,7 +347,7 @@ export const TOOL_EXPLANATIONS: Record<string, string> = {
     'Converts freely between CSV, TSV and JSON in any direction, so you can move tabular data between formats without opening a spreadsheet app.',
 
   'delimiter-converter':
-    'Changes the delimiter of any delimited text file, for example turning comma-separated values into pipe- or semicolon-separated values. Pick the source and target delimiter and convert instantly.',
+    'Changes the delimiter of any delimited text file, for example turning comma-separated values into pipe- or semicolon-separated values. Pick the source and target delimiter and convert.',
 
   'remove-duplicates':
     'Scans CSV data for exact-match duplicate rows and removes them, telling you how many were found and removed. Paste or upload your CSV and download the de-duplicated version.',
@@ -397,11 +365,7 @@ export const TOOL_EXPLANATIONS: Record<string, string> = {
   'base64-to-image':
     'Decodes a Base64 data URL or raw Base64 string back into a viewable image, with a download button for the result. Paste your Base64 string to preview and save the image.',
 
-  'image-collage':
-    'Arranges 2 to 9 uploaded images into a single grid collage, automatically choosing a sensible layout based on how many images you add, then lets you download the combined result.',
 
-  'meme-generator':
-    'Adds classic bold, white, black-outlined caption text to the top and bottom of any image, the familiar meme style, right in your browser. Upload an image, type your captions, and download the result.',
 
   'batch-resize':
     'Resizes many images at once to the same exact dimensions or the same percentage scale, then bundles all the results into a single downloadable ZIP file.',
@@ -574,4 +538,6 @@ export const TOOL_EXPLANATIONS: Record<string, string> = {
 
   'vtt-to-srt':
     'Converts WebVTT caption files to SRT for editors and media players. Drop the VTT and download the SRT.',
+  'image-sharpen':
+    'Makes blurry photos look crisper by increasing the detail at edges. Upload your image and adjust the sharpening strength until you are happy with the result, then download it.',
 };

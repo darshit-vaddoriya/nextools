@@ -110,33 +110,6 @@ export const WORD_EXCEL_ARCHIVE_COLOR_SEO_CONTENT: ToolSeoMap = {
       'Use this before a word count or text-analysis tool that gets thrown off by hidden formatting characters.',
     ],
   },
-  'html-to-docx': {
-    intro:
-      'This tool takes raw HTML markup and turns it into a formatted Word .docx file, which is useful when you have web content, an exported blog post, or an email template that needs to become an editable Word document. Headings, bold and italic text, and lists are translated into corresponding Word styles. Since everything is generated locally, your HTML content and the resulting document never pass through an external server.',
-    steps: [
-      { title: 'Paste or upload your HTML', description: 'Enter HTML markup directly into the input area.' },
-      { title: 'Convert in your browser', description: 'The tool builds a valid DOCX structure locally from the HTML tags.' },
-      { title: 'Preview the result', description: 'Check that headings, text formatting, and lists mapped correctly.' },
-      { title: 'Download the Word document', description: 'Save the generated .docx file to open in Word or Google Docs.' },
-    ],
-    faqs: [
-      { question: 'Which HTML tags are supported?', answer: 'Common tags such as headings, paragraphs, bold/italic text, links, and lists convert reliably; highly custom CSS layouts may not carry over exactly.' },
-      { question: 'Can I open the output in both Microsoft Word and Google Docs?', answer: 'Yes, the generated file follows the standard .docx format compatible with Word, Google Docs, and LibreOffice.' },
-      { question: 'Will inline CSS styles be preserved exactly?', answer: 'Basic styling like bold, italics, and color is preserved where possible, but pixel-perfect CSS layouts are not guaranteed since Word uses its own styling model.' },
-      { question: 'Does it support embedded images in the HTML?', answer: 'Image tags with accessible sources are included where the converter can read the image data.' },
-    ],
-    useCases: [
-      'Turning an exported blog post into an editable Word document for a client review',
-      'Converting an HTML email template into a .docx that non-technical colleagues can edit',
-      'Archiving web page content as a Word file for offline record-keeping',
-      'Handing off web copy to someone who only works in Microsoft Word or Google Docs',
-    ],
-    tips: [
-      'Stick to semantic tags like headings, paragraphs, and lists for the most reliable conversion, heavy CSS layouts won\'t translate.',
-      'Check image sources are publicly reachable URLs or embedded data before converting, since broken links won\'t resolve.',
-      'Review the output in Word for spacing differences, since HTML and Word use different default margins.',
-    ],
-  },
   'markdown-to-docx': {
     intro:
       'This tool converts Markdown text or files into a properly formatted Word document, applying Word heading styles, bullet and numbered lists, and inline emphasis automatically. It is a fast way to turn README files, notes, or documentation written in Markdown into a .docx you can share with people who expect a Word file. The whole conversion process runs locally in your browser, so your notes stay private.',
@@ -189,33 +162,6 @@ export const WORD_EXCEL_ARCHIVE_COLOR_SEO_CONTENT: ToolSeoMap = {
       'Use your browser\'s print dialog if you need a physical copy or PDF snapshot of what you\'re viewing.',
       'If a document fails to render, try re-saving it as .docx from its original application, since the viewer expects the standard XML format.',
       'This is read-only by design, use a dedicated editor tool if you need to change the content.',
-    ],
-  },
-  'word-metadata': {
-    intro:
-      'This tool inspects the hidden metadata stored inside a .docx file, such as the author name, creation and last-modified dates, revision number, and any custom document properties. It is a quick way to check who last touched a document or verify authorship before sharing a file externally, without needing to open Word\'s document properties dialog. All metadata is read locally in your browser.',
-    steps: [
-      { title: 'Upload the Word document', description: 'Select the .docx file whose metadata you want to inspect.' },
-      { title: 'View the extracted metadata', description: 'The tool reads the document\'s core and app properties locally.' },
-      { title: 'Check fields of interest', description: 'Look at author, dates, revision count, and custom properties.' },
-      { title: 'Edit or export if needed', description: 'Update fields where supported and save the file with revised metadata.' },
-    ],
-    faqs: [
-      { question: 'What metadata fields does it show?', answer: 'Typical fields include author, company, creation date, last modified date, last modified by, and revision number, along with any custom document properties.' },
-      { question: 'Is this useful for removing personal information before sharing?', answer: 'Yes, checking metadata is a good first step before sending a document externally, since author names and edit history can reveal more than intended.' },
-      { question: 'Can I remove or change the metadata?', answer: 'Where editing is supported, you can update fields like author or title and save a new copy with the revised metadata.' },
-      { question: 'Does it work on documents created in Google Docs and exported to DOCX?', answer: 'Yes, as long as the file follows the standard .docx XML format, its embedded metadata can be read.' },
-    ],
-    useCases: [
-      'Checking who last edited a document before forwarding it to a client or partner',
-      'Auditing authorship and revision history on a legal or contractual document',
-      'Scrubbing sensitive author or company names from a document before public release',
-      'Confirming a document\'s real creation date when timing matters for compliance or records',
-    ],
-    tips: [
-      'Always check metadata before sending a document externally, author names and company fields often leak more than intended.',
-      'Custom document properties can hold leftover template data from wherever the file originated, so scan those too.',
-      'Editing metadata only changes what\'s stored in the file properties, not the visible document content.',
     ],
   },
   'word-compare': {
@@ -273,7 +219,7 @@ export const WORD_EXCEL_ARCHIVE_COLOR_SEO_CONTENT: ToolSeoMap = {
   },
   'csv-viewer': {
     intro:
-      'This tool lets you open a CSV or TSV file and browse it as a readable table instead of squinting at raw comma-separated text in a plain text editor. You can upload a file or paste data directly, switch the delimiter between comma, tab, pipe, or semicolon, and the table updates instantly. Everything is parsed locally with a lightweight hand-written parser, so your data never leaves your browser.',
+      'This tool lets you open a CSV or TSV file and browse it as a readable table instead of squinting at raw comma-separated text in a plain text editor. You can upload a file or paste data directly, switch the delimiter between comma, tab, pipe, or semicolon, and the table redraws. Everything is parsed locally with a lightweight hand-written parser, so your data never leaves your browser.',
     steps: [
       { title: 'Upload or paste your data', description: 'Drag in a .csv/.tsv file or paste delimited text into the box.' },
       { title: 'Pick the correct delimiter', description: 'Choose comma, tab, pipe, or semicolon if it is not auto-detected.' },
@@ -354,7 +300,7 @@ export const WORD_EXCEL_ARCHIVE_COLOR_SEO_CONTENT: ToolSeoMap = {
   },
   'csv-to-json': {
     intro:
-      'This tool converts CSV data into a JSON array of objects, using the first row as property keys for every subsequent row, which is a common step when feeding tabular data into an API or JavaScript application. It works on plain CSV or TSV text rather than binary Excel files, and the conversion happens instantly as you type or upload. Nothing is sent to a server during the conversion.',
+      'This tool converts CSV data into a JSON array of objects, using the first row as property keys for every subsequent row, which is a common step when feeding tabular data into an API or JavaScript application. It works on plain CSV or TSV text rather than binary Excel files, and the conversion happens as you type or upload. Nothing is sent to a server during the conversion.',
     steps: [
       { title: 'Upload or paste CSV data', description: 'Load your delimited data into the input box.' },
       { title: 'Select the delimiter', description: 'Choose comma, tab, pipe, or semicolon to match your data.' },
@@ -435,7 +381,7 @@ export const WORD_EXCEL_ARCHIVE_COLOR_SEO_CONTENT: ToolSeoMap = {
   },
   'delimiter-converter': {
     intro:
-      'This tool swaps the delimiter used in a text file, so you can turn comma-separated data into pipe-separated, semicolon-separated, or tab-separated text and back again. It is useful when a downstream system expects a specific delimiter that differs from what your data currently uses. Conversion happens instantly in your browser as you type or paste text, with no upload required.',
+      'This tool swaps the delimiter used in a text file, so you can turn comma-separated data into pipe-separated, semicolon-separated, or tab-separated text and back again. It is useful when a downstream system expects a specific delimiter that differs from what your data currently uses. Conversion happens in your browser as you type or paste text, with no upload required.',
     steps: [
       { title: 'Paste your delimited text', description: 'Enter the text data you want to convert.' },
       { title: 'Choose the source delimiter', description: 'Select the delimiter currently used in your data.' },
@@ -568,39 +514,12 @@ export const WORD_EXCEL_ARCHIVE_COLOR_SEO_CONTENT: ToolSeoMap = {
       'Remove any accidentally added files from the list before compressing to avoid re-doing the whole archive.',
     ],
   },
-  'batch-zip': {
-    intro:
-      'This tool zips each file you add individually into its own separate archive, then bundles all of those small ZIPs into one outer archive for a single convenient download. It is useful when you need to distribute several files that each need to stay as their own standalone ZIP, such as separate submission packages, rather than one combined archive. Everything is compressed locally in your browser.',
-    steps: [
-      { title: 'Add multiple files', description: 'Select or drag in the files you want zipped individually.' },
-      { title: 'Review the file list', description: 'Confirm how many inner ZIPs will be created, one per file.' },
-      { title: 'Create the batch ZIPs', description: 'Click the button to compress each file into its own archive.' },
-      { title: 'Download the outer bundle', description: 'Save the single outer batch-zips.zip containing all the individual archives.' },
-    ],
-    faqs: [
-      { question: 'How is this different from the regular ZIP Creator?', answer: 'The regular ZIP Creator puts all files into one shared archive, while this tool wraps each file in its own separate ZIP first, then bundles those individual ZIPs together for download.' },
-      { question: 'What is the output file named?', answer: 'The final downloaded bundle is named batch-zips.zip, containing one .zip file per original file you added.' },
-      { question: 'Can I use this to prepare separate downloadable packages for different recipients?', answer: 'Yes, since each inner ZIP is self-contained, you can extract the outer bundle and hand out the individual archives separately.' },
-      { question: 'Is there a limit on the number of files?', answer: 'There is no fixed limit, but zipping many files individually takes more processing time and memory than a single combined archive.' },
-    ],
-    useCases: [
-      'Preparing separate submission packages for multiple recipients from one batch of files',
-      'Creating individually downloadable archives for each student, applicant, or vendor',
-      'Distributing standalone file packages where each recipient should only see their own file',
-      'Packaging multiple independent deliverables without merging them into one shared archive',
-    ],
-    tips: [
-      'Remember the download is one outer batch-zips.zip, extract it once to get all the individual inner archives.',
-      'Use the regular ZIP Creator instead if recipients are meant to receive one shared archive rather than separate ones.',
-      'Processing scales with file count, so expect longer wait times when batching many files compared to a single combined ZIP.',
-    ],
-  },
   'color-converter': {
     intro:
-      'This tool lets you pick a color visually or type a HEX code and instantly see the equivalent RGB and HSL values, along with a strip of lighter and darker shades generated from the same hue. It is useful for designers and developers who need to translate a brand color between different CSS color notations while building a style guide. All calculations happen locally in JavaScript with no network requests.',
+      'This tool lets you pick a color visually or type a HEX code and see the equivalent RGB and HSL values, along with a strip of lighter and darker shades generated from the same hue. It is useful for designers and developers who need to translate a brand color between different CSS color notations while building a style guide. All calculations happen locally in JavaScript with no network requests.',
     steps: [
       { title: 'Pick or type a color', description: 'Use the color picker or enter a HEX code directly.' },
-      { title: 'View the converted formats', description: 'See the matching RGB and HSL values update instantly.' },
+      { title: 'View the converted formats', description: 'See the matching RGB and HSL values change as you edit.' },
       { title: 'Browse the shade palette', description: 'Click any generated shade swatch to switch to that color.' },
       { title: 'Copy the format you need', description: 'Use the copy button next to HEX, RGB, or HSL to grab the code.' },
     ],
@@ -624,7 +543,7 @@ export const WORD_EXCEL_ARCHIVE_COLOR_SEO_CONTENT: ToolSeoMap = {
   },
   'gradient-generator': {
     intro:
-      'This tool provides a visual builder for CSS linear and radial gradients, letting you drag color stops, adjust their position and angle, and instantly copy the resulting CSS background property. It removes the guesswork of hand-writing gradient syntax and is handy for designing hero sections, buttons, or backgrounds. The live preview and generated code update in real time, entirely within your browser.',
+      'This tool provides a visual builder for CSS linear and radial gradients, letting you drag color stops, adjust their position and angle, and copy the resulting CSS background property. It removes the guesswork of hand-writing gradient syntax and is handy for designing hero sections, buttons, or backgrounds. The live preview and generated code update in real time, entirely within your browser.',
     steps: [
       { title: 'Choose gradient type', description: 'Select linear or radial gradient style.' },
       { title: 'Set the angle (linear only)', description: 'Drag the angle slider to rotate the gradient direction.' },
@@ -652,7 +571,7 @@ export const WORD_EXCEL_ARCHIVE_COLOR_SEO_CONTENT: ToolSeoMap = {
   },
   'palette-color': {
     intro:
-      'This tool generates a harmonious set of colors starting from a single seed color, using standard color theory rules like complementary, analogous, triadic, tetradic, and monochromatic harmonies. It is useful for quickly building a coordinated color scheme for a design project without manually calculating hue rotations. Every palette is computed instantly in your browser using HSL math, with one-click copy for each generated swatch.',
+      'This tool generates a harmonious set of colors starting from a single seed color, using standard color theory rules like complementary, analogous, triadic, tetradic, and monochromatic harmonies. It is useful for quickly building a coordinated color scheme for a design project without manually calculating hue rotations. Every palette is computed in your browser using HSL math, with one-click copy for each generated swatch.',
     steps: [
       { title: 'Pick a seed color', description: 'Choose a starting color using the color picker or HEX input.' },
       { title: 'Select a harmony rule', description: 'Pick complementary, analogous, triadic, tetradic, or monochromatic.' },
@@ -680,7 +599,7 @@ export const WORD_EXCEL_ARCHIVE_COLOR_SEO_CONTENT: ToolSeoMap = {
   },
   'contrast-checker': {
     intro:
-      'This tool calculates the WCAG contrast ratio between a foreground text color and a background color, then checks it against the AA and AAA thresholds for both normal and large text. It is essential for making sure your website or app text is readable and meets accessibility standards before you ship a design. The ratio and live text preview update instantly as you adjust either color, all computed locally in your browser.',
+      'This tool calculates the WCAG contrast ratio between a foreground text color and a background color, then checks it against the AA and AAA thresholds for both normal and large text. It is essential for making sure your website or app text is readable and meets accessibility standards before you ship a design. The ratio and live text preview update as you adjust either color, all computed locally in your browser.',
     steps: [
       { title: 'Set the foreground color', description: 'Choose the text color using the picker or HEX input.' },
       { title: 'Set the background color', description: 'Choose the background color the text will sit on.' },
@@ -703,33 +622,6 @@ export const WORD_EXCEL_ARCHIVE_COLOR_SEO_CONTENT: ToolSeoMap = {
       'Large, bold headings can pass at a lower ratio than body copy, so check both text sizes rather than assuming one result covers all cases.',
       'If a pair fails, try darkening the text or lightening the background slightly rather than switching hues entirely.',
       'Don\'t rely on color contrast alone for accessibility, pair it with sufficient font size and weight for real-world readability.',
-    ],
-  },
-  'glassmorphism': {
-    intro:
-      'This tool provides a live visual builder for the popular glassmorphism (frosted glass) UI style, letting you adjust backdrop blur, glass opacity, border opacity, and corner radius with sliders while watching the effect render in real time on a sample card. Once you\'re happy with the look, it generates ready-to-use CSS with the backdrop-filter property and vendor prefix included. Everything runs client-side, so there is nothing to upload or configure on a server.',
-    steps: [
-      { title: 'Adjust the backdrop blur', description: 'Drag the blur slider to control how frosted the glass looks.' },
-      { title: 'Set glass and border opacity', description: 'Fine-tune how transparent the panel and its border edge appear.' },
-      { title: 'Adjust the border radius', description: 'Round the corners of the glass card to match your design.' },
-      { title: 'Copy the generated CSS', description: 'Grab the ready-made CSS class including backdrop-filter and fallbacks.' },
-    ],
-    faqs: [
-      { question: 'Will the glass effect work in every browser?', answer: 'The backdrop-filter CSS property used for the blur effect is supported in all current major browsers, though very old browser versions may not render the blur and will just show a semi-transparent panel.' },
-      { question: 'Does the generated CSS include vendor prefixes?', answer: 'Yes, it includes both the standard backdrop-filter property and the -webkit-backdrop-filter prefix for broader compatibility.' },
-      { question: 'Do I need a background image for the glass effect to show?', answer: 'Yes, the frosted blur effect is only visible when there is content behind the glass element, such as a background image, gradient, or other page elements.' },
-      { question: 'Can I customize the box-shadow or colors beyond what the sliders offer?', answer: 'The sliders control blur, opacity, and radius; you can further customize the copied CSS manually in your own stylesheet, such as changing the box-shadow color.' },
-    ],
-    useCases: [
-      'Designing a frosted-glass navigation bar or modal that sits over a background image',
-      'Prototyping a glassmorphic card component for a dashboard or landing page',
-      'Fine-tuning blur and opacity values visually instead of guessing backdrop-filter numbers',
-      'Generating ready-to-paste CSS for a design trend without writing it from scratch',
-    ],
-    tips: [
-      'The effect only shows up over something visually busy behind it, test it on top of an image or gradient, not a flat background.',
-      'Keep blur values moderate; very high blur can make background content behind the glass unrecognizable and hurt usability.',
-      'Check the effect on an older browser or device if your audience includes users on outdated software, since backdrop-filter support varies there.',
     ],
   },
 };

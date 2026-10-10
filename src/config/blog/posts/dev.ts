@@ -9,7 +9,7 @@ export const DEV_POSTS: BlogPost[] = [
     category: 'dev',
     tags: ['unicode', 'utf-8', 'encoding'],
     published: '2026-09-09',
-    relatedTools: ['unicode-converter', 'ascii-converter', 'text-cleaner', 'binary-converter'],
+    relatedTools: ['unicode-converter', 'ascii-converter', 'text-cleaner'],
     takeaways: [
       'Unicode is a catalogue of characters; an encoding is a rule for turning them into bytes. Most bugs are two systems disagreeing about the rule.',
       'One accented character becoming exactly two garbled ones is a UTF-8 read as Latin-1, and the data is still recoverable.',
@@ -63,7 +63,7 @@ export const DEV_POSTS: BlogPost[] = [
     category: 'dev',
     tags: ['diff', 'git', 'algorithms'],
     published: '2026-09-09',
-    relatedTools: ['diff-checker', 'diff-text', 'word-compare', 'pdf-compare'],
+    relatedTools: ['diff-checker', 'word-compare', 'pdf-compare'],
     takeaways: [
       'A diff finds the longest common subsequence, so it is fast on similar files and slow on dissimilar ones.',
       'Granularity decides what you see: line-based is right for code, word-based for prose.',
@@ -135,7 +135,7 @@ export const DEV_POSTS: BlogPost[] = [
     category: 'dev',
     tags: ['accessibility', 'wcag', 'colour', 'css'],
     published: '2026-09-09',
-    relatedTools: ['contrast-checker', 'color-converter', 'palette-color', 'gradient-generator', 'glassmorphism'],
+    relatedTools: ['contrast-checker', 'color-converter', 'palette-color', 'gradient-generator'],
     takeaways: [
       'The ratio compares relative luminance, not perceived brightness, so two colours can look distinct and still fail.',
       'The thresholds are 4.5:1 for body text and 3:1 for large text and interface components.',
@@ -207,7 +207,7 @@ export const DEV_POSTS: BlogPost[] = [
     category: 'dev',
     tags: ['text', 'cleanup', 'case'],
     published: '2026-09-16',
-    relatedTools: ['text-cleaner', 'remove-duplicates-text', 'sort-lines', 'remove-empty-lines', 'case-converter', 'word-counter', 'lorem-ipsum', 'reverse-text', 'extract-phones', 'extract-hashtags'],
+    relatedTools: ['text-cleaner', 'remove-duplicates-text', 'sort-lines', 'remove-empty-lines', 'case-converter', 'word-counter', 'lorem-ipsum', 'extract-phones'],
     takeaways: [
       'Trim whitespace before deduplicating, or two identical lines with different trailing spaces both survive.',
       'Case conversion is not symmetric: going to a flat case loses word boundaries you cannot always recover.',
@@ -261,7 +261,7 @@ export const DEV_POSTS: BlogPost[] = [
     category: 'dev',
     tags: ['regex', 'text', 'extraction'],
     published: '2026-09-16',
-    relatedTools: ['find-replace', 'regex-tester', 'extract-hashtags', 'extract-emails', 'extract-urls', 'reverse-text'],
+    relatedTools: ['find-replace', 'regex-tester', 'extract-emails', 'extract-urls'],
     takeaways: [
       'Plain find and replace matches inside words. Use word boundaries unless you want to change "category" while replacing "cat".',
       'Replace-all is unrecoverable once you close the tab. Check the match count before committing.',
@@ -337,7 +337,7 @@ export const DEV_POSTS: BlogPost[] = [
     relatedTools: ['mime-checker', 'image-convert', 'zip-extractor'],
     takeaways: [
       'A file extension is a naming convention, not a fact about the contents. Renaming .webp to .png converts nothing.',
-      'Most formats start with a signature — magic bytes — that identifies them regardless of name. That is what strict uploaders check.',
+      'Most formats start with a signature, magic bytes, that identifies them regardless of name. That is what strict uploaders check.',
       'Browsers decide what to do with a response from the Content-Type header, not the URL, which is why a served file can download instead of displaying.',
       'Never trust a client-supplied MIME type on the server. It is chosen by whoever uploaded the file.',
     ],
@@ -356,7 +356,7 @@ export const DEV_POSTS: BlogPost[] = [
       'Every mainstream browser begins its user agent with "Mozilla/5.0" for compatibility with 1990s server sniffing. It carries no information.',
       'Browsers are freezing and reducing the string on purpose, so version and platform detail is deliberately less precise than it used to be.',
       'Detect capabilities, not browsers. Feature detection stays correct when the string changes; version comparisons do not.',
-      'A user agent is trivially spoofed, so it is never a security control — but combined with other signals it still contributes to fingerprinting.',
+      'A user agent is trivially spoofed, so it is never a security control, but combined with other signals it still contributes to fingerprinting.',
     ],
     words: 726,
   },

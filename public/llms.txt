@@ -27,12 +27,9 @@
 - [Sign PDF](https://nexttool.click/tool/pdf-sign): Draw, type or upload a signature and place it on any PDF page
 - [Fill PDF Forms](https://nexttool.click/tool/pdf-fill-forms): Fill in interactive PDF form fields directly in your browser
 - [Flatten PDF](https://nexttool.click/tool/pdf-flatten): Flatten form fields and annotations into the PDF page content
-- [Repair PDF](https://nexttool.click/tool/pdf-repair): Attempt to fix corrupted or damaged PDF files
 - [Compare PDFs](https://nexttool.click/tool/pdf-compare): Highlight differences between two PDF documents side by side
 - [Redact PDF](https://nexttool.click/tool/pdf-redact): Permanently black out sensitive text or regions in a PDF
 - [PDF Metadata Editor](https://nexttool.click/tool/pdf-metadata): View and edit title, author, subject and keywords stored in a PDF
-- [PDF Viewer](https://nexttool.click/tool/pdf-viewer): View and browse PDF files directly in your browser without plugins
-- [PDF Page Extractor](https://nexttool.click/tool/pdf-page-extractor): Extract a specific page range from a PDF as a new document
 
 ## word tools
 
@@ -40,10 +37,8 @@
 - [DOCX to HTML](https://nexttool.click/tool/docx-to-html): Extract formatted HTML markup from Word DOCX documents
 - [DOCX to Markdown](https://nexttool.click/tool/docx-to-markdown): Convert Word documents to clean Markdown format
 - [DOCX to TXT](https://nexttool.click/tool/docx-to-txt): Strip formatting and extract plain text from Word DOCX files
-- [HTML to DOCX](https://nexttool.click/tool/html-to-docx): Convert HTML content into a Word DOCX document
 - [Markdown to DOCX](https://nexttool.click/tool/markdown-to-docx): Convert Markdown files into formatted Word DOCX documents
 - [Word Viewer](https://nexttool.click/tool/word-viewer): View DOCX files directly in your browser without Microsoft Word
-- [Word Metadata Viewer](https://nexttool.click/tool/word-metadata): Inspect author, dates, revision count and other metadata inside DOCX files
 - [Document Compare](https://nexttool.click/tool/word-compare): Compare two Word documents and highlight text differences
 - [Remove Formatting](https://nexttool.click/tool/word-remove-format): Strip all formatting from a Word document and produce clean plain text
 
@@ -64,25 +59,22 @@
 - [Image Compressor](https://nexttool.click/tool/image-compressor): Compress JPEG, PNG, WebP & AVIF images with quality control, no upload needed
 - [Resize Image](https://nexttool.click/tool/image-resize): Resize images to exact pixel dimensions or by percentage - all in browser
 - [Crop Image](https://nexttool.click/tool/image-crop): Crop any image to a precise selection with aspect ratio locking
-- [Rotate Image](https://nexttool.click/tool/image-rotate): Rotate images by any degree or flip them horizontally/vertically
+- [Rotate Image](https://nexttool.click/tool/image-rotate): Rotate images by any angle to fix a sideways photo or straighten a horizon
 - [Flip Image](https://nexttool.click/tool/image-flip): Mirror images horizontally or vertically
 - [Convert Image Formats](https://nexttool.click/tool/image-convert): Convert images to PNG, JPG or WebP, one at a time or in a batch
 - [SVG Converter](https://nexttool.click/tool/svg-converter): Convert SVG to PNG/JPG or rasterize SVG files at any resolution
 - [ICO Generator](https://nexttool.click/tool/ico-generator): Create multi-size ICO favicon files from any image
 - [Background Remover](https://nexttool.click/tool/ai-bg-remover): Remove backgrounds from images using WebGPU/WASM AI models, no upload
 - [Sharpen Image](https://nexttool.click/tool/image-sharpen): Sharpen blurry photos and enhance image details using browser filters
-- [Brightness / Contrast](https://nexttool.click/tool/image-adjust): Adjust brightness, contrast, saturation, hue, and sharpness of any image
+- [Brightness / Contrast](https://nexttool.click/tool/image-adjust): Adjust the brightness, contrast, saturation and hue of any image
 - [Image to Base64](https://nexttool.click/tool/image-to-base64): Encode any image file to a Base64 data URL string
 - [Base64 to Image](https://nexttool.click/tool/base64-to-image): Decode a Base64 data URL string back into an image file
 - [OCR - Image to Text](https://nexttool.click/tool/ocr-image): Extract text from any image using Tesseract.js OCR running in browser
 - [Watermark Image](https://nexttool.click/tool/image-watermark): Add a text watermark to images, in a corner, the centre or tiled across
-- [Draw on Image](https://nexttool.click/tool/image-draw): Upload an image and draw, highlight or annotate it with pen, eraser and color tools
 - [Image Editor](https://nexttool.click/tool/image-editor): Full in-browser image editor: crop, resize, rotate, flip, adjust colors, blur, annotate and export
 - [Drawing Board](https://nexttool.click/tool/drawing): Full-screen drawing app: sketch on a blank canvas or over a photo with brushes, shapes, text and layers
 - [Remove Metadata](https://nexttool.click/tool/image-metadata): Strip EXIF and other metadata from images for privacy
 - [Batch Resize](https://nexttool.click/tool/batch-resize): Resize hundreds of images at once to the same dimensions
-- [Image Collage](https://nexttool.click/tool/image-collage): Arrange multiple images into a collage layout and download as one image
-- [Meme Generator](https://nexttool.click/tool/meme-generator): Add top/bottom text to any image and create shareable memes in browser
 - [QR Code Generator](https://nexttool.click/tool/qr-generator): Generate QR codes for links, Wi-Fi, contact cards and UPI payments
 
 ## convert tools
@@ -148,7 +140,6 @@
 
 - [ZIP Extractor](https://nexttool.click/tool/zip-extractor): Extract files from ZIP archives entirely in browser, no upload needed
 - [ZIP Creator](https://nexttool.click/tool/zip-creator): Compress multiple files into a ZIP archive right in your browser
-- [Batch ZIP Creator](https://nexttool.click/tool/batch-zip): Zip each file individually in bulk and download all as a single archive
 
 ## text tools
 
@@ -156,18 +147,15 @@
 - [Case Converter](https://nexttool.click/tool/case-converter): Convert text between camelCase, snake_case, kebab-case, PascalCase, UPPER and more
 - [Remove Duplicate Lines](https://nexttool.click/tool/remove-duplicates-text): Remove duplicate lines from any block of text, with optional sorting
 - [Sort Lines](https://nexttool.click/tool/sort-lines): Sort lines of text alphabetically, numerically, by length, or reverse order
-- [Reverse Text](https://nexttool.click/tool/reverse-text): Reverse an entire text string, or reverse word order
 - [Lorem Ipsum Generator](https://nexttool.click/tool/lorem-ipsum): Generate placeholder Lorem Ipsum text by paragraphs, sentences or words
 - [Slug Generator](https://nexttool.click/tool/slug-generator): Convert any text to a URL-friendly slug with customizable separators
 - [Text Cleaner](https://nexttool.click/tool/text-cleaner): Remove extra whitespace, special characters, HTML tags and fix encoding issues
 - [Find & Replace](https://nexttool.click/tool/find-replace): Find and replace text with plain string or regex patterns across a document
-- [Remove Empty Lines](https://nexttool.click/tool/remove-empty-lines): Strip all blank or empty lines from a block of text instantly
+- [Remove Empty Lines](https://nexttool.click/tool/remove-empty-lines): Strip all blank or empty lines from a block of text
 - [Extract Emails](https://nexttool.click/tool/extract-emails): Pull all email addresses from any block of text using regex
 - [Extract URLs](https://nexttool.click/tool/extract-urls): Extract all URLs and hyperlinks from a text block or HTML source
 - [Extract Phone Numbers](https://nexttool.click/tool/extract-phones): Find and extract all phone numbers from a body of text
-- [Extract Hashtags](https://nexttool.click/tool/extract-hashtags): Pull all #hashtags and @mentions from social media text
 - [Live Regex Tester](https://nexttool.click/tool/regex-tester): Test regular expressions in real-time with flags, match highlights and groups
-- [Text Diff Checker](https://nexttool.click/tool/diff-text): Compare two blocks of text and highlight all additions, deletions and changes
 
 ## dev tools
 
@@ -182,15 +170,12 @@
 - [Base64 Encoder / Decoder](https://nexttool.click/tool/base64): Encode text or files to Base64 and decode Base64 strings back to data
 - [JWT Token Inspector](https://nexttool.click/tool/jwt-decoder): Decode JWT header, payload, verify expiry and inspect claims
 - [UUID / GUID Generator](https://nexttool.click/tool/uuid-generator): Generate RFC4122 v4 UUIDs in bulk with casing and separator options
-- [Hash Generator](https://nexttool.click/tool/hash-generator): Generate MD5, SHA-1, SHA-256 and SHA-512 hashes via the Web Crypto API
+- [Hash Generator](https://nexttool.click/tool/hash-generator): Generate MD5, SHA-1, SHA-256 and SHA-512 hashes of any text
 - [Diff Checker](https://nexttool.click/tool/diff-checker): Compare two code files or text blocks and show a colour-coded diff
 - [Markdown Preview](https://nexttool.click/tool/markdown-preview): Write Markdown in a live editor and see the rendered HTML side by side
-- [HTML ↔ Markdown](https://nexttool.click/tool/html-markdown): Convert HTML to Markdown or Markdown to HTML instantly
+- [HTML ↔ Markdown](https://nexttool.click/tool/html-markdown): Convert HTML to Markdown or Markdown to HTML
 - [JSON to TypeScript](https://nexttool.click/tool/json-to-types): Generate TypeScript interfaces, Zod schemas, Go structs or Python dataclasses from JSON
 - [Cron Expression Parser](https://nexttool.click/tool/cron-parser): Explain any cron expression in plain English and preview its next run times
-- [cURL to Code](https://nexttool.click/tool/curl-to-code): Convert a cURL command into fetch, axios, Python requests or Node code
-- [String Escaper](https://nexttool.click/tool/string-escaper): Escape or unescape strings for JSON, JavaScript, SQL, shell, regex, CSV and XML
-- [.env to JSON Converter](https://nexttool.click/tool/env-json): Convert .env files to JSON config objects and JSON back into .env lines
 - [HTTP Status Codes](https://nexttool.click/tool/http-status-codes): Search every HTTP status code with a plain-English explanation of what it means
 - [JSONPath Tester](https://nexttool.click/tool/jsonpath-tester): Query a JSON document with JSONPath expressions and see matching values live
 - [Mock JSON Generator](https://nexttool.click/tool/mock-json): Generate realistic fake JSON, CSV or SQL test data from custom field definitions
@@ -198,11 +183,10 @@
 ## security tools
 
 - [Password Generator](https://nexttool.click/tool/password-generator): Generate cryptographically strong passwords with custom charset and entropy meter
-- [Passphrase Generator](https://nexttool.click/tool/passphrase-gen): Generate memorable multi-word passphrases using the EFF wordlist
+- [Passphrase Generator](https://nexttool.click/tool/passphrase-gen): Generate memorable multi-word passphrases from a list of 250 common words
 - [Password Strength Checker](https://nexttool.click/tool/password-strength): Analyse password strength, entropy bits and estimated crack time
-- [File Checksum](https://nexttool.click/tool/file-checksum): Verify file integrity by computing and comparing SHA-256 or MD5 checksums
+- [File Checksum](https://nexttool.click/tool/file-checksum): Verify a download by computing and comparing its SHA-256 and SHA-1 checksums
 - [Random String Generator](https://nexttool.click/tool/random-string): Generate random strings with custom length, charset and output count
-- [Secure Notes](https://nexttool.click/tool/secure-notes): Write encrypted notes that are stored only in your browser, never sent to a server
 
 ## color tools
 
@@ -210,7 +194,6 @@
 - [Gradient Generator](https://nexttool.click/tool/gradient-generator): Build CSS linear and radial gradients visually and copy the CSS code
 - [Palette Generator](https://nexttool.click/tool/palette-color): Generate harmonious color palettes from a seed color with multiple harmony rules
 - [Contrast Checker](https://nexttool.click/tool/contrast-checker): Check WCAG AA/AAA contrast ratio between text and background colors
-- [Glassmorphism Builder](https://nexttool.click/tool/glassmorphism): Design frosted glass UI components visually and copy the ready-to-use CSS
 
 ## utility tools
 
@@ -221,10 +204,8 @@
 - [Percentage Calculator](https://nexttool.click/tool/percentage-calc): Calculate percentages, percentage change, and reverse percentage problems
 - [BMI Calculator](https://nexttool.click/tool/bmi-calculator): Calculate Body Mass Index with metric and imperial unit support
 - [EMI Calculator](https://nexttool.click/tool/emi-calculator): Calculate monthly EMI for loans with breakdown of principal and interest
-- [Scientific Calculator](https://nexttool.click/tool/scientific-calc): Full scientific calculator with trig, log, factorial and memory functions
 - [GST Calculator](https://nexttool.click/tool/gst-calculator): Calculate GST inclusive/exclusive amounts and breakdown by tax slab
 - [Number to Words](https://nexttool.click/tool/number-to-words): Write any amount in words, in lakh and crore or millions, with rupees and paise
-- [Roman Numerals](https://nexttool.click/tool/roman-numerals): Convert between Roman numerals and standard Arabic numbers
 
 ## web tools
 
@@ -234,13 +215,12 @@
 - [HTML Entity Encoder](https://nexttool.click/tool/html-entity): Encode or decode HTML entities such as &amp;, &lt;, &gt; and &#x...
 - [Unicode Converter](https://nexttool.click/tool/unicode-converter): Convert characters to Unicode code points and back, supports emoji and scripts
 - [ASCII Converter](https://nexttool.click/tool/ascii-converter): Convert text to ASCII codes and ASCII codes back to characters
-- [Binary Converter](https://nexttool.click/tool/binary-converter): Convert between binary, decimal, hexadecimal and octal number systems
 
 ## Guides
 
 - [iPhone photos in HEIC: opening, sharing and converting them](https://nexttool.click/blog/iphone-heic-photos-explained): Why your iPhone saves photos as .heic, why Windows and some websites will not open them, and the three ways to get a JPG instead.
 - [Making a GIF that is not 40 megabytes](https://nexttool.click/blog/making-a-gif-worth-sending): GIF is a 1987 format with 256 colours and no real compression for photos. Knowing what it is bad at is how you get a small, clean loop.
-- [Reading text off an image: what OCR gets right and where it fails](https://nexttool.click/blog/reading-text-off-an-image): OCR turns pixels into characters, and its accuracy is decided before it runs — by resolution, contrast and whether the page is straight.
+- [Reading text off an image: what OCR gets right and where it fails](https://nexttool.click/blog/reading-text-off-an-image): OCR turns pixels into characters, and its accuracy is decided before it runs: by resolution, contrast and whether the page is straight.
 - [MP4 is not a codec: containers, codecs and why a file will not play](https://nexttool.click/blog/mp4-is-not-a-codec): A video file has a container and at least two codecs inside it. Playback failures are almost always a codec problem wearing a container name.
 - [Compressing a video without ruining it](https://nexttool.click/blog/compressing-a-video-without-ruining-it): Video size is bit rate times duration. Knowing which of resolution, bit rate and frame rate to cut first is what keeps a compressed clip watchable.
 - [Getting the audio out of a video, and what quality survives](https://nexttool.click/blog/extracting-audio-from-video): Extracting audio can be a lossless copy or a re-encode. Which one you get decides whether the result is identical to the original track.
@@ -260,7 +240,7 @@
 - [Word styles: why formatting by hand costs you later](https://nexttool.click/blog/word-styles-and-templates): Direct formatting and styles look identical and behave completely differently. One converts, exports and restyles; the other does not.
 - [Finding what changed between two versions of a document](https://nexttool.click/blog/comparing-two-documents): Comparing documents, PDFs and plain text each work differently, and knowing which comparison you are running explains the false positives.
 - [Favicons: the sizes that still matter and the ones that do not](https://nexttool.click/blog/favicon-sizes-and-formats): Browsers, phones and search results all want a different icon. Here is the short list that actually covers them without shipping fourteen files.
-- [Watermarks, annotations, memes and collages: drawing on an image](https://nexttool.click/blog/putting-things-on-top-of-images): Four tools that all composite something onto a picture, and the surprisingly different things they are each good for.
+- [Watermarks and annotations: drawing on top of an image](https://nexttool.click/blog/putting-things-on-top-of-images): A watermark and an annotation both put something on top of a picture. What each is good for, and the mistakes that make them useless.
 - [Rotate, flip and sharpen: the small fixes, and which ones cost quality](https://nexttool.click/blog/rotate-flip-and-sharpen): Three corrections that look equally trivial. One is free, one is free, and one permanently alters your image and cannot be undone.
 - [Base64 images: when inlining helps and when it costs you](https://nexttool.click/blog/data-uris-when-to-inline-an-image): Turning an image into a data URI removes a request and adds 33% to its size. Knowing which trade matters tells you when to do it.
 - [Cropping well: aspect ratios, the rule nobody needs, and safe areas](https://nexttool.click/blog/cropping-well): Cropping is the cheapest way to improve a photograph and the easiest way to have it mangled by a platform that crops it again.

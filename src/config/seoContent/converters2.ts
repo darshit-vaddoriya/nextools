@@ -9,7 +9,7 @@ import { ToolSeoMap } from './types';
 export const CONVERTER_SEO_CONTENT_2: ToolSeoMap = {
   'psd-to-png': {
     intro:
-      'A PSD is Photoshop\'s working file: layers, masks, adjustment layers and text that stays editable. Most people who receive one only need to see or use the finished picture, and without Photoshop that is surprisingly hard — Windows and most phones show a blank icon. This converter reads the PSD in your browser and saves the flattened image as PNG (keeping transparency), JPG or WebP, so a client\'s mock-up or a designer\'s export can be viewed, shared or dropped into a document without any Adobe software.',
+      'A PSD is Photoshop\'s working file: layers, masks, adjustment layers and text that stays editable. Most people who receive one only need to see or use the finished picture, and without Photoshop that is surprisingly hard: Windows and most phones show a blank icon. This converter reads the PSD in your browser and saves the flattened image as PNG (keeping transparency), JPG or WebP, so a client\'s mock-up or a designer\'s export can be viewed, shared or dropped into a document without any Adobe software.',
     steps: [
       { title: 'Add the PSD', description: 'Drop one or more .psd files. Large Photoshop Big (.psb) files are accepted too.' },
       { title: 'Pick PNG, JPG or WebP', description: 'PNG keeps transparent areas; JPG is smallest for photographic designs; WebP is for the web.' },
@@ -17,7 +17,7 @@ export const CONVERTER_SEO_CONTENT_2: ToolSeoMap = {
       { title: 'Convert and download', description: 'The flattened image downloads; several PSDs arrive as one ZIP.' },
     ],
     faqs: [
-      { question: 'Does it keep the layers?', answer: 'No — PNG, JPG and WebP are single flat images, so the result is what the design looks like with all visible layers combined. Keep the PSD if you need to edit layers later.' },
+      { question: 'Does it keep the layers?', answer: 'No: PNG, JPG and WebP are single flat images, so the result is what the design looks like with all visible layers combined. Keep the PSD if you need to edit layers later.' },
       { question: 'Why does my PSD look different from Photoshop?', answer: 'The converter uses the flattened preview Photoshop stores inside the file when "Maximize PSD and PSB File Compatibility" is on, which is exact. If that preview is missing, visible layers are stacked in order, and blend modes, layer effects and adjustment layers are not reproduced. Re-saving the PSD with Maximize Compatibility turned on fixes it.' },
       { question: 'Can it open very large PSD files?', answer: 'Files of a few hundred megabytes work on a laptop. The whole file has to fit in the browser\'s memory, so a phone may struggle with the largest ones.' },
       { question: 'Will CMYK PSDs convert correctly?', answer: 'They convert, but colours are shown in RGB for the screen. For print work, export from Photoshop with your colour profile instead.' },
@@ -30,14 +30,14 @@ export const CONVERTER_SEO_CONTENT_2: ToolSeoMap = {
     ],
     tips: [
       'Choose PNG when the design has a transparent background you want to keep',
-      'Ask designers to save with Maximize Compatibility on — it makes every viewer, including this one, show the file exactly',
+      'Ask designers to save with Maximize Compatibility on: it makes every viewer, including this one, show the file exactly',
       'Resize during conversion; full-size PSD exports are often far larger than any screen needs',
     ],
   },
 
   'raw-to-jpg': {
     intro:
-      'Camera RAW files — DNG, NEF, CR2, CR3, ARW, RAF, ORF and others — store the sensor data before any processing, which is why they are large and why most apps and websites cannot open them. Every camera also writes a full-size JPEG preview inside the RAW, processed with the camera\'s own settings: it is the image you saw on the camera\'s screen. This tool finds that embedded preview and saves it as JPG, PNG or TIFF, losslessly and in seconds, so you can share or check a shoot without a RAW editor.',
+      'Camera RAW files (DNG, NEF, CR2, CR3, ARW, RAF, ORF and others) store the sensor data before any processing, which is why they are large and why most apps and websites cannot open them. Every camera also writes a full-size JPEG preview inside the RAW, processed with the camera\'s own settings: it is the image you saw on the camera\'s screen. This tool finds that embedded preview and saves it as JPG, PNG or TIFF, losslessly and in seconds, so you can share or check a shoot without a RAW editor.',
     steps: [
       { title: 'Add RAW files', description: 'Drop files from any camera brand; a whole card\'s worth at once is fine.' },
       { title: 'Choose the output', description: 'JPG for sharing, PNG or TIFF if you want to edit without further compression.' },
@@ -45,8 +45,8 @@ export const CONVERTER_SEO_CONTENT_2: ToolSeoMap = {
       { title: 'Convert and download', description: 'Each file converts in a second or two; batches arrive as a ZIP.' },
     ],
     faqs: [
-      { question: 'Is this the same as developing the RAW in Lightroom?', answer: 'No. RAW development — choosing white balance, recovering highlights, demosaicing the sensor data — needs a full RAW processor. This extracts the JPEG the camera already produced, with the camera\'s picture style applied. It looks like the photo did on the back of the camera.' },
-      { question: 'Is the extracted image full resolution?', answer: 'For almost all modern cameras, yes — Canon, Nikon, Sony, Fujifilm, Olympus and Panasonic embed a full-size preview. Some older models and some phone DNGs store only a smaller preview, and the output will be that size.' },
+      { question: 'Is this the same as developing the RAW in Lightroom?', answer: 'No. RAW development (choosing white balance, recovering highlights, demosaicing the sensor data) needs a full RAW processor. This extracts the JPEG the camera already produced, with the camera\'s picture style applied. It looks like the photo did on the back of the camera.' },
+      { question: 'Is the extracted image full resolution?', answer: 'For almost all modern cameras, yes: Canon, Nikon, Sony, Fujifilm, Olympus and Panasonic embed a full-size preview. Some older models and some phone DNGs store only a smaller preview, and the output will be that size.' },
       { question: 'Why did a DNG file fail?', answer: 'Some DNGs from phones and scanners contain only raw sensor data and no preview at all. Those need a RAW editor such as Lightroom, darktable or RawTherapee.' },
       { question: 'Is the preview re-compressed?', answer: 'Choosing JPG re-encodes it once at the quality you set; PNG and TIFF keep every pixel of the decoded preview exactly.' },
     ],
@@ -59,13 +59,13 @@ export const CONVERTER_SEO_CONTENT_2: ToolSeoMap = {
     tips: [
       'For prints or serious editing, develop the RAW in a proper editor; this is for fast, faithful previews',
       'Choose PNG if you plan to edit the result, to avoid a second JPEG compression',
-      'If the output is smaller than expected, your camera stores a reduced preview — that is the largest image the file contains without development',
+      'If the output is smaller than expected, your camera stores a reduced preview: that is the largest image the file contains without development',
     ],
   },
 
   'svg-to-pdf': {
     intro:
-      'An SVG is a vector drawing — shapes and text described mathematically rather than as pixels — and a PDF can hold exactly the same kind of vector content. Converting SVG to PDF this way keeps logos, diagrams and illustrations perfectly sharp at any zoom and any print size, unlike rasterising them to PNG first. It is how printers, sign makers and document systems usually want vector artwork delivered.',
+      'An SVG is a vector drawing, shapes and text described mathematically rather than as pixels, and a PDF can hold exactly the same kind of vector content. Converting SVG to PDF this way keeps logos, diagrams and illustrations perfectly sharp at any zoom and any print size, unlike rasterising them to PNG first. It is how printers, sign makers and document systems usually want vector artwork delivered.',
     steps: [
       { title: 'Add SVG files', description: 'Drop one or several .svg files.' },
       { title: 'Convert', description: 'Each SVG becomes a one-page PDF sized to the drawing.' },
@@ -76,7 +76,7 @@ export const CONVERTER_SEO_CONTENT_2: ToolSeoMap = {
       { question: 'Is the PDF vector or an image?', answer: 'Vector. Paths, fills, strokes and text are translated into PDF drawing commands, so the file stays sharp at any scale and is usually small.' },
       { question: 'What page size is used?', answer: 'The page matches the SVG\'s own width and height (or its viewBox when no size is set), converted from CSS pixels to points at 96 per inch.' },
       { question: 'Will my fonts look right?', answer: 'Text is drawn with the fonts available to the PDF. If the SVG relies on an unusual web font, convert text to outlines in your design tool first for an exact result.' },
-      { question: 'Are filters and effects supported?', answer: 'Common SVG features — gradients, clipping, masks, transforms, dashed strokes — convert well. Complex filter effects such as blurs have no PDF equivalent and may be simplified.' },
+      { question: 'Are filters and effects supported?', answer: 'Common SVG features (gradients, clipping, masks, transforms, dashed strokes) convert well. Complex filter effects such as blurs have no PDF equivalent and may be simplified.' },
     ],
     useCases: [
       'Sending a logo to a printer who asks for a vector PDF',
@@ -93,7 +93,7 @@ export const CONVERTER_SEO_CONTENT_2: ToolSeoMap = {
 
   'video-converter': {
     intro:
-      'Video formats are containers — MP4, WebM, MOV, MKV — holding video and audio encoded with codecs such as H.264, VP9 or Opus. This converter changes the container and, only when it has to, the codecs, using the video encoder built into your device. When the streams inside are already compatible with the target (an H.264 MOV from an iPhone going to MP4, for example), they are copied across without re-encoding, which is lossless and takes seconds even for long videos.',
+      'Video formats are containers (MP4, WebM, MOV, MKV) holding video and audio encoded with codecs such as H.264, VP9 or Opus. This converter changes the container and, only when it has to, the codecs, using the video encoder built into your device. When the streams inside are already compatible with the target (an H.264 MOV from an iPhone going to MP4, for example), they are copied across without re-encoding, which is lossless and takes seconds even for long videos.',
     steps: [
       { title: 'Add a video', description: 'Drop an MP4, MOV, WebM or MKV file.' },
       { title: 'Pick the output format', description: 'MP4 plays almost everywhere; WebM is for web pages; MOV for Apple editing apps; MKV holds anything.' },
@@ -101,9 +101,9 @@ export const CONVERTER_SEO_CONTENT_2: ToolSeoMap = {
       { title: 'Convert and download', description: 'Progress is shown as the video is processed on your device.' },
     ],
     faqs: [
-      { question: 'Why is this so much faster than other online converters?', answer: 'There is no upload or download, and the work is done by WebCodecs — the browser\'s interface to your device\'s hardware video encoder. When codecs can be copied instead of re-encoded, only the container is rewritten.' },
+      { question: 'Why is this so much faster than other online converters?', answer: 'There is no upload or download, and the work is done by WebCodecs: the browser\'s interface to your device\'s hardware video encoder. When codecs can be copied instead of re-encoded, only the container is rewritten.' },
       { question: 'Can it convert AVI or WMV?', answer: 'No. Those older formats use codecs browsers cannot decode. Convert them with a desktop tool such as HandBrake or VLC.' },
-      { question: 'Why did my iPhone video fail?', answer: 'Recent iPhones record HEVC (H.265). Browsers can only decode HEVC where the operating system provides a decoder — Safari on Apple devices, and Chrome or Edge on hardware that supports it. Setting the iPhone camera to "Most Compatible" records H.264 instead.' },
+      { question: 'Why did my iPhone video fail?', answer: 'Recent iPhones record HEVC (H.265). Browsers can only decode HEVC where the operating system provides a decoder: Safari on Apple devices, and Chrome or Edge on hardware that supports it. Setting the iPhone camera to "Most Compatible" records H.264 instead.' },
       { question: 'Which audio codec does MP4 get?', answer: 'AAC where the browser can encode it (Chrome and Edge on Windows and macOS, Safari). Where it cannot, such as Chrome on Linux, Opus is used, which plays in every modern browser but not in some older TV and car players.' },
       { question: 'Is there a size limit?', answer: 'The converted video is held in memory before download, so very long 4K videos need a machine with plenty of RAM. Several gigabytes is fine on most laptops.' },
     ],
@@ -114,7 +114,7 @@ export const CONVERTER_SEO_CONTENT_2: ToolSeoMap = {
       'Converting video privately, without handing footage to an upload service',
     ],
     tips: [
-      'Leave quality on High for a container-only change — that is what allows the lossless copy',
+      'Leave quality on High for a container-only change: that is what allows the lossless copy',
       'Choose MP4 unless you have a specific reason not to; it has the widest playback support',
       'Keep the tab open while converting large files; the work happens in this page',
     ],
@@ -122,7 +122,7 @@ export const CONVERTER_SEO_CONTENT_2: ToolSeoMap = {
 
   'video-compressor': {
     intro:
-      'Phone videos are recorded at bitrates far higher than most uses need, so a two-minute clip can easily exceed email limits and messaging caps. Compressing re-encodes the video at a lower bitrate and, if you choose, a lower resolution — 720p is plenty for phones, chat apps and most websites. This runs entirely on your device with its hardware encoder, so private footage never leaves it and there are no file-size tiers or watermarks.',
+      'Phone videos are recorded at bitrates far higher than most uses need, so a two-minute clip can easily exceed email limits and messaging caps. Compressing re-encodes the video at a lower bitrate and, if you choose, a lower resolution: 720p is plenty for phones, chat apps and most websites. This runs entirely on your device with its hardware encoder, so private footage never leaves it and there are no file-size tiers or watermarks.',
     steps: [
       { title: 'Add the video', description: 'Drop an MP4, MOV, WebM or MKV file.' },
       { title: 'Choose resolution', description: '720p is the default; 480p for very small files; Original to keep full size.' },
@@ -131,7 +131,7 @@ export const CONVERTER_SEO_CONTENT_2: ToolSeoMap = {
     ],
     faqs: [
       { question: 'How much smaller will my video be?', answer: 'It depends on the source. A 1080p phone video at 720p, Medium quality is typically 50–75% smaller. Screen recordings with little motion shrink the most; fast action the least.' },
-      { question: 'Will the quality drop noticeably?', answer: 'At Medium and 720p, most people cannot tell the difference on a phone screen. On a large TV, 1080p at High looks better — compress as much as the destination needs, not more.' },
+      { question: 'Will the quality drop noticeably?', answer: 'At Medium and 720p, most people cannot tell the difference on a phone screen. On a large TV, 1080p at High looks better: compress as much as the destination needs, not more.' },
       { question: 'Can I remove the sound to save space?', answer: 'Yes, choose Remove audio. Audio is usually a small part of the size, though, so resolution and quality matter more.' },
       { question: 'Does it compress to a target size, like 25 MB?', answer: 'Not directly; it uses quality levels rather than a size target. Start with 720p Medium and step down to 480p or Low if the result is still too large.' },
     ],
@@ -150,7 +150,7 @@ export const CONVERTER_SEO_CONTENT_2: ToolSeoMap = {
 
   'mov-to-mp4': {
     intro:
-      'MOV is Apple\'s QuickTime container, used by iPhones, Macs and many cameras. Windows, Android, smart TVs and a lot of upload forms prefer MP4. The two containers are close relatives and usually hold the same H.264 or HEVC video and AAC audio, so converting MOV to MP4 is most often a lossless rewrap — the video data is copied, not re-encoded, and a long clip converts in seconds.',
+      'MOV is Apple\'s QuickTime container, used by iPhones, Macs and many cameras. Windows, Android, smart TVs and a lot of upload forms prefer MP4. The two containers are close relatives and usually hold the same H.264 or HEVC video and AAC audio, so converting MOV to MP4 is most often a lossless rewrap: the video data is copied, not re-encoded, and a long clip converts in seconds.',
     steps: [
       { title: 'Add the MOV file', description: 'Drop videos from an iPhone, Mac screen recording or camera. MKV works too.' },
       { title: 'Keep quality on High', description: 'That lets compatible streams be copied without any quality loss.' },
@@ -158,7 +158,7 @@ export const CONVERTER_SEO_CONTENT_2: ToolSeoMap = {
       { title: 'Convert and download', description: 'You get a standard MP4 that plays almost everywhere.' },
     ],
     faqs: [
-      { question: 'Is MOV to MP4 lossless?', answer: 'When the MOV holds H.264 or HEVC video that the MP4 can carry, yes — the video is copied untouched. It is only re-encoded if you change resolution or quality, or the codec cannot go into MP4.' },
+      { question: 'Is MOV to MP4 lossless?', answer: 'When the MOV holds H.264 or HEVC video that the MP4 can carry, yes: the video is copied untouched. It is only re-encoded if you change resolution or quality, or the codec cannot go into MP4.' },
       { question: 'Why does my iPhone MOV fail in Chrome?', answer: 'Recent iPhones record HEVC. Copying HEVC into MP4 needs no decoding, but resizing or re-encoding it does, and Chrome can only decode HEVC on supported hardware. Keep settings at Original/High, or use Safari.' },
       { question: 'Will the MP4 play on Windows and Android?', answer: 'H.264 MP4 plays everywhere. HEVC MP4 plays on most recent devices, but some older Windows PCs need the HEVC extension from the Microsoft Store.' },
       { question: 'Are Live Photo or slow-motion clips supported?', answer: 'Slow-motion videos convert as recorded at their high frame rate. The video part of a Live Photo is a short MOV and converts like any other.' },
@@ -171,14 +171,14 @@ export const CONVERTER_SEO_CONTENT_2: ToolSeoMap = {
     ],
     tips: [
       'Set the iPhone camera to Most Compatible if you regularly need MP4 on non-Apple devices',
-      'A container-only conversion keeps full quality — only lower resolution if you also need a smaller file',
+      'A container-only conversion keeps full quality: only lower resolution if you also need a smaller file',
       'For a very large recording, keep the tab in view until it finishes',
     ],
   },
 
   'webm-to-mp4': {
     intro:
-      'WebM is what browsers produce when they record — screen recorders, Loom-style tools, Google Meet downloads and many web apps save WebM with VP8 or VP9 video. iPhones, older Windows players, PowerPoint and many upload forms want MP4 instead. Because those codecs cannot go inside a standard MP4, the video is re-encoded to H.264 with your device\'s hardware encoder, which is fast and keeps the picture visually the same at High quality.',
+      'WebM is what browsers produce when they record: screen recorders, Loom-style tools, Google Meet downloads and many web apps save WebM with VP8 or VP9 video. iPhones, older Windows players, PowerPoint and many upload forms want MP4 instead. Because those codecs cannot go inside a standard MP4, the video is re-encoded to H.264 with your device\'s hardware encoder, which is fast and keeps the picture visually the same at High quality.',
     steps: [
       { title: 'Add the WebM file', description: 'Drop a screen recording or downloaded WebM. MKV is accepted too.' },
       { title: 'Choose quality', description: 'High keeps it visually identical; Medium makes it smaller.' },
@@ -199,14 +199,14 @@ export const CONVERTER_SEO_CONTENT_2: ToolSeoMap = {
     ],
     tips: [
       'Choose 720p for screen recordings shared in chat; text stays readable and the file is much smaller',
-      'If you only need the sound, use MP4 to MP3 — it accepts WebM too',
+      'If you only need the sound, use MP4 to MP3: it accepts WebM too',
       'Keep the tab open while it converts; long recordings take a little while',
     ],
   },
 
   'gif-to-mp4': {
     intro:
-      'Animated GIFs are an old, inefficient format: every frame is stored as a separate 256-colour image, so a few seconds of motion can weigh several megabytes. The same animation as an MP4 or WebM video is typically 5 to 20 times smaller and has full colour — which is why Twitter, Reddit and Giphy quietly convert every GIF to video on upload. This tool does that conversion in your browser, frame by frame, keeping each frame\'s original timing.',
+      'Animated GIFs are an old, inefficient format: every frame is stored as a separate 256-colour image, so a few seconds of motion can weigh several megabytes. The same animation as an MP4 or WebM video is typically 5 to 20 times smaller and has full colour, which is why Twitter, Reddit and Giphy quietly convert every GIF to video on upload. This tool does that conversion in your browser, frame by frame, keeping each frame\'s original timing.',
     steps: [
       { title: 'Add an animated GIF', description: 'Drop one or several GIF files.' },
       { title: 'Choose MP4 or WebM', description: 'MP4 for chat apps and phones; WebM for your own web pages.' },
@@ -243,7 +243,7 @@ export const CONVERTER_SEO_CONTENT_2: ToolSeoMap = {
       { title: 'Download the PDF', description: 'Ready to email, print or attach to a report.' },
     ],
     faqs: [
-      { question: 'Is the Excel formatting kept?', answer: 'No — fonts, colours, merged cells and charts are not reproduced. The PDF shows the values as a consistent, readable table, which is what most printed spreadsheets need.' },
+      { question: 'Is the Excel formatting kept?', answer: 'No: fonts, colours, merged cells and charts are not reproduced. The PDF shows the values as a consistent, readable table, which is what most printed spreadsheets need.' },
       { question: 'What happens with very wide sheets?', answer: 'More than six columns switches the page to landscape, and columns are scaled to fit the page width. Very long cell contents are shortened with an ellipsis rather than overflowing.' },
       { question: 'Do formulas show their results?', answer: 'Yes. The PDF shows the value Excel last calculated and saved for each formula cell.' },
       { question: 'Are non-English characters supported?', answer: 'Western European accented letters print correctly. Characters outside that set, such as Devanagari or Chinese, appear as "?" because the PDF uses the standard built-in fonts.' },
@@ -263,7 +263,7 @@ export const CONVERTER_SEO_CONTENT_2: ToolSeoMap = {
 
   'xls-to-xlsx': {
     intro:
-      'The .xls format is Excel 97–2003\'s binary workbook, and it is still everywhere: exports from old accounting and ERP systems, government downloads, email attachments from 2005. Modern tools increasingly refuse it — Google Sheets imports it grudgingly, many web apps and Python scripts want .xlsx, and .xls has a 65,536-row limit. This converter reads the legacy file and writes a modern XLSX (or CSV) with every sheet, value and date intact.',
+      'The .xls format is Excel 97–2003\'s binary workbook, and it is still everywhere: exports from old accounting and ERP systems, government downloads, email attachments from 2005. Modern tools increasingly refuse it: Google Sheets imports it grudgingly, many web apps and Python scripts want .xlsx, and .xls has a 65,536-row limit. This converter reads the legacy file and writes a modern XLSX (or CSV) with every sheet, value and date intact.',
     steps: [
       { title: 'Add the .xls file', description: 'Drop one or more Excel 97–2003 workbooks.' },
       { title: 'Choose sheets', description: 'Keep every sheet, or only the first.' },
@@ -283,7 +283,7 @@ export const CONVERTER_SEO_CONTENT_2: ToolSeoMap = {
       'Modernising an archive of .xls files',
     ],
     tips: [
-      'Check that dates came across as dates — they are converted from Excel\'s internal serial numbers',
+      'Check that dates came across as dates: they are converted from Excel\'s internal serial numbers',
       'Choose CSV if the data is going straight into another program',
       'Keep the original .xls if it contains macros or formatting you rely on',
     ],
@@ -319,7 +319,7 @@ export const CONVERTER_SEO_CONTENT_2: ToolSeoMap = {
 
   'xml-to-json': {
     intro:
-      'XML is still the format of RSS feeds, SOAP APIs, sitemaps, Android resources and countless enterprise exports, while most modern code expects JSON. This converter maps XML to JSON using the widely used convention: attributes become "@name" keys, repeated elements become arrays, and element text sits under "#text" when it shares an element with attributes. Numbers and true/false are typed, and the mapping round-trips — JSON produced here converts back to the same XML.',
+      'XML is still the format of RSS feeds, SOAP APIs, sitemaps, Android resources and countless enterprise exports, while most modern code expects JSON. This converter maps XML to JSON using the widely used convention: attributes become "@name" keys, repeated elements become arrays, and element text sits under "#text" when it shares an element with attributes. Numbers and true/false are typed, and the mapping round-trips: JSON produced here converts back to the same XML.',
     steps: [
       { title: 'Add an XML file', description: 'Drop any well-formed XML: a feed, sitemap, config or export.' },
       { title: 'Choose JSON or YAML', description: 'YAML is easier to read by eye; JSON is what code consumes.' },
@@ -330,7 +330,7 @@ export const CONVERTER_SEO_CONTENT_2: ToolSeoMap = {
       { question: 'How are attributes represented?', answer: 'As keys prefixed with @, so <book id="7"> becomes {"book": {"@id": 7}}. The prefix keeps attributes distinct from child elements with the same name.' },
       { question: 'Why is one element an object and another an array?', answer: 'An element that appears once becomes an object; one that repeats becomes an array. If your code needs a consistent shape, normalise single items to arrays after converting.' },
       { question: 'Are namespaces kept?', answer: 'Element and attribute names keep their prefixes, such as "dc:title", so no information is lost.' },
-      { question: 'Are numbers converted?', answer: 'Plain integers and decimals become JSON numbers and "true"/"false" become booleans. Anything that could lose meaning — "007", long IDs — stays a string.' },
+      { question: 'Are numbers converted?', answer: 'Plain integers and decimals become JSON numbers and "true"/"false" become booleans. Anything that could lose meaning ("007", long IDs) stays a string.' },
     ],
     useCases: [
       'Turning an RSS or Atom feed into JSON for a web app',
@@ -347,7 +347,7 @@ export const CONVERTER_SEO_CONTENT_2: ToolSeoMap = {
 
   'json-to-xml': {
     intro:
-      'Plenty of systems still speak XML — SOAP services, government filing portals, payment gateways, older ERPs and configuration formats. This converter turns JSON into well-formed, indented XML: object keys become elements, arrays become repeated elements, and keys starting with "@" become attributes, so JSON that came from XML converts back to the original structure. Characters are escaped correctly and invalid element names are made safe rather than rejected.',
+      'Plenty of systems still speak XML: SOAP services, government filing portals, payment gateways, older ERPs and configuration formats. This converter turns JSON into well-formed, indented XML: object keys become elements, arrays become repeated elements, and keys starting with "@" become attributes, so JSON that came from XML converts back to the original structure. Characters are escaped correctly and invalid element names are made safe rather than rejected.',
     steps: [
       { title: 'Add a JSON file', description: 'Drop any JSON object or array.' },
       { title: 'Set indentation', description: 'Indented for reading, minified for transmission.' },
@@ -375,7 +375,7 @@ export const CONVERTER_SEO_CONTENT_2: ToolSeoMap = {
 
   'yaml-to-json': {
     intro:
-      'YAML is the configuration language of Kubernetes, Docker Compose, GitHub Actions, Ansible and OpenAPI specs — pleasant to write, but whitespace-sensitive and easy to get subtly wrong. Converting it to JSON shows exactly how a parser reads it, catches indentation mistakes, and produces the format that APIs, validators and many tools require. This uses a full YAML 1.2 parser, so anchors, multi-line strings and flow syntax are all handled.',
+      'YAML is the configuration language of Kubernetes, Docker Compose, GitHub Actions, Ansible and OpenAPI specs: pleasant to write, but whitespace-sensitive and easy to get subtly wrong. Converting it to JSON shows exactly how a parser reads it, catches indentation mistakes, and produces the format that APIs, validators and many tools require. This uses a full YAML 1.2 parser, so anchors, multi-line strings and flow syntax are all handled.',
     steps: [
       { title: 'Add a YAML file', description: 'Drop a .yaml or .yml file such as a workflow, manifest or spec.' },
       { title: 'Choose JSON or XML', description: 'JSON for tools and APIs; XML if a system needs it.' },
@@ -384,7 +384,7 @@ export const CONVERTER_SEO_CONTENT_2: ToolSeoMap = {
     ],
     faqs: [
       { question: 'Are anchors and aliases supported?', answer: 'Yes. &anchors and *aliases are resolved, so the JSON contains the full expanded values.' },
-      { question: 'Why did "no" or "on" become a string?', answer: 'The parser follows YAML 1.2, where only true and false are booleans. The older YAML 1.1 treated yes/no/on/off as booleans — the famous "Norway problem" — which is a common source of surprises.' },
+      { question: 'Why did "no" or "on" become a string?', answer: 'The parser follows YAML 1.2, where only true and false are booleans. The older YAML 1.1 treated yes/no/on/off as booleans, the famous "Norway problem", which is a common source of surprises.' },
       { question: 'What about files with several documents separated by ---?', answer: 'Only single-document files are converted. Split multi-document files, such as combined Kubernetes manifests, first.' },
       { question: 'Are comments kept?', answer: 'No. JSON has no comments, so YAML comments are dropped.' },
     ],
@@ -413,7 +413,7 @@ export const CONVERTER_SEO_CONTENT_2: ToolSeoMap = {
     faqs: [
       { question: 'Will the YAML convert back to the same JSON?', answer: 'Yes. Values such as "true", "007" or "2024-01-01" that are strings in the JSON are quoted in the YAML, so a round trip returns identical data.' },
       { question: 'Are long strings wrapped?', answer: 'No. Lines are never folded, so long URLs and keys stay on one line and copy cleanly.' },
-      { question: 'Can I add comments afterwards?', answer: 'Yes — that is one of the main reasons to switch to YAML. Add # comments anywhere in the output.' },
+      { question: 'Can I add comments afterwards?', answer: 'Yes: that is one of the main reasons to switch to YAML. Add # comments anywhere in the output.' },
       { question: 'What if my JSON is invalid?', answer: 'You will see the parser\'s error message. The JSON Formatter can help locate and fix the problem.' },
     ],
     useCases: [
@@ -431,9 +431,9 @@ export const CONVERTER_SEO_CONTENT_2: ToolSeoMap = {
 
   'images-to-pptx': {
     intro:
-      'Turning a folder of photos, screenshots or scanned pages into a presentation usually means inserting them into PowerPoint one at a time. This tool builds the whole deck at once: each image becomes its own slide, in the order you arrange them, fitted inside the slide without cropping or stretching. The result is a genuine .pptx file you can open and edit in PowerPoint, Keynote or Google Slides — add titles, notes or transitions afterwards.',
+      'Turning a folder of photos, screenshots or scanned pages into a presentation usually means inserting them into PowerPoint one at a time. This tool builds the whole deck at once: each image becomes its own slide, in the order you arrange them, fitted inside the slide without cropping or stretching. The result is a genuine .pptx file you can open and edit in PowerPoint, Keynote or Google Slides: add titles, notes or transitions afterwards.',
     steps: [
-      { title: 'Add your images', description: 'Drop JPG, PNG, WebP, HEIC, PSD or RAW images — as many as you like.' },
+      { title: 'Add your images', description: 'Drop JPG, PNG, WebP, HEIC, PSD or RAW images, as many as you like.' },
       { title: 'Arrange the order', description: 'Slides follow the order of the file list; move files up or down to change it.' },
       { title: 'Choose slide shape and background', description: '16:9 widescreen, 4:3 classic, or matched to your first image; white or black around the picture.' },
       { title: 'Create the deck', description: 'Download one .pptx with a slide for every image.' },
@@ -459,7 +459,7 @@ export const CONVERTER_SEO_CONTENT_2: ToolSeoMap = {
 
   'pdf-to-pptx': {
     intro:
-      'Slides are often shared as PDF — conference decks, lecture notes, exported Keynote files — and then someone needs them back in PowerPoint to present, rearrange or reuse. This converter turns each PDF page into a slide that keeps the page\'s exact appearance, sized to the page\'s own shape. The text of every page is also placed in that slide\'s speaker notes, so the words are searchable and easy to copy while the design stays pixel-perfect.',
+      'Slides are often shared as PDF (conference decks, lecture notes, exported Keynote files) and then someone needs them back in PowerPoint to present, rearrange or reuse. This converter turns each PDF page into a slide that keeps the page\'s exact appearance, sized to the page\'s own shape. The text of every page is also placed in that slide\'s speaker notes, so the words are searchable and easy to copy while the design stays pixel-perfect.',
     steps: [
       { title: 'Add a PDF', description: 'Drop a slide deck, handout or any multi-page PDF.' },
       { title: 'Choose the background', description: 'Only visible if a page has transparent areas; white suits most documents.' },
@@ -487,9 +487,9 @@ export const CONVERTER_SEO_CONTENT_2: ToolSeoMap = {
 
   'epub-to-pdf': {
     intro:
-      'EPUB is the standard e-book format: a bundle of web pages that reflows to fit any screen. That flexibility is also its limit — it does not print, many devices and apps do not open it, and it is awkward to annotate or quote. This converter reads a DRM-free EPUB in your browser and produces a paginated PDF in book proportions, a plain text file, or a single self-contained HTML page with the images included.',
+      'EPUB is the standard e-book format: a bundle of web pages that reflows to fit any screen. That flexibility is also its limit: it does not print, many devices and apps do not open it, and it is awkward to annotate or quote. This converter reads a DRM-free EPUB in your browser and produces a paginated PDF in book proportions, a plain text file, or a single self-contained HTML page with the images included.',
     steps: [
-      { title: 'Add an EPUB', description: 'Drop a DRM-free .epub file — from Project Gutenberg, a publisher\'s direct download or your own writing.' },
+      { title: 'Add an EPUB', description: 'Drop a DRM-free .epub file: from Project Gutenberg, a publisher\'s direct download or your own writing.' },
       { title: 'Choose PDF, TXT or HTML', description: 'PDF for reading and printing, TXT for text analysis, HTML to open in any browser with images.' },
       { title: 'Convert', description: 'Chapters are read in the book\'s reading order.' },
       { title: 'Download', description: 'The file is named after the book.' },
@@ -515,9 +515,9 @@ export const CONVERTER_SEO_CONTENT_2: ToolSeoMap = {
 
   'font-converter': {
     intro:
-      'Fonts come in desktop formats — TrueType (TTF) and OpenType (OTF) — and web formats: WOFF and WOFF2, which are the same font tables compressed for faster downloads. Web developers need WOFF2 to self-host fonts; designers who download a web font need TTF or OTF to install it. This converter moves between all four in your browser, and the conversion is lossless: every glyph, kerning pair, hinting instruction and name table comes out exactly as it went in.',
+      'Fonts come in desktop formats, TrueType (TTF) and OpenType (OTF), and web formats: WOFF and WOFF2, which are the same font tables compressed for faster downloads. Web developers need WOFF2 to self-host fonts; designers who download a web font need TTF or OTF to install it. This converter moves between all four in your browser, and the conversion is lossless: every glyph, kerning pair, hinting instruction and name table comes out exactly as it went in.',
     steps: [
-      { title: 'Add font files', description: 'Drop TTF, OTF, WOFF or WOFF2 files — a whole family at once is fine.' },
+      { title: 'Add font files', description: 'Drop TTF, OTF, WOFF or WOFF2 files: a whole family at once is fine.' },
       { title: 'Pick the output format', description: 'WOFF2 for websites, WOFF for older browsers, TTF/OTF to install on a computer.' },
       { title: 'Convert', description: 'Tables are decompressed and recompressed without being modified.' },
       { title: 'Download', description: 'A family arrives as a ZIP with one file per weight or style.' },
@@ -526,7 +526,7 @@ export const CONVERTER_SEO_CONTENT_2: ToolSeoMap = {
       { question: 'Why did my WOFF2 become an .otf, not a .ttf?', answer: 'Fonts with PostScript (CFF) outlines are OpenType files and carry the .otf extension; fonts with TrueType outlines get .ttf. The converter names the output after what the font actually contains.' },
       { question: 'Is anything lost in conversion?', answer: 'No. The font tables are byte-for-byte identical after conversion; only the container and compression change.' },
       { question: 'How much smaller is WOFF2?', answer: 'Typically 30–50% smaller than TTF, and 20–30% smaller than WOFF, thanks to Brotli compression and glyph-table transforms.' },
-      { question: 'Can I convert a .ttc font collection?', answer: 'Not yet — a collection holds several fonts in one file. Extract the one you need with a font editor such as FontForge first.' },
+      { question: 'Can I convert a .ttc font collection?', answer: 'Not yet: a collection holds several fonts in one file. Extract the one you need with a font editor such as FontForge first.' },
       { question: 'Am I allowed to convert any font?', answer: 'Conversion is technically lossless, but font licences often restrict web embedding or redistribution. Check the licence of commercial fonts before self-hosting them.' },
     ],
     useCases: [
@@ -536,7 +536,7 @@ export const CONVERTER_SEO_CONTENT_2: ToolSeoMap = {
       'Converting a whole type family in one go',
     ],
     tips: [
-      'Serve only WOFF2 on modern sites — every current browser supports it',
+      'Serve only WOFF2 on modern sites: every current browser supports it',
       'Check the font\'s licence covers web use before self-hosting',
       'Subsetting a font to the characters you need saves even more than WOFF2 alone',
     ],
@@ -552,10 +552,10 @@ export const CONVERTER_SEO_CONTENT_2: ToolSeoMap = {
       { title: 'Add them to your site', description: 'Reference the files with @font-face and font-display: swap.' },
     ],
     faqs: [
-      { question: 'Do I still need WOFF or TTF fallbacks?', answer: 'Not for current browsers — WOFF2 is supported by Chrome, Edge, Firefox and Safari 12 and later. Only very old browsers need WOFF.' },
+      { question: 'Do I still need WOFF or TTF fallbacks?', answer: 'Not for current browsers: WOFF2 is supported by Chrome, Edge, Firefox and Safari 12 and later. Only very old browsers need WOFF.' },
       { question: 'Will the font look any different?', answer: 'No. WOFF2 is lossless: hinting, kerning and OpenType features are all preserved.' },
       { question: 'How do I use the file in CSS?', answer: 'Add an @font-face rule with src: url("/fonts/name.woff2") format("woff2"), a font-family name, and font-display: swap so text is visible while the font loads.' },
-      { question: 'Can I make the file even smaller?', answer: 'Yes, by subsetting — removing characters you do not use, such as Cyrillic or Vietnamese glyphs. That is a separate step from format conversion.' },
+      { question: 'Can I make the file even smaller?', answer: 'Yes, by subsetting: removing characters you do not use, such as Cyrillic or Vietnamese glyphs. That is a separate step from format conversion.' },
     ],
     useCases: [
       'Self-hosting a font instead of loading it from Google Fonts',
@@ -600,7 +600,7 @@ export const CONVERTER_SEO_CONTENT_2: ToolSeoMap = {
 
   'rar-to-zip': {
     intro:
-      'RAR is a proprietary archive format: Windows has only recently gained built-in support, many phones and older systems cannot open it, and creating RAR files requires paid software. ZIP opens everywhere with no extra software. This converter extracts a RAR archive in your browser using libarchive — the library behind bsdtar and macOS Archive Utility — and repacks every file into a standard ZIP with the same folders and names.',
+      'RAR is a proprietary archive format: Windows has only recently gained built-in support, many phones and older systems cannot open it, and creating RAR files requires paid software. ZIP opens everywhere with no extra software. This converter extracts a RAR archive in your browser using libarchive, the library behind bsdtar and macOS Archive Utility, and repacks every file into a standard ZIP with the same folders and names.',
     steps: [
       { title: 'Add the RAR file', description: 'Drop a .rar archive (RAR 4 and RAR 5 are both supported).' },
       { title: 'Convert', description: 'Every file is extracted and repacked into a ZIP.' },
@@ -628,7 +628,7 @@ export const CONVERTER_SEO_CONTENT_2: ToolSeoMap = {
 
   '7z-to-zip': {
     intro:
-      '7-Zip\'s .7z format compresses very well, which is why software, game mods and large datasets are often distributed in it — but neither Windows (before recent versions), macOS nor most phones open it without extra software. This converter extracts a .7z archive in your browser and repacks the contents as a standard ZIP, keeping folder structure and file names, so it opens anywhere.',
+      '7-Zip\'s .7z format compresses very well, which is why software, game mods and large datasets are often distributed in it, but neither Windows (before recent versions), macOS nor most phones open it without extra software. This converter extracts a .7z archive in your browser and repacks the contents as a standard ZIP, keeping folder structure and file names, so it opens anywhere.',
     steps: [
       { title: 'Add the .7z file', description: 'Drop a 7-Zip archive; LZMA and LZMA2 compression are both supported.' },
       { title: 'Convert', description: 'Contents are extracted and repacked as ZIP.' },
@@ -648,7 +648,7 @@ export const CONVERTER_SEO_CONTENT_2: ToolSeoMap = {
       'Repacking datasets for tools that read ZIP files directly',
     ],
     tips: [
-      'Keep the original .7z for archiving — it is smaller',
+      'Keep the original .7z for archiving: it is smaller',
       'Split archives (.7z.001, .002) need to be joined in 7-Zip first',
       'For Linux servers, ZIP to TAR.GZ is often the better final format',
     ],
@@ -656,7 +656,7 @@ export const CONVERTER_SEO_CONTENT_2: ToolSeoMap = {
 
   'tar-to-zip': {
     intro:
-      'TAR archives — often compressed as .tar.gz, .tgz, .tar.bz2 or .tar.xz — are the standard on Linux and for source-code releases, but Windows users frequently cannot open them without extra tools, and a .tar.gz needs two steps to extract. This converter unpacks any TAR variant in your browser and repacks the contents as a single ZIP that every operating system opens natively.',
+      'TAR archives, often compressed as .tar.gz, .tgz, .tar.bz2 or .tar.xz: are the standard on Linux and for source-code releases, but Windows users frequently cannot open them without extra tools, and a .tar.gz needs two steps to extract. This converter unpacks any TAR variant in your browser and repacks the contents as a single ZIP that every operating system opens natively.',
     steps: [
       { title: 'Add the TAR archive', description: 'Drop a .tar, .tar.gz, .tgz, .tar.bz2 or .tar.xz file.' },
       { title: 'Convert', description: 'The compression layer and the TAR are both unpacked.' },
@@ -684,7 +684,7 @@ export const CONVERTER_SEO_CONTENT_2: ToolSeoMap = {
 
   'zip-to-tar': {
     intro:
-      'On Linux servers, in Docker builds and in most open-source release workflows, TAR — usually gzipped as .tar.gz — is the expected archive format, and tools like tar, curl pipelines and package managers handle it natively. This converter repacks a ZIP (or a 7z or RAR archive) as TAR.GZ or plain TAR in your browser, preserving folder structure and long path names.',
+      'On Linux servers, in Docker builds and in most open-source release workflows, TAR, usually gzipped as .tar.gz: is the expected archive format, and tools like tar, curl pipelines and package managers handle it natively. This converter repacks a ZIP (or a 7z or RAR archive) as TAR.GZ or plain TAR in your browser, preserving folder structure and long path names.',
     steps: [
       { title: 'Add the archive', description: 'Drop a ZIP, 7z or RAR file.' },
       { title: 'Choose TAR.GZ or TAR', description: 'TAR.GZ is compressed and the usual choice; plain TAR is uncompressed.' },

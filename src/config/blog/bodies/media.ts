@@ -13,11 +13,11 @@ Nothing is corrupt. The file is carrying something your player cannot decode, an
 
 A video file is a container holding streams:
 
-- **The container** — MP4, MKV, MOV, WebM, AVI. It stores the streams, their timing, chapter marks and metadata. Think of it as the box and the packing list.
-- **The video codec** — H.264, HEVC (H.265), VP9, AV1. This is the compression scheme the picture is stored in.
-- **The audio codec** — AAC, MP3, Opus, FLAC, AC-3.
+- **The container**: MP4, MKV, MOV, WebM, AVI. It stores the streams, their timing, chapter marks and metadata. Think of it as the box and the packing list.
+- **The video codec**: H.264, HEVC (H.265), VP9, AV1. This is the compression scheme the picture is stored in.
+- **The audio codec**: AAC, MP3, Opus, FLAC, AC-3.
 
-"MP4" tells you about the box. It tells you almost nothing about whether the contents will play, because an MP4 can legally hold H.264 or HEVC or AV1, and the same goes for the audio. This is the same gap between a file's name and its actual contents that makes [MIME types and magic bytes](/blog/mime-types-and-file-signatures) worth understanding — the extension is a claim, not a description.
+"MP4" tells you about the box. It tells you almost nothing about whether the contents will play, because an MP4 can legally hold H.264 or HEVC or AV1, and the same goes for the audio. This is the same gap between a file's name and its actual contents that makes [MIME types and magic bytes](/blog/mime-types-and-file-signatures) worth understanding: the extension is a claim, not a description.
 
 This is why "convert to MP4" is an incomplete instruction. If the file is already an MP4 with HEVC inside and the target device only decodes H.264, converting it to another MP4 with the same codecs achieves nothing.
 
@@ -90,9 +90,9 @@ Run that backwards to hit a limit. For 25 MB and a 4-minute (240 s) clip:
 total kbps = 25 × 8 × 1000 ÷ 240 ≈ 833 kbps
 \`\`\`
 
-Leave 96 kbps for audio and the video gets roughly 730 kbps. Now the question is a concrete one — does this footage look acceptable at 730 kbps — instead of a vague one about how much to compress.
+Leave 96 kbps for audio and the video gets roughly 730 kbps. Now the question is a concrete one, does this footage look acceptable at 730 kbps, instead of a vague one about how much to compress.
 
-At that budget, 1080p will look soft and blocky on movement. 720p will look reasonable. 480p will look clean but small. That is the trade being made, and making it deliberately beats discovering it after the upload. The underlying principle is the one [image compression](/blog/how-image-compression-works) runs on: quality is what you spend bits on, and fewer pixels means fewer bits to spend. If the target is an email rather than an upload form, attachment limits are stricter than the number they advertise.
+At that budget, 1080p will look soft and blocky on movement. 720p will look reasonable. 480p will look clean but small. That is the trade being made, and making it on purpose beats discovering it after the upload. The underlying principle is the one [image compression](/blog/how-image-compression-works) runs on: quality is what you spend bits on, and fewer pixels means fewer bits to spend. If the target is an email rather than an upload form, attachment limits are stricter than the number they advertise.
 
 ## Which dial, in which order
 
@@ -128,7 +128,7 @@ For archiving or sharing where the size is not fixed, constant quality is the be
 
 ## Audio is worth checking
 
-Audio is frequently left at 320 kbps on a clip where nobody will notice 96 kbps. On a four-minute video that difference is about 6 MB — which, in the example above, was a quarter of the entire budget.
+Audio is frequently left at 320 kbps on a clip where nobody will notice 96 kbps. On a four-minute video that difference is about 6 MB, which, in the example above, was a quarter of the entire budget.
 
 For speech, 64–96 kbps AAC mono is clean. For music, 128–192 kbps stereo. If the video has no meaningful audio at all, removing the track removes its entire contribution.
 
@@ -144,7 +144,7 @@ For speech, 64–96 kbps AAC mono is clean. For music, 128–192 kbps stereo. If
 The [video compressor](/tool/video-compressor) covers steps 4 and 6: it scales the resolution down (never up) and sets the quality, working on the file in the browser tab, so a recording of an internal call gets down to an attachable size without leaving the machine. It does not trim, so if the clip needs cutting, do step 1 first in whatever recorded it.`,
   'extracting-audio-from-video': `You have a recorded call, a lecture or an interview as a video file, and what you actually want is the sound. Maybe for a podcast cut, maybe to transcribe it, maybe because a 900 MB video of a static slide is absurd when the content is a voice.
 
-The audio is already a separate stream inside the container, so getting it out is more like unpacking than converting — as long as you ask for the right output. It is worth knowing this before reaching for an online converter, because uploading a file to one hands over a recording that a copy operation could have produced locally in seconds.
+The audio is already a separate stream inside the container, so getting it out is more like unpacking than converting, as long as you ask for the right output. It is worth knowing this before reaching for an online converter, because uploading a file to one hands over a recording that a copy operation could have produced locally in seconds.
 
 ## Copy or convert
 
@@ -152,7 +152,7 @@ The audio in an MP4 is almost always AAC. That gives you two very different oper
 
 **Copy (remux).** Write the existing AAC stream into an \`.m4a\` or \`.aac\` file. Nothing is decoded, nothing is re-compressed, the result is bit-for-bit the audio that was in the video. It takes about as long as copying a file.
 
-**Convert (re-encode).** Decode the AAC and encode it as something else — MP3, Opus, WAV. This is a second lossy generation if the target is lossy, and takes real time.
+**Convert (re-encode).** Decode the AAC and encode it as something else: MP3, Opus, WAV. This is a second lossy generation if the target is lossy, and takes real time.
 
 Asking for MP3 out of an MP4 is therefore always a re-encode, even though MP3 feels like the "normal" audio format. If nothing downstream specifically demands MP3, taking the M4A is both faster and better.
 
@@ -171,10 +171,10 @@ WAV is useful for two real reasons: it is what editing and processing tools want
 
 Speech is much easier to compress than music, and most extracted audio is speech.
 
-- **64 kbps mono AAC or Opus** — clean for a single voice; an hour is about 28 MB.
-- **96 kbps mono** — comfortable headroom, still small.
-- **128 kbps stereo** — the default most tools use, and usually wasteful for a recorded call.
-- **192 kbps+ stereo** — for music. Nothing about a meeting recording needs this.
+- **64 kbps mono AAC or Opus**: clean for a single voice; an hour is about 28 MB.
+- **96 kbps mono**: comfortable headroom, still small.
+- **128 kbps stereo**: the default most tools use, and usually wasteful for a recorded call.
+- **192 kbps+ stereo**: for music. Nothing about a meeting recording needs this.
 
 Two people talking over a conference call are already mixed into a single channel of information even when the file says stereo, so mono usually halves the size with no loss of anything you would notice.
 
@@ -191,7 +191,7 @@ This matters especially for transcription, where processing time scales with dur
 
 The opposite job comes up as often: a clip that needs to be shared without the room's conversation on it, or a screen recording where the microphone caught something it should not have.
 
-Removing the audio track is a container-level operation on the video side — the video stream is copied untouched and the audio stream is simply not written. It is instant and does not degrade the picture.
+Removing the audio track is a container-level operation on the video side: the video stream is copied untouched and the audio stream is simply not written. It is instant and does not degrade the picture.
 
 That is also the safe way to handle a recording with a sensitive few seconds: strip the audio entirely, rather than trusting that nobody turns the volume up.
 
@@ -212,7 +212,7 @@ That is also the safe way to handle a recording with a sensitive few seconds: st
 
 **Embedded track.** The subtitles live inside the container as their own stream, the way audio does. One file to move around, still switchable off in players that support it. MKV handles this well, MP4 support is patchier, and browsers mostly ignore embedded subtitle tracks entirely.
 
-**Burned in (hardsub).** The text is drawn into the pixels during encoding. It always appears, on every player, in every context, at the size and position you chose. It cannot be turned off, cannot be corrected, cannot be translated and cannot be selected as text — and you cannot get the clean video back without re-encoding from the original.
+**Burned in (hardsub).** The text is drawn into the pixels during encoding. It always appears, on every player, in every context, at the size and position you chose. It cannot be turned off, cannot be corrected, cannot be translated and cannot be selected as text, and you cannot get the clean video back without re-encoding from the original.
 
 ## What an SRT actually looks like
 
@@ -233,7 +233,7 @@ A cue number, a time range with a comma before the milliseconds, the text, a bla
 That similarity is also the usual bug: an SRT with full stops in the timestamps, or a VTT with commas, will be rejected or silently ignored by strict players.
 
 > [!NOTE]
-> Because cues are plain text, sync errors are arithmetic rather than editing. If every caption is 1.5 seconds early, adding 1.5 s to every timestamp fixes the file — no re-encoding involved, because the video was never touched.
+> Because cues are plain text, sync errors are arithmetic rather than editing. If every caption is 1.5 seconds early, adding 1.5 s to every timestamp fixes the file: no re-encoding involved, because the video was never touched.
 
 ## When burning in is the right call
 
@@ -247,7 +247,7 @@ Outside of that, burning in costs you things worth keeping:
 - Viewers who need larger text cannot change it.
 - The captions cover the picture permanently, including on a phone where they may overlap the interface.
 
-If both are needed — burned in for the feed, sidecar for the site — export the clean master first and produce the burned version from it. Never the other way round.
+If both are needed (burned in for the feed, sidecar for the site) export the clean master first and produce the burned version from it. Never the other way round.
 
 > [!WARNING]
 > Keep the clean master. A burned-in file is the end of the line: extracting the original frames from under the text is not something any tool can do. Every re-cut, re-translation and correction has to start from the version without text on it.
@@ -258,7 +258,7 @@ Speech recognition has become good enough that starting from an automatic transc
 
 - **Proper nouns.** Names of people, products and companies come out phonetically.
 - **Numbers.** "Fifteen" and "fifty" are the classic pair, and version numbers, prices and dates are where a caption error becomes a factual error.
-- **Punctuation.** Modern models insert it, but sentence boundaries in unscripted speech are genuinely ambiguous.
+- **Punctuation.** Modern models insert it, but sentence boundaries in unscripted speech are ambiguous.
 - **Overlapping speakers.** Two people talking at once tends to produce one confident and wrong sentence.
 - **Technical terms and acronyms.** Anything domain-specific will need a pass.
 
@@ -270,7 +270,7 @@ Running speech-to-text to get a timed draft and then correcting those five categ
 - A cue should stay up long enough to read: about one second per three words, with a 1.2 s minimum.
 - Break lines at natural phrase boundaries, not mid-noun-phrase.
 - Identify speakers when it is not obvious who is talking.
-- Include meaningful non-speech sound — a door, a laugh, music starting — where it carries information.
+- Include meaningful non-speech sound (a door, a laugh, music starting) where it carries information.
 
 These are accessibility requirements as much as style preferences: captions exist first for viewers who cannot hear the audio, and a caption that flashes past unreadably fails that job while technically existing.
 

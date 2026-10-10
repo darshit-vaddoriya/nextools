@@ -27,7 +27,7 @@ export const DOCS_POSTS: BlogPost[] = [
     category: 'pdf',
     tags: ['docx', 'word', 'metadata'],
     published: '2026-09-16',
-    relatedTools: ['word-viewer', 'docx-to-txt', 'docx-to-html', 'word-metadata'],
+    relatedTools: ['word-viewer', 'docx-to-txt', 'docx-to-html'],
     takeaways: [
       'A .docx is an ordinary zip archive. Rename it to .zip and you can read the XML inside with no Office licence.',
       'docProps/core.xml carries the author, last editor, revision count and total editing time, and it travels with every copy you send.',
@@ -45,7 +45,7 @@ export const DOCS_POSTS: BlogPost[] = [
     category: 'pdf',
     tags: ['markdown', 'docx', 'html', 'workflow'],
     published: '2026-09-16',
-    relatedTools: ['markdown-to-docx', 'html-to-docx', 'markdown-preview', 'html-markdown'],
+    relatedTools: ['markdown-to-docx', 'markdown-preview', 'html-markdown'],
     takeaways: [
       'A DOCX is compressed XML, so two versions have no meaningful textual difference and nothing can diff or merge them.',
       'Markdown is plain text, so review becomes reading a change rather than hunting for one.',
@@ -81,7 +81,7 @@ export const DOCS_POSTS: BlogPost[] = [
     category: 'pdf',
     tags: ['compare', 'diff', 'versions', 'review'],
     published: '2026-09-16',
-    relatedTools: ['word-compare', 'diff-text', 'pdf-compare', 'text-cleaner'],
+    relatedTools: ['word-compare', 'diff-checker', 'pdf-compare', 'text-cleaner'],
     takeaways: [
       'Text comparison finds what changed. Visual comparison finds where the pixels differ, which is not the same question.',
       'A single insertion near the top reflows every page after it, so a visual diff reports the whole document as changed.',

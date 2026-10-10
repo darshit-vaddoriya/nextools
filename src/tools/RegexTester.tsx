@@ -110,7 +110,7 @@ export const RegexTester: React.FC = () => {
       onFullChange={setFull}
       hint={
         <p className="text-[12.5px] text-muted-foreground">
-          Live regex matching with capture groups — nothing is sent anywhere.
+          Live regex matching with capture groups: nothing is sent anywhere.
         </p>
       }
     >

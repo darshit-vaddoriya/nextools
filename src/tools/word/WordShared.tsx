@@ -87,7 +87,7 @@ export const ConversionNotes: React.FC<{ messages: string[] }> = ({ messages }) 
         className="font-semibold text-warning hover:underline"
       >
         {messages.length} formatting note{messages.length > 1 ? 's' : ''} from this document
-        {open ? ' — hide' : ' — show'}
+        {open ? ', hide' : ', show'}
       </button>
       {open && (
         <ul className="mt-2 space-y-1 text-muted-foreground list-disc pl-4">

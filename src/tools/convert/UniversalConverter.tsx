@@ -449,7 +449,7 @@ const AudioSettings: React.FC<{ to: 'mp3' | 'wav'; value: AudioOptions; onChange
           />
         </Field>
       )}
-      <Field label="Channels" hint="Mono mixes left and right together — half the size, ideal for voice recordings.">
+      <Field label="Channels" hint="Mono mixes left and right together: half the size, ideal for voice recordings.">
         <Chips
           label="Channels"
           value={value.channels}
@@ -615,7 +615,7 @@ const DeckSettings: React.FC<{ value: DeckOptions; onChange: (v: DeckOptions) =>
 };
 
 const DataSettings: React.FC<{ value: DataOptions; onChange: (v: DataOptions) => void }> = ({ value, onChange }) => (
-  <Field label="Indentation" hint="Minified output has no whitespace at all — smallest, but hard to read.">
+  <Field label="Indentation" hint="Minified output has no whitespace at all: smallest, but hard to read.">
     <Chips
       label="Indentation"
       value={value.indent}

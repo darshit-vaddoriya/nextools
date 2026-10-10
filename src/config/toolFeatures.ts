@@ -3,7 +3,7 @@ import { CONVERTER_TOOLS } from './converters';
 
 export const PLANNED_FEATURES: Record<string, string[]> = {
   // ─── PDF ─────────────────────────────────────────────────────────
-  'pdf-to-word':          ['Reconstruct editable paragraphs and lists', 'Detect headings and apply Word styles', 'Extract tables with cell alignment', 'Download as .docx instantly'],
+  'pdf-to-word':          ['Reconstruct editable paragraphs and lists', 'Detect headings and apply Word styles', 'Extract tables with cell alignment', 'Download as .docx'],
   'word-to-pdf':          ['Convert DOCX to PDF with layout preserved', 'Keep fonts, images and tables intact', 'Drag-and-drop multiple files', 'Batch convert and download'],
   'pdf-to-excel':         ['Rebuild table rows and columns from PDF text', 'One sheet per page or one combined sheet', 'XLSX or CSV output', 'Works on text-based PDFs, not scans'],
   'excel-to-pdf':         ['Turn worksheets into print-ready PDFs', 'Page-break and orientation control', 'Fit-to-width scaling options', 'Preserve cell formatting'],
@@ -18,9 +18,7 @@ export const PLANNED_FEATURES: Record<string, string[]> = {
   'pdf-unlock':           ['Remove password protection you own', 'Strip editing restrictions', 'Keep content and layout unchanged', 'Quick in-browser decryption'],
   'pdf-fill-forms':       ['Fill interactive form fields', 'Text, checkbox and dropdown support', 'Save filled PDF for submission', 'Preview before download'],
   'pdf-flatten':          ['Merge form fields into page content', 'Remove editable fields and annotations', 'Lock the document state', 'Smaller, stable file output'],
-  'pdf-repair':           ['Fix corrupted PDF structures', 'Rebuild broken cross-reference tables', 'Recover recoverable pages', 'Restore readable content'],
   'pdf-compare':          ['Side-by-side document comparison', 'Highlight added, removed and changed text', 'Per-page diff navigation', 'Export a comparison report'],
-  'pdf-viewer':           ['Fast page-by-page viewing', 'Zoom, rotate and search inside PDFs', 'Thumbnail sidebar navigation', 'Print-ready rendering'],
 
   // ─── EXCEL & CSV ─────────────────────────────────────────────────
   'excel-to-csv':         ['Convert worksheets to CSV or TSV', 'Comma or semicolon separator', 'Dates exported as ISO dates', 'Export every sheet as its own file'],
@@ -59,8 +57,8 @@ export const PLANNED_FEATURES: Record<string, string[]> = {
   'svg-converter':        ['SVG to PNG/JPG at any resolution', 'Rasterize with scale factor', 'Transparent background option', 'Download high-res export'],
   'ico-generator':        ['Generate multi-size ICO files', '16×16 to 256×256 presets', 'Favicon-ready output', 'Preview all sizes before download'],
   'blur-background':      ['Auto subject detection', 'Adjustable blur strength', 'Real-time preview', 'Export transparent or blurred BG'],
-  'image-sharpen':        ['Sharpen with adjustable radius', 'Unsharp mask controls', 'Enhance edge details', 'Compare before/after'],
   'noise-reduction':      ['Reduce grain and sensor noise', 'Adjustable denoise strength', 'Preserve fine details', 'Before/after comparison'],
+  'image-sharpen':        ['Sharpen with adjustable radius', 'Unsharp mask controls', 'Enhance edge details', 'Compare before/after'],
   'image-adjust':         ['Brightness and contrast sliders', 'Saturation and hue control', 'Sharpness adjustment', 'Live preview and reset'],
   'palette-generator':    ['Extract dominant colors from images', 'Generate a harmonious palette', 'Copy HEX codes in one click', 'Export as CSS variables'],
   'image-to-base64':      ['Encode images to Base64 data URLs', 'Copy or download the string', 'Support all common formats', 'Instant client-side encoding'],
@@ -71,8 +69,6 @@ export const PLANNED_FEATURES: Record<string, string[]> = {
   'batch-resize':         ['Resize hundreds of images at once', 'Uniform output dimensions', 'Quality setting per batch', 'Download as ZIP'],
   'batch-rename':         ['Rename files with patterns', 'Add sequence numbers and dates', 'Find-and-replace renaming', 'Preview new names before applying'],
   'batch-convert':        ['Convert a folder of images', 'Choose target format and quality', 'Maintain folder structure', 'Download all results as ZIP'],
-  'image-collage':        ['Arrange images into a grid collage', 'Custom spacing and background', 'Multiple layout templates', 'Export as one high-res image'],
-  'meme-generator':       ['Add top and bottom text', 'Custom font, size and color', 'Drag text into position', 'Export shareable meme image'],
   'qr-generator':         ['Generate high-res QR codes', 'URL, text, Wi-Fi and vCard support', 'Custom colors and logo', 'SVG or PNG export'],
 
   // ─── VIDEO ───────────────────────────────────────────────────────
@@ -83,7 +79,7 @@ export const PLANNED_FEATURES: Record<string, string[]> = {
   'video-rotate':         ['Rotate by 90°, 180° or 270°', 'Fix portrait/landscape orientation', 'Flip horizontal or vertical', 'Preserve audio track'],
   'video-flip':           ['Mirror video horizontally', 'Mirror vertically', 'Live preview', 'Keep audio in sync'],
   'video-merge':          ['Concatenate video clips seamlessly', 'Reorder clips before merging', 'Cross-fade transition option', 'Single output file'],
-  'video-extract-audio':  ['Extract audio as MP3, WAV or AAC', 'Choose audio bitrate', 'Multiple video inputs', 'Download audio instantly'],
+  'video-extract-audio':  ['Extract audio as MP3, WAV or AAC', 'Choose audio bitrate', 'Multiple video inputs', 'Download audio'],
   'video-remove-audio':   ['Strip the audio track', 'Keep video quality intact', 'Fast processing', 'Output silent MP4/WebM'],
   'video-add-audio':      ['Replace or overlay an audio track', 'Offset and volume control', 'Mute original audio option', 'Mux into the final video'],
   'video-speed':          ['Speed from 0.25x to 4x', 'Preserve audio pitch option', 'Timelapse presets', 'Frame-rate aware processing'],
@@ -112,26 +108,22 @@ export const PLANNED_FEATURES: Record<string, string[]> = {
   'zip-creator':          ['Compress multiple files into ZIP', 'Choose compression level', 'Drag-and-drop file ordering', 'Password-protected archives'],
   'tar-extractor':        ['Extract .tar and .tar.gz files', 'Handle .tgz archives', 'Preserve folder structure', 'Download extracted files'],
   '7z-extractor':         ['Extract .7z archives via WASM', 'Password-protected 7z support', 'Browse contents first', 'Selective file extraction'],
-  'batch-zip':            ['Zip each file individually', 'Create archives in bulk', 'Custom per-file names', 'Download all archives as one ZIP'],
 
   // ─── TEXT ────────────────────────────────────────────────────────
   'remove-duplicates-text':['Remove duplicate lines', 'Case-sensitive matching option', 'Optional sorting after dedupe', 'Copy or download clean text'],
   'sort-lines':           ['Sort alphabetically and reverse', 'Numeric and natural sorting', 'Sort by line length', 'Remove blanks while sorting'],
-  'reverse-text':         ['Reverse the whole string', 'Reverse word order only', 'Reverse each word in place', 'Preserve line structure'],
   'lorem-ipsum':          ['Generate by paragraphs, sentences or words', 'Custom starting text option', 'Copy or download output', 'One-click word and line counts'],
-  'slug-generator':       ['Convert text to URL-friendly slugs', 'Choose dash or underscore separator', 'Lowercase and accent handling', 'Copy instantly'],
+  'slug-generator':       ['Convert text to URL-friendly slugs', 'Choose dash or underscore separator', 'Lowercase and accent handling', 'Copy with one click'],
   'text-cleaner':         ['Remove extra whitespace', 'Strip HTML tags', 'Fix common encoding issues', 'Normalize quotes and dashes'],
   'find-replace':         ['Find and replace with regex support', 'Case-sensitive toggle', 'Live match count', 'Replace all or one at a time'],
   'remove-empty-lines':   ['Strip blank and whitespace-only lines', 'Collapse multiple blanks', 'Preserve line numbering', 'Instant result'],
   'extract-emails':       ['Pull all email addresses from text', 'Deduplicate extracted emails', 'Copy as comma-separated list', 'Download as TXT'],
-  'extract-urls':         ['Extract URLs and links from text/HTML', 'Sort and deduplicate results', 'Copy list instantly', 'Export to file'],
+  'extract-urls':         ['Extract URLs and links from text/HTML', 'Sort and deduplicate results', 'Copy list', 'Export to file'],
   'extract-phones':       ['Find phone numbers in any format', 'International number support', 'Deduplicate and sort', 'Copy or download the list'],
-  'extract-hashtags':     ['Extract #hashtags and @mentions', 'Count frequency of each tag', 'Sort by popularity', 'Copy or download results'],
-  'diff-text':            ['Compare two blocks of text', 'Highlight additions and deletions', 'Inline and side-by-side modes', 'Copy the merged result'],
 
   // ─── DEVELOPER ───────────────────────────────────────────────────
   'xml-formatter':        ['Pretty-print and indent XML', 'Minify XML output', 'Validate well-formedness', 'Syntax error highlighting'],
-  'yaml-formatter':       ['Format and validate YAML', 'Convert YAML ↔ JSON', 'Indentation-aware parsing', 'Copy output instantly'],
+  'yaml-formatter':       ['Format and validate YAML', 'Convert YAML ↔ JSON', 'Indentation-aware parsing', 'Copy output'],
   'sql-formatter':        ['Beautify SQL queries', 'Multiple SQL dialects', 'Configurable indentation', 'Keyword case control'],
   'html-formatter':       ['Prettify HTML markup', 'Minify for production', 'Adjustable indent size', 'Preserve inline scripts'],
   'css-formatter':        ['Format and indent CSS', 'Minify stylesheets', 'SCSS/LESS snippet support', 'Colorize properties'],
@@ -144,9 +136,8 @@ export const PLANNED_FEATURES: Record<string, string[]> = {
   // ─── SECURITY ────────────────────────────────────────────────────
   'passphrase-gen':       ['Generate memorable word passphrases', 'EFF-approved wordlist', 'Custom word count and separator', 'Entropy estimate per phrase'],
   'password-strength':    ['Score strength from weak to strong', 'Entropy bits calculation', 'Estimated crack time', 'Actionable improvement tips'],
-  'file-checksum':        ['Compute SHA-256, SHA-1 and MD5', 'Compare two checksums', 'Verify file integrity', 'Copy hash instantly'],
+  'file-checksum':        ['Compute SHA-256, SHA-1 and MD5', 'Compare two checksums', 'Verify file integrity', 'Copy hash'],
   'random-string':        ['Custom length and character set', 'Generate multiple strings at once', 'Exclude ambiguous characters', 'Copy results in one click'],
-  'secure-notes':         ['Encrypt notes with a password', 'Store only in browser storage', 'Copy encrypted text anywhere', 'Decrypt on any device'],
 
   // ─── COLOR ───────────────────────────────────────────────────────
   'gradient-generator':   ['Linear and radial gradients', 'Drag-and-drop color stops', 'Angle and position control', 'Copy ready-to-use CSS'],
@@ -159,13 +150,11 @@ export const PLANNED_FEATURES: Record<string, string[]> = {
   'timezone-converter':   ['Convert between any two time zones', 'World clock comparison', 'DST-aware calculation', 'Copy formatted time'],
   'timestamp-converter':  ['Unix timestamp to readable date', 'Date back to timestamp', 'Milliseconds and seconds modes', 'Local and UTC display'],
   'age-calculator':       ['Exact age in years, months and days', 'Total days, hours and minutes', 'Countdown to next birthday', 'Date-of-birth input presets'],
-  'percentage-calc':      ['What percent of X is Y', 'Percentage increase and decrease', 'Reverse percentage problems', 'Copy answers instantly'],
+  'percentage-calc':      ['What percent of X is Y', 'Percentage increase and decrease', 'Reverse percentage problems', 'Copy answers'],
   'bmi-calculator':       ['Metric and imperial units', 'Instant BMI score', 'Category classification', 'Healthy weight range guidance'],
   'emi-calculator':       ['Monthly EMI for any loan', 'Principal and interest breakdown', 'Payment schedule table', 'Adjustable tenure and rate'],
-  'scientific-calc':      ['Trig, log and exponential functions', 'Factorial and memory functions', 'Degree/radian toggle', 'Expression history'],
   'gst-calculator':       ['GST inclusive and exclusive amounts', 'Configurable tax slabs', 'Breakdown by CGST/SGST/IGST', 'Quick state-preset selector'],
-  'number-to-words':      ['Convert numbers to English words', 'Indian and Western numbering support', 'Currency formatting option', 'Copy result instantly'],
-  'roman-numerals':       ['Arabic to Roman numerals', 'Roman back to Arabic', 'Validate correct Roman input', 'Copy conversion result'],
+  'number-to-words':      ['Convert numbers to English words', 'Indian and Western numbering support', 'Currency formatting option', 'Copy result'],
 
   // ─── WEB ─────────────────────────────────────────────────────────
   'url-parser':           ['Break URLs into protocol, host and path', 'Extract query parameters', 'Fragment and port detection', 'Copy any component'],
@@ -174,7 +163,6 @@ export const PLANNED_FEATURES: Record<string, string[]> = {
   'html-entity':          ['Encode text to HTML entities', 'Decode entities back to text', 'Named and numeric entity modes', 'Copy encoded output'],
   'unicode-converter':    ['Convert characters to code points', 'Support emoji and scripts', 'Escape sequences output', 'Reverse conversion'],
   'ascii-converter':      ['Text to ASCII codes', 'ASCII codes back to characters', 'Decimal and hex modes', 'Copy converted output'],
-  'binary-converter':     ['Binary ↔ decimal ↔ hex ↔ octal', 'Signed and unsigned support', 'Bit-length display', 'Instant multi-base conversion'],
 
   // ─── AI ──────────────────────────────────────────────────────────
   'ai-ocr':               ['Extract text from scans and photos', 'Multi-language OCR', 'Preserve reading order', 'Export as TXT or PDF text layer'],
@@ -198,17 +186,17 @@ const IMPLEMENTED = [
   'compress-image', 'compress-images', 'image-adjust', 'image-sharpen',
   'svg-converter', 'svg-to-png', 'image-metadata',
   'image-watermark', 'qr-generator', 'qr-code-generator', 'ocr-image',
-  'image-draw', 'image-editor', 'drawing', 'drawing-board',
+  'image-editor', 'drawing', 'drawing-board',
   'pdf-split', 'pdf-compress', 'pdf-to-jpg', 'jpg-to-pdf',
   'text-to-pdf', 'pdf-ocr', 'pdf-extract-text', 'pdf-extract-images',
   'pdf-rotate', 'pdf-reorder', 'pdf-delete-pages', 'pdf-watermark',
-  'pdf-page-numbers', 'pdf-sign', 'pdf-metadata', 'pdf-redact', 'pdf-page-extractor',
+  'pdf-page-numbers', 'pdf-sign', 'pdf-metadata', 'pdf-redact',
   ...Object.keys(CONVERTER_TOOLS),
 ];
 
 const EXEMPT = [
   'docx-to-pdf', 'docx-to-html', 'docx-to-markdown', 'docx-to-txt',
-  'html-to-docx', 'markdown-to-docx', 'word-viewer', 'word-metadata',
+  'markdown-to-docx', 'word-viewer', 'word-metadata',
   'word-compare', 'word-remove-format',
 ];
 

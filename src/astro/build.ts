@@ -3,6 +3,17 @@
 // runs once per page during `astro build` and ships to the browser as HTML.
 import { parseHTML } from 'linkedom';
 import baseHead from './head.html?raw';
+
+/**
+ * head.html carries notes for whoever edits it: why the tags are deferred,
+ * which policy a setting must match. They are for this repository, not for
+ * visitors, so HTML comments and whole-line script comments are removed before
+ * the head is placed on every page. Inline `//` is left alone because URLs
+ * contain it.
+ */
+const shippedHead = baseHead
+  .replace(/<!--[\s\S]*?-->\s*/g, '')
+  .replace(/^[ \t]*\/\/.*\n/gm, '');
 import { TOOLS } from '../config/tools';
 import { STATIC_PAGES } from '../config/pages';
 import { BLOG_POSTS, BLOG_CATEGORIES, getPost, loadPostBody, postsForTool, postsForToolCategory } from '../config/blog';
@@ -150,7 +161,7 @@ function serializeHead(head: ParentNode): string {
  * exactly as Google has been indexing them.
  */
 export function headFor(route: AppRoute): string {
-  const { document } = parseHTML(`<!DOCTYPE html><html lang="en"><head>${baseHead}</head><body></body></html>`);
+  const { document } = parseHTML(`<!DOCTYPE html><html lang="en"><head>${shippedHead}</head><body></body></html>`);
   const g = globalThis as unknown as { document?: unknown };
   const previous = g.document;
   g.document = document;

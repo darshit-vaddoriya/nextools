@@ -98,7 +98,7 @@ Merging is one of the most common reasons people hand documents to an unknown we
 
 NextTool's [PDF merger](/tool/pdf-merge) runs the whole thing in the browser tab. The files are read into memory, the new document is assembled, and a download is produced. Nothing is transmitted, which matters when the documents in question are a lease, a medical report or a set of ID scans, exactly the sort of thing people merge most often.
 
-If you only need a handful of pages from each source, [extract those pages](/tool/pdf-page-extractor) first. Merging less is always faster than compressing more.`,
+If you only need a handful of pages from each source, [split out those pages](/tool/pdf-split) first. Merging less is always faster than compressing more.`,
   'how-to-redact-a-pdf-properly': `There is a specific, repeated, very public failure mode in document handling: someone opens a PDF, draws filled black rectangles over the sensitive passages, saves, and publishes. The passages are then recovered by anyone who selects the page and pastes it into a text editor.
 
 It has happened in court filings, government disclosures and corporate reports. The people involved were not careless with the concept of redaction; they misunderstood what a PDF is.
@@ -142,7 +142,7 @@ Never trust the visual result. Run these three checks on the output file:
 2. **Search the document** for a distinctive redacted term, a surname, an account number.
 3. **Inspect the metadata.** Author, title, producer, creation and modification timestamps often reveal more than people expect.
 
-If all three come back clean, the content is genuinely gone.
+If all three come back clean, the content is gone.
 
 ## What redaction cannot fix
 
@@ -173,7 +173,7 @@ OCR accuracy depends on how many pixels make up each character. The rule of thum
 
 - Below ~200 DPI, small type loses the fine distinctions between similar letters and you start seeing classic confusions: \`rn\` read as \`m\`, \`l\`/\`1\`/\`I\`, \`0\`/\`O\`, \`5\`/\`S\`.
 - Above ~400 DPI you gain almost nothing and pay for it in processing time and memory.
-- For unusually small print, footnotes, legal fine print, receipts, 400–600 DPI genuinely helps.
+- For unusually small print, footnotes, legal fine print, receipts, 400–600 DPI helps.
 
 If you are scanning the document yourself, this is the one setting worth getting right. Rescanning at 300 DPI beats any amount of post-processing on a 150 DPI capture.
 
@@ -190,7 +190,7 @@ If you are scanning the document yourself, this is the one setting worth getting
 ## Practical steps for a better result
 
 1. **Fix the image before recognising it.** Increase contrast, straighten the page, crop away the desk. A ten-second adjustment often does more than any engine setting.
-2. **Set the correct language**, and set multiple languages if the document genuinely mixes them.
+2. **Set the correct language**, and set multiple languages if the document mixes them.
 3. **Scan in greyscale, not colour**, for plain documents. It reduces noise and file size without losing information the engine uses.
 4. **Split the job.** If only pages 4–7 matter, OCR those pages. Recognition is the slowest step in any document pipeline.
 5. **Always proofread numbers.** Even at 98% character accuracy, a page of figures will contain errors, and a digit error in an invoice total is far worse than a letter error in a sentence.
@@ -267,14 +267,14 @@ When a form specifies both a size and a dimension requirement, common for photog
 
 ## Putting it together
 
-For a scan that is over the limit, [extract](/tool/pdf-page-extractor) only the pages the form needs, then run the [compressor](/tool/pdf-compress) with *Compress images* at Balanced, and step down to Smallest only if the file is still too large. For a digital PDF, try *Keep text selectable* first, since it keeps the text searchable. If a portal wants a single page as a picture instead, [PDF to JPG](/tool/pdf-to-jpg) gives you that page as an image you can resize and compress on its own.`,
+For a scan that is over the limit, [split out](/tool/pdf-split) only the pages the form needs, then run the [compressor](/tool/pdf-compress) with *Compress images* at Balanced, and step down to Smallest only if the file is still too large. For a digital PDF, try *Keep text selectable* first, since it keeps the text searchable. If a portal wants a single page as a picture instead, [PDF to JPG](/tool/pdf-to-jpg) gives you that page as an image you can resize and compress on its own.`,
   'taking-pages-out-of-a-pdf': `You need pages 12 to 18 of a 200-page report. There are three buttons in front of you and they all appear to do it. They do not produce the same thing, and the difference matters more once you have the output.
 
 ## The three operations
 
-**Split** takes one file and gives you many. Either one file per page, or one file per range you define. Use it when you genuinely want separate documents, such as breaking a batch of scanned invoices into one file per invoice.
+**Split** takes one file and gives you many. Either one file per page, or one file per range you define. Use it when you want separate documents, such as breaking a batch of scanned invoices into one file per invoice.
 
-**Extract** takes one file and gives you one file containing the range you asked for. Use it when you want a shorter document, which is the case most of the time.
+**Extract** takes one file and gives you one file containing the range you asked for. Use it when you want a shorter document, which is the case most of the time. Here, that is the [split tool](/tool/pdf-split) with a single range such as 12-18.
 
 **Delete** takes one file and gives you one file with the pages you named removed, keeping everything else. Use it when what you want to get rid of is smaller than what you want to keep.
 
@@ -289,7 +289,7 @@ A PDF numbers its pages by position in the file, starting at 1. The numbers prin
 So "extract pages 12 to 18" means twelfth to eighteenth sheet in the file, which may be printed pages 8 to 14.
 
 > [!TIP]
-> Open the document in a [viewer](/tool/pdf-viewer) and check what is actually on the page at each position before you type the range. Thirty seconds of checking beats extracting the wrong chapter and not noticing until someone else reads it.
+> Open the document in your browser or PDF reader and check what is actually on the page at each position before you type the range. Thirty seconds of checking beats extracting the wrong chapter and not noticing until someone else reads it.
 
 ## What breaks when you take pages away
 
@@ -321,7 +321,7 @@ The second is what you want when you need the pictures. It also reveals somethin
 3. **Extract rather than compress** when the goal is a smaller file and you only need part of it.
 4. **Open the output and read the first and last page.** Off-by-one errors are the common failure and they show up immediately at the boundaries.
 
-All of this is object copying and index rebuilding, which is arithmetic your browser is perfectly capable of. [Splitting](/tool/pdf-split), [deleting pages](/tool/pdf-delete-pages) and [extracting images](/tool/pdf-extract-images) here all work on the file in memory, which is the behaviour you want given that the documents people most often need three pages out of are bank statements, medical records and contracts.`,
+In practice: [split](/tool/pdf-split) with one range to extract a section, or several ranges to cut a file into parts; [delete pages](/tool/pdf-delete-pages) when it is quicker to name the pages that go; and [extract images](/tool/pdf-extract-images) when you need the pictures rather than the pages.`,
   'page-numbers-headers-and-margins': `You have assembled a submission from four different sources. It reads correctly and looks like four documents stapled together: no page numbers, no running header, and one landscape page that a reader has to tilt their head for. Fixing that is a small job, and it goes wrong in predictable ways worth knowing in advance.
 
 ## A page has more than one boundary
@@ -340,7 +340,7 @@ Almost everything you see is the CropBox. That has one consequence worth stating
 > [!WARNING]
 > [Cropping](/tool/pdf-crop) is a layout operation, not a privacy one. If you are trying to hide a signature, an address or a figure at the edge of a page, cropping does not do it. The data stays in the file.
 
-Where cropping is genuinely useful is trimming the wide margins on a scanned book so it reads better on a screen, or normalising a set of pages that came from different sources to the same visible size.
+Where cropping is useful is trimming the wide margins on a scanned book so it reads better on a screen, or normalising a set of pages that came from different sources to the same visible size.
 
 ## Rotation is a property, not a transformation
 
@@ -356,7 +356,7 @@ So the order matters: [rotate](/tool/pdf-rotate) everything to its final orienta
 
 ## Getting the numbering right
 
-[Page numbers](/tool/pdf-page-numbers) are stamped as ordinary page content, so a few decisions are worth making deliberately.
+[Page numbers](/tool/pdf-page-numbers) are stamped as ordinary page content, so a few decisions are worth making before you start.
 
 **Do it last.** After merging, after reordering, after deleting. Numbering a document and then inserting a page gives you a document that is confidently wrong, which is worse than one with no numbers at all.
 
@@ -399,10 +399,10 @@ So a table splits across a page boundary with its header left behind. A heading 
 
 [HTML to PDF](/tool/html-to-pdf) has to make those decisions, and a few things make its job easier:
 
-- **Give it a page size deliberately.** A4 and US Letter differ by about 18mm of height, which is enough to move every break in a long document.
+- **Choose the page size yourself.** A4 and US Letter differ by about 18mm of height, which is enough to move every break in a long document.
 - **Expect backgrounds to be dropped.** Browsers omit background colours and images when printing unless told otherwise, which is why a dark-themed page often converts to black text on white.
 - **Fixed and sticky positioning has no meaning.** A sticky header belongs to a viewport, and there is no viewport. It usually renders once at the top or repeats on every page, and neither is what the page looked like.
-- **Links survive as links.** Anchors become clickable PDF link annotations, which is genuinely useful and often unexpected.
+- **Links survive as links.** Anchors become clickable PDF link annotations, which is useful and often unexpected.
 
 If what you actually want is a readable archive of an article rather than a facsimile of the page, strip it to the content first. Fewer elements means fewer things to break across a boundary.
 
@@ -437,12 +437,10 @@ If the watermark is decorative, either is fine. If it says DRAFT or CONFIDENTIAL
 
 A PDF ends with a cross-reference table saying where every object lives. It is the part most often damaged by a truncated download, a failed sync or a crash mid-save, and a viewer that cannot read it refuses the whole file even though the page content is usually intact.
 
-[Repairing a PDF](/tool/pdf-repair) means scanning the file for object definitions and rebuilding that index from what is found. It often works, because the damage is to the map rather than the territory.
+Repairing a PDF means scanning the file for object definitions and rebuilding that index from what is found. It often works, because the damage is to the map rather than the territory, and desktop tools such as qpdf and Ghostscript can attempt it.
 
-What it cannot do is invent bytes that are not there. If a download stopped at 60%, the last 40% of the pages do not exist and no repair recovers them. What you usually get back is the pages that made it, which is worth having.
-
-Everything above runs in the browser tab: rendering HTML, laying out text, setting field values and rebuilding a cross-reference table are all things a modern browser does without a server. Given that filled forms are, by definition, documents with your details in them, that is the property worth having.`,
-  'images-to-pdf-and-comparing-versions': `You photograph twelve pages of a signed agreement with your phone. You now have twelve JPEGs, in an order determined by how fast you were working, each 4000 pixels wide and 3 MB. Turning that into something a solicitor will accept involves four decisions, and it is worth making them deliberately.
+What it cannot do is invent bytes that are not there. If a download stopped at 60%, the last 40% of the pages do not exist and no repair recovers them. What you usually get back is the pages that made it, which is worth having.`,
+  'images-to-pdf-and-comparing-versions': `You photograph twelve pages of a signed agreement with your phone. You now have twelve JPEGs, in an order determined by how fast you were working, each 4000 pixels wide and 3 MB. Turning that into something a solicitor will accept involves four decisions, and it is worth making them yourself rather than taking the defaults.
 
 ## Order comes from filenames, and filenames sort as text
 
@@ -546,7 +544,7 @@ Two more things worth checking, both covered in [why CSVs break in Excel](/blog/
 
 If the document is a bank statement, an invoice or any published report, ask whether the data exists somewhere better. Most institutions offer a CSV export of the same information, and five minutes looking for it beats an hour of extraction and reconciliation.
 
-Extraction is the right tool when the PDF genuinely is the only copy, which is common for older archives and for documents you received rather than generated.
+Extraction is the right tool when the PDF is the only copy, which is common for older archives and for documents you received rather than generated.
 
 Try [PDF to Excel](/tool/pdf-to-excel) first for a digital PDF, fall back to [text extraction](/tool/pdf-extract-text) when the columns come out merged, and use [OCR](/tool/pdf-ocr) only for scans; then check totals in the [CSV editor](/tool/csv-editor) against the original before trusting a single figure.`,
   'turning-a-pdf-or-photos-into-slides': `Two situations come up again and again. Someone sends a report as a PDF and you need to present it in a meeting where everything runs through PowerPoint or Google Slides. Or you have a folder of photos from an event and need a slideshow on the screen in ten minutes. Both are quick, as long as you know what the conversion can and cannot do.

@@ -100,7 +100,7 @@ export const SECURITY_UTILITY_WEB_SEO_CONTENT: ToolSeoMap = {
     ],
   },
   'random-string': {
-    intro: 'API keys, tokens and temporary secrets need genuinely unpredictable random strings. This tool generates them using your browser\'s crypto API with configurable length and character set.',
+    intro: 'API keys, tokens and temporary secrets need unpredictable random strings. This tool generates them using your browser\'s crypto API with configurable length and character set.',
     steps: [
       { title: 'Set length and character set', description: 'Choose letters, digits, symbols or a combination.' },
       { title: 'Choose how many to generate', description: 'Set the output count if you need multiple strings at once.' },
@@ -123,38 +123,14 @@ export const SECURITY_UTILITY_WEB_SEO_CONTENT: ToolSeoMap = {
       'For anything used as a real production secret, treat it as sensitive the moment it\'s generated and avoid pasting it into chat logs or tickets.',
     ],
   },
-  'secure-notes': {
-    intro: 'Sometimes you need to jot down something sensitive without any cloud service seeing it. This tool encrypts notes with a passphrase you choose before saving them only in your browser\'s local storage.',
-    steps: [
-      { title: 'Write your note', description: 'Type the sensitive content you want to store.' },
-      { title: 'Set a passphrase', description: 'Choose a strong passphrase to encrypt the note with AES-GCM.' },
-      { title: 'Save locally', description: 'The encrypted note is stored only in your browser, never sent to a server.' },
-    ],
-    faqs: [
-      { question: 'What happens if I forget my passphrase?', answer: 'The note cannot be recovered, encryption is designed so only someone with the correct passphrase can decrypt it, so keep it somewhere safe.' },
-      { question: 'Is the note synced across my devices?', answer: 'No, notes are stored in this browser\'s local storage only and will not appear on other devices or browsers.' },
-      { question: 'What encryption method is used?', answer: 'AES-GCM with PBKDF2 key derivation from your passphrase, a widely trusted modern encryption standard.' },
-    ],
-    useCases: [
-      'Jotting down a recovery seed phrase or license key temporarily on a personal device',
-      'Keeping a private draft or sensitive reminder off of cloud note apps',
-      'Storing a one-off secret you need to reference later on the same machine',
-      'Taking quick encrypted notes while researching something sensitive without creating an account anywhere',
-    ],
-    tips: [
-      'Use a passphrase you\'ll actually remember, there is no recovery mechanism if you lose it.',
-      'Remember these notes live in this browser\'s local storage only; clearing browser data or switching devices means losing access.',
-      'Don\'t use this for anything you need long-term or cross-device, pair it with a proper password manager for that.',
-    ],
-  },
 
   // ─── Utility / Calculators ───────────────────────────────────────────────────
   'unit-converter': {
-    intro: 'Converting between metric and imperial units for length, weight, temperature, area, volume or speed is a constant small annoyance. This tool handles them all instantly, updating as you type.',
+    intro: 'Converting between metric and imperial units for length, weight, temperature, area, volume or speed is a constant small annoyance. This tool handles them all, updating as you type.',
     steps: [
       { title: 'Pick a category', description: 'Choose length, weight, temperature, area, volume or speed.' },
       { title: 'Choose the units', description: 'Select which units you are converting between.' },
-      { title: 'Read the result', description: 'The converted value updates instantly as you type.' },
+      { title: 'Read the result', description: 'The converted value updates as you type.' },
     ],
     faqs: [
       { question: 'How accurate are the conversions?', answer: 'Conversions use standard, precise conversion factors, so results are accurate to many decimal places.' },
@@ -199,7 +175,7 @@ export const SECURITY_UTILITY_WEB_SEO_CONTENT: ToolSeoMap = {
     ],
   },
   'timestamp-converter': {
-    intro: 'Debugging an API response or database record often means staring at a Unix timestamp with no idea what date it represents. This tool converts timestamps (seconds or milliseconds) to human-readable dates and back, instantly.',
+    intro: 'Debugging an API response or database record often means staring at a Unix timestamp with no idea what date it represents. This tool converts timestamps (seconds or milliseconds) to human-readable dates and back.',
     steps: [
       { title: 'Paste a timestamp or pick a date', description: 'Enter a Unix timestamp, or use the date picker to go the other direction.' },
       { title: 'Choose seconds or milliseconds', description: 'Match the unit your timestamp is actually in to avoid a wildly wrong date.' },
@@ -207,7 +183,7 @@ export const SECURITY_UTILITY_WEB_SEO_CONTENT: ToolSeoMap = {
     ],
     faqs: [
       { question: 'How do I know if a timestamp is in seconds or milliseconds?', answer: 'Seconds-based timestamps are 10 digits for current dates, while millisecond timestamps are 13 digits, the toggle lets you pick the right one.' },
-      { question: 'Is there a quick way to get the current timestamp?', answer: 'Yes, a "now" button fills in the current timestamp instantly for testing or reference.' },
+      { question: 'Is there a quick way to get the current timestamp?', answer: 'Yes, a "now" button fills in the current timestamp for testing or reference.' },
       { question: 'Does the conversion account for my local time zone?', answer: 'Dates display using your browser\'s local time zone by default, since Unix timestamps themselves are always UTC-based under the hood.' },
     ],
     useCases: [
@@ -223,7 +199,7 @@ export const SECURITY_UTILITY_WEB_SEO_CONTENT: ToolSeoMap = {
     ],
   },
   'age-calculator': {
-    intro: 'Figuring out someone\'s exact age in years, months and days, not just years, comes up more often than you\'d expect, from forms to eligibility checks. This tool calculates it instantly.',
+    intro: 'Figuring out someone\'s exact age in years, months and days, not just years, comes up more often than you\'d expect, from forms to eligibility checks. This tool calculates it.',
     steps: [
       { title: 'Enter a birthdate', description: 'Type or pick the date of birth.' },
       { title: 'View the full breakdown', description: 'See exact age in years, months and days, plus total days.' },
@@ -247,11 +223,11 @@ export const SECURITY_UTILITY_WEB_SEO_CONTENT: ToolSeoMap = {
     ],
   },
   'percentage-calc': {
-    intro: 'Percentage math is simple in theory but easy to fumble under pressure, what is 15% of 340, or what percent did sales grow? This tool handles the three most common percentage questions instantly.',
+    intro: 'Percentage math is simple in theory but easy to fumble under pressure, what is 15% of 340, or what percent did sales grow? This tool handles the three most common percentage questions.',
     steps: [
       { title: 'Pick a calculator', description: 'Choose "X% of Y", "X is what % of Y", or percentage change.' },
       { title: 'Enter your numbers', description: 'Type the values relevant to your chosen calculation.' },
-      { title: 'Read the answer', description: 'The result updates instantly.' },
+      { title: 'Read the answer', description: 'The result updates.' },
     ],
     faqs: [
       { question: 'What is the difference between percentage and percentage point change?', answer: 'A change from 10% to 15% is a 5 percentage point increase, but a 50% relative increase, this tool\'s percentage change calculator shows the relative percentage change.' },
@@ -318,37 +294,13 @@ export const SECURITY_UTILITY_WEB_SEO_CONTENT: ToolSeoMap = {
       'Factor in processing fees and other charges separately, since EMI calculators typically only model principal and interest.',
     ],
   },
-  'scientific-calc': {
-    intro: 'For calculations beyond basic arithmetic, trigonometry, logarithms, factorials, this full scientific calculator handles it all with a familiar button-based interface.',
-    steps: [
-      { title: 'Enter your expression', description: 'Use the on-screen buttons for numbers and operations.' },
-      { title: 'Use scientific functions', description: 'Access trig, log, powers, roots and factorial functions as needed.' },
-      { title: 'Use memory functions', description: 'Store and recall values with M+, M-, MR and MC just like a physical calculator.' },
-    ],
-    faqs: [
-      { question: 'Does it support both degrees and radians for trig functions?', answer: 'Yes, you can switch the angle mode between degrees and radians depending on your calculation.' },
-      { question: 'Can I chain multiple operations together?', answer: 'Yes, it works like a standard scientific calculator, supporting sequences of operations in one calculation.' },
-      { question: 'Are results shown with full precision?', answer: 'Results are displayed with a practical number of decimal places suitable for most scientific and everyday use.' },
-    ],
-    useCases: [
-      'Solving trigonometry, logarithm, or exponent problems for homework or coursework',
-      'Running a quick engineering calculation without opening a full spreadsheet',
-      'Using memory functions to carry a running total across a multi-step calculation',
-      'Checking a calculation on any device without needing a physical calculator',
-    ],
-    tips: [
-      'Check the degrees/radians mode before running trig functions, it\'s the most common source of wrong answers.',
-      'Use the memory keys (M+, MR, MC) to hold intermediate results instead of manually re-typing them.',
-      'For very large or very small results, watch for scientific notation in the output rather than expecting a long decimal.',
-    ],
-  },
   'gst-calculator': {
-    intro: 'Working out GST-inclusive or exclusive amounts across India\'s standard tax slabs is a routine task for shopping, billing and accounting. This calculator handles it instantly using the common 5%, 12%, 18% and 28% slab rates.',
+    intro: 'Working out GST-inclusive or exclusive amounts across India\'s standard tax slabs is a routine task for shopping, billing and accounting. This calculator handles it using the common 5%, 12%, 18% and 28% slab rates.',
     steps: [
       { title: 'Choose Add GST or Remove GST', description: 'Pick "Add GST" to calculate tax on top of a base amount, or "Remove GST" to extract tax from a total that already includes it.' },
       { title: 'Enter the amount', description: 'Type the base amount or tax-inclusive total, depending on the mode you chose.' },
       { title: 'Select the GST rate', description: 'Pick the applicable slab, 5%, 12%, 18% or 28%, from the rate dropdown.' },
-      { title: 'View the breakdown', description: 'See the base amount, GST amount and total amount calculated instantly.' },
+      { title: 'View the breakdown', description: 'See the base amount, GST amount and total amount calculated.' },
     ],
     faqs: [
       { question: 'What is the difference between GST-inclusive and exclusive calculation?', answer: 'Exclusive (Add GST) calculation adds GST on top of a base amount you enter; inclusive (Remove GST) calculation extracts the GST portion from a total that already includes tax.' },
@@ -391,30 +343,6 @@ export const SECURITY_UTILITY_WEB_SEO_CONTENT: ToolSeoMap = {
     tips: [
       'Read the words back against the figure before signing. A wrong amount in words is the most common reason a bank returns a cheque.',
       'For international readers, switch to the international system: ten lakh is one million, and one crore is ten million.',
-    ],
-  },
-  'roman-numerals': {
-    intro: 'Converting between Roman numerals and standard numbers by hand means remembering subtractive notation rules. This tool converts both directions instantly, with validation to catch mistakes.',
-    steps: [
-      { title: 'Type a number or numeral', description: 'Enter either a standard number or a Roman numeral.' },
-      { title: 'View the conversion', description: 'See the equivalent in the other format instantly.' },
-      { title: 'Check for validity', description: 'Invalid Roman numeral input is flagged automatically.' },
-    ],
-    faqs: [
-      { question: 'What is the largest number this can convert?', answer: 'Standard Roman numerals typically support numbers up to 3999 using the classic symbol set.' },
-      { question: 'Does it validate incorrect Roman numerals, like "IIII"?', answer: 'Yes, invalid or non-standard numeral forms are flagged rather than silently accepted.' },
-      { question: 'Why are Roman numerals still used today?', answer: 'They remain common for clock faces, book chapters, movie sequels and formal numbering where a traditional look is wanted.' },
-    ],
-    useCases: [
-      'Figuring out the correct Roman numeral for a movie sequel, Super Bowl, or event edition number',
-      'Decoding a Roman numeral date engraved on a building or document',
-      'Formatting chapter or section numbers in a formal document using Roman numerals',
-      'Checking whether a Roman numeral you\'ve written follows standard subtractive notation',
-    ],
-    tips: [
-      'Remember standard Roman numerals only go up to 3999, larger numbers need special notation not covered here.',
-      'Watch for non-standard forms like "IIII" instead of "IV", the validator will flag them as invalid even though you may see them on some clock faces.',
-      'When decoding an inscribed date, read left to right and watch for subtractive pairs like IV or IX rather than adding every symbol.',
     ],
   },
 
@@ -519,7 +447,7 @@ export const SECURITY_UTILITY_WEB_SEO_CONTENT: ToolSeoMap = {
     intro: 'Working with emoji or characters from non-Latin scripts sometimes requires their exact Unicode code point. This tool converts text to code points like U+1F600 and back again.',
     steps: [
       { title: 'Enter text or code points', description: 'Type text (including emoji) or Unicode code points.' },
-      { title: 'Convert', description: 'See the equivalent representation instantly.' },
+      { title: 'Convert', description: 'See the equivalent representation.' },
       { title: 'Copy the result', description: 'Grab the converted output.' },
     ],
     faqs: [
@@ -540,10 +468,10 @@ export const SECURITY_UTILITY_WEB_SEO_CONTENT: ToolSeoMap = {
     ],
   },
   'ascii-converter': {
-    intro: 'Converting text to its underlying ASCII/decimal character codes is a common need in programming and puzzles. This tool converts in both directions instantly.',
+    intro: 'Converting text to its underlying ASCII/decimal character codes is a common need in programming and puzzles. This tool converts in both directions.',
     steps: [
       { title: 'Enter text or codes', description: 'Type plain text, or a list of space-separated ASCII codes.' },
-      { title: 'Convert', description: 'See the equivalent representation appear instantly.' },
+      { title: 'Convert', description: 'See the equivalent representation.' },
       { title: 'Copy the result', description: 'Grab the converted output.' },
     ],
     faqs: [
@@ -561,30 +489,6 @@ export const SECURITY_UTILITY_WEB_SEO_CONTENT: ToolSeoMap = {
       'Remember ASCII only covers the basic 128-character set, for accented letters, emoji, or non-Latin scripts, use the Unicode Converter instead.',
       'Keep codes space-separated when pasting a list in, since that\'s the expected delimiter format.',
       'Case matters, uppercase and lowercase letters have different ASCII codes, so double-check casing when decoding.',
-    ],
-  },
-  'binary-converter': {
-    intro: 'Switching a number between binary, decimal, hexadecimal and octal is routine when working close to the hardware or debugging low-level code. This tool updates all four fields together live.',
-    steps: [
-      { title: 'Type a number in any field', description: 'Enter a value in binary, decimal, hex or octal.' },
-      { title: 'Watch the others update', description: 'All four representations update together automatically.' },
-      { title: 'Copy what you need', description: 'Grab the format your code or documentation requires.' },
-    ],
-    faqs: [
-      { question: 'Does it support negative numbers?', answer: 'Positive integers convert cleanly across all bases; check the specific behavior shown for negative number handling if needed.' },
-      { question: 'Is there a maximum number size?', answer: 'Reasonably large integers are supported, well beyond what fits in standard 32-bit or 64-bit representations for typical use.' },
-      { question: 'Which base should I use for reading memory addresses?', answer: 'Hexadecimal is the conventional choice for memory addresses and byte-level data since it maps cleanly to binary in a more compact form.' },
-    ],
-    useCases: [
-      'Converting a memory address or byte value between hex and binary while debugging low-level code',
-      'Translating a decimal value into binary for a computer science assignment',
-      'Checking an octal file permission value (like chmod 755) against its binary or decimal form',
-      'Verifying a hex color or bitmask value by seeing its binary breakdown',
-    ],
-    tips: [
-      'Use hexadecimal rather than binary when working with memory addresses or byte data, it maps more compactly and is easier to read.',
-      'Watch for leading-zero conventions in binary/octal fields, since they don\'t change the value but affect readability.',
-      'Be cautious with negative numbers, behavior across bases can vary, so verify against your specific use case (like two\'s complement) if it matters.',
     ],
   },
 };

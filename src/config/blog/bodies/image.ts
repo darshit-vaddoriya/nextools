@@ -163,7 +163,7 @@ On screen, DPI is ignored entirely. Browsers, phones and monitors work in pixels
 
 Enlarging an image cannot add detail that was not captured. Traditional upscaling interpolates between existing pixels, producing a larger, softer version of the same picture with a bigger file size.
 
-AI upscalers are genuinely different, they hallucinate plausible detail based on training data, and they are useful. But it is invention, not recovery. For anything where accuracy matters (a document, a product photo, evidence), do not upscale; go back to the source.
+AI upscalers are different, they hallucinate plausible detail based on training data, and they are useful. But it is invention, not recovery. For anything where accuracy matters (a document, a product photo, evidence), do not upscale; go back to the source.
 
 ## Sizing guidelines that hold up
 
@@ -203,13 +203,13 @@ Architectures like U²-Net are built for exactly this: an encoder progressively 
 
 ## Why edges are the hard part
 
-For most pixels the answer is obvious. The interesting pixels are the boundary ones, where a single pixel genuinely contains both subject and background, this is a real physical property of how cameras sample light, not a modelling shortcut.
+For most pixels the answer is obvious. The interesting pixels are the boundary ones, where a single pixel contains both subject and background, this is a real physical property of how cameras sample light, not a modelling shortcut.
 
 Getting those pixels right is a separate problem called **alpha matting**, and it is where quality differences between tools show up:
 
 - **Hair.** Thousands of strands thinner than one pixel each. A hard mask cuts them off and leaves a helmet-like silhouette; a good soft mask preserves partial transparency and keeps them looking like hair.
 - **Fur and feathers.** Same problem, more of it.
-- **Glass, smoke, water, veils.** Genuinely semi-transparent, the "correct" alpha is somewhere in the middle, and models trained mostly on opaque subjects tend to guess wrong.
+- **Glass, smoke, water, veils.** Truly semi-transparent, the "correct" alpha is somewhere in the middle, and models trained mostly on opaque subjects tend to guess wrong.
 - **Motion blur.** A blurred hand has no defined edge to find.
 
 ## What predicts a good result
@@ -234,7 +234,7 @@ Getting those pixels right is a separate problem called **alpha matting**, and i
 
 ## Running it on your own device
 
-This is the part that has genuinely changed. These models are a few tens of megabytes and can be exported to ONNX and run in a browser through WebAssembly or WebGPU, using your own CPU or graphics card rather than a rented one.
+This is the part that has changed. These models are a few tens of megabytes and can be exported to ONNX and run in a browser through WebAssembly or WebGPU, using your own CPU or graphics card rather than a rented one.
 
 That is what NextTool's [AI background remover](/tool/ai-bg-remover) does. The first run downloads the model, then every image is processed locally. It is slower than a datacentre GPU and it means your product photography, portraits and personal pictures never get uploaded to a service that may retain them for training.
 
@@ -358,7 +358,7 @@ At 16 pixels you have 256 pixels in total. A logo with a wordmark, a gradient an
 
 So do not resize your logo to 16px and accept the result. Look at it at actual size, and if it is unreadable, draw a simplified mark for the small sizes. The SVG can carry the detailed version for large rendering while the ICO carries the simplified one.
 
-Two practical points while you are there. Keep some padding inside the canvas, because browsers crop tight to the edges and a shape touching the boundary looks cramped. And use a transparent background rather than white, unless the mark genuinely needs a plate behind it.
+Two practical points while you are there. Keep some padding inside the canvas, because browsers crop tight to the edges and a shape touching the boundary looks cramped. And use a transparent background rather than white, unless the mark needs a plate behind it.
 
 ## Wiring it up
 
@@ -384,13 +384,13 @@ From one high-resolution square source:
 4. Look at the 16px version at 16px on both a light and a dark tab strip.
 
 Step four is the only one that is not mechanical, and it is the one that matters.`,
-  'putting-things-on-top-of-images': `Adding a watermark, annotating a screenshot, making a meme and assembling a collage are the same operation underneath: draw something on top of an image and flatten the result to new pixels. What separates them is what happens if you get it wrong.
+  'putting-things-on-top-of-images': `Adding a watermark and annotating a screenshot are the same operation underneath: draw something on top of an image and flatten the result to new pixels. What separates them is what happens if you get it wrong.
 
 ## Compositing is one-way
 
 Every one of these produces a flat raster. There are no layers in a JPEG or a PNG. Once the text is drawn, those pixels are the text, and there is no undo beyond starting again from the original.
 
-So the rule that covers all four: **keep the original.** Export the annotated version under a new name. This sounds obvious and is the single most common regret, usually discovered when someone asks for the same screenshot without the red circle.
+So the rule that covers both: **keep the original.** Export the annotated version under a new name. This sounds obvious and is the single most common regret, usually discovered when someone asks for the same screenshot without the red circle.
 
 ## Watermarks, and what they are worth
 
@@ -408,39 +408,20 @@ For a logo watermark, use a PNG with real transparency. A logo on a white rectan
 
 ## Annotating, and the redaction difference
 
-[Drawing on an image](/tool/image-draw) is for showing someone where to look: an arrow at the broken button, a box around the error, a highlight on the clause that matters.
+[Drawing on an image](/tool/drawing) is for showing someone where to look: an arrow at the broken button, a box around the error, a highlight on the clause that matters.
 
 There is one important difference from doing the same thing in a document.
 
 > [!NOTE]
-> Drawing a filled black rectangle over text in an image genuinely removes it. The pixels are replaced and the original values are gone. This is the opposite of a PDF, where a black rectangle is drawn over text that remains selectable underneath.
+> Drawing a filled black rectangle over text in an image removes it. The pixels are replaced and the original values are gone. This is the opposite of a PDF, where a black rectangle is drawn over text that remains selectable underneath.
 
 So a screenshot is one of the few places where a black box is real redaction. Two caveats still apply. Blurring and pixellation are not the same as a solid fill, and both have been reversed on text in practice, so use an opaque block rather than a blur for anything that matters. And check the rest of the frame: browser tabs, notification banners, bookmark bars and the taskbar clock leak more than people expect.
 
 If you need a blank canvas rather than an image to mark up, the [drawing board](/tool/drawing) is the same idea without a photograph underneath, which is often the faster way to sketch a layout or an architecture diagram for someone.
 
-## Memes are a format, not a joke
+## Before you send it
 
-The [meme generator](/tool/meme-generator) exists because the Impact-white-with-black-outline convention is a genuine legibility solution. Heavy condensed type with a thick stroke stays readable over any background, at any size, at any compression level. That is why it survived.
-
-The practical points are the same ones that apply to any text over an image: keep the stroke, do not go below about 24px at output size, and remember that the image will be recompressed by whatever platform it lands on, so export at a generous quality.
-
-## Collages want equal inputs
-
-A [collage](/tool/image-collage) is a grid of images composited onto one canvas, and the single thing that decides whether it looks deliberate is consistency of the inputs.
-
-Mixed aspect ratios are the usual problem. Given a 4:3 photo, a 16:9 screenshot and a square crop, any layout engine has to either letterbox, stretch or crop, and it will choose without asking.
-
-> [!TIP]
-> [Resize or crop the inputs to a common aspect ratio first](/tool/image-resize). Ten seconds of preparation removes the entire class of "why is that one squashed" problems.
-
-Two other things worth setting deliberately: the gap between cells, because zero gap reads as one confusing image, and the output resolution, because a collage of six 4000px photos produces an enormous file unless you say otherwise. A comparison grid for a document or an email rarely needs more than about 2000px on its long edge.
-
-## What they share
-
-All five are canvas operations: load pixels, draw on top, export. That is something a browser does natively and quickly, with no server involved.
-
-Which matters more than it sounds, because the images people annotate are disproportionately screenshots of things that should not be public, and the images people watermark are disproportionately unpublished work. Both are poor candidates for uploading to a free editor in exchange for a download link.`,
+Open the marked copy at the size it will actually be seen. Check that the watermark or the arrow says what you meant without covering the detail that matters, then send that copy and keep the original. The [watermark tool](/tool/image-watermark) handles text marks in a corner, the centre or tiled across the picture, and the [drawing board](/tool/drawing) has the arrows, boxes and highlighter that annotation needs.`,
   'rotate-flip-and-sharpen': `A photo that looks perfectly upright in your gallery appears rotated 90 degrees when you put it on a web page. The file is not corrupt and nothing resized it. It has an orientation tag, and something along the way ignored it.
 
 ## The EXIF orientation tag
@@ -462,7 +443,7 @@ Stripping EXIF without rotating first is the trap. It removes the orientation ta
 
 Rotating by an arbitrary angle, say 3 degrees to straighten a horizon, is a completely different operation. There is no one-to-one mapping between source and destination pixels, so every output pixel is interpolated from several input pixels. The image is softened everywhere, and the corners have to be either cropped or filled. Do it once, from the original, and not repeatedly.
 
-[Flipping](/tool/image-flip) is always lossless in both directions. It is worth remembering that a flip is not a rotation: a mirrored image is a genuinely different image, which matters for anything containing text, a clock face, a road sign or a person's parting.
+[Flipping](/tool/image-flip) is always lossless in both directions. It is worth remembering that a flip is not a rotation: a mirrored image is a different image, which matters for anything containing text, a clock face, a road sign or a person's parting.
 
 ## Sharpening does not add detail
 
@@ -478,7 +459,7 @@ So the useful cases are narrow and real:
 
 - **After resizing down.** Downscaling averages pixels together and softens edges. A light sharpen restores the apparent crispness the resize removed. This is the single most legitimate use.
 - **Counteracting a soft lens or a slight focus miss.** Modest improvement.
-- **Scanned documents.** Increasing edge contrast genuinely helps OCR read the characters.
+- **Scanned documents.** Increasing edge contrast helps OCR read the characters.
 
 And the case it does not fix: motion blur or significant missed focus. That detail was never recorded.
 
@@ -519,7 +500,7 @@ Gzip claws some of it back, because base64 text is more compressible than the bi
 
 **No flash of missing image.** The picture is present the moment the markup is parsed. For a logo above the fold, that can be the difference between a clean first paint and a visible pop-in.
 
-**A genuinely self-contained file.** This is the strongest argument and the one that survives. An HTML file, an email signature or an exported report with inlined images is one file that works with no network, no relative paths and no broken-image icons.
+**A truly self-contained file.** This is the strongest argument and the one that survives. An HTML file, an email signature or an exported report with inlined images is one file that works with no network, no relative paths and no broken-image icons.
 
 ## What it costs
 
@@ -660,7 +641,7 @@ And export a new file rather than saving over the original, because the flatteni
 
 ## Annotation that helps
 
-An arrow pointing at the problem beats a paragraph describing where to look. [Drawing on the image](/tool/image-draw) covers the useful set: a box around the affected region, an arrow to the specific control, and a highlight on the value that is wrong.
+An arrow pointing at the problem beats a paragraph describing where to look. [Drawing on the image](/tool/drawing) covers the useful set: a box around the affected region, an arrow to the specific control, and a highlight on the value that is wrong.
 
 The practical guidance is short. Use a colour that does not appear in the interface, which usually means red or magenta over a typical grey application. Keep the stroke thick enough to survive being viewed at half size in a chat window. And annotate sparingly, because five arrows communicate less than one.
 
@@ -692,7 +673,7 @@ All of it runs in this browser tab, which is the relevant property when the scre
 
 Three constraints explain nearly every oversized GIF:
 
-**256 colours per frame.** A GIF frame carries a palette of at most 256 entries. A photograph or camera footage contains tens of thousands of distinct colours, so the encoder has to quantise, and to hide the banding it dithers — scattering pixels of two palette colours to fake a third.
+**256 colours per frame.** A GIF frame carries a palette of at most 256 entries. A photograph or camera footage contains tens of thousands of distinct colours, so the encoder has to quantise, and to hide the banding it dithers: scattering pixels of two palette colours to fake a third.
 
 **Dithering defeats compression.** GIF compresses with LZW, which works by finding repeated runs of pixels. Dithering deliberately makes neighbouring pixels differ. So the trick that keeps a photo looking acceptable is the same trick that stops it compressing. If the goal is a small file that still looks right, [choosing a modern format](/blog/jpeg-png-webp-avif-which-format) solves the problem that no amount of GIF tuning will.
 
@@ -701,7 +682,7 @@ Three constraints explain nearly every oversized GIF:
 Put those together and you get the rule: GIF is good at flat-colour, low-motion, small-dimension content, and terrible at everything else.
 
 > [!NOTE]
-> A screen recording of a terminal, a diagram animating, or a UI interaction with solid backgrounds is close to the ideal case — few colours, large unchanged areas, sharp edges. That is why developer demos as GIFs look fine and holiday clips as GIFs look like a fax.
+> A screen recording of a terminal, a diagram animating, or a UI interaction with solid backgrounds is close to the ideal case: few colours, large unchanged areas, sharp edges. That is why developer demos as GIFs look fine and holiday clips as GIFs look like a fax.
 
 ## The three dials, in order
 
@@ -717,9 +698,9 @@ Change them in that order. Cutting length costs you nothing you needed; cutting 
 
 If your converter exposes them, two settings do most of the work:
 
-**Palette scope.** A single palette for the whole animation compresses far better than a fresh palette per frame, and looks fine when the scene does not change much. Per-frame palettes are for clips where the colours genuinely shift.
+**Palette scope.** A single palette for the whole animation compresses far better than a fresh palette per frame, and looks fine when the scene does not change much. Per-frame palettes are for clips where the colours shift.
 
-**Dithering.** Turning it off makes flat-colour content smaller and usually *cleaner* — banding on a UI screenshot is invisible because the source was already flat. Leave it on only for gradients and photographic content, where the banding would be obvious.
+**Dithering.** Turning it off makes flat-colour content smaller and usually *cleaner*: banding on a UI screenshot is invisible because the source was already flat. Leave it on only for gradients and photographic content, where the banding would be obvious.
 
 > [!WARNING]
 > Converting an existing GIF to a smaller GIF re-quantises an already-quantised image. Go back to the video or screen recording if you still have it. Second-generation GIFs pick up colour blotching that no setting removes.
@@ -742,7 +723,7 @@ The honest checklist:
 4. Single palette, dithering off.
 5. Check the result at display size, not zoomed in.
 
-That typically lands a UI interaction between 500 KB and 2 MB — small enough for a README, a ticket or a chat message.
+That typically lands a UI interaction between 500 KB and 2 MB: small enough for a README, a ticket or a chat message.
 
 [Video to GIF](/tool/video-to-gif) exposes the same dials: a start time and length, 5 to 20 fps, and a width from 320 to 800 px. It converts in the browser tab, which matters because screen recordings are also the clips most likely to show an internal dashboard. When the honest answer from the previous section is "this should not be a GIF", [GIF to MP4](/tool/gif-to-mp4) goes the other way, and the video is usually a fraction of the size.`,
   'reading-text-off-an-image': `Optical character recognition has quietly become very good, which makes its failures more confusing than they used to be. A page comes back perfect and the next one comes back as fragments. The difference is almost never the engine.
@@ -759,7 +740,7 @@ Step three is the part people picture and the part that is now rarely the bottle
 
 ## Resolution is the hard floor
 
-OCR wants around 300 DPI relative to the text — roughly 20–30 pixels of height for a normal body character.
+OCR wants around 300 DPI relative to the text: roughly 20–30 pixels of height for a normal body character.
 
 A phone photo of an A4 page framed edge to edge at 12 megapixels is comfortably above that. The same page photographed from across a desk, at an angle, with half the frame being the table, may have body text only 10 pixels tall. At that point strokes merge, and no amount of sharpening invents the gap between the two verticals of an \`n\`.
 
@@ -784,14 +765,14 @@ The fix is to re-take the photo: fill the frame with the page, hold the camera p
 
 **Tables.** The characters are usually right and the structure is usually wrong. Cells get merged, columns get read as one line, and the output needs rebuilding by hand.
 
-**Multi-column layouts.** If layout analysis misses the column break, you get sentences from column one and column two interleaved — every character correct, the text meaningless.
+**Multi-column layouts.** If layout analysis misses the column break, you get sentences from column one and column two interleaved: every character correct, the text meaningless.
 
 **Very stylised type.** Logos, condensed display faces and heavy italics have glyph shapes that fall outside what the model saw in training.
 
 **Low-contrast scans.** Faded thermal receipts and second-generation photocopies lose the strokes themselves, and the engine's language model starts guessing whole words.
 
 > [!WARNING]
-> Check every number. Language models fix "recieve" into "receive", but they have no way to know that an invoice total should be 1,180 rather than 1,180 misread as 7,780 — \`1\`/\`7\`, \`0\`/\`O\`, \`5\`/\`S\` and \`8\`/\`B\` are the standard confusions. Amounts, dates, account numbers and quantities need a human pass.
+> Check every number. Language models fix "recieve" into "receive", but they have no way to know that an invoice total should be 1,180 rather than 1,180 misread as 7,780: \`1\`/\`7\`, \`0\`/\`O\`, \`5\`/\`S\` and \`8\`/\`B\` are the standard confusions. Amounts, dates, account numbers and quantities need a human pass.
 
 ## Getting the best out of a single page
 
@@ -802,7 +783,7 @@ The fix is to re-take the photo: fill the frame with the page, hold the camera p
 5. Recognise.
 6. Proofread digits and proper nouns.
 
-For a scanned PDF rather than a photo, the same logic applies one layer up — see [what OCR can and cannot read off a scan](/blog/ocr-scanned-pdf-explained) for how the text layer gets attached to the page.
+For a scanned PDF rather than a photo, the same logic applies one layer up: see [what OCR can and cannot read off a scan](/blog/ocr-scanned-pdf-explained) for how the text layer gets attached to the page.
 
 For difficult images, [adjust the contrast](/tool/image-adjust) before running [OCR](/tool/ocr-image), and always proofread numbers, names and anything else where a single misread character changes the meaning.`,
   'iphone-heic-photos-explained': `You take a photo on an iPhone, copy it to a Windows laptop or attach it to an upload form, and it will not open. The file ends in \`.heic\`, and the form says the format is not supported. Nothing is wrong with the photo. It is simply stored in a format that much of the world still does not read by default.

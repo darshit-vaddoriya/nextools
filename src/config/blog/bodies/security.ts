@@ -39,7 +39,7 @@ Pick four words at random from a list of 7,776 (the standard Diceware wordlist):
 7776⁴ ≈ 3.7 × 10¹⁵ combinations ≈ 51.7 bits
 \`\`\`
 
-Five words gives about 64.6 bits, six about 77.5 bits. A six-word passphrase is stronger than most random 12-character passwords and is genuinely memorable.
+Five words gives about 64.6 bits, six about 77.5 bits. A six-word passphrase is stronger than most random 12-character passwords and is memorable.
 
 The critical condition again: **the words must be selected randomly, not chosen by you.** A phrase you thought of is a phrase a language model can generate. Roll dice, or use a generator.
 
@@ -182,7 +182,7 @@ Then compare to the published value. Compare the whole string, checking the firs
 ## What it catches
 
 - **Incomplete or corrupted downloads.** Common on flaky connections, and the most frequent real cause of a mismatch.
-- **A compromised mirror.** Large projects distribute through many mirrors; a mirror serving a modified installer is a genuine attack pattern with real historical examples.
+- **A compromised mirror.** Large projects distribute through many mirrors; a mirror serving a modified installer is a known attack pattern with real historical examples.
 - **Bit rot** on old storage.
 - **The wrong file entirely**, a different version than you thought.
 

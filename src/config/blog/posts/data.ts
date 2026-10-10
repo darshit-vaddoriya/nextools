@@ -29,7 +29,7 @@ export const DATA_POSTS: BlogPost[] = [
     published: '2026-09-09',
     relatedTools: ['csv-to-json', 'json-to-csv', 'json-formatter', 'csv-cleaner'],
     takeaways: [
-      'Every CSV value is a string, so any type inference is a guess. Keeping everything as a string and casting deliberately is the safe default.',
+      'Every CSV value is a string, so any type inference is a guess. Keeping everything as a string and casting each column yourself is the safe default.',
       'Losing a number type is recoverable; losing the leading zeros on an identifier is not.',
       'An empty CSV field could mean empty string, missing or null, and CSV cannot tell you which. Pick a convention and document it.',
       'Numbers beyond 2^53 are silently rounded by JavaScript, so long IDs must stay strings.',
@@ -99,7 +99,7 @@ export const DATA_POSTS: BlogPost[] = [
     category: 'data',
     tags: ['zip', 'compression', 'archives'],
     published: '2026-09-16',
-    relatedTools: ['zip-creator', 'zip-extractor', 'batch-zip', 'merge-csv'],
+    relatedTools: ['zip-creator', 'zip-extractor', 'merge-csv'],
     takeaways: [
       'ZIP removes repetition. Already-compressed formats like JPEG, PNG, MP4 and DOCX have none left, so they barely shrink.',
       'Text, CSV, logs and source code compress enormously, often to a tenth of their size.',

@@ -54,3 +54,107 @@
   from = "/blog/topic/privacy"
   to = "/blog/topic/security"
   status = 301
+
+# Tools retired on 2026-10-10: duplicates of a better tool, or too slight to
+# be worth a page. Each URL points to the tool or category that replaces it.
+[[redirects]]
+  from = "/tool/diff-text"
+  to = "/tool/diff-checker"
+  status = 301
+
+[[redirects]]
+  from = "/tool/pdf-page-extractor"
+  to = "/tool/pdf-split"
+  status = 301
+
+[[redirects]]
+  from = "/tool/image-draw"
+  to = "/tool/drawing"
+  status = 301
+
+[[redirects]]
+  from = "/tool/batch-zip"
+  to = "/tool/zip-creator"
+  status = 301
+
+[[redirects]]
+  from = "/tool/reverse-text"
+  to = "/category/text"
+  status = 301
+
+[[redirects]]
+  from = "/tool/extract-hashtags"
+  to = "/category/text"
+  status = 301
+
+[[redirects]]
+  from = "/tool/glassmorphism"
+  to = "/category/color"
+  status = 301
+
+[[redirects]]
+  from = "/tool/pdf-repair"
+  to = "/category/pdf"
+  status = 301
+
+# More tools retired on 2026-10-10 after a usage review: each was rarely used
+# or done as well by the browser or the phone. URLs point to their category.
+[[redirects]]
+  from = "/tool/pdf-viewer"
+  to = "/category/pdf"
+  status = 301
+
+[[redirects]]
+  from = "/tool/env-json"
+  to = "/category/dev"
+  status = 301
+
+[[redirects]]
+  from = "/tool/string-escaper"
+  to = "/category/dev"
+  status = 301
+
+[[redirects]]
+  from = "/tool/curl-to-code"
+  to = "/category/dev"
+  status = 301
+
+[[redirects]]
+  from = "/tool/secure-notes"
+  to = "/category/security"
+  status = 301
+
+[[redirects]]
+  from = "/tool/word-metadata"
+  to = "/category/word"
+  status = 301
+
+[[redirects]]
+  from = "/tool/html-to-docx"
+  to = "/category/word"
+  status = 301
+
+[[redirects]]
+  from = "/tool/scientific-calc"
+  to = "/category/utility"
+  status = 301
+
+[[redirects]]
+  from = "/tool/roman-numerals"
+  to = "/category/utility"
+  status = 301
+
+[[redirects]]
+  from = "/tool/meme-generator"
+  to = "/category/image"
+  status = 301
+
+[[redirects]]
+  from = "/tool/image-collage"
+  to = "/category/image"
+  status = 301
+
+[[redirects]]
+  from = "/tool/binary-converter"
+  to = "/category/web"
+  status = 301

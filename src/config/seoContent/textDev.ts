@@ -31,7 +31,7 @@ export const TEXT_DEV_SEO_CONTENT: ToolSeoMap = {
 
   'case-converter': {
     intro:
-      'Developers renaming variables to match a language convention, and writers cleaning up text pasted from a spreadsheet, both run into the same problem: text in the wrong case. This tool converts between camelCase, snake_case, kebab-case, PascalCase, Title Case, UPPERCASE and lowercase with a single click, so you can match your codebase style guide or tidy up copy without retyping anything by hand. Conversion happens instantly in your browser.',
+      'Developers renaming variables to match a language convention, and writers cleaning up text pasted from a spreadsheet, both run into the same problem: text in the wrong case. This tool converts between camelCase, snake_case, kebab-case, PascalCase, Title Case, UPPERCASE and lowercase with a single click, so you can match your codebase style guide or tidy up copy without retyping anything by hand. Conversion happens in your browser.',
     steps: [
       { title: 'Paste your text', description: 'Enter a variable name, sentence or block of text into the input field.' },
       { title: 'Pick a case style', description: 'Click the button for the case you need, such as camelCase or kebab-case.' },
@@ -88,7 +88,7 @@ export const TEXT_DEV_SEO_CONTENT: ToolSeoMap = {
 
   'sort-lines': {
     intro:
-      'Whether you are alphabetizing a reference list, ranking log lines by length, or reversing an ordered export, sorting text by hand is tedious and error-prone. This tool sorts pasted lines alphabetically (A-Z or Z-A), numerically, by line length, or simply reverses their order, giving developers and writers a quick way to reorganize lists without opening a spreadsheet.',
+      'Sorting a reference list, ranking log lines by length or flipping an export upside down is slow and error-prone by hand. This tool sorts pasted lines alphabetically (A-Z or Z-A), numerically, by line length, or simply reverses their order, giving developers and writers a quick way to reorganize lists without opening a spreadsheet.',
     steps: [
       { title: 'Paste your lines', description: 'Enter text with one item per line.' },
       { title: 'Select a sort mode', description: 'Choose alphabetical, numeric, by length, or reverse order.' },
@@ -115,33 +115,6 @@ export const TEXT_DEV_SEO_CONTENT: ToolSeoMap = {
     ],
   },
 
-  'reverse-text': {
-    intro:
-      'From creating novelty mirrored text for social media to reversing word order in a sentence for a puzzle or linguistics exercise, reversing text has plenty of small but real uses. This tool flips an entire string character by character, or reverses the order of words while keeping each word intact, all processed instantly on your own device.',
-    steps: [
-      { title: 'Enter your text', description: 'Type or paste the text you want to reverse.' },
-      { title: 'Choose a reverse mode', description: 'Pick character reversal or word-order reversal.' },
-      { title: 'View the reversed output', description: 'The result updates immediately in the output box.' },
-      { title: 'Copy the reversed text', description: 'Copy it out for use in a message, puzzle or document.' },
-    ],
-    faqs: [
-      { question: 'What is the difference between character and word reversal?', answer: 'Character reversal flips the entire string letter by letter (so "hello world" becomes "dlrow olleh"), while word reversal keeps each word spelled normally but reverses their order (so it becomes "world hello").' },
-      { question: 'Does reversing text handle emoji and special characters correctly?', answer: 'Most emoji and multi-byte characters are handled correctly, but some complex emoji sequences built from multiple code points can occasionally split apart when reversed character by character.' },
-      { question: 'Can I reverse multiple lines at once?', answer: 'Yes, you can paste multi-line text and each line is reversed independently.' },
-      { question: 'Is this tool useful for anything besides novelty text?', answer: 'It is also handy for quick puzzle creation, testing string-handling code, or checking palindrome-like patterns.' },
-    ],
-    useCases: [
-      'Creating novelty mirrored text for a social media post or username',
-      'Building a quick word-order puzzle or riddle for a game or classroom activity',
-      'Checking whether a string is a palindrome by comparing it to its reversed form',
-      'Testing how a piece of code or UI handles reversed or right-to-left-like text',
-    ],
-    tips: [
-      'Use word-order reversal instead of character reversal if you want each word to stay readable.',
-      'Watch for complex emoji made of multiple code points, reversing character by character can occasionally split them apart.',
-      'Paste multi-line text if you need each line reversed independently rather than the whole block treated as one string.',
-    ],
-  },
 
   'lorem-ipsum': {
     intro:
@@ -261,7 +234,7 @@ export const TEXT_DEV_SEO_CONTENT: ToolSeoMap = {
 
   'remove-empty-lines': {
     intro:
-      'Log files, exported CSV-like data, and text copied from PDFs frequently end up riddled with blank lines that make the content harder to read or process. This tool strips every blank or whitespace-only line from a block of text instantly, leaving a compact version ready to paste into code, a spreadsheet, or a document.',
+      'Log files, exported CSV-like data, and text copied from PDFs frequently end up riddled with blank lines that make the content harder to read or process. This tool strips every blank or whitespace-only line from a block of text, leaving a compact version ready to paste into code, a spreadsheet, or a document.',
     steps: [
       { title: 'Paste your text', description: 'Add the text containing unwanted blank lines.' },
       { title: 'Remove empty lines', description: 'Click the action to strip out every blank or whitespace-only line.' },
@@ -373,34 +346,6 @@ export const TEXT_DEV_SEO_CONTENT: ToolSeoMap = {
     ],
   },
 
-  'extract-hashtags': {
-    intro:
-      'Social media managers analyzing a batch of posts and researchers studying campaign reach both need to quickly pull every hashtag and mention out of raw text. This tool scans pasted social media content and extracts all #hashtags and @mentions into a clean list, useful for tracking trending tags or compiling a mention report without manual copy-pasting.',
-    steps: [
-      { title: 'Paste your social text', description: 'Add posts, captions or comments containing hashtags and mentions.' },
-      { title: 'Extract tags', description: 'Run extraction to pull out every #hashtag and @mention.' },
-      { title: 'Review the results', description: 'Check the separated lists of hashtags and mentions.' },
-      { title: 'Copy the list', description: 'Copy the results for reporting or reuse in future posts.' },
-    ],
-    faqs: [
-      { question: 'Does it separate hashtags from @mentions?', answer: 'Yes, the results are typically grouped so you can see hashtags and mentions as distinct lists.' },
-      { question: 'Will it remove duplicate hashtags if the same tag is used repeatedly?', answer: 'Duplicates are generally consolidated so each unique tag appears once, which is useful for a frequency-style overview.' },
-      { question: 'Does it work on text copied from Twitter/X, Instagram, or LinkedIn?', answer: 'Yes, it works on any plain text you paste, regardless of which platform it originally came from.' },
-      { question: 'Can it count how many times each hashtag appears?', answer: 'The tool focuses on extracting the unique tags present; for detailed frequency counts you may want to cross-check with a word frequency tool.' },
-      { question: 'Is this data processed locally?', answer: 'Yes, extraction runs entirely in your browser with no upload to any server.' },
-    ],
-    useCases: [
-      'Compiling every hashtag used across a batch of posts for a campaign performance report',
-      'Pulling @mentions out of comments to see who engaged with a brand or thread',
-      'Building a reusable hashtag set from a top-performing post to reuse in future content',
-      'Auditing a large export of social copy for tag consistency before a scheduled campaign',
-    ],
-    tips: [
-      'Results are split into separate hashtag and mention lists, so you do not need to sort them manually afterward.',
-      'Duplicate tags are consolidated to one entry each, cross-check with a word frequency tool if you need actual usage counts.',
-      'Works on plain text pasted from any platform, so you can mix content from Twitter/X, Instagram and LinkedIn in one pass.',
-    ],
-  },
 
   'regex-tester': {
     intro:
@@ -431,33 +376,6 @@ export const TEXT_DEV_SEO_CONTENT: ToolSeoMap = {
     ],
   },
 
-  'diff-text': {
-    intro:
-      'Comparing two drafts of an email, two versions of a legal clause, or a translated paragraph against the original is much easier when the differences are highlighted instead of read line by line. This text diff checker compares two blocks of text and visually marks every addition, deletion and change between them, helping writers, editors and reviewers spot exactly what moved without re-reading the whole document.',
-    steps: [
-      { title: 'Paste the original text', description: 'Add the first version into the left-hand box.' },
-      { title: 'Paste the updated text', description: 'Add the revised version into the second box.' },
-      { title: 'Run the comparison', description: 'The tool computes the differences between the two versions.' },
-      { title: 'Review highlighted changes', description: 'Additions, deletions and modified sections are marked with distinct colors.' },
-    ],
-    faqs: [
-      { question: 'Does the diff compare word by word or character by character?', answer: 'It generally compares at the word or line level to produce a readable diff, rather than a noisy character-by-character comparison.' },
-      { question: 'Can I use this for comparing code snippets too?', answer: 'It works for code text, though for structured source files the dedicated Diff Checker tool may give clearer line-based results.' },
-      { question: 'Is whitespace ignored when comparing?', answer: 'Minor whitespace differences can affect the diff result, so it is best to compare text with consistent formatting for the cleanest output.' },
-      { question: 'Does it show which parts were only reordered rather than changed?', answer: 'Reordered text is generally shown as a deletion in one place and an addition in another, since the comparison does not track block movement separately.' },
-    ],
-    useCases: [
-      'Comparing two drafts of an email or contract clause to see exactly what changed',
-      'Reviewing an edited translation against the original text for accuracy',
-      'Checking two versions of marketing copy before approving a revision',
-      'Spotting subtle wording changes between two policy or documentation versions',
-    ],
-    tips: [
-      'Keep formatting consistent between the two versions before comparing, stray whitespace differences can clutter the diff.',
-      'For code specifically, use the dedicated Diff Checker tool instead, which gives clearer line-based results.',
-      'Reordered content shows as a deletion plus an addition rather than a "moved" marker, so read both changes together to understand what actually happened.',
-    ],
-  },
 
   'json-formatter': {
     intro:
@@ -690,7 +608,7 @@ export const TEXT_DEV_SEO_CONTENT: ToolSeoMap = {
     steps: [
       { title: 'Enter text or choose a file', description: 'Type text directly, or upload a file you want to encode.' },
       { title: 'Select Encode or Decode', description: 'Pick the direction based on what you are starting with.' },
-      { title: 'Run the conversion', description: 'The tool processes the input instantly in your browser.' },
+      { title: 'Run the conversion', description: 'The tool processes the input in your browser.' },
       { title: 'Copy or download the result', description: 'Copy the text result, or download the decoded file.' },
     ],
     faqs: [
@@ -744,7 +662,7 @@ export const TEXT_DEV_SEO_CONTENT: ToolSeoMap = {
     steps: [
       { title: 'Set the quantity', description: 'Choose how many UUIDs you want to generate at once.' },
       { title: 'Choose casing and format', description: 'Pick uppercase or lowercase, and any separator or hyphen style you need.' },
-      { title: 'Generate the UUIDs', description: 'Click generate to produce the list instantly.' },
+      { title: 'Generate the UUIDs', description: 'Click generate to produce the list.' },
       { title: 'Copy or download the list', description: 'Copy all generated IDs, or download them as a text file.' },
     ],
     faqs: [
@@ -772,11 +690,11 @@ export const TEXT_DEV_SEO_CONTENT: ToolSeoMap = {
     steps: [
       { title: 'Enter your text', description: 'Type or paste the text you want to hash.' },
       { title: 'Choose a hash algorithm', description: 'Select MD5, SHA-1, SHA-256 or SHA-512.' },
-      { title: 'View the generated hash', description: 'The hash is computed and displayed instantly.' },
+      { title: 'View the generated hash', description: 'The hash is computed and displayed.' },
       { title: 'Copy the hash', description: 'Copy the resulting hash for comparison or storage.' },
     ],
     faqs: [
-      { question: 'Can I convert a hash back into the original text?', answer: 'No, hashing is a one-way function by design, there is no way to reverse a hash back into its original input, which is exactly what makes hashes useful for integrity checks and password storage.' },
+      { question: 'Can I convert a hash back into the original text?', answer: 'No, hashing is a one-way function by design, there is no way to reverse a hash back into its original input, which is exactly what makes hashes useful for integrity checks. For storing passwords, use a slow, salted algorithm such as Argon2 or bcrypt, never a plain hash.' },
       { question: 'Why would two different pieces of text produce the same hash?', answer: 'This is called a hash collision, and while theoretically possible for any hash function, it is computationally impractical to find for SHA-256 and SHA-512, and only practically demonstrated for weaker algorithms like MD5.' },
       { question: 'Can I hash a file instead of just text?', answer: 'This tool is designed for hashing text input directly; for hashing files you would need to first extract or paste their text content.' },
     ],
@@ -823,7 +741,7 @@ export const TEXT_DEV_SEO_CONTENT: ToolSeoMap = {
 
   'markdown-preview': {
     intro:
-      'Writing documentation, a GitHub README, or a blog post in Markdown is much easier when you can see the rendered result as you type instead of guessing how headings and code blocks will look. This live Markdown editor shows your rendered HTML side by side with the source, updating instantly as you write headings, lists, links, tables and code blocks.',
+      'Writing documentation, a GitHub README, or a blog post in Markdown is much easier when you can see the rendered result as you type instead of guessing how headings and code blocks will look. This live Markdown editor shows your rendered HTML side by side with the source, updating as you write headings, lists, links, tables and code blocks.',
     steps: [
       { title: 'Type or paste Markdown', description: 'Write your content in the editor panel using standard Markdown syntax.' },
       { title: 'Watch the live preview', description: 'The rendered HTML updates automatically on the other side as you type.' },

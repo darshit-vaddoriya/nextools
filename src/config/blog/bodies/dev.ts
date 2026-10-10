@@ -66,7 +66,7 @@ Naively slicing a string at a byte or code-unit boundary will split a character 
 
 ## Inspecting the bytes
 
-When text looks wrong, look at the actual bytes rather than guessing. NextTool's [Unicode converter](/tool/unicode-converter) shows code points for any string, and the [binary](/tool/binary-converter) and [ASCII](/tool/ascii-converter) converters show the byte-level view, usually enough to identify which of the failures above you are looking at.`,
+When text looks wrong, look at the actual characters rather than guessing. The [Unicode converter](/tool/unicode-converter) shows the code point of every character and the [ASCII converter](/tool/ascii-converter) the values of plain ASCII text, usually enough to identify which of the failures above you are looking at.`,
   'json-errors-and-how-to-fix-them': `JSON's whole design goal was to be small enough to specify on a business card. That minimalism is why it won, and also why people constantly write things it does not allow, because those things are legal in JavaScript, which JSON only superficially resembles.
 
 ## The five that account for most failures
@@ -277,7 +277,7 @@ So:
 - **Never put anything confidential in a JWT payload.** No passwords, no personal data you would not put in a URL, no internal identifiers you would rather not leak.
 - The signature guarantees the token has not been *modified*. It does nothing to stop it being *read*.
 
-If you genuinely need an encrypted token, that is JWE, a different specification. JWT alone is signed, not encrypted.
+If you need an encrypted token, that is JWE, a different specification. JWT alone is signed, not encrypted.
 
 ## Decoding versus verifying
 
@@ -530,18 +530,18 @@ Note the third row: it was added in WCAG 2.1 and is widely missed. Input borders
 
 ## Where automated checking stops
 
-An automated checker reliably catches contrast failures. It cannot tell you whether your alt text is meaningful, whether the tab order makes sense, or whether a control is operable by keyboard. Contrast is the part of accessibility that is genuinely measurable, which is precisely why there is no excuse for failing it.
+An automated checker reliably catches contrast failures. It cannot tell you whether your alt text is meaningful, whether the tab order makes sense, or whether a control is operable by keyboard. Contrast is the part of accessibility that is measurable, which is precisely why there is no excuse for failing it.
 
 ## Checking as you design
 
-Pick colours and see the ratio immediately rather than auditing at the end, when changing a palette means changing a design system. The [contrast checker](/tool/contrast-checker) shows the ratio and the AA/AAA verdict for any pair, and the [colour converter](/tool/color-converter) moves between HEX, RGB and HSL so you can adjust lightness without disturbing the hue you actually chose. The [glassmorphism builder](/tool/glassmorphism) is worth a look for the same reason in reverse: frosted panels are where contrast quietly fails, because the text sits on whatever happens to be behind it.`,
+Pick colours and see the ratio immediately rather than auditing at the end, when changing a palette means changing a design system. The [contrast checker](/tool/contrast-checker) shows the ratio and the AA/AAA verdict for any pair, and the [colour converter](/tool/color-converter) moves between HEX, RGB and HSL so you can adjust lightness without disturbing the hue you actually chose.`,
   'qr-codes-what-is-encoded': `A QR code is not a link to a record somewhere. It is the text itself, encoded as black and white squares with enough redundancy to survive being scuffed. Nothing is looked up, nothing phones home, and the code works forever offline. That one fact explains most of what follows.
 
 ## Size is driven by content length
 
 The grid is made of **modules**, the individual squares. QR codes come in 40 versions, from 21×21 modules up to 177×177. The more characters you encode, the higher the version, the more modules, and the smaller each module becomes at a fixed print size.
 
-Small modules are harder for a camera to resolve. So a code encoding a 200-character URL printed on a business card is genuinely harder to scan than one encoding 30 characters at the same physical size. This is not a quality setting, it is geometry.
+Small modules are harder for a camera to resolve. So a code encoding a 200-character URL printed on a business card is harder to scan than one encoding 30 characters at the same physical size. This is not a quality setting, it is geometry.
 
 Encoding mode matters too, because the specification packs different character sets differently:
 
@@ -580,7 +580,7 @@ The specification requires a blank margin of four modules on all sides. Scanners
 
 Placing a code flush against a coloured background, a border, or the edge of a card is one of the most common reasons a code fails to scan, and it looks like nothing is wrong. Leave the margin.
 
-Two related points. Contrast must be dark-on-light, and inverting to light-on-dark breaks many scanners. And the dark modules should be genuinely dark: a mid-grey code on a cream background may pass a designer's eye and fail a phone camera in a dim restaurant.
+Two related points. Contrast must be dark-on-light, and inverting to light-on-dark breaks many scanners. And the dark modules should be dark: a mid-grey code on a cream background may pass a designer's eye and fail a phone camera in a dim restaurant.
 
 ## Beyond URLs
 
@@ -626,7 +626,7 @@ It also explains why formatted output sometimes differs from what you wrote in w
 
 **[JavaScript](/tool/js-formatter)** is mostly safe with one famous exception. Automatic semicolon insertion means line breaks can be syntactically significant, so a minifier joining lines has to insert semicolons correctly. Modern minifiers get this right. Beyond formatting, real minifiers also rename local variables to single letters and remove dead branches, which is where most of the size saving comes from.
 
-**[HTML](/tool/html-formatter)** is where it gets genuinely risky.
+**[HTML](/tool/html-formatter)** is where it gets risky.
 
 > [!WARNING]
 > Whitespace between inline elements is rendered. \`<span>a</span> <span>b</span>\` shows a space between the words and \`<span>a</span><span>b</span>\` does not. An HTML minifier that collapses all whitespace will change how the page looks. This is why HTML minifiers have a conservative mode, and why the saving is smaller than you might expect once compression is already in play.
@@ -692,7 +692,7 @@ Entity encoding replaces these with named or numeric references: \`&amp;\` \`&lt
 
 This is the same problem as percent-encoding and a completely separate solution. Percent-encoding text before putting it on a page does not make it safe, and a browser will display \`%3Cscript%3E\` as literal text rather than treating it as escaped markup.
 
-The two genuinely stack. A URL inside an HTML attribute needs both, applied in order:
+The two do stack. A URL inside an HTML attribute needs both, applied in order:
 
 \`\`\`html
 <!-- value: Ben & Co -->
@@ -734,7 +734,7 @@ For security, never trust an uploaded file's extension or its client-supplied \`
 | Deciding what a file is | Magic bytes, not the extension |
 
 When something arrives garbled, identify which layer is wrong before changing anything: percent signs point to [URL encoding](/tool/url-encoder), ampersand sequences to [HTML entities](/tool/html-entity), and a file that opens in the wrong program to its [MIME type](/tool/mime-checker).`,
-  'cleaning-a-block-of-text': `You have 4,000 email addresses pasted out of six spreadsheets. They need deduplicating, and afterwards the count is suspiciously high. The problem is almost never the deduplicator. It is that \`ben@x.com\` and \`ben@x.com \` are genuinely different strings, and you removed duplicates before removing the trailing spaces.
+  'cleaning-a-block-of-text': `You have 4,000 email addresses pasted out of six spreadsheets. They need deduplicating, and afterwards the count is suspiciously high. The problem is almost never the deduplicator. It is that \`ben@x.com\` and \`ben@x.com \` are different strings, and you removed duplicates before removing the trailing spaces.
 
 Most text-cleaning frustration is this: the operations are trivial, and the order is not.
 
@@ -742,7 +742,7 @@ Most text-cleaning frustration is this: the operations are trivial, and the orde
 
 1. **Normalise whitespace.** Trim leading and trailing spaces on every line, collapse runs of spaces, normalise line endings.
 2. **Remove empty lines.** After trimming, because a line containing three spaces is not empty until you trim it.
-3. **Normalise case**, but only if case genuinely does not matter for your data.
+3. **Normalise case**, but only if case does not matter for your data.
 4. **Deduplicate.** Now identical things are actually identical strings.
 5. **Sort.** Last, because everything above changes what sorts where.
 6. **Count**, to check the result is plausible.
@@ -831,7 +831,7 @@ CSV's real problem is quoting. A comma inside a value means the field must be qu
 
 TSV separates on tabs, and tabs essentially never appear inside ordinary data. Names, addresses and descriptions contain commas constantly and tabs almost never. So the quoting problem largely evaporates, parsing is a split on \\t, and files are unambiguous.
 
-The trade-off is the mirror image: **TSV has no standard way to represent a value that contains a tab.** There is no escaping mechanism in common use. If your data genuinely contains tabs or newlines inside fields, TSV cannot carry it and CSV with proper quoting can.
+The trade-off is the mirror image: **TSV has no standard way to represent a value that contains a tab.** There is no escaping mechanism in common use. If your data contains tabs or newlines inside fields, TSV cannot carry it and CSV with proper quoting can.
 
 Tabs are also invisible, so a TSV file that has been through an editor that converts tabs to spaces is silently destroyed. Never open one in something that reformats whitespace.
 
@@ -843,7 +843,7 @@ The other common conversion is going from nested JSON to something tabular, whic
 
 The difficulty is that JSON is a tree and a table is a rectangle, so nesting has to be flattened. The usual convention is dotted paths: \`{"user": {"name": "Asha"}}\` becomes a column called \`user.name\`.
 
-Arrays are where it gets genuinely ambiguous, and there is no right answer, only choices:
+Arrays are where it gets ambiguous, and there is no right answer, only choices:
 
 - **Join into one cell.** \`"tags": ["a","b"]\` becomes \`a;b\`. Compact, loses structure.
 - **One column per index.** \`tags.0\`, \`tags.1\`. Breaks when rows have different lengths.
@@ -899,7 +899,7 @@ Three things help. Keep the endpoints closer in lightness, so there are fewer st
 
 Palette generators offer complementary, analogous, triadic and so on. These are hue relationships: complementary is 180 degrees around the wheel, triadic is three colours 120 degrees apart, analogous is a few neighbouring hues.
 
-They are genuinely useful for generating candidates. They do not produce a usable palette on their own, because **hue is only one of three dimensions and the other two matter more.**
+They are useful for generating candidates. They do not produce a usable palette on their own, because **hue is only one of three dimensions and the other two matter more.**
 
 The trap is deriving a palette by rotating hue and keeping lightness and saturation fixed. Do that and you get a set of colours that are mathematically related and visually unbalanced, because perceived brightness varies enormously by hue. Yellow at 60% lightness looks far brighter than blue at 60% lightness. Pure yellow text is unreadable on white while pure blue is fine, at the same nominal lightness.
 
@@ -936,7 +936,7 @@ The fix is word boundaries. In regex, \\b matches the position between a word ch
            does not match: category, concatenate
 \`\`\`
 
-Most [find and replace](/tool/find-replace) tools offer a "whole word" checkbox that does exactly this. Use it by default and turn it off deliberately, rather than the other way round.
+Most [find and replace](/tool/find-replace) tools offer a "whole word" checkbox that does exactly this. Use it by default and turn it off only when you mean to, rather than the other way round.
 
 > [!WARNING]
 > Replace-all is not undoable once the page is closed. Before committing a bulk change, search first and look at the match count. If you expect 12 replacements and the tool reports 340, stop. That gap is the warning you get.
@@ -956,13 +956,11 @@ A [regex tester](/tool/regex-tester) with live highlighting is worth using befor
 
 ## Extraction is find without replace
 
-Pulling every email, URL or hashtag out of a block of text is the same matching operation, collecting results instead of substituting them. The patterns are well understood and each has a known limitation worth knowing.
+Pulling every email, URL or phone number out of a block of text is the same matching operation, collecting results instead of substituting them. The patterns are well understood and each has a known limitation worth knowing.
 
 **[Emails](/tool/extract-emails).** No regex validates an email address correctly. The actual specification permits quoted strings, comments and characters almost nobody uses, and a pattern that accepts all of it also accepts nonsense. Practical extraction uses a deliberately loose pattern and accepts that some results will not be deliverable. The only real validation is sending mail to it.
 
 **[URLs](/tool/extract-urls).** The hard part is the end, not the start. A URL at the end of a sentence collides with the full stop, and trailing brackets are ambiguous because parentheses are legal inside URLs. Extractors apply heuristics, so check the last character of anything you extract from prose.
-
-**[Hashtags and mentions](/tool/extract-hashtags).** Straightforward in structure and awkward in Unicode. Hashtags can contain accented characters, non-Latin scripts and emoji, so a pattern restricted to \`[A-Za-z0-9_]\` will truncate a tag at the first accented letter rather than failing visibly.
 
 **[Phone numbers](/tool/extract-phones).** The loosest of all, because formatting varies by country, and a long digit sequence might be an order number, an account reference or a date.
 
@@ -980,12 +978,6 @@ Quantifiers are greedy by default, meaning they match as much as possible and th
 The \`?\` makes it lazy. This one character accounts for a large share of patterns that "work on my test string" and then swallow entire lines of real data. When a pattern matches far more than expected, greediness is the first thing to check.
 
 And the standing advice: do not parse HTML with regex. Extracting all URLs from a page's text is fine. Trying to match nested tags is not, because HTML is not a regular language and the pattern will be wrong on input you have not seen.
-
-## One small tool that is not what it looks like
-
-[Reversing text](/tool/reverse-text) appears to be a novelty, and it has two real uses. Reversing word order is occasionally the fastest way to re-sort a list built in the wrong direction. And reversing characters is a quick way to see how a string behaves with bidirectional text, which matters if your interface handles Arabic or Hebrew and you want to check nothing breaks.
-
-It is also a decent demonstration of the grapheme problem: reversing a string by code unit splits emoji and combining characters apart, which is why a naive reverse of text containing a flag produces two unrelated letters.
 
 ## Before any bulk edit
 
@@ -1014,7 +1006,7 @@ Using a 302 for a permanent move is the mistake, and it is easy to make because 
 
 **404 Not Found.** There is nothing here. A crawler will retry occasionally before dropping it.
 
-**410 Gone.** There is nothing here and that is deliberate. Crawlers treat this as more final and drop the URL faster. Worth using when you have genuinely retired content rather than lost it.
+**410 Gone.** There is nothing here and that is deliberate. Crawlers treat this as more final and drop the URL faster. Worth using when you have retired content rather than lost it.
 
 **The soft 404** is the one that causes real trouble. A page that does not exist returns a friendly "sorry, we could not find that" message with a **200 OK** status. To a visitor it reads as a missing page. To a crawler it is a page that exists and contains that text, so it stays indexed, and a site can accumulate thousands of near-identical thin pages that way.
 
@@ -1207,7 +1199,7 @@ Pulling every link out of a block of text, which is the usual first step when au
 
 **The extension.** Characters after the last dot in the name. It is a hint for the operating system about which program to launch, and it is trivially wrong because anyone can rename anything.
 
-**The MIME type.** A label like \`image/png\` or \`text/csv\` transmitted alongside the file — in an HTTP \`Content-Type\` header, in a multipart upload, in an email part. It describes intent and it is also just a claim.
+**The MIME type.** A label like \`image/png\` or \`text/csv\` transmitted alongside the file: in an HTTP \`Content-Type\` header, in a multipart upload, in an email part. It describes intent and it is also just a claim.
 
 **The magic bytes.** The first few bytes of the file itself, which most formats define as a fixed signature. This is the only one of the three derived from the actual contents.
 
@@ -1226,12 +1218,12 @@ RIFF   52 49 46 46 .... 57 45 42 50 RIFF....WEBP
 
 Two of those explain a lot of everyday confusion.
 
-\`PK\` at the start of a ZIP is the initials of Phil Katz, and it appears at the start of DOCX, XLSX, PPTX, ODT, EPUB, JAR and APK files — because all of those *are* ZIP archives with a prescribed internal structure. That is why [a ZIP extractor can open a DOCX](/tool/zip-extractor) and show you the XML inside, and why a corrupt Office file is often a corrupt ZIP.
+\`PK\` at the start of a ZIP is the initials of Phil Katz, and it appears at the start of DOCX, XLSX, PPTX, ODT, EPUB, JAR and APK files: because all of those *are* ZIP archives with a prescribed internal structure. That is why [a ZIP extractor can open a DOCX](/tool/zip-extractor) and show you the XML inside, and why a corrupt Office file is often a corrupt ZIP.
 
 \`%PDF-\` is ASCII, which is why a PDF header is readable in a text editor and why a truncated PDF can sometimes be diagnosed by eye.
 
 > [!NOTE]
-> Checking the signature is how you find out what a file really is. A [MIME checker](/tool/mime-checker) reads the leading bytes and reports the format, which settles the "but it is a PNG" argument in one step — and confirms that renaming changed nothing.
+> Checking the signature is how you find out what a file really is. A [MIME checker](/tool/mime-checker) reads the leading bytes and reports the format, which settles the "but it is a PNG" argument in one step, and confirms that renaming changed nothing.
 
 ## Why the browser downloads instead of displaying
 
@@ -1246,7 +1238,7 @@ That sniffing is the historical behaviour: browsers used to examine content when
 
 ## Text files have no signature
 
-Plain text formats — CSV, JSON, Markdown, YAML, SQL — have no magic bytes, which is why detection for them is guesswork and why a CSV can be opened as anything.
+Plain text formats (CSV, JSON, Markdown, YAML, SQL) have no magic bytes, which is why detection for them is guesswork and why a CSV can be opened as anything.
 
 The one marker that does appear is a byte order mark: \`EF BB BF\` for UTF-8. It is invisible in most editors and is a recurring cause of a first column header arriving with three strange characters in front of it, or a JSON parser rejecting a file that looks perfectly valid. See [mojibake and UTF-8](/blog/unicode-utf8-and-mojibake) for why that happens and what to do about it.
 
@@ -1279,7 +1271,7 @@ In the 1990s, servers checked the user agent to decide whether to send frames-ca
 
 Every browser since has inherited the problem. Safari added \`AppleWebKit\` and also claimed \`like Gecko\` so that Gecko-targeting code would work. Chrome added \`Chrome/\` and kept \`Safari/\` so WebKit-targeting code would work. Edge added \`Edg/\` and kept everything else.
 
-The string is therefore a stack of compatibility claims in rough historical order, and the only reliable way to read it is to look for the most specific token present — \`Edg/\` before \`Chrome/\`, \`Chrome/\` before \`Safari/\` — which is exactly what a [user agent parser](/tool/user-agent-parser) does.
+The string is therefore a stack of compatibility claims in rough historical order, and the only reliable way to read it is to look for the most specific token present: \`Edg/\` before \`Chrome/\`, \`Chrome/\` before \`Safari/\`, which is exactly what a [user agent parser](/tool/user-agent-parser) does.
 
 ## What it is legitimately used for
 
@@ -1300,20 +1292,20 @@ The string is therefore a stack of compatibility claims in rough historical orde
 **Blocking.** Blocking by user agent blocks polite bots and courteous users, and does nothing to anything hostile, which will send whatever string gets through.
 
 > [!NOTE]
-> Parsing a user agent is a string-matching exercise, so a [parser](/tool/user-agent-parser) that runs in the tab is enough — there is nothing to look up remotely. That also means you can paste a string from a production log without it travelling anywhere.
+> Parsing a user agent is a string-matching exercise, so a [parser](/tool/user-agent-parser) that runs in the tab is enough: there is nothing to look up remotely. That also means you can paste a string from a production log without it travelling anywhere.
 
 ## The string is shrinking on purpose
 
 The user agent is a fingerprinting surface: precise OS version, exact browser build and device model combine with other signals to identify a specific person across sites without any cookie.
 
-So browsers have been reducing it. Chrome freezes parts of the string and reports minor versions as zeros. Safari has reported a near-static string for years. Platform detail on mobile has been generalised — many Android devices now report a single generic model rather than their own.
+So browsers have been reducing it. Chrome freezes parts of the string and reports minor versions as zeros. Safari has reported a near-static string for years. Platform detail on mobile has been generalised: many Android devices now report a single generic model rather than their own.
 
 The replacement is Client Hints: the browser sends a low-entropy set by default (rough platform, rough browser) and a site must explicitly request more detail, which makes the request visible rather than automatic.
 
 The practical consequence is that user-agent-derived analytics get vaguer every year, and code that compares version numbers gets more fragile. Both arguments point the same way: detect capabilities.
 
 > [!WARNING]
-> Changing your user agent does not make you anonymous. An unusual string is *more* identifying, not less, because very few people have it. Fingerprinting works on the combination of signals — fonts, screen size, timezone, GPU — and a mismatched user agent adds one more distinguishing feature.
+> Changing your user agent does not make you anonymous. An unusual string is *more* identifying, not less, because very few people have it. Fingerprinting works on the combination of signals (fonts, screen size, timezone, GPU) and a mismatched user agent adds one more distinguishing feature.
 
 ## Reading one quickly
 

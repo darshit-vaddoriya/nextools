@@ -28,7 +28,7 @@ export const PDF_POSTS: BlogPost[] = [
     category: 'pdf',
     tags: ['pdf', 'merge', 'forms'],
     published: '2026-09-09',
-    relatedTools: ['pdf-merge', 'pdf-reorder', 'pdf-page-extractor', 'pdf-flatten'],
+    relatedTools: ['pdf-merge', 'pdf-reorder', 'pdf-split', 'pdf-flatten'],
     takeaways: [
       'Page content, fonts, images and page sizes survive a merge intact, because nothing is re-rendered.',
       'Form fields, bookmarks, internal links and digital signatures frequently do not.',
@@ -83,7 +83,7 @@ export const PDF_POSTS: BlogPost[] = [
     tags: ['pdf', 'file-size', 'compression'],
     published: '2026-09-09',
     updated: '2026-10-10',
-    relatedTools: ['pdf-compress', 'pdf-page-extractor', 'pdf-to-jpg', 'jpg-to-pdf', 'image-compressor'],
+    relatedTools: ['pdf-compress', 'pdf-split', 'pdf-to-jpg', 'jpg-to-pdf', 'image-compressor'],
     takeaways: [
       'Find out what is heavy first. If text highlights when you select it, images are not the problem and compression will disappoint.',
       'Sending fewer pages beats degrading every page. Extraction is lossless.',
@@ -101,7 +101,7 @@ export const PDF_POSTS: BlogPost[] = [
     category: 'pdf',
     tags: ['pdf', 'pages', 'extract'],
     published: '2026-09-16',
-    relatedTools: ['pdf-split', 'pdf-delete-pages', 'pdf-extract-images', 'pdf-viewer'],
+    relatedTools: ['pdf-split', 'pdf-delete-pages', 'pdf-extract-images'],
     takeaways: [
       'Split makes many files, extract makes one file from a range, delete makes one file with pages removed. Pick by what you want out.',
       'Page numbers in a PDF are positions, not the numbers printed on the page. A document with a cover and roman-numbered front matter will be off by several.',
@@ -137,7 +137,7 @@ export const PDF_POSTS: BlogPost[] = [
     category: 'pdf',
     tags: ['pdf', 'html', 'forms'],
     published: '2026-09-16',
-    relatedTools: ['html-to-pdf', 'text-to-pdf', 'pdf-fill-forms', 'pdf-watermark', 'pdf-repair'],
+    relatedTools: ['html-to-pdf', 'text-to-pdf', 'pdf-fill-forms', 'pdf-watermark'],
     takeaways: [
       'A web page is one continuous column with no page breaks, so converting it to PDF means inventing them.',
       'Fill PDF forms in a proper form filler, not by typing into a drawing layer, and flatten before sending.',

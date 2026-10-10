@@ -23,7 +23,7 @@ Excel will detect UTF-8 if the file begins with a byte order mark, the three byt
 
 So the fix for Excel is to write the BOM. The complication is that a BOM is unwelcome almost everywhere else: many parsers include it in the first column's header name, so \`id\` silently becomes \`\\ufeffid\` and every lookup by that name fails.
 
-This is a genuine incompatibility, not a bug you can fix once. If a file is for Excel, write the BOM. If it is for a data pipeline, do not.
+This is a real incompatibility, not a bug you can fix once. If a file is for Excel, write the BOM. If it is for a data pipeline, do not.
 
 ## The delimiter is not always a comma
 
@@ -51,7 +51,7 @@ The consequence is that a comma-separated file opens correctly on one colleague'
 ## Checking before you trust it
 
 The fastest way to find out what a file actually contains is to look at it in something that does not reinterpret it. A [CSV viewer](/tool/csv-viewer) shows the parsed rows as they really are, and a [CSV cleaner](/tool/csv-cleaner) normalises delimiters, quoting and encoding before the file reaches a spreadsheet. Both run locally, which matters when the file is a customer export.`,
-  'csv-to-json-conversion-guide': `CSV and JSON describe data differently enough that converting between them requires choices. Making those choices deliberately avoids a set of failures that are easy to miss until much later.
+  'csv-to-json-conversion-guide': `CSV and JSON describe data differently enough that converting between them requires choices. Making those choices up front avoids a set of failures that are easy to miss until much later.
 
 ## The shape mismatch
 
@@ -211,7 +211,7 @@ For one-off work, a [CSV cleaner](/tool/csv-cleaner) that handles trimming, casi
 
 **XLSX** is a ZIP archive containing XML files. It stores cell types, formulas and their cached results, number and date formatting, multiple worksheets, charts, conditional formatting, pivot tables, data validation rules, and macros in the \`.xlsm\` variant.
 
-The trade is legibility versus capability, and it is a genuine trade in both directions.
+The trade is legibility versus capability, and it is a real trade-off either way.
 
 ## Where CSV wins
 
@@ -384,19 +384,13 @@ So [creating a zip](/tool/zip-creator) of a photo set is still the right move. J
 > [!TIP]
 > If the actual goal is smaller photos, compression is the wrong lever entirely. [Resize and re-encode the images](/tool/image-compressor) first. Reducing 4000px photos to 2000px and saving at quality 80 typically takes 800 MB to under 100 MB, which is a real reduction rather than a repackaging.
 
-## When you want many archives, not one
-
-The default assumption is one archive containing everything. Sometimes the requirement is the opposite: one archive per file, because a portal accepts submissions individually, or because each recipient should get only their own document.
-
-That is what [batch zipping](/tool/batch-zip) does, producing a separate archive per input and handing you all of them together. It is a small thing that saves a genuinely tedious afternoon when there are forty of them.
-
 ## The encryption is two different things
 
 ZIP supports encryption, and the format has two schemes with very different properties.
 
 **ZipCrypto**, the original, is cryptographically broken. It is vulnerable to a known-plaintext attack, which is easy to mount because archives often contain predictable content. Treat it as no protection at all.
 
-**AES-256**, added later, is genuinely strong. But support is inconsistent: Windows Explorer's built-in zip handling cannot open AES-encrypted archives, so your recipient may need a separate tool.
+**AES-256**, added later, is strong. But support is inconsistent: Windows Explorer's built-in zip handling cannot open AES-encrypted archives, so your recipient may need a separate tool.
 
 > [!WARNING]
 > Neither scheme encrypts the file list. Filenames, sizes and timestamps stay readable without the password. An archive called \`redundancies-march.zip\` containing \`smith-j-termination.pdf\` has told the story before anyone tries the password.
@@ -429,7 +423,7 @@ Before merging anything, list the header row of every file and compare the sets.
 **Renamed columns.** \`customer_id\` in one export and \`CustomerID\` in the next produce two separate columns, each half empty. This one is easy to spot in the merged header and very hard to spot in a summary figure later.
 
 > [!NOTE]
-> A [CSV merger](/tool/merge-csv) that matches on header names rather than position handles the first three correctly. The renamed-column case cannot be solved automatically — only you know that those two names mean the same thing.
+> A [CSV merger](/tool/merge-csv) that matches on header names rather than position handles the first three correctly. The renamed-column case cannot be solved automatically: only you know that those two names mean the same thing.
 
 ## Stacking is not joining
 
@@ -437,7 +431,7 @@ These get conflated and they are different shapes of operation.
 
 **Stacking (union / append).** Files have the same kind of rows. January's orders plus February's orders. The result has the rows of both and the columns of the union.
 
-**Joining (lookup).** Files have different kinds of rows related by a key. Orders plus a customer table, matched on customer ID. The result has the columns of both and — critically — a row count that depends on the matching.
+**Joining (lookup).** Files have different kinds of rows related by a key. Orders plus a customer table, matched on customer ID. The result has the columns of both and, critically, a row count that depends on the matching.
 
 A join against a key that is not unique multiplies rows. Two customer records with the same ID and 500 orders gives you 1,000 rows and every total doubles. Before joining, confirm the key is unique on at least one side; if it is not, deduplicate that side first.
 
@@ -445,7 +439,7 @@ A join against a key that is not unique multiplies rows. Two customer records wi
 
 Before merging, add a column to each file holding its filename or period. It costs nothing and it is the difference between "the total is 4% too high" being a five-minute check and a two-hour one.
 
-It also catches the most common merge error of all — including the same file twice, which is easy when the exports are named \`export.csv\`, \`export (1).csv\` and \`export (2).csv\`.
+It also catches the most common merge error of all, including the same file twice, which is easy when the exports are named \`export.csv\`, \`export (1).csv\` and \`export (2).csv\`.
 
 ## Deduplicate deliberately
 
@@ -460,7 +454,7 @@ After merging, duplicates fall into three categories:
 The trap is whitespace. \`"Acme Ltd "\` and \`"Acme Ltd"\` are different strings, so whole-row deduplication keeps both. [Trim and normalise](/tool/csv-cleaner) before [removing duplicates](/tool/remove-duplicates), in that order, or the deduplication will do almost nothing.
 
 > [!WARNING]
-> Watch encodings across files. If eleven exports are UTF-8 and one is Windows-1252, the merged file has two encodings in it and every accented name in that twelfth file is broken — often only visible in a handful of rows. Convert everything to UTF-8 before merging, not after.
+> Watch encodings across files. If eleven exports are UTF-8 and one is Windows-1252, the merged file has two encodings in it and every accented name in that twelfth file is broken, often only visible in a handful of rows. Convert everything to UTF-8 before merging, not after.
 
 ## An order that works
 
@@ -547,7 +541,7 @@ Going the other way is useful too. When you are uploading files to a Linux serve
 
 ## Which to use when you are the sender
 
-Send **ZIP** to people, because everyone can open it. Use **TAR.GZ** for servers and for anything where file permissions matter. Reach for **7z** when size genuinely matters and you know the recipient has 7-Zip. And remember that compressing photos, videos and PDFs barely shrinks them in any format, because those files are already compressed; the archive is useful for bundling them into one download, not for saving space.`,
+Send **ZIP** to people, because everyone can open it. Use **TAR.GZ** for servers and for anything where file permissions matter. Reach for **7z** when size matters and you know the recipient has 7-Zip. And remember that compressing photos, videos and PDFs barely shrinks them in any format, because those files are already compressed; the archive is useful for bundling them into one download, not for saving space.`,
   'loading-a-spreadsheet-into-a-database': `A spreadsheet arrives, and the data in it needs to be in a database: a product list for a new shop, survey responses for analysis, seed data for a test environment. Every database has a bulk loader, such as \`COPY\` in PostgreSQL, \`LOAD DATA INFILE\` in MySQL and \`.import\` in SQLite, and each has its own syntax, permissions and quirks. For a table of a few thousand rows, there is often a simpler route.
 
 ## When a SQL script is the right tool

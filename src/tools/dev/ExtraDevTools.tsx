@@ -1286,7 +1286,7 @@ export const DiffCheckerTool: React.FC = () => {
         <div className="flex flex-col items-center justify-center gap-2 py-14 text-center">
           <CheckCircle className="w-7 h-7 text-success" />
           <p className="text-[13px] font-semibold text-foreground">Both sides are identical</p>
-          <p className="text-xs text-muted-foreground font-sans">Edit either side above to see changes appear instantly.</p>
+          <p className="text-xs text-muted-foreground font-sans">Edit either side above and the other one follows.</p>
         </div>
       ) : view === 'split' ? (
         <div className={wrap ? '' : 'min-w-max'}>
@@ -1562,7 +1562,7 @@ export const DiffCheckerTool: React.FC = () => {
 
 const MARKDOWN_SAMPLE = `## Release notes
 
-Write Markdown on the left, see the **rendered structure** on the right — headings,
+Write Markdown on the left, see the **rendered structure** on the right: headings,
 lists, tables and code all styled exactly as they will read.
 
 ### What changed
@@ -1583,7 +1583,7 @@ lists, tables and code all styled exactly as they will read.
 2. Watch the preview update live
 3. Copy the Markdown or the generated HTML
 
-> Everything runs on your device — nothing is uploaded.
+> Everything runs on your device: nothing is uploaded.
 
 \`\`\`ts
 const render = (md: string) => marked.parse(md, { gfm: true });
@@ -1918,7 +1918,7 @@ export const MarkdownPreviewTool: React.FC = () => {
       onFullChange={setFull}
       hint={
         <p className="text-[13px] font-semibold text-muted-foreground">
-          Live Markdown editor and preview — GitHub-flavoured tables, task lists and code blocks.
+          Live Markdown editor and preview: GitHub-flavoured tables, task lists and code blocks.
         </p>
       }
       controls={

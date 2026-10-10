@@ -111,18 +111,18 @@ export const IMAGE_POSTS: BlogPost[] = [
 
   {
     slug: 'putting-things-on-top-of-images',
-    title: 'Watermarks, annotations, memes and collages: drawing on an image',
-    description: 'Four tools that all composite something onto a picture, and the surprisingly different things they are each good for.',
-    excerpt: 'Whether you are marking a proof, redacting a screenshot or building a comparison, you are doing the same operation with very different stakes.',
+    title: 'Watermarks and annotations: drawing on top of an image',
+    description: 'A watermark and an annotation both put something on top of a picture. What each is good for, and the mistakes that make them useless.',
+    excerpt: 'Marking a proof and pointing at a bug in a screenshot are the same operation with very different stakes.',
     category: 'image',
-    tags: ['watermark', 'annotation', 'collage'],
+    tags: ['watermark', 'annotation', 'screenshots'],
     published: '2026-09-16',
-    relatedTools: ['image-watermark', 'image-draw', 'image-collage', 'meme-generator', 'drawing'],
+    updated: '2026-10-10',
+    relatedTools: ['image-watermark', 'drawing'],
     takeaways: [
       'Compositing is destructive. The output is a flat picture, so keep the original separately.',
       'Drawing a black box over a screenshot is real removal, unlike the same action in a PDF, because the pixels are replaced.',
       'A watermark at the edge is cropped off in seconds. Across the middle at low opacity is the version that survives.',
-      'For a collage, resize the inputs to a common dimension first, or the layout engine will do it for you and badly.',
     ],
     words: 813,
   },
@@ -189,7 +189,7 @@ export const IMAGE_POSTS: BlogPost[] = [
     category: 'image',
     tags: ['screenshots', 'annotation', 'redaction', 'privacy'],
     published: '2026-09-16',
-    relatedTools: ['image-draw', 'image-crop', 'image-metadata', 'image-compressor'],
+    relatedTools: ['drawing', 'image-crop', 'image-metadata', 'image-compressor'],
     takeaways: [
       'A solid black box over pixels is genuine removal, because the original values are overwritten.',
       'Blur and pixellation are reversible on text and have been broken in practice. Use an opaque fill.',
@@ -211,7 +211,7 @@ export const IMAGE_POSTS: BlogPost[] = [
     takeaways: [
       'GIF stores at most 256 colours per frame and cannot compress across frames the way a video codec does, so photographic content explodes in size.',
       'Duration, frame rate and dimensions each multiply the size. Cut length first, then width, then frames per second.',
-      'Flat-colour screen recordings are what GIF is genuinely good at. Camera footage almost never is.',
+      'Flat-colour screen recordings are what GIF is good at. Camera footage almost never is.',
       'If the destination accepts a silent looping MP4 or WebM, use that instead: same motion, a fraction of the bytes.',
     ],
     words: 748,
@@ -219,7 +219,7 @@ export const IMAGE_POSTS: BlogPost[] = [
   {
     slug: 'reading-text-off-an-image',
     title: 'Reading text off an image: what OCR gets right and where it fails',
-    description: 'OCR turns pixels into characters, and its accuracy is decided before it runs — by resolution, contrast and whether the page is straight.',
+    description: 'OCR turns pixels into characters, and its accuracy is decided before it runs: by resolution, contrast and whether the page is straight.',
     excerpt: 'The difference between 99% and 80% accuracy is usually the photo, not the engine. Most of the fix happens before any text is recognised.',
     category: 'image',
     tags: ['ocr', 'text', 'scanning'],

@@ -15,7 +15,7 @@ export const PRIVACY_BODIES: Record<string, string> = {
 
 **Device.** Make, model, lens, and on many cameras a **body serial number**. That serial number links every photo taken with that camera, across accounts and platforms, which is a stronger identifier than most people realise.
 
-**Camera settings.** Aperture, shutter speed, ISO, focal length, flash. Harmless, and genuinely useful for photographers.
+**Camera settings.** Aperture, shutter speed, ISO, focal length, flash. Harmless, and useful for photographers.
 
 **Software history.** Which editor touched the file and when. XMP records can retain an edit history.
 

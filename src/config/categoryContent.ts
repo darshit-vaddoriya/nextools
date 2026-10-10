@@ -32,21 +32,21 @@ export interface CategoryContent {
  */
 export const CATEGORY_CONTENT: Partial<Record<ToolCategory, CategoryContent>> = {
   convert: {
-    tagline: 'PNG to JPG, MOV to MP4, PDF to PPTX, RAR to ZIP and 40 more — converted on your device, never uploaded.',
+    tagline: 'PNG to JPG, MOV to MP4, PDF to PPTX, RAR to ZIP and 40 more: converted on your device, never uploaded.',
     intro:
-      'Most online converters work by uploading your file to a server, converting it there and sending it back, which is why they have queues, size tiers and privacy policies about deleting your files later. The converters here work the other way round: the browser already contains decoders for most image, audio and video formats, and the missing pieces — a HEIC decoder, an MP3 encoder, a Photoshop reader, a WOFF2 compressor, an archive library — are loaded into the page, and video is encoded by your device\'s own hardware through WebCodecs. The file is converted in memory and saved straight back to your disk, which also means there is no daily limit and nothing to wait for.',
+      'Most online converters work by uploading your file to a server, converting it there and sending it back, which is why they have queues, size tiers and privacy policies about deleting your files later. The converters here work the other way round: the browser already contains decoders for most image, audio and video formats, and the missing pieces (a HEIC decoder, an MP3 encoder, a Photoshop reader, a WOFF2 compressor, an archive library) are loaded into the page, and video is encoded by your device\'s own hardware through WebCodecs. The file is converted in memory and saved straight back to your disk, which also means there is no daily limit and nothing to wait for.',
     guide: [
       {
         title: 'Lossy to lossless never restores quality',
-        body: 'Converting a JPG to PNG or an MP3 to WAV makes the file larger but not better: the detail the lossy format discarded is gone. Those conversions are for compatibility and editing. When the goal is a smaller file, go the other way — PNG to JPG or WebP, WAV to MP3.',
+        body: 'Converting a JPG to PNG or an MP3 to WAV makes the file larger but not better: the detail the lossy format discarded is gone. Those conversions are for compatibility and editing. When the goal is a smaller file, go the other way: PNG to JPG or WebP, WAV to MP3.',
       },
       {
         title: 'Every lossy re-encode costs a little',
-        body: 'WebP to JPG, M4A to MP3 and HEIC to JPG all decode one lossy format and encode another. Keep the quality or bitrate at or above the source and the loss is invisible, but avoid converting the same file back and forth — each round adds a generation of artefacts.',
+        body: 'WebP to JPG, M4A to MP3 and HEIC to JPG all decode one lossy format and encode another. Keep the quality or bitrate at or above the source and the loss is invisible, but avoid converting the same file back and forth: each round adds a generation of artefacts.',
       },
       {
         title: 'Transparency survives only where the format has it',
-        body: 'PNG, WebP, GIF and ICO store transparency; JPG, BMP and PDF pages do not. When converting a cut-out or logo into one of those, pick the background colour deliberately rather than letting it default, or choose PNG or WebP to keep the see-through areas.',
+        body: 'PNG, WebP, GIF and ICO store transparency; JPG, BMP and PDF pages do not. When converting a cut-out or logo into one of those, pick the background colour yourself rather than letting it default, or choose PNG or WebP to keep the see-through areas.',
       },
       {
         title: 'Readable is not the same as writable',
@@ -56,7 +56,7 @@ export const CATEGORY_CONTENT: Partial<Record<ToolCategory, CategoryContent>> = 
     faqs: [
       {
         question: 'How can a website convert files without uploading them?',
-        answer: 'The conversion code runs inside the page. Image and audio decoding use the engines built into your browser; formats the browser lacks are handled by WebAssembly and JavaScript libraries — libheif for HEIC, LAME for MP3, UTIF for TIFF, pdf.js for PDF. The file is read with the File API and the result is handed back as a download.',
+        answer: 'The conversion code runs inside the page. Image and audio decoding use the engines built into your browser; formats the browser lacks are handled by WebAssembly and JavaScript libraries: libheif for HEIC, LAME for MP3, UTIF for TIFF, pdf.js for PDF. The file is read with the File API and the result is handed back as a download.',
       },
       {
         question: 'Can I convert many files at once?',
@@ -64,11 +64,11 @@ export const CATEGORY_CONTENT: Partial<Record<ToolCategory, CategoryContent>> = 
       },
       {
         question: 'How can video be converted without a server?',
-        answer: 'Through WebCodecs, the browser interface to your device\'s own video encoder and decoder — usually dedicated hardware. That is far faster than the WebAssembly FFmpeg builds many sites use, and when only the container changes (an H.264 MOV to MP4, say) the video is copied without re-encoding at all. AVI and WMV are not supported because browsers cannot decode their codecs.',
+        answer: 'Through WebCodecs, the browser interface to your device\'s own video encoder and decoder, usually dedicated hardware. That is far faster than the WebAssembly FFmpeg builds many sites use, and when only the container changes (an H.264 MOV to MP4, say) the video is copied without re-encoding at all. AVI and WMV are not supported because browsers cannot decode their codecs.',
       },
       {
         question: 'Where are the Word converters?',
-        answer: 'Word conversions live in the PDF and Word & Office categories — PDF to Word, DOCX to PDF, DOCX to HTML and Markdown, and more. The File Converter links to them automatically when you drop a DOCX, Markdown or HTML file. PowerPoint output is here: Images to PPTX and PDF to PPTX.',
+        answer: 'Word conversions live in the PDF and Word & Office categories: PDF to Word, DOCX to PDF, DOCX to HTML and Markdown, and more. The File Converter links to them automatically when you drop a DOCX, Markdown or HTML file. PowerPoint output is here: Images to PPTX and PDF to PPTX.',
       },
       {
         question: 'Do converted files keep their metadata?',
@@ -77,13 +77,13 @@ export const CATEGORY_CONTENT: Partial<Record<ToolCategory, CategoryContent>> = 
     ],
   },
   pdf: {
-    tagline: 'Merge, split, compress, sign, convert and extract — without a PDF becoming an upload.',
+    tagline: 'Merge, split, compress, sign, convert and extract: without a PDF becoming an upload.',
     intro:
-      'PDF is a layout format, not a document format: it stores where each glyph sits on the page rather than what the text means. That single fact explains most of what surprises people here — why extracted text arrives with odd line breaks, why a scanned page needs OCR before any tool can read it, and why "editing" a PDF is usually a rebuild rather than a change. The tools in this category work on the real structure of the file, in your browser, so a contract or a payslip never becomes an upload to somebody else\'s server.',
+      'PDF is a layout format, not a document format: it stores where each glyph sits on the page rather than what the text means. That single fact explains most of what surprises people here: why extracted text arrives with odd line breaks, why a scanned page needs OCR before any tool can read it, and why "editing" a PDF is usually a rebuild rather than a change. The tools in this category work on the real structure of the file, in your browser, so a contract or a payslip never becomes an upload to somebody else\'s server.',
     guide: [
       {
         title: 'Start by asking whether the PDF has text or pictures of text',
-        body: 'A PDF exported from Word contains selectable text; a PDF from a scanner or a phone camera contains images. Text extraction, search and compare only work on the first kind. If selecting text in a viewer gives you nothing, run PDF OCR first — every other tool will behave better afterwards.',
+        body: 'A PDF exported from Word contains selectable text; a PDF from a scanner or a phone camera contains images. Text extraction, search and compare only work on the first kind. If selecting text in a viewer gives you nothing, run PDF OCR first: every other tool will behave better afterwards.',
       },
       {
         title: 'Compression trades against the thing you care about',
@@ -91,7 +91,7 @@ export const CATEGORY_CONTENT: Partial<Record<ToolCategory, CategoryContent>> = 
       },
       {
         title: 'Page operations are lossless, content operations are not',
-        body: 'Merging, splitting, rotating, reordering and deleting pages copy page objects untouched — the text and images are bit-for-bit what they were. Converting to Word or images, compressing, or flattening forms all rewrite content. Do the lossless steps first and the lossy step once, at the end.',
+        body: 'Merging, splitting, rotating, reordering and deleting pages copy page objects untouched: the text and images are bit-for-bit what they were. Converting to Word or images, compressing, or flattening forms all rewrite content. Do the lossless steps first and the lossy step once, at the end.',
       },
       {
         title: 'Redaction is not the same as drawing a black box',
@@ -105,7 +105,7 @@ export const CATEGORY_CONTENT: Partial<Record<ToolCategory, CategoryContent>> = 
       },
       {
         question: 'Why does my converted Word document lose the layout?',
-        answer: 'Because a PDF does not record paragraphs, headings or tables — only positioned text. Converting to DOCX means inferring that structure back from coordinates, and the inference is imperfect for multi-column layouts and complex tables. Text and reading order convert reliably; exact visual layout does not.',
+        answer: 'Because a PDF does not record paragraphs, headings or tables: only positioned text. Converting to DOCX means inferring that structure back from coordinates, and the inference is imperfect for multi-column layouts and complex tables. Text and reading order convert reliably; exact visual layout does not.',
       },
       {
         question: 'How large a PDF can these tools handle?',
@@ -121,7 +121,7 @@ export const CATEGORY_CONTENT: Partial<Record<ToolCategory, CategoryContent>> = 
   image: {
     tagline: 'Compress, convert, resize, crop and edit images on the canvas in your own browser.',
     intro:
-      'Almost every image problem is one of three questions: which format, how many pixels, and how much quality to throw away. Getting those three right is what separates a 180 KB hero image from a 4 MB one that looks identical. These tools run on the browser\'s own canvas and codecs, which means the picture — a passport scan, a photograph of a person, an internal dashboard — is decoded and re-encoded on your machine and nowhere else.',
+      'Almost every image problem is one of three questions: which format, how many pixels, and how much quality to throw away. Getting those three right is what separates a 180 KB hero image from a 4 MB one that looks identical. These tools run on the browser\'s own canvas and codecs, which means the picture (a passport scan, a photograph of a person, an internal dashboard) is decoded and re-encoded on your machine and nowhere else.',
     guide: [
       {
         title: 'Resize before you compress, never after',
@@ -133,11 +133,11 @@ export const CATEGORY_CONTENT: Partial<Record<ToolCategory, CategoryContent>> = 
       },
       {
         title: 'Every re-encode is permanent',
-        body: 'Lossy formats do not remember what they discarded. Opening a JPEG, editing it and saving it again applies the loss a second time, and it compounds. Keep an original, work from it, and export once — rather than repeatedly editing the export.',
+        body: 'Lossy formats do not remember what they discarded. Opening a JPEG, editing it and saving it again applies the loss a second time, and it compounds. Keep an original, work from it, and export once, rather than repeatedly editing the export.',
       },
       {
         title: 'Background removal is a model, not a measurement',
-        body: 'The AI background remover runs a segmentation model with WebGPU or WebAssembly on your device. It is genuinely good on clear subject-background separation and genuinely imperfect on hair, glass and motion blur. Check the edges before you use the result somewhere that matters.',
+        body: 'The AI background remover runs a segmentation model with WebGPU or WebAssembly on your device. It is good on clear subject-background separation and imperfect on hair, glass and motion blur. Check the edges before you use the result somewhere that matters.',
       },
     ],
     faqs: [
@@ -147,7 +147,7 @@ export const CATEGORY_CONTENT: Partial<Record<ToolCategory, CategoryContent>> = 
       },
       {
         question: 'Which format gives the smallest file?',
-        answer: 'For photographs, AVIF is usually smallest, WebP close behind, and JPEG largest of the three at equal visual quality — but support and encode time run in the opposite order. WebP is the safe default in 2026: it is supported everywhere that matters and is meaningfully smaller than JPEG.',
+        answer: 'For photographs, AVIF is usually smallest, WebP close behind, and JPEG largest of the three at equal visual quality, but support and encode time run in the opposite order. WebP is the safe default in 2026: it is supported everywhere that matters and is meaningfully smaller than JPEG.',
       },
       {
         question: 'Is image metadata removed when I convert a file?',
@@ -163,7 +163,7 @@ export const CATEGORY_CONTENT: Partial<Record<ToolCategory, CategoryContent>> = 
   dev: {
     tagline: 'Formatters, encoders, decoders and inspectors for the data developers paste all day.',
     intro:
-      'The strings a developer pastes into an online tool are disproportionately production data: an API response, a signed URL, a JWT from a real session, a config file with credentials in it. That is the argument for these tools running in the tab rather than on a server — not convenience, but the fact that a formatter has no business seeing your bearer token. Everything here is parsing and printing, which is exactly the class of work a browser does well.',
+      'The strings a developer pastes into an online tool are disproportionately production data: an API response, a signed URL, a JWT from a real session, a config file with credentials in it. That is the argument for these tools running in the tab rather than on a server, not convenience, but the fact that a formatter has no business seeing your bearer token. Everything here is parsing and printing, which is exactly the class of work a browser does well.',
     guide: [
       {
         title: 'A formatter that reformats is also a validator',
@@ -171,11 +171,11 @@ export const CATEGORY_CONTENT: Partial<Record<ToolCategory, CategoryContent>> = 
       },
       {
         title: 'Decoding is not decrypting',
-        body: 'Base64 and URL encoding are reversible transformations with no key and no secret. A JWT\'s payload is Base64, which means anyone holding the token can read every claim in it. The signature is what makes a JWT trustworthy, and verifying it needs the key — decoding it does not.',
+        body: 'Base64 and URL encoding are reversible transformations with no key and no secret. A JWT\'s payload is Base64, which means anyone holding the token can read every claim in it. The signature is what makes a JWT trustworthy, and verifying it needs the key: decoding it does not.',
       },
       {
         title: 'Generated values differ in what they guarantee',
-        body: 'A UUID v4 is random and effectively unique; a password generator is aiming at entropy against guessing; a hash is deterministic and will give the same output for the same input forever. Picking the wrong one — a hash where you wanted a random token — is a real and common bug.',
+        body: 'A UUID v4 is random and effectively unique; a password generator is aiming at entropy against guessing; a hash is deterministic and will give the same output for the same input forever. Picking the wrong one, a hash where you wanted a random token, is a real and common bug.',
       },
       {
         title: 'Diff on structure when structure is what changed',
@@ -189,11 +189,11 @@ export const CATEGORY_CONTENT: Partial<Record<ToolCategory, CategoryContent>> = 
       },
       {
         question: 'Can the JWT decoder tell me if a token is valid?',
-        answer: 'It shows you the header, the payload and the claims, including expiry — enough to answer "why is this request being rejected" most of the time. It does not verify the signature, because that requires the signing key, and pasting a signing key into a web page is the thing you should never do.',
+        answer: 'It shows you the header, the payload and the claims, including expiry: enough to answer "why is this request being rejected" most of the time. It does not verify the signature, because that requires the signing key, and pasting a signing key into a web page is the thing you should never do.',
       },
       {
         question: 'Which hash should I use?',
-        answer: 'For checking that a download arrived intact, SHA-256 is the standard answer. MD5 and SHA-1 are still fine for detecting accidental corruption and are broken for anything adversarial. For storing passwords, none of these are appropriate — that needs a deliberately slow function such as bcrypt or Argon2, on a server.',
+        answer: 'For checking that a download arrived intact, SHA-256 is the standard answer. MD5 and SHA-1 are still fine for detecting accidental corruption and are broken for anything adversarial. For storing passwords, none of these are appropriate: that needs a deliberately slow function such as bcrypt or Argon2, on a server.',
       },
       {
         question: 'Do these tools work offline?',
@@ -205,7 +205,7 @@ export const CATEGORY_CONTENT: Partial<Record<ToolCategory, CategoryContent>> = 
   text: {
     tagline: 'Count, clean, convert, sort and compare text without pasting it into somebody else\'s server.',
     intro:
-      'Text tools look trivial until you need one at the exact moment you cannot use one — a paragraph that has to fit a character limit, a list that needs deduplicating before an import, a block of copy that carries invisible formatting from a Word document. These run locally, which matters more than it sounds: the text people paste into online converters is often a draft contract, a customer list or an unpublished announcement.',
+      'Text tools look trivial until you need one at the exact moment you cannot use one: a paragraph that has to fit a character limit, a list that needs deduplicating before an import, a block of copy that carries invisible formatting from a Word document. These run locally, which matters more than it sounds: the text people paste into online converters is often a draft contract, a customer list or an unpublished announcement.',
     guide: [
       {
         title: 'Character counts depend on what you are counting for',
@@ -213,7 +213,7 @@ export const CATEGORY_CONTENT: Partial<Record<ToolCategory, CategoryContent>> = 
       },
       {
         title: 'Clean before you transform',
-        body: 'Most failed imports come from invisible characters — non-breaking spaces, smart quotes, zero-width joiners and stray carriage returns pasted out of a document or a web page. Stripping those first is what makes the sort, the deduplication or the CSV conversion behave.',
+        body: 'Most failed imports come from invisible characters: non-breaking spaces, smart quotes, zero-width joiners and stray carriage returns pasted out of a document or a web page. Stripping those first is what makes the sort, the deduplication or the CSV conversion behave.',
       },
       {
         title: 'Case conversion is not one operation',
@@ -257,7 +257,7 @@ export const CATEGORY_CONTENT: Partial<Record<ToolCategory, CategoryContent>> = 
     faqs: [
       {
         question: 'Are these calculators accurate enough to rely on?',
-        answer: 'For unit conversion, yes — the factors are the internationally defined ones and the arithmetic is done in double precision. For financial and health calculators, the arithmetic is exact but the result is a model: an EMI figure ignores fees your lender may charge, and BMI is a population-level statistic that says little about an individual.',
+        answer: 'For unit conversion, yes: the factors are the internationally defined ones and the arithmetic is done in double precision. For financial and health calculators, the arithmetic is exact but the result is a model: an EMI figure ignores fees your lender may charge, and BMI is a population-level statistic that says little about an individual.',
       },
       {
         question: 'Why is there no live currency conversion?',
@@ -273,7 +273,7 @@ export const CATEGORY_CONTENT: Partial<Record<ToolCategory, CategoryContent>> = 
   word: {
     tagline: 'Read, convert and inspect .docx documents without Microsoft Word and without uploading them.',
     intro:
-      'A .docx file is a ZIP archive of XML — which is why it can be read in a browser at all, and why converting one is a question of mapping Word\'s structure onto something else rather than rendering a picture of a page. These tools read that structure directly: headings, emphasis, lists, tables and links come through, and everything that exists only as page furniture does not. The document is parsed in your tab, which is the property that matters when the file is a contract, a review or an unsigned offer.',
+      'A .docx file is a ZIP archive of XML, which is why it can be read in a browser at all, and why converting one is a question of mapping Word\'s structure onto something else rather than rendering a picture of a page. These tools read that structure directly: headings, emphasis, lists, tables and links come through, and everything that exists only as page furniture does not. The document is parsed in your tab, which is the property that matters when the file is a contract, a review or an unsigned offer.',
     guide: [
       {
         title: 'Convert to the format that keeps what you need',
@@ -285,11 +285,11 @@ export const CATEGORY_CONTENT: Partial<Record<ToolCategory, CategoryContent>> = 
       },
       {
         title: 'Check what the document says about you before you send it',
-        body: 'Word stores the author name, the last person to edit, the company, the total editing time and the revision count inside every file. The metadata viewer shows exactly what a recipient can read, which is worth doing once before a document leaves your organisation.',
+        body: 'Word stores the author name, the last person to edit, the company, the total editing time and the revision count inside every file. In Word, File, then Info lists them, and Check for Issues, then Inspect Document removes them, which is worth doing once before a document leaves your organisation.',
       },
       {
         title: 'Comparison is on text, not formatting',
-        body: 'The document compare tool reports paragraphs that were added, removed or changed. A font swap or a margin change is not a difference in this sense — which is usually what you want when the question is "what actually changed in this draft".',
+        body: 'The document compare tool reports paragraphs that were added, removed or changed. A font swap or a margin change is not a difference in this sense, which is usually what you want when the question is "what actually changed in this draft".',
       },
     ],
     faqs: [
@@ -307,7 +307,7 @@ export const CATEGORY_CONTENT: Partial<Record<ToolCategory, CategoryContent>> = 
       },
       {
         question: 'Can I convert a document with tracked changes?',
-        answer: 'Tracked changes are read as their accepted state — you get the text as it would look if every revision were accepted. If you need to see the revisions themselves, compare the two versions as separate documents instead.',
+        answer: 'Tracked changes are read as their accepted state: you get the text as it would look if every revision were accepted. If you need to see the revisions themselves, compare the two versions as separate documents instead.',
       },
     ],
   },
@@ -323,7 +323,7 @@ export const CATEGORY_CONTENT: Partial<Record<ToolCategory, CategoryContent>> = 
       },
       {
         title: 'Clean before you merge',
-        body: 'Merging files with inconsistent headers, trailing whitespace or mixed line endings produces a file with subtly duplicated columns. Normalising each input first — trim, fix encoding, align headers — turns the merge into a trivial step.',
+        body: 'Merging files with inconsistent headers, trailing whitespace or mixed line endings produces a file with subtly duplicated columns. Normalising each input first (trim, fix encoding, align headers) turns the merge into a trivial step.',
       },
       {
         title: 'Deduplication needs a definition of duplicate',
@@ -349,7 +349,7 @@ export const CATEGORY_CONTENT: Partial<Record<ToolCategory, CategoryContent>> = 
       },
       {
         question: 'Can these tools read .xlsx files?',
-        answer: 'These tools work on delimited text formats — CSV and TSV. For an Excel workbook, export the sheet you need as CSV from Excel, Google Sheets or LibreOffice first; that also forces you to decide which sheet and which range you actually mean.',
+        answer: 'These tools work on delimited text formats: CSV and TSV. For an Excel workbook, export the sheet you need as CSV from Excel, Google Sheets or LibreOffice first; that also forces you to decide which sheet and which range you actually mean.',
       },
     ],
   },
@@ -357,7 +357,7 @@ export const CATEGORY_CONTENT: Partial<Record<ToolCategory, CategoryContent>> = 
   web: {
     tagline: 'Encoders, decoders and inspectors for the plumbing between a browser and a server.',
     intro:
-      'Most of what breaks between a form and a server is an encoding question: a character that meant one thing in a URL and another in a query string, a MIME type that does not match the bytes, a string that was encoded twice. These tools do the small, exact transformations that make those problems visible, and they do them in the tab — which matters because the URLs people debug tend to carry tokens.',
+      'Most of what breaks between a form and a server is an encoding question: a character that meant one thing in a URL and another in a query string, a MIME type that does not match the bytes, a string that was encoded twice. These tools do the small, exact transformations that make those problems visible, and they do them in the tab, which matters because the URLs people debug tend to carry tokens.',
     guide: [
       {
         title: 'Encode for the position, not for the string',
@@ -375,7 +375,7 @@ export const CATEGORY_CONTENT: Partial<Record<ToolCategory, CategoryContent>> = 
     faqs: [
       {
         question: 'Why does my URL break after encoding it?',
-        answer: 'Almost always because the whole URL was encoded rather than one component of it. The colon after the scheme, the slashes in the path and the ampersands between parameters are structural — escaping them turns a URL into a single opaque string.',
+        answer: 'Almost always because the whole URL was encoded rather than one component of it. The colon after the scheme, the slashes in the path and the ampersands between parameters are structural: escaping them turns a URL into a single opaque string.',
       },
       {
         question: 'Is Base64 a way to hide data?',
@@ -409,7 +409,7 @@ export const CATEGORY_CONTENT: Partial<Record<ToolCategory, CategoryContent>> = 
     faqs: [
       {
         question: 'Is a password generated in a browser actually random?',
-        answer: 'Yes, when it uses the Web Crypto API, which is what these tools use. It draws from the operating system\'s cryptographically secure random source — the same one used for TLS keys — rather than from Math.random, which is predictable and unsuitable for anything secret.',
+        answer: 'Yes, when it uses the Web Crypto API, which is what these tools use. It draws from the operating system\'s cryptographically secure random source, the same one used for TLS keys, rather than from Math.random, which is predictable and unsuitable for anything secret.',
       },
       {
         question: 'Could the generated password be logged or recovered?',
@@ -417,7 +417,7 @@ export const CATEGORY_CONTENT: Partial<Record<ToolCategory, CategoryContent>> = 
       },
       {
         question: 'Is MD5 still usable?',
-        answer: 'For detecting accidental corruption — a truncated download, a bad copy — yes, and it is fast. For anything where someone might deliberately construct a colliding file, no: MD5 and SHA-1 are both broken in that sense, and SHA-256 is the correct default.',
+        answer: 'For detecting accidental corruption (a truncated download, a bad copy) yes, and it is fast. For anything where someone might deliberately construct a colliding file, no: MD5 and SHA-1 are both broken in that sense, and SHA-256 is the correct default.',
       },
     ],
   },
@@ -425,7 +425,7 @@ export const CATEGORY_CONTENT: Partial<Record<ToolCategory, CategoryContent>> = 
   color: {
     tagline: 'Convert colour formats, build gradients and check contrast before shipping a palette.',
     intro:
-      'Colour on the web is several different models wearing the same clothes. Hex, RGB, HSL and OKLCH all describe the same pixel, but they make different operations easy: HSL makes "slightly lighter" obvious, hex makes nothing obvious but is what design tools hand you. Converting between them is exact arithmetic — which is why it belongs in the browser, next to the page you are styling.',
+      'Colour on the web is several different models wearing the same clothes. Hex, RGB, HSL and OKLCH all describe the same pixel, but they make different operations easy: HSL makes "slightly lighter" obvious, hex makes nothing obvious but is what design tools hand you. Converting between them is exact arithmetic, which is why it belongs in the browser, next to the page you are styling.',
     guide: [
       {
         title: 'Pick the model that matches the change you want',
@@ -433,7 +433,7 @@ export const CATEGORY_CONTENT: Partial<Record<ToolCategory, CategoryContent>> = 
       },
       {
         title: 'Contrast is a requirement, not a preference',
-        body: 'WCAG asks for a 4.5:1 ratio for body text and 3:1 for large text. The ratio depends on relative luminance, not on how different two colours look side by side — which is why a mid-grey on white can fail while a colour pairing that looks bolder passes.',
+        body: 'WCAG asks for a 4.5:1 ratio for body text and 3:1 for large text. The ratio depends on relative luminance, not on how different two colours look side by side, which is why a mid-grey on white can fail while a colour pairing that looks bolder passes.',
       },
       {
         title: 'Check both themes before committing',
@@ -443,7 +443,7 @@ export const CATEGORY_CONTENT: Partial<Record<ToolCategory, CategoryContent>> = 
     faqs: [
       {
         question: 'Is hex or HSL better for CSS?',
-        answer: 'Neither is better as output — browsers treat them identically. HSL is better as a source of truth, because a designer changing "the brand colour, ten percent lighter" can express that directly, while the same change in hex means recomputing three channels by hand.',
+        answer: 'Neither is better as output: browsers treat them identically. HSL is better as a source of truth, because a designer changing "the brand colour, ten percent lighter" can express that directly, while the same change in hex means recomputing three channels by hand.',
       },
       {
         question: 'What contrast ratio do I actually need?',

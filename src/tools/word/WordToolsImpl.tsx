@@ -357,7 +357,7 @@ export const DocxToPdfTool: React.FC = () => {
               {result && (
                 <DownloadBar
                   label={result.name}
-                  note="Generated locally — the document never left this browser."
+                  note="Generated locally: the document never left this browser."
                   onDownload={() => downloadBlobAs(result.blob, result.name)}
                   blob={result.blob}
                 />
@@ -379,7 +379,7 @@ export const WordViewerTool: React.FC = () => {
   return (
     <div className="space-y-4">
       {!file ? (
-        <DocxDropZone onFiles={load} label="Select a .docx file to read" hint="Opens in this tab — no Word, no account, no upload" />
+        <DocxDropZone onFiles={load} label="Select a .docx file to read" hint="Opens in this tab: no Word, no account, no upload" />
       ) : (
         <>
           <DocxFileBar name={file.name} onClear={clear} note={busy ? 'Opening…' : 'Rendered from the document body'} />
@@ -511,7 +511,7 @@ export const WordMetadataTool: React.FC = () => {
   return (
     <div className="space-y-4">
       {!file ? (
-        <DocxDropZone onFiles={load} label="Select a .docx file to inspect" hint="Reads docProps only — the document text is not shown" />
+        <DocxDropZone onFiles={load} label="Select a .docx file to inspect" hint="Reads docProps only: the document text is not shown" />
       ) : (
         <>
           <DocxFileBar
@@ -619,7 +619,7 @@ export const WordRemoveFormatTool: React.FC = () => {
               {result && (
                 <DownloadBar
                   label={result.name}
-                  note="Plain paragraphs in Word's default style — no inherited fonts, colours or tracked changes."
+                  note="Plain paragraphs in Word's default style: no inherited fonts, colours or tracked changes."
                   onDownload={() => downloadBlobAs(result.blob, result.name)}
                   blob={result.blob}
                 />
@@ -784,8 +784,8 @@ export const WordCompareTool: React.FC = () => {
 
       {(!left || !right) && (
         <p className="text-[11px] text-muted-foreground leading-relaxed text-center">
-          Comparison is on the text of each document. Formatting-only edits — a font change, a different
-          margin — are intentionally not reported as differences.
+          Comparison is on the text of each document. Formatting-only edits: a font change, a different
+          margin: are intentionally not reported as differences.
         </p>
       )}
       <ErrorBox message={error} />

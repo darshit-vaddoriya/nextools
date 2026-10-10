@@ -28,7 +28,7 @@ export const NUMBERS_POSTS: BlogPost[] = [
     category: 'data',
     tags: ['finance', 'percentages', 'units'],
     published: '2026-09-16',
-    relatedTools: ['emi-calculator', 'gst-calculator', 'percentage-calc', 'unit-converter', 'bmi-calculator', 'number-to-words', 'roman-numerals', 'scientific-calc'],
+    relatedTools: ['emi-calculator', 'gst-calculator', 'percentage-calc', 'unit-converter', 'bmi-calculator', 'number-to-words'],
     takeaways: [
       'Percentage change is not symmetric. Down 20% then up 20% leaves you 4% below where you started.',
       'Removing GST from an inclusive price is division, not subtraction. Taking 18% off a 118 price does not give 100.',
@@ -47,7 +47,7 @@ export const NUMBERS_POSTS: BlogPost[] = [
     tags: ['units', 'conversion', 'measurement'],
     published: '2026-09-17',
     updated: '2026-09-29',
-    relatedTools: ['unit-converter', 'scientific-calc', 'percentage-calc'],
+    relatedTools: ['unit-converter', 'percentage-calc'],
     takeaways: [
       'Ratio scales (length, mass, time) convert by multiplication. Interval scales (Celsius, Fahrenheit) need an offset, so doubling them is meaningless.',
       'A US gallon and an imperial gallon differ by about 20%, and both are called "gallon". The same trap applies to tons, pints and fluid ounces.',

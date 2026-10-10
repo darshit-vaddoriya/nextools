@@ -3,7 +3,7 @@ import { ToolSeoMap } from './types';
 export const PDF_SEO_CONTENT: ToolSeoMap = {
   'pdf-merge': {
     intro:
-      'PDF Merge lets you combine invoices, scanned contracts, lecture notes, or multi-part reports into a single tidy document without installing any software. Students stitching together separate chapter scans, freelancers assembling a proposal packet, and office workers consolidating signed forms all use it to save time before emailing or printing. Every file is joined right inside your browser tab, so the original documents never leave your device.',
+      'PDF Merge lets you combine invoices, scanned contracts, lecture notes, or multi-part reports into a single tidy document without installing any software. Every file is joined right inside your browser tab, so the original documents never leave your device.',
     steps: [
       { title: 'Add your PDF files', description: 'Click the upload area or drag and drop two or more PDF files into the tool.' },
       { title: 'Reorder the files', description: 'Drag the file thumbnails into the exact order you want them to appear in the final document.' },
@@ -115,7 +115,7 @@ export const PDF_SEO_CONTENT: ToolSeoMap = {
   },
   'pdf-to-jpg': {
     intro:
-      'PDF to Image renders each page of a PDF as a standalone JPG or PNG file, which is useful for pasting a page into a slide deck, posting a flyer on social media, or generating thumbnails for a document library. Designers and marketers often use it to pull a single page out of a brochure PDF for quick sharing. Rendering happens on your own device using the browser canvas, so nothing is uploaded to convert your pages into images.',
+      'PDF to Image renders each page of a PDF as a standalone JPG or PNG file, which is useful for pasting a page into a slide deck, posting a flyer on social media, or generating thumbnails for a document library. Rendering happens on your own device using the browser canvas, so nothing is uploaded to convert your pages into images.',
     steps: [
       { title: 'Upload your PDF', description: 'Select the PDF file you want to convert to images.' },
       { title: 'Choose format and quality', description: 'Pick JPG or PNG output and set the resolution or quality level.' },
@@ -143,7 +143,7 @@ export const PDF_SEO_CONTENT: ToolSeoMap = {
   },
   'jpg-to-pdf': {
     intro:
-      'Image to PDF bundles one or many JPG or PNG images into a single, shareable PDF document, which is exactly what you need after scanning receipts with your phone camera or collecting photos of a whiteboard for a report. Small business owners use it to compile expense photos, and students use it to submit handwritten homework as one file. The whole conversion is done client-side, keeping personal photos off any external server.',
+      'Image to PDF bundles one or many JPG or PNG images into a single, shareable PDF document, which is exactly what you need after scanning receipts with your phone camera or collecting photos of a whiteboard for a report. The whole conversion is done client-side, keeping personal photos off any external server.',
     steps: [
       { title: 'Add your images', description: 'Upload one or more JPG or PNG images you want combined into a PDF.' },
       { title: 'Arrange the order', description: 'Drag images into the sequence you want them to appear as pages.' },
@@ -227,7 +227,7 @@ export const PDF_SEO_CONTENT: ToolSeoMap = {
   },
   'pdf-ocr': {
     intro:
-      'PDF OCR extracts text from scanned documents and image-based PDFs, such as printed contracts, old book scans, or photographed receipts, using optical character recognition that runs right in your browser. This makes previously unsearchable scans copyable and searchable without sending them to a cloud OCR API. It is a favorite among researchers digitizing archives and anyone trying to quote text from a scanned document without retyping it by hand.',
+      'PDF OCR extracts text from scanned documents and image-based PDFs, such as printed contracts, old book scans, or photographed receipts, using optical character recognition that runs right in your browser. This makes previously unsearchable scans copyable and searchable without sending them to a cloud OCR API.',
     steps: [
       { title: 'Upload your scanned PDF', description: 'Select the image-based or scanned PDF you want to run OCR on.' },
       { title: 'Choose the recognition language', description: 'Pick the language that matches the text in your document for best accuracy.' },
@@ -284,7 +284,7 @@ export const PDF_SEO_CONTENT: ToolSeoMap = {
   },
   'pdf-extract-images': {
     intro:
-      'Extract Images from PDF finds every embedded picture inside a PDF, such as product photos in a catalog or diagrams in a manual, and lets you download them individually as standalone image files. Designers reusing assets from an old brochure and researchers pulling figures out of a paper both rely on this instead of taking manual screenshots. Since the scanning happens locally, the source PDF is never uploaded to complete the extraction.',
+      'Extract Images from PDF finds every embedded picture inside a PDF, such as product photos in a catalog or diagrams in a manual, and lets you download them individually as standalone image files. Since the scanning happens locally, the source PDF is never uploaded to complete the extraction.',
     steps: [
       { title: 'Upload your PDF', description: 'Select the PDF file containing the images you want to extract.' },
       { title: 'Scan for embedded images', description: 'The tool detects all raster images embedded across the pages.' },
@@ -341,7 +341,7 @@ export const PDF_SEO_CONTENT: ToolSeoMap = {
   },
   'pdf-reorder': {
     intro:
-      'Reorder PDF Pages lets you drag page thumbnails into any sequence you like, which is perfect for fixing a scanner that grabbed pages out of order or rearranging a report before sending it to a client. Anyone assembling a portfolio or combining sections from different sources can use it to get the final page order exactly right before saving. The rearranged document is built entirely in-browser, with no intermediate upload step.',
+      'Reorder PDF Pages lets you drag page thumbnails into any sequence you like, which is perfect for fixing a scanner that grabbed pages out of order or rearranging a report before sending it to a client. The rearranged document is built entirely in-browser, with no intermediate upload step.',
     steps: [
       { title: 'Upload your PDF', description: 'Select the PDF whose pages you want to rearrange.' },
       { title: 'View the page thumbnails', description: 'The tool displays a thumbnail grid representing every page in order.' },
@@ -397,7 +397,7 @@ export const PDF_SEO_CONTENT: ToolSeoMap = {
   },
   'pdf-crop': {
     intro:
-      'Crop PDF trims excess margins or resizes pages to a custom crop box, which helps when preparing a document for printing on a specific paper size or removing scanner border artifacts from a scanned page. Publishers preparing a book excerpt and students tidying up scanned worksheets both use it to get cleaner-looking pages. The cropping tool renders and clips pages directly in the browser, so no file upload is required to see or apply the crop.',
+      'Crop PDF trims excess margins or resizes pages to a custom crop box, which helps when preparing a document for printing on a specific paper size or removing scanner border artifacts from a scanned page. The cropping tool renders and clips pages directly in the browser, so no file upload is required to see or apply the crop.',
     steps: [
       { title: 'Upload your PDF', description: 'Select the PDF file you want to crop.' },
       { title: 'Set the crop area', description: 'Drag the crop handles over a page preview to define the region to keep.' },
@@ -451,7 +451,7 @@ export const PDF_SEO_CONTENT: ToolSeoMap = {
   },
   'pdf-page-numbers': {
     intro:
-      'Add Page Numbers automatically stamps sequential numbers onto every page of a PDF in the position you choose, saving you from manually labeling each page of a long report or thesis. Authors preparing a manuscript and office staff finalizing a multi-page handbook both use it to give documents a polished, navigable feel. Numbering is calculated and applied directly in the browser, so there is no upload step involved in generating the final file.',
+      'Add Page Numbers automatically stamps sequential numbers onto every page of a PDF in the position you choose, saving you from manually labeling each page of a long report or thesis. Numbering is calculated and applied directly in the browser, so there is no upload step involved in generating the final file.',
     steps: [
       { title: 'Upload your PDF', description: 'Select the PDF file you want to number.' },
       { title: 'Choose position and style', description: 'Pick where the numbers appear, such as bottom center, and choose a starting number or format.' },
@@ -479,7 +479,7 @@ export const PDF_SEO_CONTENT: ToolSeoMap = {
   },
   'pdf-header-footer': {
     intro:
-      'Add Header & Footer inserts repeating text, such as a document title, date, or company name, into the top or bottom margin of every page in a PDF. Businesses standardizing internal documents and students formatting a thesis according to university guidelines both use it to add consistent branding or metadata without manually editing each page. The header and footer text is composited onto pages locally in your browser with no file upload required.',
+      'Add Header & Footer inserts repeating text, such as a document title, date, or company name, into the top or bottom margin of every page in a PDF. The header and footer text is composited onto pages locally in your browser with no file upload required.',
     steps: [
       { title: 'Upload your PDF', description: 'Select the PDF file you want to add a header or footer to.' },
       { title: 'Enter header and footer text', description: 'Type the text you want repeated, such as a title, date, or page label.' },
@@ -507,7 +507,7 @@ export const PDF_SEO_CONTENT: ToolSeoMap = {
   },
   'pdf-sign': {
     intro:
-      'Sign PDF lets you draw a signature with your mouse or finger, type your name in a script font, or upload an image of your handwritten signature, then place it anywhere on a PDF page. Freelancers signing client contracts and tenants signing lease agreements use it to avoid printing, signing, and rescanning paperwork. Because signing happens fully in the browser, your signature image and the document you are signing are never uploaded to a remote server.',
+      'Sign PDF lets you draw a signature with your mouse or finger, type your name in a script font, or upload an image of your handwritten signature, then place it anywhere on a PDF page. Because signing happens fully in the browser, your signature image and the document you are signing are never uploaded to a remote server.',
     steps: [
       { title: 'Upload the PDF to sign', description: 'Select the PDF document that needs a signature.' },
       { title: 'Create your signature', description: 'Draw it with your mouse or touchscreen, type it, or upload an image of your signature.' },
@@ -589,37 +589,9 @@ export const PDF_SEO_CONTENT: ToolSeoMap = {
       'Flattening does not change the visual appearance, only whether the content stays interactive.',
     ],
   },
-  'pdf-repair': {
-    intro:
-      'Repair PDF attempts to fix corrupted or damaged PDF files that fail to open properly, such as documents interrupted during a download or partially saved after a crash. It works by re-parsing the file structure and rebuilding a valid PDF where possible, which can rescue important files like a corrupted invoice or report you cannot otherwise access. The repair process runs locally in your browser, so a potentially sensitive damaged file never has to be uploaded elsewhere to attempt a fix.',
-    steps: [
-      { title: 'Upload the damaged PDF', description: 'Select the corrupted or broken PDF file you are having trouble opening.' },
-      { title: 'Run the repair scan', description: 'The tool analyzes the file structure and attempts to recover valid page and object data.' },
-      { title: 'Review the recovered content', description: 'Check whether pages and content were successfully restored.' },
-      { title: 'Download the repaired file', description: 'Save the newly reconstructed PDF to your device.' },
-    ],
-    faqs: [
-      { question: 'Can every corrupted PDF be fully repaired?', answer: 'No, severely damaged files with missing critical data may only be partially recovered or may fail to repair at all.' },
-      { question: 'What usually causes a PDF to become corrupted?', answer: 'Common causes include an interrupted download, a crash during saving, or transfer errors over an unstable connection.' },
-      { question: 'Will repairing a PDF change its original content?', answer: 'The tool tries to preserve original content while fixing structural issues, though in some recovery cases minor elements may be lost.' },
-      { question: 'Can this tool fix a PDF that will not open at all?', answer: 'It is designed for exactly that scenario, though results depend on how much of the file structure is still intact.' },
-      { question: 'Does it work on password-protected PDFs that are also corrupted?', answer: 'Encryption combined with corruption is much harder to recover from, so results in that case are less reliable.' },
-    ],
-    useCases: [
-      'Rescuing an invoice or report that got corrupted during an interrupted download',
-      'Recovering a file that will not open after a crash during saving',
-      'Fixing a PDF damaged by a transfer error over an unstable connection',
-      'Attempting to restore access to a critical document with no other backup',
-    ],
-    tips: [
-      'Try repair as soon as you notice corruption, since files damaged further by repeated failed opens can be harder to recover.',
-      'Expect only partial recovery on severely damaged files where critical structural data is missing.',
-      'If the file is both encrypted and corrupted, recovery odds drop significantly, so keep expectations modest.',
-    ],
-  },
   'pdf-compare': {
     intro:
-      'Compare PDFs highlights the differences between two versions of a document side by side, which is invaluable when reviewing a redlined contract, checking a revised report against the original, or verifying that a reprinted document matches its source. Legal assistants tracking contract revisions and editors checking manuscript changes both rely on this instead of manually scanning every line. Both files are loaded and compared directly in your browser, so neither document is uploaded to a remote comparison service.',
+      'Compare PDFs highlights the differences between two versions of a document side by side, which is invaluable when reviewing a redlined contract, checking a revised report against the original, or verifying that a reprinted document matches its source. Both files are loaded and compared directly in your browser, so neither document is uploaded to a remote comparison service.',
     steps: [
       { title: 'Upload both PDFs', description: 'Select the original PDF and the revised version you want to compare.' },
       { title: 'Run the comparison', description: 'The tool analyzes both documents page by page to detect differences.' },
@@ -675,7 +647,7 @@ export const PDF_SEO_CONTENT: ToolSeoMap = {
   },
   'pdf-metadata': {
     intro:
-      'PDF Metadata Editor lets you view and update the title, author, subject, and keyword fields embedded in a PDF file, which helps with organizing document libraries and correcting information before official distribution. Authors preparing an ebook and companies standardizing internal report metadata both use it to keep file properties accurate and searchable. Metadata is read and rewritten directly in your browser, so the document is never sent to a server just to update its properties.',
+      'PDF Metadata Editor lets you view and update the title, author, subject, and keyword fields embedded in a PDF file, which helps with organizing document libraries and correcting information before official distribution. Metadata is read and rewritten directly in your browser, so the document is never sent to a server just to update its properties.',
     steps: [
       { title: 'Upload your PDF', description: 'Select the PDF whose metadata you want to inspect or change.' },
       { title: 'View current metadata', description: 'See the existing title, author, subject, and keywords stored in the file.' },
@@ -698,62 +670,6 @@ export const PDF_SEO_CONTENT: ToolSeoMap = {
       'Clear author and keyword fields if you want to remove identifying details before distributing a sensitive file.',
       'Accurate metadata improves discoverability in document management systems, so it is worth filling in title, subject, and keywords consistently.',
       'Editing metadata never touches the visible page content, so it is a safe change to make without risking the document layout.',
-    ],
-  },
-  'pdf-viewer': {
-    intro:
-      'PDF Viewer lets you open and page through a PDF directly in your browser without installing a dedicated reader app or plugin, which is convenient for quickly checking a document you just downloaded or received as an attachment. It supports zooming and page navigation so you can read reports, manuals, or contracts comfortably on any device. Because the file is rendered locally, nothing about the document you are viewing is ever transmitted to an external server.',
-    steps: [
-      { title: 'Upload or open your PDF', description: 'Select the PDF file you want to view.' },
-      { title: 'Navigate between pages', description: 'Use the page controls or scroll to move through the document.' },
-      { title: 'Zoom as needed', description: 'Adjust zoom level for comfortable reading of small text or detailed images.' },
-      { title: 'Close or open another file', description: 'Switch to a different PDF at any time without leaving the page.' },
-    ],
-    faqs: [
-      { question: 'Do I need Adobe Reader or another app to use this?', answer: 'No, the viewer renders PDFs entirely in your browser, so no external reader software or plugin is required.' },
-      { question: 'Can I view password-protected PDFs?', answer: 'You will need to enter the correct password if the file is encrypted, since the viewer cannot bypass PDF encryption.' },
-      { question: 'Does it work well on mobile browsers?', answer: 'Yes, the viewer adapts to smaller screens with touch-friendly zoom and page navigation.' },
-      { question: 'Can I print directly from the viewer?', answer: 'Yes, you can use your browser print function while the PDF is open to send it to a printer or save it as a new file.' },
-      { question: 'Will large PDFs load slowly in the viewer?', answer: 'Very large files may take a bit longer to render initial pages, but performance is generally smooth for typical document sizes.' },
-    ],
-    useCases: [
-      'Quickly checking a PDF attachment right after downloading it without installing a reader app',
-      'Reading a manual or contract comfortably on a phone or tablet',
-      'Previewing a document before deciding whether to download or share it',
-      'Viewing a PDF on a locked-down machine where installing software is not allowed',
-    ],
-    tips: [
-      'Use your browser print function directly from the viewer if you need a paper copy or a new saved file.',
-      'Zoom in for detailed images or small text rather than squinting at the default view.',
-      'Have the correct password ready for encrypted files, since the viewer cannot bypass PDF encryption.',
-    ],
-  },
-  'pdf-page-extractor': {
-    intro:
-      'PDF Page Extractor pulls a specific range of pages out of a larger PDF and saves them as a brand-new, standalone document, which is ideal for sharing just the relevant section of a lengthy report or textbook chapter. Researchers citing a single study from a large collection and employees forwarding only the relevant clause of a contract both use it instead of manually recreating a shorter file. Extraction happens entirely within your browser, so the source document is never uploaded during the process.',
-    steps: [
-      { title: 'Upload your PDF', description: 'Select the PDF file you want to extract pages from.' },
-      { title: 'Specify the page range', description: 'Enter the start and end pages, or a custom range, that you want to pull out.' },
-      { title: 'Preview the selected pages', description: 'Confirm the correct pages are included before extracting.' },
-      { title: 'Download the new PDF', description: 'Save the extracted page range as its own separate document.' },
-    ],
-    faqs: [
-      { question: 'How is this different from the Split PDF tool?', answer: 'Page Extractor is focused on pulling out one specific range as a single new document, while Split can break a file into several separate pieces at once.' },
-      { question: 'Can I extract a non-contiguous set of pages, like 2, 5, and 9?', answer: 'Yes, most configurations let you specify individual pages and ranges together, not just one continuous block.' },
-      { question: 'Will the extracted pages keep their original quality?', answer: 'Yes, extracted pages retain their original resolution and content since they are copied directly rather than re-rendered.' },
-      { question: 'Can I extract pages from a scanned PDF?', answer: 'Yes, extraction works the same way regardless of whether pages contain scanned images or selectable text.' },
-      { question: 'What happens to page numbering in the new file?', answer: 'The new file starts fresh with the extracted pages in order, though any printed page numbers within the content itself remain as originally printed.' },
-    ],
-    useCases: [
-      'Sharing just the relevant chapter of a textbook instead of the entire book',
-      'Citing a single study by pulling it out of a large collection of papers',
-      'Forwarding only the relevant clause of a contract to a colleague',
-      'Creating a standalone excerpt from a long report for a specific audience',
-    ],
-    tips: [
-      'Use non-contiguous ranges like 2,5,9-11 when you need scattered pages rather than one continuous block.',
-      'Reach for Split PDF instead if you need to break a file into several separate pieces at once, not just pull out one range.',
-      'Extracted pages keep their original resolution since they are copied directly rather than re-rendered.',
     ],
   },
 };

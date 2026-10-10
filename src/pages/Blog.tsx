@@ -206,7 +206,7 @@ export const Blog: React.FC<BlogProps> = ({ onBack, onOpenPost, topic, onSelectT
           <Icon size={14} className={active ? '' : `${value ? BLOG_CATEGORY_META[value].color : 'text-muted-foreground'} group-hover:text-primary`} />
           {label}
           {/* The count sits in its own pill so a two-digit number does not read
-              as part of the label — "Images 15" was being scanned as one word. */}
+              as part of the label: "Images 15" was being scanned as one word. */}
           <span className={`inline-flex h-5 min-w-[20px] items-center justify-center rounded-full px-1.5 text-[10.5px] font-bold tabular-nums ${
             active ? 'bg-primary-foreground/20 text-primary-foreground' : 'bg-muted text-muted-foreground group-hover:bg-primary/15 group-hover:text-primary'
           }`}>{count}</span>

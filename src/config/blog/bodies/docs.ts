@@ -19,11 +19,11 @@ One of those is reliable. The other is a reconstruction.
 
 ## Going DOCX to PDF
 
-This direction is the well-behaved one, but there are three things that genuinely change.
+This direction is the well-behaved one, but there are three things that change.
 
 **Fonts get embedded or substituted.** If the document uses a font the converter has, it embeds a subset and the output looks identical. If it does not, it substitutes something metrically similar and your line breaks move. This is why a CV that fitted on one page in Word arrives as a page and a half.
 
-**Everything interactive stops being interactive.** Comments, tracked changes, hidden text and field codes are resolved and flattened. A \`{ PAGE }\` field becomes the literal number. A cross-reference becomes the text it happened to say at conversion time. Tracked changes are either burned in or dropped depending on the view being rendered, so it is worth accepting or rejecting them deliberately first rather than finding out afterwards.
+**Everything interactive stops being interactive.** Comments, tracked changes, hidden text and field codes are resolved and flattened. A \`{ PAGE }\` field becomes the literal number. A cross-reference becomes the text it happened to say at conversion time. Tracked changes are either burned in or dropped depending on the view being rendered, so it is worth accepting or rejecting them yourself first rather than finding out afterwards.
 
 **Reflow ends.** A DOCX re-lays out for the page size it is opened at. Once it is a PDF, the pagination is fixed. That is usually the point of converting, but it also means an A4 layout stays A4 on US Letter, with the margins slightly wrong.
 
@@ -34,7 +34,7 @@ Here the converter is reverse-engineering. How well it does depends entirely on 
 | What you start with | What a converter can recover |
 |---|---|
 | PDF exported from Word, text intact | Paragraphs and most runs of formatting, usually good |
-| PDF with a tagged structure tree | Headings, lists and tables, genuinely reliable |
+| PDF with a tagged structure tree | Headings, lists and tables, reliable |
 | Designed PDF from InDesign or LaTeX | Text, but the structure is a guess |
 | Multi-column layout | Text, often in the wrong reading order |
 | Scanned pages | Nothing at all without OCR first |
@@ -106,7 +106,7 @@ None of this is visible in the document. All of it is copied when you send the f
 > [!WARNING]
 > The consequences are ordinary and awkward. A CV built from a template still names the person who wrote the template. A proposal sent to a client names the other client whose document it was copied from. A "fresh" report has a revision count of 47 and a created date from two years ago.
 
-If you want to see what a specific file is carrying, a [metadata viewer](/tool/word-metadata) reads those two files and shows you the fields without you having to unzip anything.
+If you want to see what a specific file is carrying, Word lists those fields under File, then Info, and Check for Issues, then Inspect Document removes them. You can also rename a copy to .zip and open the two files in its docProps folder.
 
 ## Tracked changes are not deletions
 
@@ -116,7 +116,7 @@ When change tracking is on, deleted text is not removed from \`document.xml\`. I
 
 The same applies to comments. Resolving a comment thread does not delete it, and \`comments.xml\` keeps the text and the names.
 
-Accepting all changes and deleting all comments genuinely removes them. Saving over the file without doing that does not.
+Accepting all changes and deleting all comments removes them. Saving over the file without doing that does not.
 
 ## Getting the text out cleanly
 
@@ -142,7 +142,7 @@ Plain text can do all three, which is the whole argument for keeping the source 
 
 ## What you get back
 
-**Real diffs.** Any [text comparison](/tool/diff-text) shows exactly which lines changed. Review becomes reading a change rather than hunting for one.
+**Real diffs.** Any [text comparison](/tool/diff-checker) shows exactly which lines changed. Review becomes reading a change rather than hunting for one.
 
 **Merges.** Two people editing different sections combine automatically. The only conflicts are genuine ones, where both edited the same lines.
 
@@ -174,8 +174,6 @@ Reviewers wanting Track Changes is the objection that comes up most, and it has 
 [Markdown to DOCX](/tool/markdown-to-docx) maps the structure onto real Word styles, so \`##\` becomes Heading 2 and a bullet list becomes a Word list. Because those are styles rather than direct formatting, the recipient can restyle the whole document from the Styles pane, which is not true of a document where every heading was hand-formatted.
 
 [Markdown preview](/tool/markdown-preview) is worth keeping open while writing, for the ordinary reason that a broken table or an unclosed emphasis is easier to spot rendered than in the source.
-
-For the other direction, [HTML to DOCX](/tool/html-to-docx) handles the case where the content already exists as a web page and someone has asked for it in Word.
 
 > [!TIP]
 > The most useful conversion in day-to-day work goes the opposite way. Pasting from Word into a CMS drops a mess of \`<span style="...">\` and \`mso-\` attributes into the page source. Running it through [HTML to Markdown](/tool/html-markdown) and back out strips all of that and leaves the structure intact, which is much faster than cleaning the markup by hand.
@@ -282,7 +280,7 @@ A line-based comparison reports an entire line as changed when one word in it ch
 
 A word-based comparison is what you want for documents. It shows the three words that actually changed inside a paragraph rather than flagging the paragraph.
 
-[Text comparison](/tool/diff-text) offers this choice, and picking it deliberately is most of the difference between a readable result and a wall of red.
+The [diff checker](/tool/diff-checker) highlights the changed words inside each changed line, which is most of the difference between a readable result and a wall of red.
 
 ## Clean before you compare
 

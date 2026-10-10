@@ -210,7 +210,7 @@ export const JsonToTypesTool: React.FC = () => {
       const shapes: Shape[] = [];
       const rootType = collectShapes(parsed, rootName || 'Root', shapes, lang);
       if (shapes.length === 0 && lang !== 'typescript') {
-        return { output: '', error: 'Top-level value is not an object — paste a JSON object or array of objects.' };
+        return { output: '', error: 'Top-level value is not an object: paste a JSON object or array of objects.' };
       }
       return { output: renderTypes(shapes, rootType, rootName || 'Root', lang), error: null };
     } catch (err) {
@@ -227,7 +227,7 @@ export const JsonToTypesTool: React.FC = () => {
       title="JSON to TypeScript"
       full={full}
       onFullChange={setFull}
-      hint={<Hint>Paste a JSON response and get typed models — nested objects become their own types.</Hint>}
+      hint={<Hint>Paste a JSON response and get typed models: nested objects become their own types.</Hint>}
       controls={
         <>
           <label className="flex items-center gap-1.5 text-[12px] text-muted-foreground">
@@ -326,7 +326,7 @@ type CronParsed = { minutes: Set<number>; hours: Set<number>; doms: Set<number>;
 function parseCron(expr: string): CronParsed {
   const parts = expr.trim().split(/\s+/);
   if (parts.length !== 5) {
-    throw new Error(`A cron expression needs exactly 5 fields (minute hour day month weekday) — got ${parts.length}.`);
+    throw new Error(`A cron expression needs exactly 5 fields (minute hour day month weekday): got ${parts.length}.`);
   }
   const [m, h, dom, mon, dow] = parts;
   const dows = parseCronField(dow, 0, 7, DAY_ALIASES, 'Day of week');
@@ -461,7 +461,7 @@ export const CronParserTool: React.FC = () => {
         <WhitePanel label="Next 8 runs (your local time)" className={full ? 'h-full min-h-0' : 'min-h-[260px]'}>
           <div className="flex-1 overflow-auto divide-y divide-border/60">
             {result.runs.length === 0 ? (
-              <p className="p-4 text-[13px] text-muted-foreground">No upcoming runs — check the expression above.</p>
+              <p className="p-4 text-[13px] text-muted-foreground">No upcoming runs: check the expression above.</p>
             ) : (
               result.runs.map((d, i) => (
                 <div key={i} className="flex items-center justify-between px-4 py-2.5 text-[13px]">
@@ -961,7 +961,7 @@ export const EnvJsonTool: React.FC = () => {
       </div>
 
       <p className="text-[12px] text-muted-foreground shrink-0">
-        Secrets stay on your device — this page never uploads the values you paste.
+        Secrets stay on your device: this page never uploads the values you paste.
       </p>
     </ToolShell>
   );
@@ -987,7 +987,7 @@ const HTTP_STATUSES: StatusEntry[] = [
   { code: 304, name: 'Not Modified', summary: 'The cached copy is still fresh, so no body is sent.' },
   { code: 307, name: 'Temporary Redirect', summary: 'Like 302 but the method and body must not change.' },
   { code: 308, name: 'Permanent Redirect', summary: 'Like 301 but the method and body must not change.' },
-  { code: 400, name: 'Bad Request', summary: 'The server could not understand the request — usually malformed JSON or a missing field.' },
+  { code: 400, name: 'Bad Request', summary: 'The server could not understand the request, usually malformed JSON or a missing field.' },
   { code: 401, name: 'Unauthorized', summary: 'Authentication is missing or invalid. Really means "unauthenticated".' },
   { code: 402, name: 'Payment Required', summary: 'Reserved for payment flows; used by some APIs for billing limits.' },
   { code: 403, name: 'Forbidden', summary: 'The caller is authenticated but not allowed to do this.' },
@@ -997,7 +997,7 @@ const HTTP_STATUSES: StatusEntry[] = [
   { code: 408, name: 'Request Timeout', summary: 'The client took too long to send the request.' },
   { code: 409, name: 'Conflict', summary: 'The request clashes with the current state, such as a duplicate or stale version.' },
   { code: 410, name: 'Gone', summary: 'The resource existed but was intentionally removed for good.' },
-  { code: 413, name: 'Payload Too Large', summary: 'The request body exceeds the server limit — common on file uploads.' },
+  { code: 413, name: 'Payload Too Large', summary: 'The request body exceeds the server limit: common on file uploads.' },
   { code: 415, name: 'Unsupported Media Type', summary: 'The Content-Type of the body is not supported by this endpoint.' },
   { code: 418, name: "I'm a teapot", summary: 'An April Fools code from RFC 2324, still returned as a joke by some APIs.' },
   { code: 422, name: 'Unprocessable Content', summary: 'The syntax is fine but the data fails validation rules.' },
@@ -1006,7 +1006,7 @@ const HTTP_STATUSES: StatusEntry[] = [
   { code: 500, name: 'Internal Server Error', summary: 'An unhandled error on the server. The catch-all failure code.' },
   { code: 501, name: 'Not Implemented', summary: 'The server does not support the functionality required.' },
   { code: 502, name: 'Bad Gateway', summary: 'A proxy got an invalid response from the upstream server.' },
-  { code: 503, name: 'Service Unavailable', summary: 'The server is overloaded or down for maintenance — usually temporary.' },
+  { code: 503, name: 'Service Unavailable', summary: 'The server is overloaded or down for maintenance, usually temporary.' },
   { code: 504, name: 'Gateway Timeout', summary: 'A proxy waited too long for the upstream server to answer.' },
   { code: 507, name: 'Insufficient Storage', summary: 'The server ran out of room to store the representation.' },
 ];

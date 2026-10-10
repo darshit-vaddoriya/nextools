@@ -10,11 +10,11 @@ import { ToolSeoMap } from './types';
 export const CONVERTER_SEO_CONTENT: ToolSeoMap = {
   'file-converter': {
     intro:
-      'This is the open-ended converter: drop a file and it works out what that file can become. Images move between JPG, PNG, WebP, GIF, BMP, TIFF, ICO and PDF; audio and the soundtrack of a video become MP3 or WAV; a short video clip becomes an animated GIF; Excel, CSV, TSV and JSON convert into each other; and tables in a text-based PDF come out as a spreadsheet. Unlike upload-based converters, the work happens inside this browser tab — the file is read from your disk, converted in memory and saved back, so it never touches a server and there is no queue, size tier or daily limit.',
+      'This is the open-ended converter: drop a file and it works out what that file can become. Images move between JPG, PNG, WebP, GIF, BMP, TIFF, ICO and PDF; audio and the soundtrack of a video become MP3 or WAV; a short video clip becomes an animated GIF; Excel, CSV, TSV and JSON convert into each other; and tables in a text-based PDF come out as a spreadsheet. Unlike upload-based converters, the work happens inside this browser tab: the file is read from your disk, converted in memory and saved back, so it never touches a server and there is no queue, size tier or daily limit.',
     steps: [
       { title: 'Drop one or more files', description: 'Add any supported file. Several files at once are fine, and they can even be different formats.' },
       { title: 'Pick the output format', description: 'Only formats that every selected file can be converted into are offered, so you never choose a target that will fail.' },
-      { title: 'Adjust the settings', description: 'Quality for photos, bitrate for MP3, frame rate for GIFs, separator for CSV — the panel shows only what applies to your conversion.' },
+      { title: 'Adjust the settings', description: 'Quality for photos, bitrate for MP3, frame rate for GIFs, separator for CSV: the panel shows only what applies to your conversion.' },
       { title: 'Convert and download', description: 'One file downloads directly. Several are bundled into a single ZIP so nothing overwrites anything else.' },
     ],
     faqs: [
@@ -31,7 +31,7 @@ export const CONVERTER_SEO_CONTENT: ToolSeoMap = {
       'Converting files that are too sensitive for an upload-based service, such as payslips, ID photos or client data',
     ],
     tips: [
-      'Drop files of one family at a time (all images, or all audio) — mixing families leaves no common output format',
+      'Drop files of one family at a time (all images, or all audio): mixing families leaves no common output format',
       'When a conversion needs a tool this page does not cover, the warning under the file list links straight to it',
       'Batch output is a ZIP stored without recompression, so extracting it is instant',
     ],
@@ -48,7 +48,7 @@ export const CONVERTER_SEO_CONTENT: ToolSeoMap = {
     ],
     faqs: [
       { question: 'Why did my transparent PNG get a white background?', answer: 'JPG does not support transparency at all, so every pixel has to be a solid colour. The background setting controls which colour replaces the transparent areas. If you need to keep transparency, convert to WebP instead, or keep the PNG.' },
-      { question: 'Will converting PNG to JPG reduce quality?', answer: 'JPG is lossy, so some information is discarded. At quality 85–95 the loss is invisible in photographs. It is noticeable on sharp-edged graphics such as text, logos and UI screenshots, which show faint halos — those are better left as PNG.' },
+      { question: 'Will converting PNG to JPG reduce quality?', answer: 'JPG is lossy, so some information is discarded. At quality 85–95 the loss is invisible in photographs. It is noticeable on sharp-edged graphics such as text, logos and UI screenshots, which show faint halos: those are better left as PNG.' },
       { question: 'How much smaller will the JPG be?', answer: 'For photographs, typically 70–90% smaller. For flat graphics with few colours the saving is much less, and occasionally the JPG ends up larger than a well-optimised PNG.' },
       { question: 'Can I resize at the same time?', answer: 'Yes. Enter a width in pixels and the height follows the aspect ratio. Shrinking a 4000 px photo to 1600 px before converting saves far more space than lowering the quality.' },
     ],
@@ -59,7 +59,7 @@ export const CONVERTER_SEO_CONTENT: ToolSeoMap = {
       'Flattening a transparent logo onto a white background for a document or slide',
     ],
     tips: [
-      'Keep screenshots containing text as PNG — JPG blurs the edges of letters',
+      'Keep screenshots containing text as PNG: JPG blurs the edges of letters',
       'Resize first, then compress: pixel count affects file size far more than the quality slider',
       'Batch-converting applies one quality setting to every file, so group photos and graphics separately',
     ],
@@ -67,7 +67,7 @@ export const CONVERTER_SEO_CONTENT: ToolSeoMap = {
 
   'jpg-to-png': {
     intro:
-      'Converting a JPG to PNG does not restore detail the JPG already threw away, and it will make the file larger — so the reasons to do it are specific. PNG is lossless, which means repeated editing and saving no longer adds new compression artefacts each time. Many design tools, icon pipelines and older upload forms also insist on PNG. This converter decodes the JPG once and writes an exact, lossless PNG of what is there.',
+      'Converting a JPG to PNG does not restore detail the JPG already threw away, and it will make the file larger, so the reasons to do it are specific. PNG is lossless, which means repeated editing and saving no longer adds new compression artefacts each time. Many design tools, icon pipelines and older upload forms also insist on PNG. This converter decodes the JPG once and writes an exact, lossless PNG of what is there.',
     steps: [
       { title: 'Add JPG files', description: 'Drop one or many JPG or JPEG files. WebP, BMP and TIFF are accepted too.' },
       { title: 'Optionally resize', description: 'Set a width in pixels if the PNG is for a specific slot, such as an avatar or thumbnail.' },
@@ -88,7 +88,7 @@ export const CONVERTER_SEO_CONTENT: ToolSeoMap = {
       'Meeting an upload field that rejects JPG files',
     ],
     tips: [
-      'If the goal is a smaller file, this is the wrong direction — use JPG to WebP instead',
+      'If the goal is a smaller file, this is the wrong direction: use JPG to WebP instead',
       'Convert once from the original JPG; converting an already-recompressed copy keeps its extra artefacts',
       'For icons, resize to the exact target size during conversion so the PNG is not scaled again later',
     ],
@@ -118,22 +118,22 @@ export const CONVERTER_SEO_CONTENT: ToolSeoMap = {
     ],
     tips: [
       'If the WebP has a transparent background you want to keep, use WebP to PNG instead',
-      'Check whether the site offers a "download original" option first — it avoids a second lossy encode entirely',
+      'Check whether the site offers a "download original" option first: it avoids a second lossy encode entirely',
       'Quality 90–95 is the sensible range here; going lower mainly compounds artefacts',
     ],
   },
 
   'webp-to-png': {
     intro:
-      'WebP images often carry a transparent background — cut-out product shots, stickers, logos — and PNG is the widely supported format that can keep that transparency intact. Converting to PNG gives you a lossless copy that opens in every image editor, presentation tool and design app, with the see-through areas still see-through. It is the right choice whenever you plan to edit the image further or place it over another background.',
+      'WebP images often carry a transparent background (cut-out product shots, stickers, logos) and PNG is the widely supported format that can keep that transparency intact. Converting to PNG gives you a lossless copy that opens in every image editor, presentation tool and design app, with the see-through areas still see-through. It is the right choice whenever you plan to edit the image further or place it over another background.',
     steps: [
       { title: 'Add WebP files', description: 'Drop one or more .webp images. AVIF, JPG and GIF also work.' },
       { title: 'Optionally set a width', description: 'Resize while converting if the image is destined for a fixed-size slot.' },
-      { title: 'Convert', description: 'PNG is lossless, so there is nothing to tune — transparency is kept automatically.' },
+      { title: 'Convert', description: 'PNG is lossless, so there is nothing to tune: transparency is kept automatically.' },
       { title: 'Download', description: 'Get the PNG, or a ZIP for a batch.' },
     ],
     faqs: [
-      { question: 'Is the transparent background preserved?', answer: 'Yes. PNG supports a full alpha channel, so partially transparent edges — soft shadows, anti-aliased outlines — are kept exactly as they were in the WebP.' },
+      { question: 'Is the transparent background preserved?', answer: 'Yes. PNG supports a full alpha channel, so partially transparent edges (soft shadows, anti-aliased outlines) are kept exactly as they were in the WebP.' },
       { question: 'Why is the PNG several times larger?', answer: 'The WebP was lossy-compressed; the PNG stores every decoded pixel losslessly. For photographic content that is typically three to six times the size. For flat graphics the difference is smaller.' },
       { question: 'Should I pick PNG or JPG for a WebP I saved?', answer: 'PNG if it has transparency or you will keep editing it. JPG if it is a photo you just need to open or share, since the file will be far smaller.' },
       { question: 'Does it handle animated WebP?', answer: 'Only the first frame is converted, because a standard PNG holds a single image.' },
@@ -157,16 +157,16 @@ export const CONVERTER_SEO_CONTENT: ToolSeoMap = {
       'WebP produces files roughly a quarter to a third smaller than JPG at the same visual quality, which is why page-speed audits keep recommending it. Converting a site\'s JPG photos to WebP is one of the cheapest performance gains there is: pages load faster, mobile visitors use less data, and Core Web Vitals improve without changing a single pixel of layout. Every current browser displays WebP.',
     steps: [
       { title: 'Add JPG photos', description: 'Drop the images you serve on your site. PNG, BMP and TIFF are accepted too.' },
-      { title: 'Set the quality', description: 'Around 80 is the usual web setting — visibly identical to the JPG and much smaller.' },
+      { title: 'Set the quality', description: 'Around 80 is the usual web setting: visibly identical to the JPG and much smaller.' },
       { title: 'Resize for the layout', description: 'Enter the widest size the image is actually displayed at. Serving a 4000 px photo in a 1200 px slot wastes more than any format change saves.' },
       { title: 'Convert and download', description: 'Batch results come as a ZIP, ready to upload to your CMS or asset folder.' },
     ],
     faqs: [
       { question: 'How much smaller is WebP than JPG?', answer: 'Typically 25–35% at matched visual quality. Heavily detailed photos save a little less, smooth images such as skies and portraits a little more.' },
-      { question: 'Do all browsers support WebP?', answer: 'Yes — Chrome, Edge, Firefox and Safari 14 and later all display it. The remaining concern is older desktop software and some email clients, which is why WebP is best for websites rather than attachments.' },
-      { question: 'Why does the converter say my browser cannot encode WebP?', answer: 'Displaying WebP and creating it are separate features. Safari shows WebP but its canvas cannot write it, so the conversion needs Chrome, Edge or Firefox — on any operating system, including macOS.' },
+      { question: 'Do all browsers support WebP?', answer: 'Yes: Chrome, Edge, Firefox and Safari 14 and later all display it. The remaining concern is older desktop software and some email clients, which is why WebP is best for websites rather than attachments.' },
+      { question: 'Why does the converter say my browser cannot encode WebP?', answer: 'Displaying WebP and creating it are separate features. Safari shows WebP but its canvas cannot write it, so the conversion needs Chrome, Edge or Firefox: on any operating system, including macOS.' },
       { question: 'Is quality 100 lossless?', answer: 'No. The browser WebP encoder is lossy at every quality level; 100 is simply the least compression. For a lossless master keep PNG.' },
-      { question: 'Will EXIF data such as location be kept?', answer: 'No. Converting through the canvas writes pixels only, so camera details and GPS coordinates are stripped — usually desirable for images you publish.' },
+      { question: 'Will EXIF data such as location be kept?', answer: 'No. Converting through the canvas writes pixels only, so camera details and GPS coordinates are stripped, usually desirable for images you publish.' },
     ],
     useCases: [
       'Cutting the page weight of a blog, portfolio or shop by converting its photos',
@@ -175,7 +175,7 @@ export const CONVERTER_SEO_CONTENT: ToolSeoMap = {
       'Preparing lighter hero images for a landing page',
     ],
     tips: [
-      'Keep the original JPGs — WebP is for delivery, not archiving',
+      'Keep the original JPGs: WebP is for delivery, not archiving',
       'Use a <picture> element with a JPG fallback if you still support very old browsers',
       'Resizing to the displayed width usually saves more than the format switch itself',
     ],
@@ -183,7 +183,7 @@ export const CONVERTER_SEO_CONTENT: ToolSeoMap = {
 
   'png-to-webp': {
     intro:
-      'PNG screenshots, illustrations and UI graphics are frequently the heaviest assets on a web page, and WebP can shrink them dramatically while keeping transparency — something JPG cannot do. A transparent PNG logo or a product cut-out converts to a WebP that is still see-through but often a fraction of the size. That makes WebP the natural web replacement for PNG in a way JPG never was.',
+      'PNG screenshots, illustrations and UI graphics are frequently the heaviest assets on a web page, and WebP can shrink them dramatically while keeping transparency: something JPG cannot do. A transparent PNG logo or a product cut-out converts to a WebP that is still see-through but often a fraction of the size. That makes WebP the natural web replacement for PNG in a way JPG never was.',
     steps: [
       { title: 'Add PNG images', description: 'Drop screenshots, graphics or transparent cut-outs. JPG, GIF and BMP work too.' },
       { title: 'Pick a quality', description: 'For graphics with text and sharp edges, stay at 90 or higher to keep them crisp.' },
@@ -204,7 +204,7 @@ export const CONVERTER_SEO_CONTENT: ToolSeoMap = {
       'Optimising app store or marketing graphics before hosting them on the web',
     ],
     tips: [
-      'Compare the output size — for tiny icons, an optimised PNG or SVG can beat WebP',
+      'Compare the output size: for tiny icons, an optimised PNG or SVG can beat WebP',
       'Keep PNG originals for editing; treat the WebP as the published copy',
       'Use 90+ quality for anything containing text',
     ],
@@ -212,7 +212,7 @@ export const CONVERTER_SEO_CONTENT: ToolSeoMap = {
 
   'heic-to-jpg': {
     intro:
-      'iPhones save photos as HEIC by default because it takes about half the space of JPG. The catch appears the moment the photo leaves Apple\'s ecosystem: Windows often needs an extra codec, many websites and government portals reject .heic uploads, and Android apps may not open it at all. This converter decodes HEIC in your browser and writes a JPG (or PNG) that works everywhere — and because it runs locally, personal photos never go to a conversion server.',
+      'iPhones save photos as HEIC by default because it takes about half the space of JPG. The catch appears the moment the photo leaves Apple\'s ecosystem: Windows often needs an extra codec, many websites and government portals reject .heic uploads, and Android apps may not open it at all. This converter decodes HEIC in your browser and writes a JPG (or PNG) that works everywhere, and because it runs locally, personal photos never go to a conversion server.',
     steps: [
       { title: 'Add HEIC photos', description: 'Drop .heic or .heif files from your iPhone, AirDrop or iCloud download. Batches are fine.' },
       { title: 'Pick JPG or PNG', description: 'JPG for sharing and uploads; PNG if you want a lossless copy for editing.' },
@@ -224,7 +224,7 @@ export const CONVERTER_SEO_CONTENT: ToolSeoMap = {
       { question: 'Is it safe to convert personal photos here?', answer: 'The photo is decoded inside your browser using a WebAssembly build of libheif. It is never uploaded, which is the main reason to use a local converter for private pictures.' },
       { question: 'Why is the first conversion slower?', answer: 'Browsers other than Safari cannot read HEIC natively, so a decoder of about 3 MB is downloaded the first time. After that it is cached and conversions are fast.' },
       { question: 'Are Live Photos converted?', answer: 'The still image is converted. The short video part of a Live Photo is stored separately and is not included.' },
-      { question: 'Is the location data kept?', answer: 'No. The JPG contains pixels only, so GPS coordinates and camera metadata are removed — worth knowing before posting photos publicly.' },
+      { question: 'Is the location data kept?', answer: 'No. The JPG contains pixels only, so GPS coordinates and camera metadata are removed: worth knowing before posting photos publicly.' },
       { question: 'How do I stop my iPhone creating HEIC?', answer: 'Settings → Camera → Formats → Most Compatible makes the camera save JPG. You can also set Settings → Photos → Transfer to Mac or PC to Automatic, which converts on transfer.' },
     ],
     useCases: [
@@ -235,7 +235,7 @@ export const CONVERTER_SEO_CONTENT: ToolSeoMap = {
     ],
     tips: [
       'Choose JPG for anything you upload or share; PNG files from photos are very large',
-      'Convert a whole AirDrop batch at once — the results arrive in a single ZIP',
+      'Convert a whole AirDrop batch at once: the results arrive in a single ZIP',
       'If a photo fails, try re-exporting it from the Photos app; some edited or burst images use HEIC features the decoder does not support',
     ],
   },
@@ -264,7 +264,7 @@ export const CONVERTER_SEO_CONTENT: ToolSeoMap = {
     ],
     tips: [
       'Pick PNG if the AVIF has a transparent background you want to keep',
-      'For publishing on your own site, keep AVIF or use WebP — converting to JPG is for compatibility, not size',
+      'For publishing on your own site, keep AVIF or use WebP: converting to JPG is for compatibility, not size',
       'Batch-convert whole downloads to avoid opening each file separately',
     ],
   },
@@ -300,7 +300,7 @@ export const CONVERTER_SEO_CONTENT: ToolSeoMap = {
 
   'audio-converter': {
     intro:
-      'Audio arrives in a dozen formats — WAV from recorders, FLAC from music libraries, M4A from phones, OGG and Opus from web apps and messengers — while most destinations want MP3, and audio editors often want WAV. This converter reads all of them, including the soundtrack inside MP4, MOV and WebM video, and writes MP3 at the bitrate you choose or uncompressed 16-bit WAV. Decoding uses your browser\'s own audio engine; MP3 encoding uses LAME compiled to JavaScript.',
+      'Audio arrives in a dozen formats (WAV from recorders, FLAC from music libraries, M4A from phones, OGG and Opus from web apps and messengers) while most destinations want MP3, and audio editors often want WAV. This converter reads all of them, including the soundtrack inside MP4, MOV and WebM video, and writes MP3 at the bitrate you choose or uncompressed 16-bit WAV. Decoding uses your browser\'s own audio engine; MP3 encoding uses LAME compiled to JavaScript.',
     steps: [
       { title: 'Add audio or video files', description: 'Drop MP3, WAV, FLAC, M4A, AAC, OGG, Opus, or a video file for its soundtrack.' },
       { title: 'Choose MP3 or WAV', description: 'MP3 for sharing and playback; WAV for editing, burning or software that needs raw audio.' },
@@ -312,7 +312,7 @@ export const CONVERTER_SEO_CONTENT: ToolSeoMap = {
       { question: 'Does converting FLAC to MP3 lose quality?', answer: 'Yes, MP3 is lossy. At 256–320 kbps the difference is inaudible to almost everyone; 192 kbps is transparent for most music on most equipment.' },
       { question: 'Which bitrate should I choose?', answer: '320 kbps for music you care about, 192 kbps as a general default, 128 kbps for podcasts and speech, and 96 kbps mono for voice notes where size matters most.' },
       { question: 'Why did my OGG file fail in Safari?', answer: 'Safari cannot decode OGG Vorbis or Opus in some versions. Chrome, Edge and Firefox handle both.' },
-      { question: 'How long can the recording be?', answer: 'Audio is decoded into memory first — roughly 10 MB per minute of stereo audio — so hour-long recordings are fine on a laptop but may be too much for an older phone.' },
+      { question: 'How long can the recording be?', answer: 'Audio is decoded into memory first, roughly 10 MB per minute of stereo audio, so hour-long recordings are fine on a laptop but may be too much for an older phone.' },
     ],
     useCases: [
       'Converting a FLAC music library to MP3 for a car stereo or older player',
@@ -321,7 +321,7 @@ export const CONVERTER_SEO_CONTENT: ToolSeoMap = {
       'Producing WAV files for an audio editor or CD burning software',
     ],
     tips: [
-      'Choose mono for speech — it halves the file size with no loss of clarity',
+      'Choose mono for speech: it halves the file size with no loss of clarity',
       'Converting an MP3 to a higher-bitrate MP3 does not improve it; keep the original bitrate or lower',
       'Use 48 kHz when the audio is going back into a video project',
     ],
@@ -329,7 +329,7 @@ export const CONVERTER_SEO_CONTENT: ToolSeoMap = {
 
   'mp4-to-mp3': {
     intro:
-      'Sometimes the only thing you need from a video is its sound: a lecture to listen to on a commute, a recorded interview to transcribe, a song from your own performance video, or the audio of a meeting recording. This tool pulls the audio track out of MP4, MOV, WebM or MKV and saves it as MP3, discarding the video — which usually makes the file ten to fifty times smaller. The video is demuxed and decoded by your browser, so even large recordings stay on your device.',
+      'Sometimes the only thing you need from a video is its sound: a lecture to listen to on a commute, a recorded interview to transcribe, a song from your own performance video, or the audio of a meeting recording. This tool pulls the audio track out of MP4, MOV, WebM or MKV and saves it as MP3, discarding the video, which usually makes the file ten to fifty times smaller. The video is demuxed and decoded by your browser, so even large recordings stay on your device.',
     steps: [
       { title: 'Add a video file', description: 'Drop an MP4, MOV, WebM or MKV. Screen recordings and phone videos work.' },
       { title: 'Pick a bitrate', description: '192 kbps for music, 128 kbps or mono for talks and meetings.' },
@@ -351,14 +351,14 @@ export const CONVERTER_SEO_CONTENT: ToolSeoMap = {
     ],
     tips: [
       'Mono at 96–128 kbps is plenty for speech and makes files tiny',
-      'Screen recordings with no microphone produce an error — there is no audio track to extract',
+      'Screen recordings with no microphone produce an error: there is no audio track to extract',
       'For a WAV instead of MP3, use the Audio Converter with the same file',
     ],
   },
 
   'wav-to-mp3': {
     intro:
-      'WAV stores audio uncompressed — about 10 MB for every minute of CD-quality stereo — which is ideal while recording and editing but unwieldy for sharing. MP3 reduces that to roughly 1.4 MB per minute at 192 kbps with no difference most people can hear. This converter takes WAV (and FLAC, OGG or Opus) and encodes it with LAME, the same encoder used by most audio software, at the bitrate you pick.',
+      'WAV stores audio uncompressed, about 10 MB for every minute of CD-quality stereo, which is ideal while recording and editing but unwieldy for sharing. MP3 reduces that to roughly 1.4 MB per minute at 192 kbps with no difference most people can hear. This converter takes WAV (and FLAC, OGG or Opus) and encodes it with LAME, the same encoder used by most audio software, at the bitrate you pick.',
     steps: [
       { title: 'Add WAV files', description: 'Drop WAV recordings; FLAC, OGG and Opus files are accepted too.' },
       { title: 'Choose a bitrate', description: '320 kbps for masters of music, 192 kbps general purpose, 128 kbps for speech.' },
@@ -379,7 +379,7 @@ export const CONVERTER_SEO_CONTENT: ToolSeoMap = {
       'Freeing space on a phone or recorder full of WAV files',
     ],
     tips: [
-      'Always keep the WAV if it is a master — MP3 cannot be converted back to the original quality',
+      'Always keep the WAV if it is a master: MP3 cannot be converted back to the original quality',
       'For podcasts, mono 128 kbps at 44.1 kHz is the widely used standard',
       'Normalise or edit before converting, so you only encode once',
     ],
@@ -387,7 +387,7 @@ export const CONVERTER_SEO_CONTENT: ToolSeoMap = {
 
   'mp3-to-wav': {
     intro:
-      'Converting MP3 to WAV does not make it sound better — the detail MP3 discarded is gone — but it does make the audio usable by software and hardware that expect uncompressed PCM. Audio editors cut and process WAV without re-decoding, CD burning tools require it, many samplers, DJ systems and speech-recognition pipelines take only WAV, and some video editors handle it more reliably than MP3. This tool decodes MP3 (or M4A, AAC, OGG, Opus, FLAC) into standard 16-bit WAV.',
+      'Converting MP3 to WAV does not make it sound better, the detail MP3 discarded is gone, but it does make the audio usable by software and hardware that expect uncompressed PCM. Audio editors cut and process WAV without re-decoding, CD burning tools require it, many samplers, DJ systems and speech-recognition pipelines take only WAV, and some video editors handle it more reliably than MP3. This tool decodes MP3 (or M4A, AAC, OGG, Opus, FLAC) into standard 16-bit WAV.',
     steps: [
       { title: 'Add MP3 files', description: 'Drop MP3s or other compressed audio such as M4A, OGG or FLAC.' },
       { title: 'Pick a sample rate', description: '44.1 kHz for CDs and music software, 48 kHz for video, 16 kHz for speech-recognition models.' },
@@ -397,7 +397,7 @@ export const CONVERTER_SEO_CONTENT: ToolSeoMap = {
     faqs: [
       { question: 'Does converting MP3 to WAV improve quality?', answer: 'No. The WAV is an exact, uncompressed copy of what the MP3 decodes to, including anything MP3 removed. It stops further loss when editing, but cannot restore what was lost.' },
       { question: 'Why is the WAV so large?', answer: 'Uncompressed 16-bit stereo at 44.1 kHz takes about 10 MB per minute. A 5 MB MP3 typically becomes a 45–55 MB WAV.' },
-      { question: 'What WAV format is produced?', answer: 'Standard PCM WAV, 16-bit little-endian, at the sample rate and channel count you choose — the most widely compatible WAV variant.' },
+      { question: 'What WAV format is produced?', answer: 'Standard PCM WAV, 16-bit little-endian, at the sample rate and channel count you choose: the most widely compatible WAV variant.' },
       { question: 'Why is there a tiny silence at the start?', answer: 'MP3 encoders add a few milliseconds of padding, and decoders reproduce it. It is typically under 50 ms and is normal.' },
       { question: 'Which sample rate for speech-to-text?', answer: 'Most speech models, including Whisper, work at 16 kHz mono. Converting to that directly avoids resampling later and produces a much smaller file.' },
     ],
@@ -408,7 +408,7 @@ export const CONVERTER_SEO_CONTENT: ToolSeoMap = {
       'Supplying WAV files to a video editor or broadcast system',
     ],
     tips: [
-      'Use 16 kHz mono for transcription tools — it is what they resample to anyway',
+      'Use 16 kHz mono for transcription tools: it is what they resample to anyway',
       'Match the sample rate of your project (usually 48 kHz for video) to avoid another conversion',
       'Keep the MP3 as well; the WAV is a working copy, not a better original',
     ],
@@ -437,14 +437,14 @@ export const CONVERTER_SEO_CONTENT: ToolSeoMap = {
     ],
     tips: [
       'Switch to mono for voice memos to halve the size without losing clarity',
-      'Do not pick a bitrate far above the source — it adds size, not quality',
+      'Do not pick a bitrate far above the source: it adds size, not quality',
       'Convert a week of memos at once and download them in one ZIP',
     ],
   },
 
   'video-to-gif': {
     intro:
-      'A GIF plays automatically, loops, needs no player and works in places video does not — chat apps, GitHub READMEs, documentation, email signatures and old forums. This tool takes a short section of an MP4, WebM or MOV file and turns it into an animated GIF, frame by frame. You choose the start, length, frame rate and width; the video is seeked precisely to each frame in your browser, so the result is exact regardless of how fast your device is.',
+      'A GIF plays automatically, loops, needs no player and works in places video does not: chat apps, GitHub READMEs, documentation, email signatures and old forums. This tool takes a short section of an MP4, WebM or MOV file and turns it into an animated GIF, frame by frame. You choose the start, length, frame rate and width; the video is seeked precisely to each frame in your browser, so the result is exact regardless of how fast your device is.',
     steps: [
       { title: 'Add a video', description: 'Drop an MP4, WebM or MOV clip. Screen recordings are ideal.' },
       { title: 'Choose the section', description: 'Set the start time and the length in seconds. Shorter GIFs are much smaller.' },
@@ -453,10 +453,10 @@ export const CONVERTER_SEO_CONTENT: ToolSeoMap = {
     ],
     faqs: [
       { question: 'Why is my GIF so large?', answer: 'GIF compresses poorly compared with video. Size grows with width squared, frame rate and length, so a 10-second, 800 px, 20 fps GIF can exceed 20 MB. Halving the width alone cuts the size by about three quarters.' },
-      { question: 'Why do colours look banded?', answer: 'GIF is limited to 256 colours per frame. Each frame gets its own optimised palette, but smooth gradients and skin tones can still show banding — it is a limit of the format.' },
+      { question: 'Why do colours look banded?', answer: 'GIF is limited to 256 colours per frame. Each frame gets its own optimised palette, but smooth gradients and skin tones can still show banding: it is a limit of the format.' },
       { question: 'Is the sound kept?', answer: 'No. GIF has no audio. For sound, keep the video or extract the audio with MP4 to MP3.' },
       { question: 'Why did my iPhone video fail?', answer: 'Recent iPhones record HEVC (H.265), which browsers other than Safari often cannot decode. Open the page in Safari, or set the iPhone camera to Most Compatible to record H.264.' },
-      { question: 'Is there a limit on length?', answer: 'The GIF stops at 400 frames — 40 seconds at 10 fps — because anything longer becomes too large to be useful.' },
+      { question: 'Is there a limit on length?', answer: 'The GIF stops at 400 frames, 40 seconds at 10 fps, because anything longer becomes too large to be useful.' },
     ],
     useCases: [
       'Adding a short demo of a feature to a GitHub README or pull request',
@@ -467,7 +467,7 @@ export const CONVERTER_SEO_CONTENT: ToolSeoMap = {
     tips: [
       'Keep GIFs under about 5 seconds and 480 px for chat apps',
       'Screen recordings with flat colours make far smaller, cleaner GIFs than camera footage',
-      'Use 5 fps for slideshows or slow UI changes — it looks fine and cuts size in half',
+      'Use 5 fps for slideshows or slow UI changes: it looks fine and cuts size in half',
     ],
   },
 
@@ -483,7 +483,7 @@ export const CONVERTER_SEO_CONTENT: ToolSeoMap = {
     faqs: [
       { question: 'What happens to formulas?', answer: 'CSV stores values, not formulas, so each formula cell is exported as the result Excel last calculated and saved in the file.' },
       { question: 'Why did my dates look like 45123 before?', answer: 'Excel stores dates as the number of days since 1900. This converter reads the cell\'s number format and writes recognised dates as YYYY-MM-DD, which every system parses unambiguously.' },
-      { question: 'Is formatting kept?', answer: 'No — CSV is plain text. Colours, fonts, merged cells, charts and column widths are not part of the format and are dropped.' },
+      { question: 'Is formatting kept?', answer: 'No: CSV is plain text. Colours, fonts, merged cells, charts and column widths are not part of the format and are dropped.' },
       { question: 'Can it convert .xls files?', answer: 'Not the old binary .xls format from Excel 97–2003. Open it in Excel, LibreOffice or Google Sheets, save as .xlsx, then convert.' },
       { question: 'Why use semicolons?', answer: 'In countries that write decimals as 3,5 Excel expects CSV fields separated by semicolons. Choosing semicolon makes the file open in the right columns there.' },
     ],
@@ -494,7 +494,7 @@ export const CONVERTER_SEO_CONTENT: ToolSeoMap = {
       'Converting confidential spreadsheets without uploading them to a service',
     ],
     tips: [
-      'Check hidden sheets — "All sheets" exports them too',
+      'Check hidden sheets: "All sheets" exports them too',
       'If a column of IDs lost its leading zeros, it was stored as a number in Excel; format it as text there',
       'Use TSV when your data contains lots of commas, such as addresses',
     ],
@@ -502,7 +502,7 @@ export const CONVERTER_SEO_CONTENT: ToolSeoMap = {
 
   'csv-to-excel': {
     intro:
-      'Double-clicking a CSV opens it in Excel, but Excel then guesses at every column — it strips leading zeros from ZIP codes and phone numbers, turns long IDs into scientific notation and reinterprets dates by regional settings. Converting to a proper .xlsx first avoids that guesswork. This converter detects the separator automatically, stores genuine numbers as numbers, keeps codes such as "007" and 16-digit IDs as text, bolds and freezes the header row, and sizes the columns to fit.',
+      'Double-clicking a CSV opens it in Excel, but Excel then guesses at every column: it strips leading zeros from ZIP codes and phone numbers, turns long IDs into scientific notation and reinterprets dates by regional settings. Converting to a proper .xlsx first avoids that guesswork. This converter detects the separator automatically, stores genuine numbers as numbers, keeps codes such as "007" and 16-digit IDs as text, bolds and freezes the header row, and sizes the columns to fit.',
     steps: [
       { title: 'Add CSV or TSV files', description: 'Drop exports from a database, bank, shop or form. Comma, semicolon, tab and pipe separators are detected.' },
       { title: 'Convert', description: 'Each file becomes a workbook with one sheet named after the file.' },
@@ -511,7 +511,7 @@ export const CONVERTER_SEO_CONTENT: ToolSeoMap = {
     ],
     faqs: [
       { question: 'Will leading zeros be kept?', answer: 'Yes. A value is stored as a number only if doing so loses nothing, so "007", "0123" and long card or account numbers stay as text exactly as written.' },
-      { question: 'Why not just open the CSV in Excel?', answer: 'Excel applies automatic type conversion on open, which silently changes some values — the well-known problem that caused scientists to rename genes Excel kept turning into dates. A converted .xlsx stores exactly what the CSV contained.' },
+      { question: 'Why not just open the CSV in Excel?', answer: 'Excel applies automatic type conversion on open, which silently changes some values: the well-known problem that caused scientists to rename genes Excel kept turning into dates. A converted .xlsx stores exactly what the CSV contained.' },
       { question: 'Are dates converted to Excel dates?', answer: 'Dates are kept as the text in the CSV, so nothing is reinterpreted by locale. Excel can convert a text column to dates with Data → Text to Columns if you need date arithmetic.' },
       { question: 'What encoding should my CSV be in?', answer: 'UTF-8, with or without a byte-order mark. Accented and non-Latin characters come through correctly.' },
       { question: 'Can I merge several CSVs into one workbook?', answer: 'Each CSV becomes its own workbook here. To combine rows first, use the Merge CSV tool, then convert the result.' },
@@ -523,7 +523,7 @@ export const CONVERTER_SEO_CONTENT: ToolSeoMap = {
       'Preparing a CSV for sharing on a system that only previews .xlsx',
     ],
     tips: [
-      'If numbers use commas as decimals (3,5), they stay as text — convert them in Excel with Find & Replace',
+      'If numbers use commas as decimals (3,5), they stay as text: convert them in Excel with Find & Replace',
       'Clean the CSV first with CSV Cleaner if it has stray whitespace or blank rows',
       'Very wide exports are fine; column widths are set automatically up to a sensible maximum',
     ],
@@ -540,7 +540,7 @@ export const CONVERTER_SEO_CONTENT: ToolSeoMap = {
     ],
     faqs: [
       { question: 'How are column names used?', answer: 'The first non-empty row becomes the keys. Blank header cells are named column1, column2 and so on so no data is dropped.' },
-      { question: 'Are numbers kept as numbers?', answer: 'Yes. Numeric cells become JSON numbers, text stays as strings — including numbers Excel stored as text, such as ZIP codes with leading zeros.' },
+      { question: 'Are numbers kept as numbers?', answer: 'Yes. Numeric cells become JSON numbers, text stays as strings, including numbers Excel stored as text, such as ZIP codes with leading zeros.' },
       { question: 'What about dates?', answer: 'Cells formatted as dates become ISO strings such as "2024-03-15", or "2024-03-15 09:30:00" with a time, which JavaScript and every JSON consumer can parse.' },
       { question: 'Are empty rows included?', answer: 'Completely empty rows are skipped. Empty cells inside a row become null.' },
       { question: 'Can I get nested JSON?', answer: 'Rows map to flat objects. If your headers use dots (address.city), you can nest them afterwards in code, or keep the flat form most APIs accept.' },
@@ -553,14 +553,14 @@ export const CONVERTER_SEO_CONTENT: ToolSeoMap = {
     ],
     tips: [
       'Keep header names short and without spaces if they will become code property names',
-      'Use "All sheets" for lookup tables spread across tabs — each tab becomes one key',
+      'Use "All sheets" for lookup tables spread across tabs: each tab becomes one key',
       'Validate the output with the JSON Formatter before using it in production',
     ],
   },
 
   'json-to-excel': {
     intro:
-      'API responses, logs and exports often arrive as JSON, which is unreadable for anyone who is not a developer. This converter flattens JSON into an Excel sheet: every object becomes a row, every key a column, nested objects become dotted columns such as address.city, and arrays of simple values are joined into one cell. If the JSON holds several lists — say users and orders — each becomes its own worksheet in the same workbook.',
+      'API responses, logs and exports often arrive as JSON, which is unreadable for anyone who is not a developer. This converter flattens JSON into an Excel sheet: every object becomes a row, every key a column, nested objects become dotted columns such as address.city, and arrays of simple values are joined into one cell. If the JSON holds several lists, say users and orders, each becomes its own worksheet in the same workbook.',
     steps: [
       { title: 'Add a JSON file', description: 'Drop an array of objects, an object containing arrays, or a single record.' },
       { title: 'Convert', description: 'Keys from every record are collected, so columns missing from some rows are still included.' },
@@ -589,9 +589,9 @@ export const CONVERTER_SEO_CONTENT: ToolSeoMap = {
 
   'pdf-to-excel': {
     intro:
-      'Tables in PDFs — bank statements, invoices, price lists, reports — are notoriously hard to reuse, because a PDF stores positioned pieces of text rather than rows and columns. This tool reads the position of every piece of text and rebuilds the grid: runs that share a baseline become a row, and x-positions that recur down the page become columns. The result is an Excel sheet (or CSV) you can sort, filter and calculate with, produced without uploading the document anywhere.',
+      'Tables in PDFs (bank statements, invoices, price lists, reports) are notoriously hard to reuse, because a PDF stores positioned pieces of text rather than rows and columns. This tool reads the position of every piece of text and rebuilds the grid: runs that share a baseline become a row, and x-positions that recur down the page become columns. The result is an Excel sheet (or CSV) you can sort, filter and calculate with, produced without uploading the document anywhere.',
     steps: [
-      { title: 'Add a PDF', description: 'Drop a PDF that has selectable text — exported from software rather than scanned.' },
+      { title: 'Add a PDF', description: 'Drop a PDF that has selectable text: exported from software rather than scanned.' },
       { title: 'Choose a layout', description: 'One sheet per page keeps page boundaries; one combined sheet stacks all rows for multi-page tables.' },
       { title: 'Pick XLSX or CSV', description: 'XLSX for Excel users, CSV for importing into other systems.' },
       { title: 'Convert and check', description: 'Review the columns; complex layouts may need a little clean-up.' },
@@ -609,7 +609,7 @@ export const CONVERTER_SEO_CONTENT: ToolSeoMap = {
     ],
     tips: [
       'Use "One sheet" for statements that continue across pages, then delete repeated headers',
-      'If columns merge, the PDF likely uses very tight spacing — CSV output makes quick fixes easy',
+      'If columns merge, the PDF likely uses very tight spacing: CSV output makes quick fixes easy',
       'For text rather than tables, PDF to Word or Extract Text gives a better result',
     ],
   },
