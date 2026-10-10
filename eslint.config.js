@@ -15,6 +15,13 @@ export default tseslint.config(
     },
   },
   {
+    // Netlify functions: Node runtime with the built-in fetch.
+    files: ['netlify/functions/**/*.mjs'],
+    languageOptions: {
+      globals: { console: 'readonly', fetch: 'readonly' },
+    },
+  },
+  {
     // Service worker: runs in the worker scope, not the page.
     files: ['public/sw.js'],
     languageOptions: {

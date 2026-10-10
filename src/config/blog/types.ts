@@ -9,6 +9,14 @@ import { Code, FileSpreadsheet, FileText, Image, Shield } from 'lucide-react';
  */
 export type BlogCategory = 'pdf' | 'image' | 'dev' | 'data' | 'security';
 
+/** An outside source a guide's claims can be checked against. */
+export interface FurtherReading {
+  title: string;
+  /** Who publishes it: a standards body, a vendor's documentation, an author. */
+  publisher: string;
+  url: string;
+}
+
 export interface BlogPost {
   /** URL segment: /blog/<slug> */
   slug: string;
@@ -39,6 +47,8 @@ export interface BlogPost {
    * time for articles whose text is never loaded.
    */
   words: number;
+  /** Attached from config/blog/furtherReading.ts; see there. */
+  furtherReading?: FurtherReading[];
 }
 
 /**

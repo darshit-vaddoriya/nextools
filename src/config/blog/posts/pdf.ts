@@ -9,6 +9,7 @@ export const PDF_POSTS: BlogPost[] = [
     category: 'pdf',
     tags: ['pdf', 'compression', 'file-size'],
     published: '2026-09-09',
+    updated: '2026-10-10',
     relatedTools: ['pdf-compress', 'pdf-metadata', 'pdf-to-jpg'],
     takeaways: [
       'Text streams in a PDF are already deflated, which is why a text-only document will barely shrink no matter what you do.',
@@ -81,6 +82,7 @@ export const PDF_POSTS: BlogPost[] = [
     category: 'pdf',
     tags: ['pdf', 'file-size', 'compression'],
     published: '2026-09-09',
+    updated: '2026-10-10',
     relatedTools: ['pdf-compress', 'pdf-page-extractor', 'pdf-to-jpg', 'jpg-to-pdf', 'image-compressor'],
     takeaways: [
       'Find out what is heavy first. If text highlights when you select it, images are not the problem and compression will disappoint.',
@@ -171,7 +173,7 @@ export const PDF_POSTS: BlogPost[] = [
     category: 'pdf',
     tags: ['pdf', 'tables', 'extraction', 'csv'],
     published: '2026-09-16',
-    relatedTools: ['pdf-extract-text', 'pdf-ocr', 'csv-editor', 'csv-cleaner'],
+    relatedTools: ['pdf-to-excel', 'pdf-extract-text', 'pdf-ocr', 'csv-editor', 'csv-cleaner'],
     takeaways: [
       'PDF has no table structure. Extraction infers columns from x-coordinates, which is why merged cells and wrapped text break it.',
       'Copying a table usually yields one column because the text is stored in drawing order, not reading order.',
@@ -179,5 +181,41 @@ export const PDF_POSTS: BlogPost[] = [
       'Always check totals after extracting. A shifted column produces numbers that look plausible and are wrong.',
     ],
     words: 812,
+  },
+
+  {
+    slug: 'turning-a-pdf-or-photos-into-slides',
+    title: 'Turning a PDF or a folder of photos into a PowerPoint deck',
+    description: 'How to present a PDF from PowerPoint or Google Slides, build a photo slideshow in a minute, and why each slide becomes an image rather than editable text.',
+    excerpt: 'Someone sends a PDF and you have to present it in a meeting that runs on PowerPoint. Or you have forty photos and need a slideshow. Both take about a minute.',
+    category: 'pdf',
+    tags: ['pptx', 'powerpoint', 'pdf', 'slides', 'presentations'],
+    published: '2026-10-20',
+    relatedTools: ['pdf-to-pptx', 'images-to-pptx', 'pdf-split', 'image-resize'],
+    takeaways: [
+      'Converting a PDF to slides works best as one image per page, which keeps the layout exact; rebuilding editable text from a PDF goes wrong in ways that are worse than useless.',
+      'The PDF\'s text is not lost: it goes into each slide\'s speaker notes, ready to read or copy.',
+      'For a photo slideshow, pick the slide shape first: 16:9 for screens, 4:3 for older projectors, or the photos\' own shape.',
+      'Both decks open in PowerPoint, Google Slides, Keynote and LibreOffice.',
+    ],
+    words: 623,
+  },
+
+  {
+    slug: 'ebooks-epub-pdf-and-markdown',
+    title: 'E-books without the confusion: EPUB, PDF, Kindle and Markdown',
+    description: 'Why an EPUB reflows and a PDF does not, which format each reader app wants, how to read an EPUB as a PDF, and how to turn your own writing into an e-book.',
+    excerpt: 'An EPUB is a little website in a ZIP file; a PDF is a set of printed pages. Most e-book confusion comes from treating one like the other.',
+    category: 'pdf',
+    tags: ['epub', 'ebooks', 'pdf', 'kindle', 'markdown'],
+    published: '2026-10-29',
+    relatedTools: ['epub-to-pdf', 'markdown-to-epub', 'pdf-compress', 'markdown-preview'],
+    takeaways: [
+      'EPUB reflows to fit any screen and font size; PDF fixes every line in place. Pick EPUB for reading on devices and PDF for printing or annotating pages.',
+      'Kindle accepts EPUB through Amazon\'s Send to Kindle service, so EPUB is now the format to use almost everywhere.',
+      'Converting EPUB to PDF means choosing a page size and typesetting the book once; it works for DRM-free books only.',
+      'Your own writing in Markdown becomes a proper e-book when each chapter starts with a top-level heading.',
+    ],
+    words: 700,
   },
 ];

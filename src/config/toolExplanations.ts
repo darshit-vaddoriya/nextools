@@ -81,7 +81,7 @@ export const TOOL_EXPLANATIONS: Record<string, string> = {
     'Mirrors an image horizontally or vertically, like looking at it in a reflection. Upload your image, choose flip horizontal or flip vertical, and download the mirrored version.',
 
   'image-convert':
-    'Changes images from one file format to another, for example JPG to PNG, WebP or BMP. You can convert several images at once, or convert and download each one on its own. Upload your images, pick the target format, then click Convert on any file to convert just that one, or Convert All to do the whole batch.',
+    'Changes images from one format to another, for example a WebP saved from a website into a JPG, or a set of PNG screenshots into WebP. Upload your images, pick PNG, JPG or WebP, then convert each file on its own or use Convert All.',
 
   'image-compressor':
     'Reduces the file size of images without a visible drop in quality. This helps photos load faster on websites and fit within email limits. Drop your images, adjust the quality slider, and download the smaller versions. You can compare the before and after sizes.',
@@ -99,10 +99,10 @@ export const TOOL_EXPLANATIONS: Record<string, string> = {
     'Removes hidden data from images, such as camera details, GPS location and editing history, to protect your privacy before sharing. Upload your image and it is cleaned automatically. Download the version with the metadata removed.',
 
   'image-watermark':
-    'Adds a text or logo watermark to your images with control over size, opacity and position. It is useful for protecting your photos from being reused without permission. Upload your image, enter your text or logo, adjust the settings, and download the watermarked image.',
+    'Adds a text watermark to your images with control over size, opacity and position: a corner, the centre, or tiled across the whole picture. Upload your image, type the text, adjust the settings, and download the marked copy.',
 
   'qr-generator':
-    'Creates QR codes for URLs, Wi-Fi networks, vCards, plain text and more. Anyone can scan them with a phone camera. Choose the QR type, fill in the details, customize the colors if you like, and download the code as PNG or SVG.',
+    'Creates QR codes for links, plain text, Wi-Fi networks, contact cards and UPI payments, which any phone camera or UPI app can scan. Choose the type, fill in the details, adjust the size, colours and error-correction level, and download the code as a PNG.',
 
   'ocr-image':
     'Extracts written text from an image or scanned document so you can copy, edit or search it. Upload a clear image that contains text and wait while the tool reads it. Then copy or download the extracted text.',
@@ -111,7 +111,7 @@ export const TOOL_EXPLANATIONS: Record<string, string> = {
     'Divides one PDF into several smaller files. You can split it into individual pages, or group pages together using ranges such as 1-2,4. Select your PDF, choose either Every page or Custom ranges, type the ranges you want as separate files, and click Split. Each group downloads as its own PDF.',
 
   'pdf-compress':
-    'Shrinks the file size of a PDF so it is easier to email or store. It rebuilds the document structure and can strip hidden metadata, usually with no visible change to the content. Select your PDF, tick Strip metadata if you want a smaller, cleaner file, and click Compress. The new size is compared to the original.',
+    'Shrinks a PDF in one of two ways. Keep text selectable rebuilds the file structure and removes metadata; Compress images re-saves every page as a smaller image, which is what makes scans small enough for upload limits. Choose a method, pick a quality for images, and compare the before and after sizes.',
 
   'pdf-to-jpg':
     'Turns each page of a PDF into a separate image. It is useful when you need a photo of a page or want to post pages as images. Select your PDF, choose the image format (JPG or PNG), and click Convert. Every page is downloaded as its own image file.',
@@ -141,7 +141,7 @@ export const TOOL_EXPLANATIONS: Record<string, string> = {
     'Removes unwanted pages from a PDF. Tick the boxes of the pages you want to keep, or use the Quick select buttons, then download a PDF that contains only the pages you kept.',
 
   'pdf-watermark':
-    'Stamps text onto every page of a PDF, like a logo, name or "CONFIDENTIAL" label. You can choose the text, position, size, rotation, opacity and color. Type your watermark text, adjust the settings, and click Add watermark. It is placed across every page.',
+    'Stamps text onto every page of a PDF, such as a company name or a "CONFIDENTIAL" label. Choose the placement (centred, diagonal, tiled, top or bottom), size, opacity and colour, then click Add watermark.',
 
   'pdf-page-numbers':
     'Adds page numbers to every page of a PDF in a position and format you choose. Pick a style such as "Page X of Y", choose the position (top or bottom, left, center or right), and click Add page numbers.',
@@ -315,7 +315,7 @@ export const TOOL_EXPLANATIONS: Record<string, string> = {
     'Calculates GST-inclusive and GST-exclusive amounts for an entered value, with quick presets for the common Indian GST slabs (5%, 12%, 18%, 28%). Enter an amount and rate to see the full breakdown.',
 
   'number-to-words':
-    'Spells out any integer, including negative numbers and numbers into the billions, as English words, the way you would write it on a cheque. Type a number and see it converted instantly.',
+    'Writes any amount in English words, in the Indian system with lakh and crore or the international system with million and billion. Turn on rupees and paise for the cheque format, for example Rupees One Lakh Twenty-Five Thousand Only.',
 
   'roman-numerals':
     'Converts numbers to Roman numerals and Roman numerals back to numbers, both directions, with validation to catch invalid input. Type either format to see the conversion.',

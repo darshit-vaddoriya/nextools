@@ -151,7 +151,7 @@ It is a two-second assessment of how seriously a service takes this.
 
 ## Computing hashes locally
 
-Hashing a file means reading every byte of it, which is exactly the operation you do not want to perform by uploading the file somewhere. Browsers expose SHA-256 through the Web Crypto API, so [hash generation](/tool/hash-generator) and [file checksums](/tool/file-checksum) run on your own machine, the file is read from disk into memory and never transmitted.`,
+Browsers expose SHA-256 through the Web Crypto API, so a hash can be computed without sending anything anywhere. Use [hash generation](/tool/hash-generator) for text and [file checksums](/tool/file-checksum) for files, and compare the result with the value the publisher lists.`,
   'verify-a-download-with-checksums': `Download an operating system image, a database installer or a signed PDF and you will often find a long hexadecimal string published next to the link. That is a checksum, and comparing it against your copy is a fast, worthwhile habit.
 
 ## What you are checking
@@ -215,7 +215,7 @@ An MD5 sum is still useful for detecting *accidental* corruption. It is not usef
 
 Hashing requires reading every byte, so an online checksum tool that uploads your file has just received a complete copy of whatever you were verifying, often a large installer, sometimes a private archive.
 
-Browsers implement SHA-256 natively through the Web Crypto API, so there is no reason for that. NextTool's [file checksum tool](/tool/file-checksum) reads the file locally and streams it through the browser's hash implementation; nothing is transmitted, and there is no practical size limit beyond available memory.`,
+Browsers implement SHA-256 natively through the Web Crypto API, so a checksum can be computed without sending the file anywhere. The [file checksum tool](/tool/file-checksum) reads the file from disk and hashes it in the tab; paste the published value into its compare box and it tells you whether they match.`,
   'signing-a-pdf-what-it-proves': `You are sent a contract, you draw your name with a trackpad, you place it above the line, you send it back. The document is now signed in the sense everyone means in day-to-day work. It is also, technically, a PDF with a small picture of some handwriting in it, and nothing about the file itself resists anyone moving that picture to a different page of a different document.
 
 Whether that matters depends on what you are signing. Knowing the difference is what lets you decide.
@@ -344,4 +344,57 @@ It is not a hash. A [hash](/tool/hash-generator) is deterministic: the same inpu
 And it is not secret once it is in a URL. Values in a URL end up in browser history, server access logs, Referer headers and anything that scans links in messages. An unguessable URL is a reasonable pattern for a share link with an expiry; it is not a substitute for authentication on anything that matters.
 
 Generating random values is one of the few things a browser does better than a server for your purposes, because \`crypto.getRandomValues()\` runs locally and the value never crosses a network. A token generated on someone else's server has, by definition, been seen by someone else before it reached you.`,
+  'upi-qr-codes-explained': `UPI QR codes are everywhere in India, on shop counters, auto-rickshaws, delivery bags and invoices. Most people scan them dozens of times a month without thinking about what is inside. It is worth thinking about once, because it explains both how to make your own and how the most common UPI scam works.
+
+## What the code actually contains
+
+A UPI QR code is not a special payment object. It is a short piece of text, a link in a format defined by NPCI, the body that runs UPI, printed as a QR code. A typical one reads:
+
+\`\`\`
+upi://pay?pa=shop@okaxis&pn=Sharma%20General%20Store&cu=INR
+\`\`\`
+
+Each part has one job:
+
+| Field | Meaning |
+|---|---|
+| \`pa\` | Payee address: the UPI ID the money goes to |
+| \`pn\` | Payee name: what the payer's app displays |
+| \`am\` | Amount, optional: if present, it is filled in for the payer |
+| \`cu\` | Currency: always \`INR\` |
+| \`tn\` | Transaction note, optional: for example an invoice number |
+
+That is all. There is no bank account number, no balance and no secret in it. When someone scans it, their UPI app reads the link, shows your name and the amount, and asks for their own UPI PIN. Nothing happens until they enter it.
+
+## The rule that stops the most common scam
+
+Because a UPI code is a request to **pay** the address inside it, scanning one always sends money **from** the person scanning. There is no such thing as scanning a code to receive money.
+
+This is the basis of the scam that targets people selling things online. A "buyer" offers to pay, then sends a QR code or a payment request and says you must scan it, or enter your PIN, to receive the money. Doing so pays them. Banks and NPCI repeat the same rule for this reason: you never need to scan a code or enter your UPI PIN to receive a payment.
+
+## Making a code for your shop or business
+
+Your bank or UPI app can show a QR code for your account, and many merchant apps print one for you. Making your own is useful when you want a cleaner print, a code at a specific size for a counter stand, or a code with a fixed amount for one invoice.
+
+The [QR code generator](/tool/qr-generator) has a UPI payment option. You enter:
+
+1. **Your UPI ID,** exactly as your app shows it, for example \`9876543210@ybl\` or \`shop@okaxis\`. The tool checks that it has the right shape.
+2. **The name payers should see,** usually your shop or business name.
+3. **An amount, only if the code is for one payment.** Leave it empty for a counter code, so each customer enters what they owe.
+4. **A note, if useful,** such as an invoice number, which appears in the payer's transaction history.
+
+Raise the error-correction level to Q or H if the code will be printed small or laminated, and print it at least 3 cm wide so older phone cameras can read it from a normal distance.
+
+> [!WARNING]
+> Before printing, scan the code with your own UPI app and check that the name it shows is yours. Then do the same check every few weeks on the printed copy. A sticker with someone else's code placed over yours is the simplest way to divert a shop's payments, and it is only noticed when customers say they have paid and the money has not arrived.
+
+## Static and dynamic codes
+
+A code printed once and used by everyone is a *static* code: the same link, every time, with no amount. Large shops and online checkouts often use *dynamic* codes, generated for each payment with the amount and an order reference already filled in, so the payment can be matched to the bill automatically.
+
+A code you make with a fixed amount and an invoice number in the note is a simple version of that idea: print it on the invoice, and the customer pays exactly the right amount with your reference attached. For invoices that also need the amount written out, the [number to words tool](/tool/number-to-words) writes it in lakh and crore with rupees and paise.
+
+## When a payment does not arrive
+
+If a customer shows a successful payment and you did not receive it, compare the UPI ID on their screen with yours before anything else. A mismatch means the code they scanned was not yours. If the IDs match, the reference number on their screen is what your bank will ask for.`,
 };

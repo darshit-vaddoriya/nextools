@@ -595,6 +595,9 @@ export function updateBlogPostMeta(slug: string) {
     wordCount: post.words,
     timeRequired: `PT${readingMinutes(post)}M`,
     articleSection: BLOG_CATEGORY_LABELS[post.category],
+    ...(post.furtherReading?.length
+      ? { citation: post.furtherReading.map(ref => ({ '@type': 'CreativeWork', name: ref.title, url: ref.url, publisher: ref.publisher })) }
+      : {}),
     author: { '@type': 'Organization', name: 'NextTool', url: `${SITE}/` },
     publisher: {
       '@type': 'Organization',

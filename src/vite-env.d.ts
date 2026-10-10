@@ -9,6 +9,12 @@ interface ImportMetaEnv {
   readonly PUBLIC_TURNSTILE_SITE_KEY: string;
 }
 
+/** UTC date of the build, YYYY-MM-DD; defined in astro.config.ts. */
+declare const __BUILD_DATE__: string;
+
 interface ImportMeta {
   readonly env: ImportMetaEnv;
 }
+
+/** Prism language add-ons register themselves on the global Prism and export nothing. */
+declare module 'prismjs/components/*';

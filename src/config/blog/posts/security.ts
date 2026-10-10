@@ -91,4 +91,21 @@ export const SECURITY_POSTS: BlogPost[] = [
     words: 835,
   },
 
+  {
+    slug: 'upi-qr-codes-explained',
+    title: 'UPI QR codes: what is inside one, and how to make your own safely',
+    description: 'What a UPI QR code actually contains, how to make one for a shop or a home business, and the one rule that stops the most common UPI scam.',
+    excerpt: 'A UPI QR code is just a payment link printed as a picture. Knowing what is in it tells you how to make your own, and why scanning one never sends money to you.',
+    category: 'security',
+    tags: ['upi', 'qr-codes', 'payments', 'india', 'fraud'],
+    published: '2026-10-31',
+    relatedTools: ['qr-generator', 'number-to-words', 'image-resize'],
+    takeaways: [
+      'A UPI QR code holds a payment link with your UPI ID, the name to display, and optionally an amount and a note. Nothing else is stored in it.',
+      'Scanning a UPI code always sends money from the person scanning. No one ever needs to scan a code or enter a PIN to receive money.',
+      'For a shop counter, leave the amount empty so each customer types their own. Put a fixed amount only on a code made for one invoice.',
+      'Check your printed code now and then by scanning it yourself: a sticker placed over it is the simplest way to divert a shop\'s payments.',
+    ],
+    words: 744,
+  },
 ];

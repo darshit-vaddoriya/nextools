@@ -13,6 +13,7 @@ import { CONVERTER_TOOLS } from './config/converters';
 import type { ToolSeoContent } from './config/seoContent/types';
 import type { CategoryContent } from './config/categoryContent';
 import { HOME_FAQ }        from './config/faq';
+import { POPULAR_TOOLS, POPULAR_BY_ID } from './config/popularTools';
 import { buildPath, blogTopicPath } from './utils/routes';
 import {
   FileText, Globe,
@@ -784,13 +785,19 @@ export const App: React.FC<{
 
 // ─── HOME VIEW ───────────────────────────────────────────────
 
+/**
+ * What actually happens when a file is opened, stated specifically enough to
+ * check. This replaced six generic benefit tiles ("Fast by design", "Works
+ * everywhere") that could have sat on any tool site and told a visitor nothing
+ * about this one.
+ */
 const WHY_FEATURES = [
-  { icon: Zap,             title: 'Fast by design',       desc: 'Each tool loads only the code it needs, and heavy libraries download only when you use them.' },
-  { icon: Lock,            title: 'Files stay on device', desc: 'Everything is processed in your browser. Your files are never uploaded anywhere.' },
-  { icon: ShieldCheck,     title: 'Private by default',   desc: 'No accounts, no file tracking and no sign-up walls.' },
-  { icon: InfinityIcon,    title: 'Free to use',          desc: 'No paid tiers, watermarks or paywalls. The site is supported by advertising.' },
-  { icon: MonitorSmartphone, title: 'Works everywhere',   desc: 'Optimized for desktop, tablet and phone with one consistent experience.' },
-  { icon: Globe,           title: 'Nothing to install',   desc: 'Just open a tool and start working on any modern browser.' },
+  { icon: Lock,              title: 'Your file stays in this tab', desc: 'Opening a file reads it from your disk into this browser tab. The work runs on your own processor: pdf-lib and pdf.js for PDFs, Tesseract for OCR, libarchive for RAR and 7z, and the browser\'s own encoder for MP4 and WebM. There is no upload step because there is no server to receive one.' },
+  { icon: Globe,             title: 'Two tools download extra code', desc: 'The AI background remover fetches its model from IMG.LY\'s CDN, and OCR fetches Tesseract and its language data from jsDelivr. That is code coming to you, not your file going out, and the browser caches it, so the second run starts straight away.' },
+  { icon: MonitorSmartphone, title: 'Your device sets the limits', desc: 'With no server doing the heavy lifting, how large a file a tool can handle depends on your memory and processor. A laptop merges a long PDF comfortably; a phone may struggle with a long 4K video. Each tool page lists its own limits.' },
+  { icon: ShieldCheck,       title: 'What is stored, and where', desc: 'There are no accounts. Results you keep in My Files are saved in this browser\'s own storage and can be cleared from Settings. What reaches us is a message you send through the contact form, or a payment record if you choose to support the site.' },
+  { icon: InfinityIcon,      title: 'Free, paid for by ads', desc: 'No paid tiers and no watermarks. The site is paid for by advertising and optional support payments. Analytics and advertising scripts see page visits, as the privacy policy explains, but never the contents of your files.' },
+  { icon: Zap,               title: 'Each page says what a tool cannot do', desc: 'Every tool page explains which formats it reads, what a conversion drops, and when desktop software is the better choice. If a result looks wrong, the reason is usually there, and if it is not, the contact form reaches a person.' },
 ];
 
 const FAQ_ITEMS = HOME_FAQ;
@@ -934,6 +941,42 @@ const HomeView: React.FC<{
       {/* ── BROWSE ───────────────────────────────────────── */}
       <div className="max-w-[1560px] mx-auto px-5 sm:px-8 py-12 space-y-16">
 
+        {/* ── Most used ───────────────────────────────────
+            The jobs people search for most, each with the one reason that
+            makes this tool worth using for it (see config/popularTools). */}
+        <section aria-labelledby="popular-heading">
+          <SectionHeading
+            kicker="Most used"
+            title="Popular tools"
+            desc="The jobs people come here for most, and what each tool does well"
+            id="popular-heading"
+          />
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+            {POPULAR_TOOLS.map(({ id, reason }) => {
+              const tool = TOOLS.find(t => t.id === id);
+              if (!tool) return null;
+              const conf = catConf(tool.category);
+              const Icon = conf?.icon ?? FileText;
+              return (
+                <AppLink
+                  key={id}
+                  href={`/tool/${id}`}
+                  onNavigate={() => onSelectTool(id)}
+                  className="group flex items-start gap-3 rounded-2xl border border-border bg-card p-4 shadow-card transition-colors hover:border-primary/40"
+                >
+                  <span className={`cat-icon ${conf?.iconBg ?? 'bg-muted'} w-10 h-10 rounded-xl shrink-0`}>
+                    <Icon className={conf?.iconColor} size={18} />
+                  </span>
+                  <span className="min-w-0">
+                    <span className="block text-[14.5px] font-bold text-foreground group-hover:text-primary transition-colors">{tool.name}</span>
+                    <span className="mt-1 block text-[12.5px] leading-relaxed text-muted-foreground">{reason}</span>
+                  </span>
+                </AppLink>
+              );
+            })}
+          </div>
+        </section>
+
         {/* Search, category filter and the full tool library. */}
         <ToolGrid onSelectTool={onSelectTool} />
 
@@ -1037,12 +1080,12 @@ const HomeView: React.FC<{
         {/* ── Why NextTool ───────────────────────────────── */}
         <section aria-labelledby="why-heading" className="cv-auto">
           <div className="text-center max-w-2xl mx-auto mb-8">
-            <span className="section-kicker mb-3">Why NextTool</span>
+            <span className="section-kicker mb-3">How it works</span>
             <h2 id="why-heading" className="text-[24px] sm:text-[28px] font-bold text-foreground tracking-[-0.02em]">
-              Everything you need, nothing you don't
+              What happens when you open a file
             </h2>
             <p className="text-[14px] text-muted-foreground mt-3 leading-relaxed">
-              No sign-ups, no uploads, no clutter. Just fast tools that respect your privacy.
+              Every tool here runs in your browser. This is what that means in practice, including the parts that are not obvious.
             </p>
           </div>
           <div className="rounded-[22px] border border-border bg-card p-6 sm:p-10 grid grid-cols-1 sm:grid-cols-3 gap-8">
@@ -1306,6 +1349,20 @@ const ToolView: React.FC<{
             {/* Main column, tool body sits first, so the sidebar aligns beside it from the top */}
             <div className={stacked ? 'w-full flex flex-col gap-4 sm:gap-5' : 'flex-1 min-w-[300px] basis-[560px] flex flex-col gap-4 sm:gap-5'}>
               {renderTool()}
+
+              {!appMode && POPULAR_BY_ID[activeTool.id] && (
+                <section aria-labelledby="why-use-heading" className="rounded-2xl border border-primary/25 bg-primary/[0.04] p-5 sm:p-6">
+                  <h2 id="why-use-heading" className="section-kicker mb-3">Why use this tool</h2>
+                  <ul className="space-y-2.5 mt-3">
+                    {POPULAR_BY_ID[activeTool.id].why.map((reason, i) => (
+                      <li key={i} className="flex items-start gap-2.5">
+                        <CheckCircle2 className="w-4 h-4 text-primary shrink-0 mt-0.5" />
+                        <span className="text-[13.5px] text-foreground leading-relaxed">{reason}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </section>
+              )}
 
               {!appMode && !activeTool.isComingSoon && seo?.useCases && seo.useCases.length > 0 && (
                 <div className="rounded-2xl border bg-card border-border p-5 sm:p-6 shadow-card">

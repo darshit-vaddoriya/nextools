@@ -8,7 +8,7 @@
 
 - [PDF Merge](https://nexttool.click/tool/pdf-merge): Combine multiple PDF files into one document with drag-and-drop reordering
 - [PDF Split](https://nexttool.click/tool/pdf-split): Split a PDF into individual pages or custom page ranges in your browser
-- [Compress PDF](https://nexttool.click/tool/pdf-compress): Reduce PDF file size without visible quality loss using client-side compression
+- [Compress PDF](https://nexttool.click/tool/pdf-compress): Shrink a PDF by rebuilding its structure or compressing scanned page images
 - [PDF to Word (DOCX)](https://nexttool.click/tool/pdf-to-word): Extract text from a PDF and convert it into an editable Word DOCX file locally
 - [PDF to Image](https://nexttool.click/tool/pdf-to-jpg): Convert each PDF page to high-quality JPG or PNG images in your browser
 - [Image to PDF](https://nexttool.click/tool/jpg-to-pdf): Combine one or multiple JPG or PNG images into a single PDF document
@@ -21,7 +21,7 @@
 - [Reorder PDF Pages](https://nexttool.click/tool/pdf-reorder): Drag and drop PDF pages into any order and save the rearranged document
 - [Delete PDF Pages](https://nexttool.click/tool/pdf-delete-pages): Remove specific pages from a PDF document quickly in browser
 - [Crop PDF](https://nexttool.click/tool/pdf-crop): Crop margins or trim PDF pages to a custom size
-- [Add Watermark](https://nexttool.click/tool/pdf-watermark): Stamp custom text or image watermarks onto PDF pages
+- [Add Watermark](https://nexttool.click/tool/pdf-watermark): Stamp a text watermark such as CONFIDENTIAL or DRAFT onto every PDF page
 - [Add Page Numbers](https://nexttool.click/tool/pdf-page-numbers): Add automatic page numbers to any position on every PDF page
 - [Add Header & Footer](https://nexttool.click/tool/pdf-header-footer): Insert custom header and footer text into every PDF page
 - [Sign PDF](https://nexttool.click/tool/pdf-sign): Draw, type or upload a signature and place it on any PDF page
@@ -66,7 +66,7 @@
 - [Crop Image](https://nexttool.click/tool/image-crop): Crop any image to a precise selection with aspect ratio locking
 - [Rotate Image](https://nexttool.click/tool/image-rotate): Rotate images by any degree or flip them horizontally/vertically
 - [Flip Image](https://nexttool.click/tool/image-flip): Mirror images horizontally or vertically
-- [Convert Image Formats](https://nexttool.click/tool/image-convert): Convert images between JPG, PNG, WebP, AVIF, HEIC, BMP, TIFF and more
+- [Convert Image Formats](https://nexttool.click/tool/image-convert): Convert images to PNG, JPG or WebP, one at a time or in a batch
 - [SVG Converter](https://nexttool.click/tool/svg-converter): Convert SVG to PNG/JPG or rasterize SVG files at any resolution
 - [ICO Generator](https://nexttool.click/tool/ico-generator): Create multi-size ICO favicon files from any image
 - [Background Remover](https://nexttool.click/tool/ai-bg-remover): Remove backgrounds from images using WebGPU/WASM AI models, no upload
@@ -75,7 +75,7 @@
 - [Image to Base64](https://nexttool.click/tool/image-to-base64): Encode any image file to a Base64 data URL string
 - [Base64 to Image](https://nexttool.click/tool/base64-to-image): Decode a Base64 data URL string back into an image file
 - [OCR - Image to Text](https://nexttool.click/tool/ocr-image): Extract text from any image using Tesseract.js OCR running in browser
-- [Watermark Image](https://nexttool.click/tool/image-watermark): Add custom text or logo watermarks to images with opacity and position control
+- [Watermark Image](https://nexttool.click/tool/image-watermark): Add a text watermark to images, in a corner, the centre or tiled across
 - [Draw on Image](https://nexttool.click/tool/image-draw): Upload an image and draw, highlight or annotate it with pen, eraser and color tools
 - [Image Editor](https://nexttool.click/tool/image-editor): Full in-browser image editor: crop, resize, rotate, flip, adjust colors, blur, annotate and export
 - [Drawing Board](https://nexttool.click/tool/drawing): Full-screen drawing app: sketch on a blank canvas or over a photo with brushes, shapes, text and layers
@@ -83,7 +83,7 @@
 - [Batch Resize](https://nexttool.click/tool/batch-resize): Resize hundreds of images at once to the same dimensions
 - [Image Collage](https://nexttool.click/tool/image-collage): Arrange multiple images into a collage layout and download as one image
 - [Meme Generator](https://nexttool.click/tool/meme-generator): Add top/bottom text to any image and create shareable memes in browser
-- [QR & Barcode Generator](https://nexttool.click/tool/qr-generator): Generate high-res QR codes and barcodes for URLs, Wi-Fi, vCards and more
+- [QR Code Generator](https://nexttool.click/tool/qr-generator): Generate QR codes for links, Wi-Fi, contact cards and UPI payments
 
 ## convert tools
 
@@ -223,7 +223,7 @@
 - [EMI Calculator](https://nexttool.click/tool/emi-calculator): Calculate monthly EMI for loans with breakdown of principal and interest
 - [Scientific Calculator](https://nexttool.click/tool/scientific-calc): Full scientific calculator with trig, log, factorial and memory functions
 - [GST Calculator](https://nexttool.click/tool/gst-calculator): Calculate GST inclusive/exclusive amounts and breakdown by tax slab
-- [Number to Words](https://nexttool.click/tool/number-to-words): Convert any number to its English word representation
+- [Number to Words](https://nexttool.click/tool/number-to-words): Write any amount in words, in lakh and crore or millions, with rupees and paise
 - [Roman Numerals](https://nexttool.click/tool/roman-numerals): Convert between Roman numerals and standard Arabic numbers
 
 ## web tools
@@ -238,6 +238,7 @@
 
 ## Guides
 
+- [iPhone photos in HEIC: opening, sharing and converting them](https://nexttool.click/blog/iphone-heic-photos-explained): Why your iPhone saves photos as .heic, why Windows and some websites will not open them, and the three ways to get a JPG instead.
 - [Making a GIF that is not 40 megabytes](https://nexttool.click/blog/making-a-gif-worth-sending): GIF is a 1987 format with 256 colours and no real compression for photos. Knowing what it is bad at is how you get a small, clean loop.
 - [Reading text off an image: what OCR gets right and where it fails](https://nexttool.click/blog/reading-text-off-an-image): OCR turns pixels into characters, and its accuracy is decided before it runs — by resolution, contrast and whether the page is straight.
 - [MP4 is not a codec: containers, codecs and why a file will not play](https://nexttool.click/blog/mp4-is-not-a-codec): A video file has a container and at least two codecs inside it. Playback failures are almost always a codec problem wearing a container name.

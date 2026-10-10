@@ -22,7 +22,6 @@ export const CONVERTER_SEO_CONTENT_3: ToolSeoMap = {
       { question: 'What happens to the cue numbers?', answer: 'They are dropped. SRT requires a number above every cue; WebVTT does not need one, and the converter identifies cues by their timing line instead.' },
       { question: 'Are positioning codes kept?', answer: 'Some SRT files carry SubStation-style codes such as {\\an8} to move a caption to the top of the frame. VTT has its own cue settings for that, so those codes are removed rather than shown as literal text.' },
       { question: 'My accented characters look wrong in the result. Why?', answer: 'The file is read as UTF-8. An older SRT saved in a Windows code page will show its accented letters as garbage. Open it in a text editor, save it as UTF-8, and convert again.' },
-      { question: 'Is the subtitle file uploaded?', answer: 'No. The conversion is plain text processing inside this tab, so an unreleased transcript never leaves your device.' },
     ],
     useCases: [
       'Adding captions to a video on your own website with the <track> element',
@@ -49,7 +48,6 @@ export const CONVERTER_SEO_CONTENT_3: ToolSeoMap = {
       { question: 'What happens to speaker names?', answer: 'A VTT voice tag such as <v Asha> becomes the plain prefix "Asha: " at the start of the line, so who is speaking survives the conversion.' },
       { question: 'Is italic and bold kept?', answer: 'Yes. Both formats understand <i>, <b> and <u>, so those tags are left in place.' },
       { question: 'Why are some captions missing from the result?', answer: 'A cue with a timing line but no text is skipped, as is any block without a valid "start --> end" line. If a large number vanish, the source probably uses a timestamp layout the parser does not recognise.' },
-      { question: 'Does the file leave my computer?', answer: 'No. It is read and rewritten as text inside the browser tab.' },
     ],
     useCases: [
       'Importing web captions into Premiere Pro, DaVinci Resolve or another editor',
@@ -74,7 +72,6 @@ export const CONVERTER_SEO_CONTENT_3: ToolSeoMap = {
       { question: 'Will converting an MP3 to FLAC improve it?', answer: 'No. The MP3 already threw information away when it was made, and FLAC can only preserve what is left. You get a larger file that sounds identical to the MP3. Convert to FLAC from WAV, a CD rip, or another lossless source.' },
       { question: 'How much smaller will the file be?', answer: 'It depends on the audio. Dense, loud music compresses least, often to around 60 to 70 percent of the WAV. Speech, quiet passages and silence compress much further.' },
       { question: 'Why use FLAC instead of WAV?', answer: 'Same sound, smaller files, and FLAC can carry tags such as artist and title that WAV handles poorly. Most music players, phones and editors read it.' },
-      { question: 'Is my audio uploaded?', answer: 'No. Decoding and encoding both run in this tab.' },
     ],
     useCases: [
       'Archiving recordings or CD rips without keeping full-size WAV files',
@@ -101,7 +98,6 @@ export const CONVERTER_SEO_CONTENT_3: ToolSeoMap = {
       { question: 'Why is encoding slower than other formats?', answer: 'AV1 compression searches much harder for an efficient encoding than JPG does, and that search is what makes the file small. Decoding, which is what visitors do, is fast.' },
       { question: 'Will converting a JPG to AVIF make it look better?', answer: 'No. The artefacts already in the JPG are carried over. AVIF makes the file smaller at similar quality; to get the most out of it, convert from the original PNG or camera image where you have one.' },
       { question: 'Does it keep transparency?', answer: 'Yes. AVIF supports an alpha channel, so transparent areas of a PNG or WebP stay transparent.' },
-      { question: 'Are my photos uploaded?', answer: 'No. Decoding and encoding happen in this tab.' },
     ],
     useCases: [
       'Cutting the weight of hero images and product photos on a website',
@@ -128,7 +124,6 @@ export const CONVERTER_SEO_CONTENT_3: ToolSeoMap = {
       { question: 'Why does my logo have jagged or lumpy edges?', answer: 'Tracing can only follow the pixels it is given. A small or blurry source has soft, stepped edges, and those become the outline. Start from the largest version available, and try the Smooth setting.' },
       { question: 'Is there a size limit?', answer: 'The longest side is scaled to at most 1200 pixels before tracing. Beyond that, tracing slows down sharply and the SVG grows without gaining visible detail.' },
       { question: 'Will the text in my logo stay editable?', answer: 'No. Letters are traced as shapes like everything else. If you need editable text, retype it in a vector editor using the original font.' },
-      { question: 'Is the image uploaded?', answer: 'No. Tracing runs in this tab.' },
     ],
     useCases: [
       'Turning an old logo, available only as a PNG, into a scalable file for print',
@@ -154,7 +149,6 @@ export const CONVERTER_SEO_CONTENT_3: ToolSeoMap = {
       { question: 'Why is my PDF larger than the TIFF?', answer: 'Each page is stored in the PDF as a high-quality JPEG. Black-and-white fax TIFFs use a special two-colour compression that is extremely compact, and a JPEG of the same page is usually larger. For colour and greyscale scans the PDF is often similar in size or smaller.' },
       { question: 'Will the text be searchable?', answer: 'No. A scan is a picture of text. Run the PDF through OCR afterwards if you need to search or copy it.' },
       { question: 'What if the TIFF has no resolution information?', answer: 'The page size is calculated at 96 dots per inch, which may make pages print larger than the original. Most scanners do record their resolution, so this is uncommon.' },
-      { question: 'Is the scan uploaded?', answer: 'No. Decoding and PDF creation happen in this tab, which matters because scans are so often contracts, IDs and medical letters.' },
     ],
     useCases: [
       'Emailing a multi-page scan to someone who cannot open TIFF files',
@@ -181,7 +175,6 @@ export const CONVERTER_SEO_CONTENT_3: ToolSeoMap = {
       { question: 'Why did my ID or postcode column become TEXT?', answer: 'Deliberately. A value with a leading zero, such as 00745, would lose the zero as a number, so any column containing one stays TEXT. The same applies to numbers longer than 18 digits.' },
       { question: 'What happens to column names with spaces or symbols?', answer: 'They are lowercased, spaces become underscores, other symbols are removed, and a name that would start with a digit gets a prefix. Duplicate names are numbered so every column is unique.' },
       { question: 'What about Excel files with several sheets?', answer: 'Each non-empty sheet becomes its own table, named after the sheet.' },
-      { question: 'Does it work with SQL Server?', answer: 'Mostly. SQL Server has no BOOLEAN type or TRUE and FALSE literals, so change BOOLEAN columns to BIT and the values to 1 and 0 before running the script there.' },
     ],
     useCases: [
       'Loading a spreadsheet export into a development database',
@@ -208,7 +201,6 @@ export const CONVERTER_SEO_CONTENT_3: ToolSeoMap = {
       { question: 'Are images included?', answer: 'No. A Markdown or HTML file refers to images by paths that cannot be followed from inside the browser, and an EPUB may only contain resources listed in its own manifest, so images are removed rather than left as broken links.' },
       { question: 'Can I read it on a Kindle?', answer: 'Yes. Amazon\'s Send to Kindle service accepts EPUB files and converts them for the device.' },
       { question: 'Is Markdown fully supported?', answer: 'GitHub-flavoured Markdown is: headings, emphasis, lists, block quotes, code blocks, tables and links. Scripts, forms and embedded media are removed because e-readers do not run them.' },
-      { question: 'Is my manuscript uploaded?', answer: 'No. The book is assembled in this tab.' },
     ],
     useCases: [
       'Reading your own long notes or drafts on an e-reader',
@@ -233,7 +225,6 @@ export const CONVERTER_SEO_CONTENT_3: ToolSeoMap = {
       { question: 'What formatting is kept?', answer: 'Paragraphs, line breaks, tabs, bold, italic and underline, plus all characters, including accented and non-Latin text written in any code page or as Unicode escapes.' },
       { question: 'What is dropped?', answer: 'Fonts and sizes, colours, style sheets, page layout, headers and footers, footnotes, comments and embedded pictures. The result is the document\'s text and emphasis in clean default formatting.' },
       { question: 'Why not just open the RTF in Word and save as DOCX?', answer: 'If you have Word, that keeps more of the layout. This converter is for when you do not, or when you want clean text without the RTF\'s legacy formatting carried along.' },
-      { question: 'Is it safe for confidential documents?', answer: 'The file is parsed in this browser tab and never uploaded, which matters for the legal and medical exports RTF is so often used for.' },
     ],
     useCases: [
       'Converting WordPad documents for someone who needs DOCX',
@@ -258,7 +249,6 @@ export const CONVERTER_SEO_CONTENT_3: ToolSeoMap = {
       { question: 'Why does my file fail to convert?', answer: 'It was saved without "Create PDF Compatible File" ticked, or by Illustrator 8 or older. Those files are PostScript rather than PDF and cannot be read in a browser. Re-saving from Illustrator with the option ticked fixes it.' },
       { question: 'Can I edit the layers afterwards?', answer: 'No. Layers and other editing data belong to Illustrator\'s private part of the file. The PDF and images show the finished artwork, which is what a client or printer usually needs.' },
       { question: 'Should I choose PNG or JPG?', answer: 'PNG for logos and anything with transparency or sharp edges; JPG for artwork that is mostly photographic, where it gives a smaller file.' },
-      { question: 'Is the artwork uploaded?', answer: 'No. The file is read and rendered in this tab, which matters for unreleased brand work.' },
     ],
     useCases: [
       'Viewing a logo or design a designer sent as .ai, without Illustrator',

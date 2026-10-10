@@ -11,7 +11,6 @@ export const WORD_EXCEL_ARCHIVE_COLOR_SEO_CONTENT: ToolSeoMap = {
       { title: 'Download the PDF', description: 'Save the generated PDF file to your device.' },
     ],
     faqs: [
-      { question: 'Is my Word document uploaded to a server?', answer: 'No. The .docx to PDF conversion happens locally in your browser tab, so the file content is never transmitted anywhere.' },
       { question: 'Will complex formatting be preserved?', answer: 'Standard formatting like headings, bold/italic text, bullet lists, and embedded images convert well. Very complex layouts with nested tables or unusual fonts may render slightly differently than in Word.' },
       { question: 'Is there a file size limit?', answer: 'There is no artificial cap, but very large documents (hundreds of pages or many high-resolution images) depend on your device memory and may take longer to process.' },
       { question: 'Does it work on mobile browsers?', answer: 'Yes, it runs in any modern browser, though converting large files is faster on a desktop with more available memory.' },
@@ -69,7 +68,6 @@ export const WORD_EXCEL_ARCHIVE_COLOR_SEO_CONTENT: ToolSeoMap = {
     faqs: [
       { question: 'Does it handle tables?', answer: 'Simple tables are converted to Markdown table syntax; very complex or merged-cell tables may need manual touch-up.' },
       { question: 'Will links and formatting survive the conversion?', answer: 'Hyperlinks, bold, italic, and list formatting are mapped to their standard Markdown equivalents.' },
-      { question: 'Is this safe for confidential documents?', answer: 'Yes, conversion happens entirely in your browser with no file upload, so confidential content stays on your machine.' },
       { question: 'What Markdown flavor does it produce?', answer: 'It outputs widely compatible standard Markdown that works in most static site generators, GitHub, and note apps.' },
       { question: 'Can I edit the result afterward?', answer: 'Yes, the output is plain text, so you can copy it into any text editor and adjust it before publishing.' },
     ],
@@ -97,7 +95,6 @@ export const WORD_EXCEL_ARCHIVE_COLOR_SEO_CONTENT: ToolSeoMap = {
     faqs: [
       { question: 'Does it keep paragraph breaks?', answer: 'Yes, paragraph and line breaks are preserved so the text remains readable, even though styling is removed.' },
       { question: 'What happens to images and tables?', answer: 'Images are dropped since this is a plain text extraction; table cell text is typically flattened into readable lines.' },
-      { question: 'Is the file uploaded anywhere?', answer: 'No, the DOCX file is parsed directly in your browser and never sent to a server.' },
       { question: 'Does it work with older .doc files?', answer: 'This tool is built for the modern .docx XML format; legacy binary .doc files are not supported.' },
       { question: 'Can I use this for large documents?', answer: 'Yes, though very large files depend on your browser\'s available memory to process quickly.' },
     ],
@@ -124,7 +121,6 @@ export const WORD_EXCEL_ARCHIVE_COLOR_SEO_CONTENT: ToolSeoMap = {
     ],
     faqs: [
       { question: 'Which HTML tags are supported?', answer: 'Common tags such as headings, paragraphs, bold/italic text, links, and lists convert reliably; highly custom CSS layouts may not carry over exactly.' },
-      { question: 'Is my HTML content uploaded anywhere?', answer: 'No, the DOCX file is built entirely client-side in your browser.' },
       { question: 'Can I open the output in both Microsoft Word and Google Docs?', answer: 'Yes, the generated file follows the standard .docx format compatible with Word, Google Docs, and LibreOffice.' },
       { question: 'Will inline CSS styles be preserved exactly?', answer: 'Basic styling like bold, italics, and color is preserved where possible, but pixel-perfect CSS layouts are not guaranteed since Word uses its own styling model.' },
       { question: 'Does it support embedded images in the HTML?', answer: 'Image tags with accessible sources are included where the converter can read the image data.' },
@@ -153,7 +149,6 @@ export const WORD_EXCEL_ARCHIVE_COLOR_SEO_CONTENT: ToolSeoMap = {
     faqs: [
       { question: 'Does it support code blocks?', answer: 'Fenced code blocks are converted using a monospace style so code stays readable in the resulting Word document.' },
       { question: 'Are tables in Markdown converted too?', answer: 'Markdown table syntax is translated into native Word tables.' },
-      { question: 'Is my Markdown content sent to a server?', answer: 'No, conversion happens entirely in your browser without uploading any content.' },
       { question: 'Can I edit the resulting document in Word afterward?', answer: 'Yes, the output is a standard editable .docx file you can open and modify in Word or any compatible editor.' },
       { question: 'What Markdown syntax is supported?', answer: 'Standard Markdown elements including headings, bold/italic, links, lists, and tables are supported.' },
     ],
@@ -180,7 +175,6 @@ export const WORD_EXCEL_ARCHIVE_COLOR_SEO_CONTENT: ToolSeoMap = {
     ],
     faqs: [
       { question: 'Do I need Microsoft Word installed to use this?', answer: 'No, this tool renders .docx files directly in the browser, so you can view them without having Word or any other office suite installed.' },
-      { question: 'Is the document uploaded to a server to be rendered?', answer: 'No, rendering happens locally in your browser; the file is never sent anywhere.' },
       { question: 'Can I edit the document here?', answer: 'This tool is read-only for viewing; use a dedicated editor if you need to make changes to the content.' },
       { question: 'Does it support password-protected files?', answer: 'Password-protected or encrypted DOCX files are not supported since the browser cannot decrypt them without the original password flow.' },
       { question: 'Will formatting look exactly like in Microsoft Word?', answer: 'Most standard formatting renders accurately, though very Word-specific features may appear slightly different.' },
@@ -209,7 +203,6 @@ export const WORD_EXCEL_ARCHIVE_COLOR_SEO_CONTENT: ToolSeoMap = {
     faqs: [
       { question: 'What metadata fields does it show?', answer: 'Typical fields include author, company, creation date, last modified date, last modified by, and revision number, along with any custom document properties.' },
       { question: 'Is this useful for removing personal information before sharing?', answer: 'Yes, checking metadata is a good first step before sending a document externally, since author names and edit history can reveal more than intended.' },
-      { question: 'Is my file uploaded to see the metadata?', answer: 'No, the metadata is extracted directly from the file in your browser without any upload.' },
       { question: 'Can I remove or change the metadata?', answer: 'Where editing is supported, you can update fields like author or title and save a new copy with the revised metadata.' },
       { question: 'Does it work on documents created in Google Docs and exported to DOCX?', answer: 'Yes, as long as the file follows the standard .docx XML format, its embedded metadata can be read.' },
     ],
@@ -236,7 +229,6 @@ export const WORD_EXCEL_ARCHIVE_COLOR_SEO_CONTENT: ToolSeoMap = {
     ],
     faqs: [
       { question: 'What kind of changes does it detect?', answer: 'It highlights inserted, deleted, and modified text between the two versions of the document.' },
-      { question: 'Are both files uploaded to a server for comparison?', answer: 'No, both documents are parsed and compared entirely within your browser.' },
       { question: 'Does it compare formatting changes too, or just text?', answer: 'The comparison focuses primarily on text content differences; purely visual formatting changes may not always be flagged.' },
       { question: 'Can I export the comparison result?', answer: 'Yes, the highlighted differences can be exported or saved as a comparison report where supported.' },
       { question: 'Does file size affect comparison speed?', answer: 'Very large or heavily formatted documents may take a bit longer to process since everything runs on your device rather than a server.' },
@@ -263,11 +255,9 @@ export const WORD_EXCEL_ARCHIVE_COLOR_SEO_CONTENT: ToolSeoMap = {
       { title: 'Download the clean file', description: 'Save the formatting-free document to your device.' },
     ],
     faqs: [
-      { question: 'Does this remove tracked changes and comments too?', answer: 'Yes, tracked changes and comments are stripped along with inline formatting, leaving just the finalized text.' },
       { question: 'Will the text content be changed or lost?', answer: 'No, the actual words and paragraph structure are preserved; only visual styling and metadata like comments are removed.' },
-      { question: 'Is my document uploaded to a server during cleanup?', answer: 'No, formatting removal is done entirely client-side in your browser.' },
       { question: 'What format is the output saved as?', answer: 'The cleaned result can be downloaded as a plain, unformatted document or plain text depending on your chosen output.' },
-      { question: 'Is this useful for removing tracked-change history before sharing?', answer: 'Yes, it is a quick way to make sure a document you send externally does not carry hidden edit history.' },
+      { question: 'What exactly gets cleaned besides the formatting?', answer: 'Curly quotes and apostrophes become straight ones, the single ellipsis character becomes three full stops, non-breaking spaces become ordinary spaces, spaces at the ends of lines are removed and, if you choose, runs of blank lines are collapsed. Those invisible characters are what usually break code, CSV imports and search when text is pasted out of Word.' },
     ],
     useCases: [
       'Stripping tracked changes and reviewer comments from a document before sending it externally',
@@ -292,7 +282,6 @@ export const WORD_EXCEL_ARCHIVE_COLOR_SEO_CONTENT: ToolSeoMap = {
     ],
     faqs: [
       { question: 'Does it support Excel .xlsx files?', answer: 'No, this viewer is built for delimited text files like CSV and TSV, not the binary .xlsx spreadsheet format.' },
-      { question: 'Is my data uploaded anywhere?', answer: 'No, the file is read and parsed entirely in your browser using JavaScript; nothing is sent to a server.' },
       { question: 'What happens with quoted fields containing commas?', answer: 'The parser correctly handles quoted fields, including commas, quotes, and line breaks inside quoted values, following standard CSV quoting rules.' },
       { question: 'Is there a limit on file size or row count?', answer: 'There is no hard-coded limit, but extremely large files depend on your browser\'s memory and may render more slowly.' },
       { question: 'Can I switch delimiters after loading a file?', answer: 'Yes, you can change the delimiter setting at any time and the table will re-parse the existing text.' },
@@ -321,7 +310,6 @@ export const WORD_EXCEL_ARCHIVE_COLOR_SEO_CONTENT: ToolSeoMap = {
     faqs: [
       { question: 'Can I edit Excel .xlsx files with this tool?', answer: 'No, this editor works with plain CSV/TSV text data, not binary Excel workbooks.' },
       { question: 'Does it save automatically?', answer: 'No automatic save happens; you export the edited table manually as a CSV file when you are done.' },
-      { question: 'Is my spreadsheet data sent to a server while I edit it?', answer: 'No, all editing happens locally in your browser tab; data is never uploaded.' },
       { question: 'Can I rename column headers?', answer: 'Yes, header cells in the top row are editable text inputs just like any other cell.' },
       { question: 'What delimiter does the exported file use?', answer: 'The export uses whichever delimiter you selected, comma, tab, pipe, or semicolon.' },
     ],
@@ -349,7 +337,6 @@ export const WORD_EXCEL_ARCHIVE_COLOR_SEO_CONTENT: ToolSeoMap = {
     faqs: [
       { question: 'What kinds of issues does the cleaner fix?', answer: 'It trims leading/trailing whitespace in cells, removes rows that are entirely empty, and normalizes line endings between \\r\\n and \\n.' },
       { question: 'Does it fix broken text encoding automatically?', answer: 'It normalizes line endings and whitespace; if a file has corrupted character encoding, you may need to re-export it with the correct encoding first.' },
-      { question: 'Is my data uploaded during cleaning?', answer: 'No, all cleaning operations run in your browser using JavaScript; no file is sent to a server.' },
       { question: 'Can I choose which fixes to apply?', answer: 'Yes, each cleaning option, trimming, empty row removal, and line-ending normalization, has its own toggle.' },
       { question: 'Does it work with tab-separated files too?', answer: 'Yes, you can switch the delimiter to tab, pipe, or semicolon before cleaning.' },
     ],
@@ -378,7 +365,6 @@ export const WORD_EXCEL_ARCHIVE_COLOR_SEO_CONTENT: ToolSeoMap = {
       { question: 'Does this support .xlsx Excel files?', answer: 'No, this converts CSV/TSV text data specifically; binary Excel workbooks are not parsed by this tool.' },
       { question: 'How are column headers used?', answer: 'The first row of your data is used as the object keys for every row that follows.' },
       { question: 'What happens with duplicate or missing headers?', answer: 'Missing header names are auto-labeled like "col1", "col2" so every column still has a usable key.' },
-      { question: 'Is my CSV data uploaded anywhere?', answer: 'No, parsing and JSON generation both happen locally in your browser.' },
       { question: 'What if my CSV is invalid?', answer: 'The tool shows an error message describing what went wrong so you can fix the input.' },
     ],
     useCases: [
@@ -406,7 +392,6 @@ export const WORD_EXCEL_ARCHIVE_COLOR_SEO_CONTENT: ToolSeoMap = {
       { question: 'Does it produce an Excel .xlsx file?', answer: 'No, the output is a plain CSV text file, not a binary Excel workbook; you can open it in Excel, but it is not the native .xlsx format.' },
       { question: 'What if my objects have different sets of keys?', answer: 'The tool automatically collects every unique key across all objects to build the header row, leaving cells blank where a given object lacks that key.' },
       { question: 'What happens with nested objects or arrays inside the JSON?', answer: 'Nested values are converted to their JSON string representation inside the cell since CSV has no concept of nested structures.' },
-      { question: 'Is my JSON data uploaded to a server?', answer: 'No, the conversion runs entirely client-side using your browser\'s JSON parser.' },
       { question: 'What happens if my JSON is invalid?', answer: 'An error message is shown explaining that the input could not be parsed, so you can correct the syntax.' },
     ],
     useCases: [
@@ -433,7 +418,6 @@ export const WORD_EXCEL_ARCHIVE_COLOR_SEO_CONTENT: ToolSeoMap = {
     faqs: [
       { question: 'Can I convert JSON directly to TSV?', answer: 'Yes, you can pick JSON as the input and TSV as the output (or any other combination among CSV, TSV, and JSON).' },
       { question: 'Does this support Excel binary files?', answer: 'No, it works with plain text CSV/TSV and JSON; it does not read or write .xlsx binary spreadsheet files.' },
-      { question: 'Is my data uploaded to convert it?', answer: 'No, all format conversion happens in your browser without sending data anywhere.' },
       { question: 'What happens if my JSON input is not an array?', answer: 'The tool requires the JSON input to be an array of objects and will show an error if it is not.' },
       { question: 'Can I download the converted file directly?', answer: 'Yes, a download button saves the result with the appropriate file extension for the chosen output format.' },
     ],
@@ -461,7 +445,6 @@ export const WORD_EXCEL_ARCHIVE_COLOR_SEO_CONTENT: ToolSeoMap = {
     faqs: [
       { question: 'Which delimiters are supported?', answer: 'Comma, tab, pipe, and semicolon are all supported as both source and target delimiters.' },
       { question: 'Does it handle values that already contain the target delimiter?', answer: 'Yes, values containing the delimiter, quotes, or line breaks are automatically wrapped in quotes in the output, following standard CSV quoting rules.' },
-      { question: 'Is my text uploaded anywhere?', answer: 'No, the delimiter conversion runs entirely in your browser using JavaScript.' },
       { question: 'Can I convert a TSV file to CSV with this?', answer: 'Yes, set the source delimiter to tab and the target delimiter to comma.' },
       { question: 'Does it work on very large text blocks?', answer: 'Yes, though extremely large inputs depend on your browser\'s available memory to process smoothly.' },
     ],
@@ -490,7 +473,6 @@ export const WORD_EXCEL_ARCHIVE_COLOR_SEO_CONTENT: ToolSeoMap = {
       { question: 'Does this work on Excel .xlsx files?', answer: 'This tool is built for delimited text data such as CSV and TSV; it does not parse binary Excel workbooks directly.' },
       { question: 'How does it decide a row is a duplicate?', answer: 'It compares the full contents of each row (excluding the header) against previously seen rows and flags an exact match as a duplicate.' },
       { question: 'Which occurrence of a duplicate is kept?', answer: 'The first occurrence of each unique row is kept, and later exact repeats are removed.' },
-      { question: 'Is my data uploaded to check for duplicates?', answer: 'No, deduplication runs locally in your browser without sending any data to a server.' },
       { question: 'Does it detect near-duplicates with minor differences?', answer: 'No, it only removes exact row matches; rows that differ by even a single character or extra space are treated as distinct.' },
     ],
     useCases: [
@@ -518,7 +500,6 @@ export const WORD_EXCEL_ARCHIVE_COLOR_SEO_CONTENT: ToolSeoMap = {
       { question: 'What happens if the files have different headers?', answer: 'You will see a warning noting that headers differ, and the rows are still merged using the first file\'s header order, so double-check column alignment afterward.' },
       { question: 'Can I merge Excel .xlsx files this way?', answer: 'No, this tool merges plain CSV/TSV text files; binary .xlsx workbooks are not supported.' },
       { question: 'Is there a limit on how many files I can merge?', answer: 'There is no fixed limit, but merging many large files depends on your browser\'s available memory.' },
-      { question: 'Are the files uploaded to a server to be merged?', answer: 'No, all files are read and combined locally in your browser.' },
       { question: 'Can I remove a file before merging?', answer: 'Yes, each added file has a remove button so you can adjust the list before running the merge.' },
     ],
     useCases: [
@@ -543,7 +524,6 @@ export const WORD_EXCEL_ARCHIVE_COLOR_SEO_CONTENT: ToolSeoMap = {
       { title: 'Or download everything', description: 'Click Download All to save every file in the archive one after another.' },
     ],
     faqs: [
-      { question: 'Is the ZIP file uploaded to a server to extract it?', answer: 'No, the archive is read and extracted entirely in your browser using a JavaScript ZIP library.' },
       { question: 'Does it support password-protected ZIP files?', answer: 'No, encrypted or password-protected archives are not supported since the browser library cannot decrypt them.' },
       { question: 'Can I extract just one file instead of the whole archive?', answer: 'Yes, each file in the list has its own download button so you can extract individual files.' },
       { question: 'What happens with corrupted ZIP files?', answer: 'If the archive cannot be read, the tool shows an error message indicating it may be corrupted or unsupported.' },
@@ -571,7 +551,6 @@ export const WORD_EXCEL_ARCHIVE_COLOR_SEO_CONTENT: ToolSeoMap = {
       { title: 'Create and download the ZIP', description: 'Click the button to compress everything and save the archive.' },
     ],
     faqs: [
-      { question: 'Are my files uploaded to create the ZIP?', answer: 'No, the archive is built entirely in your browser using a JavaScript compression library; files never leave your device.' },
       { question: 'What compression level does it use?', answer: 'It uses standard DEFLATE compression at a balanced level, giving reasonable file size reduction without excessive processing time.' },
       { question: 'Is there a limit to how many files I can add?', answer: 'There is no fixed limit, but adding many large files increases memory use and the time needed to generate the archive.' },
       { question: 'Can I remove a file after adding it?', answer: 'Yes, every added file has a remove button so you can adjust the selection before zipping.' },
@@ -600,7 +579,6 @@ export const WORD_EXCEL_ARCHIVE_COLOR_SEO_CONTENT: ToolSeoMap = {
     ],
     faqs: [
       { question: 'How is this different from the regular ZIP Creator?', answer: 'The regular ZIP Creator puts all files into one shared archive, while this tool wraps each file in its own separate ZIP first, then bundles those individual ZIPs together for download.' },
-      { question: 'Are my files uploaded anywhere during this process?', answer: 'No, both the inner and outer zipping steps happen entirely in your browser.' },
       { question: 'What is the output file named?', answer: 'The final downloaded bundle is named batch-zips.zip, containing one .zip file per original file you added.' },
       { question: 'Can I use this to prepare separate downloadable packages for different recipients?', answer: 'Yes, since each inner ZIP is self-contained, you can extract the outer bundle and hand out the individual archives separately.' },
       { question: 'Is there a limit on the number of files?', answer: 'There is no fixed limit, but zipping many files individually takes more processing time and memory than a single combined archive.' },
@@ -628,7 +606,6 @@ export const WORD_EXCEL_ARCHIVE_COLOR_SEO_CONTENT: ToolSeoMap = {
     ],
     faqs: [
       { question: 'Which color formats does it convert between?', answer: 'It converts between HEX, RGB, and HSL notations; it does not currently output HSV or CMYK values.' },
-      { question: 'Is my color data sent anywhere?', answer: 'No, all color math runs locally in your browser using plain JavaScript.' },
       { question: 'Can I use this for print color matching?', answer: 'Since it works with screen-based HEX/RGB/HSL values rather than CMYK, it is best suited for web and UI design rather than exact print color matching.' },
       { question: 'What is the shade palette for?', answer: 'It generates a strip of lighter and darker variations of your chosen hue, useful for building consistent UI color scales.' },
       { question: 'Does it support 3-digit shorthand HEX codes?', answer: 'Yes, 3-character HEX shorthand is automatically expanded to the full 6-character form.' },
@@ -660,7 +637,6 @@ export const WORD_EXCEL_ARCHIVE_COLOR_SEO_CONTENT: ToolSeoMap = {
       { question: 'How many color stops can I add?', answer: 'You can add as many stops as you like, with a minimum of two required to form a gradient.' },
       { question: 'Is the generated CSS compatible with all modern browsers?', answer: 'Yes, it outputs standard linear-gradient() and radial-gradient() CSS syntax supported by all current browsers.' },
       { question: 'Does this tool save my gradients?', answer: 'No, gradients exist only in your current browser session; copy the CSS code if you want to keep it.' },
-      { question: 'Is any data sent to a server while I design a gradient?', answer: 'No, the entire builder runs client-side with no network requests.' },
     ],
     useCases: [
       'Designing a hero section or banner background without hand-writing gradient syntax',
@@ -715,7 +691,6 @@ export const WORD_EXCEL_ARCHIVE_COLOR_SEO_CONTENT: ToolSeoMap = {
       { question: 'What contrast ratio do I need for WCAG AA compliance?', answer: 'Normal text needs a ratio of at least 4.5:1, while large text needs at least 3:1 to pass WCAG AA.' },
       { question: 'What about WCAG AAA?', answer: 'AAA is stricter, requiring at least 7:1 for normal text and 4.5:1 for large text.' },
       { question: 'How is the contrast ratio calculated?', answer: 'It uses the WCAG relative luminance formula for both colors and computes the ratio between the lighter and darker luminance values, exactly as specified in the accessibility guidelines.' },
-      { question: 'Is my color data sent to a server?', answer: 'No, the contrast calculation runs entirely in your browser using standard luminance math.' },
       { question: 'What counts as "large text" for these thresholds?', answer: 'WCAG generally defines large text as 18pt (24px) regular or 14pt (18.66px) bold and larger, which is why it has a lower required contrast ratio.' },
     ],
     useCases: [
@@ -743,7 +718,6 @@ export const WORD_EXCEL_ARCHIVE_COLOR_SEO_CONTENT: ToolSeoMap = {
       { question: 'Will the glass effect work in every browser?', answer: 'The backdrop-filter CSS property used for the blur effect is supported in all current major browsers, though very old browser versions may not render the blur and will just show a semi-transparent panel.' },
       { question: 'Does the generated CSS include vendor prefixes?', answer: 'Yes, it includes both the standard backdrop-filter property and the -webkit-backdrop-filter prefix for broader compatibility.' },
       { question: 'Do I need a background image for the glass effect to show?', answer: 'Yes, the frosted blur effect is only visible when there is content behind the glass element, such as a background image, gradient, or other page elements.' },
-      { question: 'Is any data sent to a server while designing the effect?', answer: 'No, the entire preview and CSS generation happens locally in your browser.' },
       { question: 'Can I customize the box-shadow or colors beyond what the sliders offer?', answer: 'The sliders control blur, opacity, and radius; you can further customize the copied CSS manually in your own stylesheet, such as changing the box-shadow color.' },
     ],
     useCases: [

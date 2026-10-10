@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { marked } from 'marked';
+import DOMPurify from 'dompurify';
 import TurndownService from 'turndown';
 import { CopyButton } from '../../components/CopyButton';
 import { renderMarkdown } from '../../utils/markdown';
@@ -1631,6 +1632,47 @@ const labelTaskBoxes = (html: string) => html.replace(
     `<li>${ws}<input ${attrs} aria-label="${text.trim().replace(/"/g, '&quot;')}"> ${text}`,
 );
 
+/**
+ * marked passes raw HTML in the input straight through, so Markdown pasted from
+ * elsewhere (a README, an AI answer) could carry a script or an onerror handler
+ * that would run on this site. DOMPurify strips those and keeps ordinary markup.
+ * At build time there is no DOM, and the only input is the sample above.
+ */
+const sanitizeHtml = (html: string) =>
+  typeof window === 'undefined' ? html : DOMPurify.sanitize(html);
+
+/** Loaded on first use: Prism core plus the languages people paste most. */
+let prismReady: Promise<typeof import('prismjs')> | null = null;
+function loadPrism() {
+  prismReady ??= (async () => {
+    // Manual mode stops Prism highlighting the whole page on load.
+    (window as unknown as { Prism?: { manual?: boolean } }).Prism = { manual: true };
+    const Prism = (await import('prismjs')).default;
+    await Promise.all([
+      import('prismjs/components/prism-typescript'),
+      import('prismjs/components/prism-json'),
+      import('prismjs/components/prism-bash'),
+      import('prismjs/components/prism-python'),
+      import('prismjs/components/prism-sql'),
+      import('prismjs/components/prism-yaml'),
+      import('prismjs/components/prism-markdown'),
+      import('prismjs/components/prism-diff'),
+      import('prismjs/components/prism-go'),
+      import('prismjs/components/prism-java'),
+      import('prismjs/components/prism-c'),
+    ]);
+    // These extend languages loaded above, so they come second.
+    await Promise.all([
+      import('prismjs/components/prism-jsx'),
+      import('prismjs/components/prism-cpp'),
+      import('prismjs/components/prism-rust'),
+    ]);
+    await import('prismjs/components/prism-tsx');
+    return Prism;
+  })();
+  return prismReady;
+}
+
 export const MarkdownPreviewTool: React.FC = () => {
   // Sample starts at h2: an h1 here would render a second <h1> into the tool page,
   // competing with the page's real heading.
@@ -1646,14 +1688,23 @@ export const MarkdownPreviewTool: React.FC = () => {
 
   const html = useMemo(() => {
     try {
-      // marked escapes raw HTML in the input by default (no `mangle`/raw html passthrough),
-      // so the rendered output only ever contains markup marked itself generated.
-      // renderMarkdown also wraps every table in its own scroll container.
-      return renderMarkdown(input).html;
+      // renderMarkdown also wraps every table in its own scroll container and
+      // turns > [!NOTE] / [!TIP] / [!WARNING] quotes into alerts.
+      return sanitizeHtml(renderMarkdown(input).html);
     } catch {
       return '<p>Could not render markdown.</p>';
     }
   }, [input]);
+
+  // Highlight code blocks after each render. The highlighted spans live only in
+  // the preview; the copied and downloaded HTML stays plain.
+  useEffect(() => {
+    const root = previewRef.current;
+    if (!root || !root.querySelector('pre code[class*="language-"]')) return;
+    let live = true;
+    loadPrism().then((Prism) => { if (live) Prism.highlightAllUnder(root); }).catch(() => {});
+    return () => { live = false; };
+  }, [html, pane]);
 
   const stats = useMemo(() => {
     const words = input.trim() ? input.trim().split(/\s+/).filter(Boolean).length : 0;
@@ -1793,7 +1844,7 @@ export const MarkdownPreviewTool: React.FC = () => {
       <div ref={previewRef} onScroll={syncFrom('preview')} className="flex-1 overflow-auto px-6 py-7">
         {/* The preview fills the pane in both split and preview-only mode. */}
         <div
-          className="blog-prose md-preview max-w-none w-full"
+          className="md-doc max-w-none w-full"
           dangerouslySetInnerHTML={{ __html: labelTaskBoxes(html) }}
         />
       </div>

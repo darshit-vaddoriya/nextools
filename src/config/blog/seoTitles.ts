@@ -24,4 +24,10 @@ export const BLOG_SEO_TITLES: Record<string, string> = {
   'the-maths-behind-the-calculators': 'EMI, GST and percentage formulas explained',
   'signing-a-pdf-what-it-proves': "Signing a PDF: what a signature image does and doesn't prove",
   'qr-codes-what-is-encoded': 'QR codes: what is encoded and how to make one that scans',
+  'json-to-typescript-types-from-a-sample': 'TypeScript types from JSON, and where they go wrong',
+  'loading-a-spreadsheet-into-a-database': 'Load a spreadsheet into a database without an import wizard',
+  'ebooks-epub-pdf-and-markdown': 'E-books explained: EPUB, PDF, Kindle and Markdown',
+  'upi-qr-codes-explained': 'UPI QR codes: what is inside one, and making your own',
+  'photo-and-signature-size-for-online-forms': 'Photo and signature size for online forms (KB, pixels, DPI)',
+  'hindi-text-in-files-and-pdfs': 'Hindi text in PDFs: boxes, question marks and broken copy',
 };

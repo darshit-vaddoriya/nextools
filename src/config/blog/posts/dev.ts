@@ -360,4 +360,40 @@ export const DEV_POSTS: BlogPost[] = [
     ],
     words: 726,
   },
+
+  {
+    slug: 'json-to-typescript-types-from-a-sample',
+    title: 'Generating TypeScript types from JSON, and where they go wrong',
+    description: 'Turning an API response into TypeScript interfaces, Zod schemas, Go structs or Python dataclasses, and five places a type from one sample misleads you.',
+    excerpt: 'Pasting an API response into a generator gives you types in a second. They describe that one response, not the API, and the difference shows up in production.',
+    category: 'dev',
+    tags: ['json', 'typescript', 'zod', 'go', 'python', 'api'],
+    published: '2026-10-24',
+    relatedTools: ['json-to-types', 'json-formatter', 'jsonpath-tester', 'mock-json'],
+    takeaways: [
+      'A type generated from JSON describes the sample you gave it, not the API\'s contract. Feed it several real responses, not one.',
+      'A field missing from some objects in an array becomes optional; a field that is null in every sample tells the generator nothing about its real type.',
+      'Numbers and dates are where inference is weakest: 1 versus 1.5 changes a Go type, and dates arrive as plain strings.',
+      'Use Zod or a similar runtime check at the boundary, because a TypeScript interface disappears when the code runs.',
+    ],
+    words: 727,
+  },
+
+  {
+    slug: 'hindi-text-in-files-and-pdfs',
+    title: 'Hindi text in files: boxes, question marks and broken copy-paste',
+    description: 'Why Hindi turns into boxes, question marks or gibberish in PDFs and documents, Unicode versus old Hindi fonts, and getting text out of a scan.',
+    excerpt: 'Hindi typed in Word looks perfect, then the PDF shows empty boxes, or copying it out gives a string of random English letters. Each failure has a specific cause.',
+    category: 'dev',
+    tags: ['hindi', 'devanagari', 'unicode', 'fonts', 'ocr', 'pdf'],
+    published: '2026-11-07',
+    relatedTools: ['unicode-converter', 'ocr-image', 'pdf-ocr', 'html-to-pdf'],
+    takeaways: [
+      'Modern Hindi text is stored as Unicode Devanagari; every device can read it, but it still needs a font that contains Devanagari to display.',
+      'Boxes or question marks in a PDF mean the font used to make it had no Devanagari letters, not that the text was lost.',
+      'Copy-paste that turns into English gibberish means the document was typed in an old non-Unicode font such as Kruti Dev, which stores Hindi letters as English codes.',
+      'To get Hindi text out of a scan or photo, use OCR with the Hindi language selected.',
+    ],
+    words: 821,
+  },
 ];

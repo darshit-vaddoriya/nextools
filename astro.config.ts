@@ -232,6 +232,8 @@ export default defineConfig({
     },
   ],
   vite: {
+    // Scheduled guides (see BLOG_POSTS) appear in the first build on or after their date.
+    define: { __BUILD_DATE__: JSON.stringify(new Date().toISOString().slice(0, 10)) },
     plugins: [vendorDevPlugin()],
     worker: { format: 'es' },
     build: {

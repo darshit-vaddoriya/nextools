@@ -25,8 +25,12 @@ const UNIT_FACTORS: Record<Exclude<UnitCategory, 'temperature'>, Record<string, 
     'Square Yards': 0.83612736, Acres: 4046.8564224, Hectares: 10000, 'Square Miles': 2_589_988.110336,
   },
   volume: {
-    Liters: 1, Milliliters: 0.001, 'Cubic Meters': 1000, Gallons: 3.785411784,
-    Quarts: 0.946352946, Pints: 0.473176473, 'Cups (US)': 0.2365882365, 'Fluid Ounces (US)': 0.0295735296875,
+    // US and UK gallons and pints share a name and differ by about 20%, so
+    // every one is labelled with its system rather than left as "Gallons".
+    Liters: 1, Milliliters: 0.001, 'Cubic Meters': 1000,
+    'Gallons (US)': 3.785411784, 'Gallons (UK)': 4.54609,
+    'Quarts (US)': 0.946352946, 'Pints (US)': 0.473176473, 'Pints (UK)': 0.56826125,
+    'Cups (US)': 0.2365882365, 'Fluid Ounces (US)': 0.0295735296875,
   },
   speed: {
     'Meters/sec': 1, 'Kilometers/hour': 0.277777778, 'Miles/hour': 0.44704, Knots: 0.514444444, 'Feet/sec': 0.3048,
@@ -903,15 +907,68 @@ function numberToWords(num: number): string {
   return (negative ? 'Negative ' : '') + parts.join(' ');
 }
 
-export const NumberToWordsTool: React.FC = () => {
-  const [input, setInput] = useState('12345');
+/**
+ * The Indian system groups the last three digits, then pairs: 12,34,56,789 is
+ * Twelve Crore Thirty-Four Lakh Fifty-Six Thousand Seven Hundred Eighty-Nine.
+ * Above a crore the crore count is itself read in this system, which gives the
+ * "lakh crore" figures used in budgets and company accounts.
+ */
+function indianWords(num: number): string {
+  if (num === 0) return '';
+  const crore = Math.floor(num / 10_000_000);
+  const rest = num % 10_000_000;
+  const lakh = Math.floor(rest / 100_000);
+  const thousand = Math.floor((rest % 100_000) / 1000);
+  const below = rest % 1000;
+  const parts: string[] = [];
+  if (crore) parts.push(`${indianWords(crore)} Crore`);
+  if (lakh) parts.push(`${threeDigitsToWords(lakh)} Lakh`);
+  if (thousand) parts.push(`${threeDigitsToWords(thousand)} Thousand`);
+  if (below) parts.push(threeDigitsToWords(below));
+  return parts.join(' ');
+}
 
-  const words = useMemo(() => {
-    const num = Number(input);
-    if (input.trim() === '' || isNaN(num) || !Number.isFinite(num)) return '';
-    if (Math.abs(num) >= 1e15) return 'Number too large';
-    return numberToWords(num);
-  }, [input]);
+type NumberSystem = 'indian' | 'international';
+
+function wholeToWords(n: number, system: NumberSystem): string {
+  if (n === 0) return 'Zero';
+  return system === 'indian' ? indianWords(n) : numberToWords(n);
+}
+
+/** Digits after the point are read one by one: 3.05 is Three Point Zero Five. */
+const DIGIT_WORDS = ['Zero', 'One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine'];
+
+function toWords(raw: string, system: NumberSystem, rupees: boolean): string {
+  const cleaned = raw.replace(/[,\s_]/g, '');
+  if (cleaned === '' || !/^-?\d*\.?\d*$/.test(cleaned) || cleaned === '-' || cleaned === '.') return '';
+  const negative = cleaned.startsWith('-');
+  const [intPart = '0', fracPart = ''] = cleaned.replace('-', '').split('.');
+  const whole = Number(intPart || '0');
+  if (!Number.isSafeInteger(whole) || whole >= 1e15) return 'Number too large';
+  const sign = negative && (whole > 0 || /[1-9]/.test(fracPart)) ? 'Negative ' : '';
+
+  if (rupees) {
+    // Paise are rounded to two places, as on a cheque or an invoice.
+    let r = whole;
+    let p = Math.round(Number(`0.${fracPart || '0'}`) * 100);
+    if (p === 100) { r += 1; p = 0; }
+    const paise = p ? ` and ${wholeToWords(p, system)} Paise` : '';
+    return `${sign}Rupees ${wholeToWords(r, system)}${paise} Only`;
+  }
+  const fraction = fracPart ? ` Point ${fracPart.split('').map((d) => DIGIT_WORDS[Number(d)]).join(' ')}` : '';
+  return `${sign}${wholeToWords(whole, system)}${fraction}`;
+}
+
+/** Visitors on an Indian locale get lakh and crore by default; everyone else millions. */
+const defaultSystem = (): NumberSystem =>
+  typeof navigator !== 'undefined' && /-IN$/i.test(navigator.language) ? 'indian' : 'international';
+
+export const NumberToWordsTool: React.FC = () => {
+  const [input, setInput] = useState('125000.50');
+  const [system, setSystem] = useState<NumberSystem>(defaultSystem);
+  const [rupees, setRupees] = useState(false);
+
+  const words = useMemo(() => toWords(input, system, rupees), [input, system, rupees]);
 
   return (
     <div className="space-y-4">
@@ -924,10 +981,22 @@ export const NumberToWordsTool: React.FC = () => {
           value={input}
           onChange={(e) => setInput(e.target.value)}
           type="text"
-          inputMode="numeric"
+          inputMode="decimal"
           className="input-base font-mono text-lg"
-          placeholder="e.g. 12345"
+          placeholder="e.g. 1,25,000.50"
+          aria-label="Number to write in words"
         />
+        <div className="flex flex-wrap gap-2">
+          {([['indian', 'Indian (lakh, crore)'], ['international', 'International (million, billion)']] as [NumberSystem, string][]).map(([k, label]) => (
+            <button key={k} onClick={() => setSystem(k)} className={`btn-secondary text-xs px-3 py-1.5 ${system === k ? 'bg-primary/10 border-primary text-primary' : ''}`}>
+              {label}
+            </button>
+          ))}
+          <label className="inline-flex items-center gap-2 text-xs text-muted-foreground ml-1">
+            <input type="checkbox" checked={rupees} onChange={(e) => setRupees(e.target.checked)} className="rounded text-primary" />
+            Rupees and paise (cheque format)
+          </label>
+        </div>
       </div>
       <div className="bg-card rounded-xl border border-border p-4 space-y-2">
         <p className="section-label">In Words</p>

@@ -413,7 +413,7 @@ If the contents are sensitive, name the files neutrally, use AES-256, and send t
 
 Point five is the one worth pausing on, because sending an archive is frequently a way of passing an unfinished job along.
 
-Both [zipping](/tool/zip-creator) and [unzipping](/tool/zip-extractor) here happen in the browser, which is the useful property when the archive is a set of client documents, HR records or ID scans. Those are exactly the files people zip in order to send somewhere, and exactly the ones you would rather not upload to a converter first.`,
+In practice: [zip](/tool/zip-creator) folders of documents, code and spreadsheets to save space, zip photos and videos only to bundle them into one download, and [unzip](/tool/zip-extractor) an archive before judging its size, because what is inside usually explains it.`,
   'merging-csv-files-that-do-not-line-up': `You have twelve monthly exports and you need one file. It looks like a job for concatenation, and for about eight of the twelve it is. The other four are why combined datasets quietly go wrong.
 
 ## Check the headers first
@@ -474,5 +474,161 @@ The trap is whitespace. \`"Acme Ltd "\` and \`"Acme Ltd"\` are different strings
 
 Step seven is the one that catches everything else. If 12 files totalling 48,210 rows produce 47,980, something dropped rows, and finding out what before you build a report on it is considerably cheaper than afterwards.
 
-The [merge](/tool/merge-csv), [clean](/tool/csv-cleaner) and [deduplicate](/tool/remove-duplicates) tools here work on the files in the browser, which is the right property for exports that contain customer records.`,
+Run the steps in that order: [clean](/tool/csv-cleaner) each file, [merge](/tool/merge-csv) on the agreed columns, then [deduplicate](/tool/remove-duplicates) the result, and check the row count after each step so a silent loss shows up immediately.`,
+  'sending-a-spreadsheet-without-excel': `You need to send a budget, a price list or a set of results to someone, and you are not sure what they have. Maybe they use Google Sheets, maybe Numbers on a Mac, maybe they will open it on a phone, or maybe it is going into an accounting system rather than to a person. The format you choose decides whether it arrives intact.
+
+## Start with what they need to do with it
+
+There are really only three cases.
+
+| They need to… | Send | Why |
+|---|---|---|
+| Read or print it | PDF | Looks identical on every device; nothing to install |
+| Load it into another system | CSV | Plain text that every database and tool reads |
+| Work in the spreadsheet | XLSX | Keeps formulas, formatting and every sheet |
+
+Most mistakes come from sending the working file when the other person only needed to read it, or sending a PDF to someone who needed to copy the numbers out.
+
+## PDF: when the figures are final
+
+A PDF fixes the layout, so the recipient sees exactly the rows and columns you intended, with no risk of them editing a cell by accident or a formula recalculating differently on their machine. It is the right choice for invoices, quotations, reports and anything that will be printed or signed.
+
+Spreadsheets have no pages, so converting one means deciding where the page breaks go. The [Excel to PDF converter](/tool/excel-to-pdf) sizes columns to their content, repeats the header row on every page so a long table stays readable, and switches to landscape when a sheet has more than six columns. It prints the value in each cell, which for a formula is the result Excel last saved. If the workbook might be stale, open it and recalculate before converting.
+
+> [!NOTE]
+> The PDF uses a standard Latin font. Sheets in Hindi, Arabic or Chinese print better from Excel, LibreOffice or Google Sheets, which have the right fonts installed.
+
+## CSV: when the data is going somewhere
+
+CSV is the lowest common denominator: one table of text, comma-separated, readable by everything from a bank's import screen to a Python script. It keeps values and nothing else, so formulas become their results, colours and merged cells disappear, and each sheet has to become its own file.
+
+The trap is dates. Excel stores a date as a number of days since the end of 1899, so 1 January 2024 is really 45292, displayed through a date format. A careless export writes the number. The [Excel to CSV converter](/tool/excel-to-csv) reads each cell's format, recognises dates and writes them as ISO dates such as \`2024-01-01\`, which no system misreads. It writes UTF-8 with a byte order mark so that Excel reopens accented characters correctly, and offers semicolons for recipients whose Excel uses a comma as the decimal separator, as it does across much of Europe.
+
+## XLSX: when they need the spreadsheet itself
+
+If the other person needs to change figures, follow formulas or add rows, send the workbook. Not having Excel is rarely a problem now: Google Sheets, LibreOffice Calc and Apple Numbers all open XLSX for free, with formulas and formatting mostly intact. Complex macros, pivot tables and some charts are where compatibility thins out.
+
+Two older formats still turn up. A \`.xls\` file is the Excel 97–2003 binary format, which some newer tools refuse; [XLS to XLSX](/tool/xls-to-xlsx) upgrades it. An \`.ods\` file comes from LibreOffice or OpenOffice and opens in Excel directly. And if what you have is a CSV that someone wants as a proper workbook, [CSV to Excel](/tool/csv-to-excel) produces an XLSX with numbers stored as numbers rather than text.
+
+## A quick check before you hit send
+
+1. **Open what you are sending**, not the original. A conversion only fails silently if nobody looks.
+2. **Check a date column and a long number.** Dates turning into five-digit numbers and long IDs turning into \`4.53E+15\` are the two classic corruptions.
+3. **Check every sheet made it.** A workbook with five tabs becomes five CSV files, or one PDF with five sections.
+4. **Name the file for the recipient.** \`Q3-prices-2026-10-17.pdf\` is more useful to them than \`Book1 (final) (2).xlsx\`.`,
+  'rar-7z-and-tar-archives-explained': `Someone sends you a download link, and the file ends in \`.rar\`, \`.7z\` or \`.tar.gz\`. On some machines it opens with a double-click. On others you get a blank icon and an offer to search the store for an app. All of these are archives, files that bundle other files together, but they made different choices, and those choices decide where they open.
+
+## ZIP: the one that opens everywhere
+
+ZIP dates from 1989 and its format is openly documented, which is why Windows, macOS, Linux, Android and iOS all open it without extra software. It compresses each file separately using the Deflate method. That independence is convenient, because you can pull one file out of a large archive without decompressing the rest, but it also limits how small the archive can get, because ZIP never notices that two files contain similar data.
+
+## RAR and 7z: smaller, but need software
+
+**RAR** is a proprietary format from the makers of WinRAR. Extracting RAR files is widely supported by free tools, but creating them requires licensed software. **7z** is the native format of 7-Zip, a free and open-source archiver, and normally uses the LZMA family of compression methods.
+
+Both commonly use *solid* compression: many files are compressed as one continuous stream, so repetition across files is found and stored once. For a folder of source code, documents or game assets, that can make the archive noticeably smaller than a ZIP. The cost is that support is not universal. Recent versions of Windows 11 added built-in reading of RAR and 7z, but older Windows, many Macs and most phones still need a separate app.
+
+## TAR.GZ: two steps in one name
+
+\`.tar.gz\` describes two separate steps, and the name lists them in order. **TAR**, the tape archive format from early Unix, simply concatenates files with a 512-byte header before each one, recording its name, size and permissions. It does no compression at all. The second extension says what compressed the whole bundle afterwards: \`.gz\` for gzip, \`.bz2\` for bzip2, \`.xz\` for XZ. A \`.tgz\` file is the same thing with a shorter name.
+
+Because the whole bundle is compressed as one stream, TAR.GZ gets the same cross-file benefit as solid RAR and 7z. It is the standard on Linux servers and in software distribution, and it preserves Unix file permissions, which ZIP handles inconsistently.
+
+## Turning anything into a ZIP
+
+If you received an archive the recipient's computer cannot open, or you just want a ZIP you can open anywhere, the conversion is extract-then-repack: every file is unpacked, then packed again in the new format. The files themselves come out byte-for-byte identical; only the wrapper changes, with folder structure and names preserved.
+
+Here, [RAR to ZIP](/tool/rar-to-zip), [7z to ZIP](/tool/7z-to-zip) and [TAR to ZIP](/tool/tar-to-zip), which also handles \`.tgz\`, \`.tar.bz2\` and \`.tar.xz\`, do this in the browser. Reading uses libarchive, the open-source library behind the \`bsdtar\` command and the archive support in macOS, compiled to WebAssembly. The ZIP is often a little larger than the original, which is the expected cost of losing solid compression.
+
+Going the other way is useful too. When you are uploading files to a Linux server or packaging something for a developer, [ZIP to TAR.GZ](/tool/zip-to-tar) repacks a ZIP, 7z or RAR archive into the format they expect.
+
+> [!WARNING]
+> Password-protected archives cannot be converted without the password, and none of these tools will try to guess it. Extract them with 7-Zip, WinRAR or The Unarchiver using the password, then work with the files.
+
+## Which to use when you are the sender
+
+Send **ZIP** to people, because everyone can open it. Use **TAR.GZ** for servers and for anything where file permissions matter. Reach for **7z** when size genuinely matters and you know the recipient has 7-Zip. And remember that compressing photos, videos and PDFs barely shrinks them in any format, because those files are already compressed; the archive is useful for bundling them into one download, not for saving space.`,
+  'loading-a-spreadsheet-into-a-database': `A spreadsheet arrives, and the data in it needs to be in a database: a product list for a new shop, survey responses for analysis, seed data for a test environment. Every database has a bulk loader, such as \`COPY\` in PostgreSQL, \`LOAD DATA INFILE\` in MySQL and \`.import\` in SQLite, and each has its own syntax, permissions and quirks. For a table of a few thousand rows, there is often a simpler route.
+
+## When a SQL script is the right tool
+
+An INSERT script is plain SQL: a \`CREATE TABLE\` statement followed by \`INSERT\` statements with the data written out. That has real advantages:
+
+- **It runs anywhere** you can paste SQL: a GUI client, a web console, a migration file, a terminal.
+- **You can read it before running it,** and see exactly what types and values are about to go in.
+- **It needs no file access on the server,** which bulk loaders often do and managed databases often forbid.
+- **It can live in version control** as seed data, next to the code that uses it.
+
+For millions of rows, the native bulk loader is much faster and worth learning. For everything smaller, a script is usually quicker to get right.
+
+## How the types get chosen
+
+The [CSV to SQL converter](/tool/csv-to-sql) reads a CSV, TSV or Excel file and picks a type for each column by looking at every value in it. A column becomes \`BOOLEAN\` if every value is true or false, \`INTEGER\` if every value is a whole number, \`REAL\` if every value is numeric, \`DATE\` if every value is written \`YYYY-MM-DD\`, and \`TEXT\` otherwise. Empty cells are ignored when choosing.
+
+Two rules are deliberately conservative. A value with a leading zero, such as \`00745\`, keeps its whole column as \`TEXT\`, because storing it as a number would delete the zero. And numbers longer than 18 digits stay text, because they would overflow or lose precision. Order numbers, postcodes, phone numbers and account IDs are identifiers, not quantities, and TEXT is the right type for them even when they look numeric.
+
+Column names are cleaned for SQL: lowercased, spaces turned into underscores, symbols removed, and duplicates numbered. Each sheet of a workbook becomes its own table.
+
+## Three things to fix before you run it
+
+**Empty cells.** The converter writes an empty cell as \`NULL\`. That is usually right, but it matters: \`WHERE phone = ''\` will not find a NULL, and \`COUNT(phone)\` skips them. Decide what "no value" means for each column now, because changing it later means updating every row.
+
+**Dates in local formats.** Only ISO dates are recognised as \`DATE\`. A column of \`17/10/2026\` stays text, because it could be 17 October or, in another locale, nonsense. Convert the column to \`YYYY-MM-DD\` in the spreadsheet first, or use [Excel to CSV](/tool/excel-to-csv), which writes Excel's real date cells as ISO dates.
+
+**Duplicates and stray whitespace.** A trailing space makes \`"Mumbai "\` and \`"Mumbai"\` two different cities, and a duplicated row becomes a duplicated record. Run the file through a [CSV cleaner](/tool/csv-cleaner) and [remove duplicates](/tool/remove-duplicates) before converting.
+
+## Running it well
+
+Rows are written in batches of 500 per \`INSERT\`, which keeps each statement under the default size limits of every common server. Two habits make the rest go smoothly:
+
+1. **Wrap it in a transaction.** Add \`BEGIN;\` at the top and \`COMMIT;\` at the end. Thousands of separate commits become one, which is dramatically faster, and if a row fails, nothing half-loads.
+2. **Add keys and indexes afterwards.** The script creates a plain table with no primary key or constraints. Load the data, check it, then add the primary key, foreign keys and indexes you need. Building an index once after the load is faster than updating it on every insert.
+
+One portability note: SQL Server has no \`BOOLEAN\` type or \`TRUE\`/\`FALSE\` literals. If you are loading into SQL Server, change \`BOOLEAN\` columns to \`BIT\` and the values to 1 and 0 before running the script.`,
+  'lakh-crore-and-amounts-in-words': `The same number can be written two ways. In India, 1234567 is written 12,34,567 and read as twelve lakh thirty-four thousand five hundred sixty-seven. Almost everywhere else it is written 1,234,567 and read as one million two hundred thirty-four thousand five hundred sixty-seven. Both are correct. Mixing the two on a cheque, an invoice or a contract is how amounts end up wrong by a factor of ten.
+
+## How the Indian system groups digits
+
+The international system groups digits in threes all the way up: thousand, million, billion. The Indian system groups the last three digits, then every two digits after that:
+
+| Digits | Indian | International |
+|---|---|---|
+| 1,000 | One thousand | One thousand |
+| 1,00,000 | One lakh | One hundred thousand |
+| 10,00,000 | Ten lakh | One million |
+| 1,00,00,000 | One crore | Ten million |
+| 10,00,00,000 | Ten crore | One hundred million |
+| 1,00,00,00,000 | One hundred crore | One billion |
+
+So the commas move. 12,34,56,789 in Indian notation is 123,456,789 internationally: twelve crore thirty-four lakh fifty-six thousand seven hundred eighty-nine, or one hundred twenty-three million four hundred fifty-six thousand seven hundred eighty-nine.
+
+## Converting quickly in your head
+
+Three anchors cover almost every case:
+
+- **1 lakh = 100,000.** So 5 lakh is half a million.
+- **10 lakh = 1 million.**
+- **1 crore = 10 million.** So 100 crore is one billion.
+
+A company valued at ₹500 crore is valued at ₹5 billion. A salary of ₹18 lakh a year is ₹1.8 million.
+
+Above a hundred crore, Indian usage does not switch to new words. It counts crores in the same system, which is why news reports and budgets talk about "₹2 lakh crore": two lakh times one crore, or two trillion rupees. Older words for larger units, such as arab and kharab, exist but are rarely used in writing today.
+
+## Writing an amount in words
+
+Cheques, invoices, receipts, rent agreements and loan papers ask for the amount in words as well as in figures, because words are far harder to alter than digits. A zero can be added to a figure with one pen stroke; "one lakh" cannot become "ten lakh" as easily. A few conventions make the words do their job:
+
+1. **Use one system throughout.** For an Indian cheque, lakh and crore. Do not mix "one million twenty-five thousand" with lakh-based figures elsewhere on the same document.
+2. **Start with "Rupees" and end with "Only".** "Rupees One Lakh Twenty-Five Thousand Only." "Only" closes the amount so nothing can be added after it.
+3. **Write paise as part of the words,** for example "and Fifty Paise", or leave them out if the amount is whole.
+4. **Leave no gap.** Start writing at the very beginning of the line and draw a line through any space left after "Only". On the figure box, many people also add "/-" after a whole amount, as in ₹1,25,000/-, for the same reason.
+5. **Read it back against the figure.** A mismatch between words and figures is one of the most common reasons a cheque is returned.
+
+The [number to words tool](/tool/number-to-words) does the conversion in either system. Type the amount with or without commas, choose Indian or International, and switch on rupees and paise to get the cheque format: 125000.50 becomes "Rupees One Lakh Twenty-Five Thousand and Fifty Paise Only".
+
+## Commas in spreadsheets and software
+
+Spreadsheets and programming languages can format numbers in the Indian style, but only if told to. Google Sheets uses the Indian grouping when the spreadsheet's locale is set to India, and Excel follows the digit grouping in the computer's regional settings. In JavaScript, \`(1234567).toLocaleString('en-IN')\` returns \`12,34,567\`. When a figure is copied between a document written in one convention and a tool expecting the other, the commas are only formatting, but readers will still misread them, so convert explicitly and label which system a report uses.
+
+For percentages and tax on the same amounts, the [percentage calculator](/tool/percentage-calc) and [GST calculator](/tool/gst-calculator) work with whichever figures you enter; the grouping does not change the arithmetic.`,
 };

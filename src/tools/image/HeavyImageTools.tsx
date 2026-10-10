@@ -163,7 +163,24 @@ export const GifConverterTool: React.FC = () => {
 };
 
 // ─── QR & BARCODE GENERATOR ────────────────────────────────
-type QrKind = 'url' | 'text' | 'wifi' | 'vcard';
+type QrKind = 'url' | 'text' | 'wifi' | 'vcard' | 'upi';
+
+/** A UPI ID is name@handle, e.g. shop@okbank. */
+const UPI_ID = /^[a-zA-Z0-9.\-_]{2,256}@[a-zA-Z][a-zA-Z0-9]{1,63}$/;
+
+/**
+ * The NPCI deep link every UPI app reads: pa is the payee's UPI ID, pn the name
+ * shown to the payer, am an optional fixed amount, tn an optional note.
+ */
+function upiLink(id: string, name: string, amount: string, note: string): string {
+  // A UPI ID only contains letters, digits, . - _ and @, so it goes in as written:
+  // several UPI apps reject a percent-encoded @.
+  const q = [`pa=${id.trim()}`, `pn=${encodeURIComponent(name.trim())}`];
+  if (amount.trim()) q.push(`am=${Number(amount).toFixed(2)}`);
+  q.push('cu=INR');
+  if (note.trim()) q.push(`tn=${encodeURIComponent(note.trim())}`);
+  return `upi://pay?${q.join('&')}`;
+}
 
 export const QrGeneratorTool: React.FC = () => {
   const [kind, setKind] = useState<QrKind>('url');
@@ -175,6 +192,10 @@ export const QrGeneratorTool: React.FC = () => {
   const [vName, setVName] = useState('John Doe');
   const [vPhone, setVPhone] = useState('+1 555 000 1234');
   const [vEmail, setVEmail] = useState('john@example.com');
+  const [upiId, setUpiId] = useState('');
+  const [upiName, setUpiName] = useState('');
+  const [upiAmount, setUpiAmount] = useState('');
+  const [upiNote, setUpiNote] = useState('');
   const [size, setSize] = useState(256);
   const [fg, setFg] = useState('#000000');
   const [bg, setBg] = useState('#ffffff');
@@ -189,6 +210,12 @@ export const QrGeneratorTool: React.FC = () => {
       case 'text': return text;
       case 'wifi': return `WIFI:T:${wifiEnc};S:${ssid};P:${wifiPass};;`;
       case 'vcard': return `BEGIN:VCARD\nVERSION:3.0\nFN:${vName}\nTEL:${vPhone}\nEMAIL:${vEmail}\nEND:VCARD`;
+      case 'upi': {
+        if (!UPI_ID.test(upiId.trim())) throw new Error('Enter a UPI ID in the form name@bank, for example shop@okaxis.');
+        if (!upiName.trim()) throw new Error('Enter the name payers should see.');
+        if (upiAmount.trim() && !(Number(upiAmount) > 0)) throw new Error('The amount must be a number above zero, or left empty.');
+        return upiLink(upiId, upiName, upiAmount, upiNote);
+      }
     }
   };
 
@@ -215,7 +242,7 @@ export const QrGeneratorTool: React.FC = () => {
   return (
     <div className="space-y-4">
       <div className="flex flex-wrap gap-2">
-        {([['url', 'URL'], ['text', 'Plain Text'], ['wifi', 'Wi-Fi'], ['vcard', 'vCard']] as [QrKind, string][]).map(([k, label]) => (
+        {([['url', 'URL'], ['text', 'Plain Text'], ['wifi', 'Wi-Fi'], ['vcard', 'vCard'], ['upi', 'UPI payment']] as [QrKind, string][]).map(([k, label]) => (
           <button key={k} onClick={() => setKind(k)} className={`btn-secondary text-xs px-4 py-2 ${kind === k ? 'bg-primary/10 border-primary' : ''}`}>
             {label}
           </button>
@@ -272,6 +299,31 @@ export const QrGeneratorTool: React.FC = () => {
               <span className="section-label mb-1 block">Email</span>
               <input value={vEmail} onChange={(e) => setVEmail(e.target.value)} className="input-base w-full font-mono" />
             </label>
+          </div>
+        )}
+        {kind === 'upi' && (
+          <div className="space-y-3 text-xs">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <label className="block">
+                <span className="section-label mb-1 block">UPI ID</span>
+                <input value={upiId} onChange={(e) => setUpiId(e.target.value)} placeholder="shop@okaxis" className="input-base w-full font-mono" autoCapitalize="off" spellCheck={false} />
+              </label>
+              <label className="block">
+                <span className="section-label mb-1 block">Name shown to payer</span>
+                <input value={upiName} onChange={(e) => setUpiName(e.target.value)} placeholder="Sharma General Store" className="input-base w-full" />
+              </label>
+              <label className="block">
+                <span className="section-label mb-1 block">Amount in ₹ (optional)</span>
+                <input value={upiAmount} onChange={(e) => setUpiAmount(e.target.value)} inputMode="decimal" placeholder="Leave empty to let the payer enter it" className="input-base w-full font-mono" />
+              </label>
+              <label className="block">
+                <span className="section-label mb-1 block">Note (optional)</span>
+                <input value={upiNote} onChange={(e) => setUpiNote(e.target.value)} placeholder="Invoice 1042" className="input-base w-full" />
+              </label>
+            </div>
+            <p className="text-muted-foreground leading-relaxed">
+              Scanning this code lets someone pay you. Check the UPI ID twice before printing it, and remember that no one ever needs to scan a code to receive money.
+            </p>
           </div>
         )}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">

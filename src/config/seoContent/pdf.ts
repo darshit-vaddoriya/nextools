@@ -12,7 +12,6 @@ export const PDF_SEO_CONTENT: ToolSeoMap = {
     ],
     faqs: [
       { question: 'Is there a limit to how many PDFs I can merge?', answer: 'You can merge as many files as your browser memory allows; most users combine anywhere from 2 to several dozen PDFs without issue.' },
-      { question: 'Are my files uploaded to a server?', answer: 'No. Merging happens entirely in your browser using JavaScript, so your documents never leave your computer.' },
       { question: 'Can I change the page order after merging?', answer: 'Yes, drag and drop the file thumbnails into any order before clicking Merge; the final PDF follows that exact sequence.' },
       { question: 'Will merging reduce the quality of my PDFs?', answer: 'No, merging simply concatenates the original pages, so text and image quality stay exactly the same.' },
       { question: 'Does it work with password-protected PDFs?', answer: 'Encrypted PDFs may fail to load since the tool cannot decrypt them in-browser; remove the password first if you run into issues.' },
@@ -42,7 +41,6 @@ export const PDF_SEO_CONTENT: ToolSeoMap = {
     faqs: [
       { question: 'Can I split by custom page ranges instead of one page at a time?', answer: 'Yes, you can enter specific ranges like 1-3 or 7,9,12 to extract exactly the pages you need.' },
       { question: 'Do I get a separate file for every page?', answer: 'By default each page becomes its own PDF, but you can group ranges together into fewer output files.' },
-      { question: 'Is the original PDF uploaded anywhere?', answer: 'No, the split happens locally in your browser and the source file is never transmitted to a server.' },
       { question: 'What happens to bookmarks and links when I split a PDF?', answer: 'Internal links that point outside the extracted page range will no longer resolve, since those target pages are removed.' },
       { question: 'Can I split a scanned PDF the same way as a text PDF?', answer: 'Yes, splitting works on any valid PDF regardless of whether the pages contain scanned images or selectable text.' },
       { question: 'Is there a file size limit?', answer: 'Very large PDFs are limited mainly by your device memory and browser, so extremely large scanned files may take longer to process.' },
@@ -61,31 +59,30 @@ export const PDF_SEO_CONTENT: ToolSeoMap = {
   },
   'pdf-compress': {
     intro:
-      'Compress PDF shrinks bulky PDFs so they fit under email attachment limits or upload faster to portals, without sending your files to a third-party cloud service. It is popular with students submitting assignments with size caps, real estate agents attaching floor plans to listings, and anyone trying to reduce a scanned document full of high-resolution images. The compression algorithm runs directly in your browser tab and lets you compare the size before and after.',
+      'Upload forms, email and messaging apps all cap file size, and a PDF that is too big simply will not go through. This tool offers the two methods that actually shrink a PDF. "Keep text selectable" rebuilds the file\'s internal structure and removes metadata, which helps PDFs that were saved inefficiently and leaves text, links and drawings untouched. "Compress images" re-saves every page as a smaller image at the quality you choose, which is what shrinks scans and photo-heavy documents, often by 80 to 90 percent.',
     steps: [
-      { title: 'Upload your PDF', description: 'Choose the PDF file you want to shrink.' },
-      { title: 'Pick a compression level', description: 'Select a preset such as low, medium, or high compression depending on how much quality you can trade for size.' },
-      { title: 'Run the compression', description: 'Click Compress and let the tool re-encode images and optimize the file structure.' },
-      { title: 'Compare and download', description: 'Check the new file size against the original, then download the compressed PDF.' },
+      { title: 'Add the PDF', description: 'Select the PDF you want to shrink.' },
+      { title: 'Choose a method', description: 'Keep text selectable for documents made on a computer; Compress images for scans and photo-heavy files.' },
+      { title: 'Pick an image quality if compressing images', description: 'High quality (150 DPI), Balanced (110 DPI) or Smallest (80 DPI).' },
+      { title: 'Compress and compare', description: 'The before and after sizes are shown. If the file would not get meaningfully smaller, the tool tells you to keep the original.' },
     ],
     faqs: [
-      { question: 'How much smaller will my PDF get?', answer: 'Results vary widely depending on content, but image-heavy scanned PDFs often shrink by 50 percent or more, while text-only PDFs compress less dramatically.' },
-      { question: 'Will compression make my text blurry?', answer: 'Text and vector content stay sharp; only embedded raster images are re-encoded, and higher quality presets keep visible loss minimal.' },
-      { question: 'Is my document uploaded to the cloud to be compressed?', answer: 'No, compression runs locally using in-browser libraries, so the file never leaves your device.' },
-      { question: 'Can I compress a PDF that already has small file size?', answer: 'You can, though there may be little to no reduction if the file has already been optimized or contains mostly text.' },
-      { question: 'Does compressing remove any pages or content?', answer: 'No pages or text are removed; compression only re-encodes images and optimizes internal structures to reduce size.' },
-      { question: 'Will it work on a scanned PDF made of only images?', answer: 'Yes, that is actually where compression has the biggest impact since it targets the embedded image data directly.' },
+      { question: 'Which method should I use?', answer: 'If you can select and copy the text in your PDF, start with Keep text selectable. If the PDF is a scan, a phone photo of documents, or mostly pictures, use Compress images, since that is where almost all of the size is.' },
+      { question: 'Why did Keep text selectable barely change the size?', answer: 'Because the size is in the images, and that method leaves images exactly as they are. It helps files saved inefficiently by the program that made them, but a scan is almost entirely image data. Switch to Compress images.' },
+      { question: 'What does Compress images change?', answer: 'Every page is redrawn as a JPEG image at the resolution you choose and placed on a page of the same size. The pages look the same at normal zoom, but text can no longer be selected, searched or copied, and links stop working. Keep the original if you will need any of that.' },
+      { question: 'How much smaller will it get?', answer: 'For scans, Balanced typically cuts the size by 80 to 90 percent. A PDF that is mostly typed text may come out larger as images, in which case the tool tells you to keep the original instead.' },
+      { question: 'Is Smallest still readable?', answer: 'Typed text at normal sizes usually is, but fine print, small table figures and signatures can blur. Check the result before sending it, and use it only when a strict upload limit leaves no other option.' },
     ],
     useCases: [
-      'Shrinking a scanned assignment or application so it fits under a portal or email attachment limit',
-      'Reducing the size of a floor plan or brochure PDF before attaching it to a listing',
-      'Preparing an image-heavy PDF for faster upload to a slow connection',
-      'Cutting storage space used by an archive of scanned documents',
+      'Getting a scanned application or certificate under a portal\'s upload limit',
+      'Shrinking a PDF of phone photos of documents before emailing it',
+      'Removing hidden author and software details before sharing a document',
+      'Reducing the size of an image-heavy brochure or report for a slow connection',
     ],
     tips: [
-      'Start with a medium preset and compare the result before jumping to high compression, since image-heavy files can lose noticeable clarity at aggressive settings.',
-      'Text-only PDFs will not shrink much because compression mainly targets embedded raster images.',
-      'If a file is already optimized, expect minimal size reduction no matter the preset you choose.',
+      'Try Balanced first. Go to Smallest only if the file is still over the limit.',
+      'Text-based PDFs rarely need compressing; if one is large, it usually contains a few big images, so Compress images helps there too, at the cost of selectable text.',
+      'Keep the original. A compressed copy cannot be turned back into the full-quality file.',
     ],
   },
   'pdf-to-word': {
@@ -100,7 +97,6 @@ export const PDF_SEO_CONTENT: ToolSeoMap = {
     faqs: [
       { question: 'Will the converted Word file keep the exact same formatting as the PDF?', answer: 'Basic text flow is preserved, but complex layouts, columns, and precise font styling may not match the original PDF exactly.' },
       { question: 'Does this work on scanned PDFs with no selectable text?', answer: 'No, this tool extracts existing text layers; for scanned or image-only PDFs use the PDF OCR tool first.' },
-      { question: 'Is my PDF sent to a server for conversion?', answer: 'No, the extraction and DOCX generation both happen entirely in your browser.' },
       { question: 'Can I edit the DOCX file on my phone after downloading?', answer: 'Yes, any mobile Word-compatible app can open the resulting DOCX file for editing.' },
       { question: 'What happens to images embedded in the PDF?', answer: 'This tool focuses on text extraction, so embedded images may not carry over into the DOCX output.' },
       { question: 'Does it support multi-column PDFs like resumes?', answer: 'Text is extracted in reading order as best as possible, but multi-column layouts can sometimes come out slightly reordered.' },
@@ -130,7 +126,6 @@ export const PDF_SEO_CONTENT: ToolSeoMap = {
       { question: 'Can I choose the image resolution?', answer: 'Yes, you can select a quality or scale setting so exported images are sharp enough for printing or presentations.' },
       { question: 'Does it convert every page, or just one?', answer: 'By default every page is converted, but you can select specific pages if you only need a few.' },
       { question: 'Which is better, JPG or PNG output?', answer: 'JPG produces smaller files for photos and scans, while PNG preserves sharper edges for text-heavy pages and supports transparency.' },
-      { question: 'Are my files uploaded anywhere during conversion?', answer: 'No, pages are rendered locally using your browser, so the PDF never leaves your computer.' },
       { question: 'Will text stay sharp in the converted images?', answer: 'Yes, at higher resolution settings text remains crisp, though very high zoom levels will still show pixelation since it becomes a raster image.' },
       { question: 'Can I convert a password-protected PDF this way?', answer: 'You will need to remove the password first, since the browser cannot render encrypted pages without the correct credentials.' },
     ],
@@ -160,7 +155,6 @@ export const PDF_SEO_CONTENT: ToolSeoMap = {
       { question: 'Does it support both JPG and PNG in the same batch?', answer: 'Yes, you can mix JPG and PNG images together and they will all be converted into pages of the same PDF.' },
       { question: 'Will the images lose quality when converted?', answer: 'Images are embedded at their original resolution, so there is no additional compression beyond what the source file already had.' },
       { question: 'Can I change the page orientation or size?', answer: 'Yes, you can typically choose between page sizes like A4 or Letter and set portrait or landscape orientation.' },
-      { question: 'Are my photos uploaded to a server to build the PDF?', answer: 'No, the PDF is assembled entirely in your browser and your images stay on your device.' },
       { question: 'Can I reorder images before creating the PDF?', answer: 'Yes, drag and drop the image thumbnails into the order you want before generating the final document.' },
     ],
     useCases: [
@@ -188,7 +182,6 @@ export const PDF_SEO_CONTENT: ToolSeoMap = {
       { question: 'Does it support CSS styling in the HTML?', answer: 'Basic inline and embedded CSS is rendered, but very complex layouts or external stylesheets may not render identically to a browser page.' },
       { question: 'Can I convert a full webpage URL to PDF?', answer: 'This tool works on HTML content you paste in; it does not fetch and render arbitrary external URLs.' },
       { question: 'Will fonts and images show up correctly in the PDF?', answer: 'Standard web-safe fonts and embedded or linked images typically render fine, but custom fonts not available on your device may fall back to a default.' },
-      { question: 'Is the HTML content sent to a server to be converted?', answer: 'No, conversion happens entirely client-side in your browser.' },
       { question: 'Can I control page breaks in the output?', answer: 'Yes, using standard CSS page-break properties in your HTML you can influence where pages split.' },
       { question: 'Does it work with JavaScript-heavy HTML content?', answer: 'The tool renders static markup and styles; dynamic content that depends on external scripts running may not appear as expected.' },
     ],
@@ -217,7 +210,6 @@ export const PDF_SEO_CONTENT: ToolSeoMap = {
       { question: 'Can I control the font and text size?', answer: 'Yes, most versions of the tool let you adjust font size and sometimes font family before generating the PDF.' },
       { question: 'Does it preserve line breaks and paragraphs exactly as typed?', answer: 'Yes, line breaks and blank lines are preserved and reflected in the paginated PDF output.' },
       { question: 'Is there a limit on how much text I can convert?', answer: 'There is no strict limit, though extremely large amounts of text may take a moment longer to paginate across many pages.' },
-      { question: 'Will my text be uploaded to a server?', answer: 'No, the PDF is generated entirely within your browser and your text never leaves your device.' },
       { question: 'Can I add multiple pages of text at once?', answer: 'Yes, the tool automatically paginates long text into as many pages as needed.' },
       { question: 'Does it support special characters and emoji?', answer: 'Standard Unicode text is supported, though rendering of unusual symbols depends on the fonts available for the PDF engine.' },
     ],
@@ -273,7 +265,6 @@ export const PDF_SEO_CONTENT: ToolSeoMap = {
     ],
     faqs: [
       { question: 'Does it work on scanned PDFs without a text layer?', answer: 'No, this tool reads existing text layers only; for scanned images use the PDF OCR tool instead.' },
-      { question: 'Is my document uploaded to extract the text?', answer: 'No, all extraction happens locally in your browser and the file is never sent to a server.' },
       { question: 'Will formatting like bold or headings be preserved?', answer: 'No, the output is plain text, so visual formatting is stripped and only the raw text content remains.' },
       { question: 'Can I extract text from just specific pages?', answer: 'Some versions let you select a page range, but by default all pages are processed.' },
       { question: 'What if my PDF has multiple columns?', answer: 'Text is pulled in the reading order embedded in the PDF, which may occasionally interleave columns unexpectedly.' },
@@ -332,7 +323,6 @@ export const PDF_SEO_CONTENT: ToolSeoMap = {
     faqs: [
       { question: 'Can I rotate just one page instead of the whole document?', answer: 'Yes, you can select individual pages and rotate only those, leaving the rest of the document untouched.' },
       { question: 'Does rotating affect the text quality or resolution?', answer: 'No, rotation only changes the page orientation metadata and does not re-render or compress the content.' },
-      { question: 'Is my file uploaded to a server to be rotated?', answer: 'No, rotation is performed entirely client-side in your browser.' },
       { question: 'Can I rotate pages by an angle other than 90, 180, or 270?', answer: 'The tool supports standard 90 degree increments since PDF page rotation is defined in those fixed steps.' },
       { question: 'Will the rotation be permanent in the saved file?', answer: 'Yes, the downloaded PDF has the rotation baked into the page orientation so it displays correctly everywhere.' },
       { question: 'Does it work on scanned image-based PDFs?', answer: 'Yes, rotation works on any PDF page regardless of whether it contains scanned images or text.' },
@@ -361,7 +351,6 @@ export const PDF_SEO_CONTENT: ToolSeoMap = {
     faqs: [
       { question: 'Can I reorder a large document with many pages?', answer: 'Yes, though dragging many thumbnails is easier with a larger screen; the tool handles documents of typical office length well.' },
       { question: 'Does reordering delete any pages?', answer: 'No, reordering only changes page sequence; use the Delete PDF Pages tool if you also need to remove pages.' },
-      { question: 'Is the file uploaded to reorder the pages?', answer: 'No, all reordering happens locally in your browser using the file you selected.' },
       { question: 'Can I undo a reorder before saving?', answer: 'Yes, you can keep rearranging thumbnails freely until you are satisfied, and nothing is finalized until you download.' },
       { question: 'Will reordering affect bookmarks or links in the PDF?', answer: 'Internal bookmarks may point to the old page numbers, so double-check navigation links after significant reordering.' },
       { question: 'Does it work on touchscreens for dragging pages?', answer: 'Yes, touch-based drag and drop is supported on most modern mobile and tablet browsers.' },
@@ -391,7 +380,6 @@ export const PDF_SEO_CONTENT: ToolSeoMap = {
       { question: 'Can I select multiple pages to delete at once?', answer: 'Yes, you can select any number of pages before removing them in a single operation.' },
       { question: 'Does deleting pages change the file size much?', answer: 'Removing pages typically reduces file size somewhat, especially if the deleted pages contained large images.' },
       { question: 'Is the original file changed, or do I get a copy?', answer: 'The tool works on a copy loaded into your browser; your original file on disk is left untouched unless you overwrite it.' },
-      { question: 'Are my documents uploaded to a server for editing?', answer: 'No, page deletion is processed entirely client-side in your browser.' },
       { question: 'Can I delete a page and then restore it?', answer: 'Deletions can be undone before you download the final file, but once downloaded the removed pages are gone from that copy.' },
       { question: 'Does it work with large scanned PDFs?', answer: 'Yes, though very large scanned files may take a bit longer to load thumbnails and process.' },
     ],
@@ -419,7 +407,6 @@ export const PDF_SEO_CONTENT: ToolSeoMap = {
     faqs: [
       { question: 'Can I crop all pages the same way at once?', answer: 'Yes, you can define one crop area and apply it uniformly across every page in the document.' },
       { question: 'Does cropping delete content outside the crop box permanently?', answer: 'The content is hidden outside the visible crop area in the output file, effectively trimming the page dimensions.' },
-      { question: 'Is my PDF uploaded to perform the crop?', answer: 'No, cropping is rendered and applied entirely within your browser.' },
       { question: 'Can I crop different pages with different areas?', answer: 'Yes, most workflows let you set a custom crop per page if your document has inconsistent margins.' },
       { question: 'Will cropping affect the text resolution?', answer: 'No, cropping only changes the visible page boundary and does not resample or degrade the underlying content.' },
       { question: 'Can I undo a crop after applying it?', answer: 'You can crop again or re-upload the original file to start over, since the tool works on the file loaded in your session.' },
@@ -438,31 +425,28 @@ export const PDF_SEO_CONTENT: ToolSeoMap = {
   },
   'pdf-watermark': {
     intro:
-      'Add Watermark stamps custom text, like "Confidential" or a company name, or a logo image across PDF pages to protect drafts, brand documents, or mark sample copies before wider distribution. Photographers protecting proofs and legal teams marking draft contracts both rely on this to discourage unauthorized reuse. The watermark is composited onto every page locally in the browser, so your original document is never sent anywhere during the process.',
+      'A watermark tells every reader what a document is before they read a word of it: CONFIDENTIAL, DRAFT, SAMPLE, or the name of the person it was sent to. This tool stamps your text onto every page of a PDF in the colour, size and opacity you choose, placed in the centre, diagonally across the page, tiled over the whole page, or along the top or bottom edge.',
     steps: [
-      { title: 'Upload your PDF', description: 'Select the PDF file you want to watermark.' },
-      { title: 'Choose text or image watermark', description: 'Enter watermark text or upload a logo image to stamp onto pages.' },
-      { title: 'Adjust position and opacity', description: 'Set the placement, size, rotation, and transparency of the watermark.' },
-      { title: 'Apply and download', description: 'Apply the watermark to all pages and download the finished PDF.' },
+      { title: 'Add the PDF', description: 'Select the document you want to mark.' },
+      { title: 'Type the watermark text', description: 'For example CONFIDENTIAL, DRAFT, or "Prepared for A. Sharma".' },
+      { title: 'Choose placement and style', description: 'Centred, diagonal, tiled, top or bottom, with your colour, size and opacity.' },
+      { title: 'Apply and download', description: 'The text is added to every page, and the marked copy downloads as a new PDF.' },
     ],
     faqs: [
-      { question: 'Can I use an image logo instead of text as the watermark?', answer: 'Yes, you can upload an image file and place it as the watermark instead of, or alongside, text.' },
-      { question: 'Will the watermark appear on every page automatically?', answer: 'Yes, by default the watermark is applied to all pages, though some setups let you limit it to a page range.' },
-      { question: 'Can I control how transparent the watermark is?', answer: 'Yes, you can adjust the opacity so the watermark is subtle or bold depending on your needs.' },
-      { question: 'Is my document uploaded to add the watermark?', answer: 'No, the watermark is drawn onto the pages entirely within your browser.' },
-      { question: 'Can the watermark be removed later by someone else?', answer: 'A watermark stamped into the page content is difficult to remove without specialized editing tools, though it is not fully tamper-proof.' },
-      { question: 'Can I rotate the watermark diagonally across the page?', answer: 'Yes, rotation controls let you angle the watermark, such as a classic diagonal "Draft" stamp.' },
+      { question: 'Can I use a logo image instead of text?', answer: 'No, this tool stamps text only. A company name in text works as a brand mark; for an image logo you need a PDF editor that can place images.' },
+      { question: 'Does the watermark go on every page?', answer: 'Yes, every page gets the same mark. To watermark only some pages, split those pages out first, mark them, then merge the document back together.' },
+      { question: 'Which placement is best?', answer: 'Diagonal is the classic DRAFT or CONFIDENTIAL stamp and reads clearly over text. Tiled is the hardest to crop or cover. Top or bottom suits a quiet line such as the recipient\'s name.' },
+      { question: 'Can someone remove the watermark?', answer: 'A determined person with a PDF editor can, because it is text added to each page. It deters casual forwarding and makes leaks traceable, especially if each copy carries the recipient\'s name, but it is not a lock.' },
     ],
     useCases: [
-      'Marking a draft contract as "Confidential" before circulating it for review',
-      'Stamping photo proofs with a logo to discourage unauthorized use',
-      'Branding internal reports with a company name or logo across every page',
-      'Labeling sample copies of a document before wider distribution',
+      'Marking a draft contract as DRAFT or CONFIDENTIAL before review',
+      'Putting the recipient\'s name on each copy of a sensitive document, so a leak can be traced',
+      'Labelling sample chapters or price lists as SAMPLE before sending',
+      'Stamping internal reports with the company name',
     ],
     tips: [
-      'Lower the opacity for a subtle background watermark that does not interfere with reading the page content.',
-      'A diagonal rotation across the page reads more clearly than a straight horizontal stamp for classic "Draft" or "Confidential" marks.',
-      'A stamped watermark deters casual reuse but is not fully tamper-proof against determined editing.',
+      'Keep opacity low, around 15 to 25 percent, so the page underneath stays readable.',
+      'For sensitive documents, send each person a copy watermarked with their own name.',
     ],
   },
   'pdf-page-numbers': {
@@ -478,7 +462,6 @@ export const PDF_SEO_CONTENT: ToolSeoMap = {
       { question: 'Can I start numbering from a page other than 1?', answer: 'Yes, you can set a custom starting number, which is useful when a document continues from another file.' },
       { question: 'Can I choose where the page number appears?', answer: 'Yes, common positions like top or bottom, left, center, or right are usually available.' },
       { question: 'Does it support formats like "Page 1 of 10"?', answer: 'Many configurations support that format alongside simple numeric page numbers, depending on the tool options provided.' },
-      { question: 'Is my PDF uploaded to add page numbers?', answer: 'No, numbers are stamped onto the pages entirely within your browser.' },
       { question: 'Will page numbers overwrite existing content on the page?', answer: 'Numbers are placed in the margin area you select, so they should not overlap with page content if positioned appropriately.' },
       { question: 'Can I skip numbering the first page, like a cover?', answer: 'Yes, many setups let you exclude a specific page or start numbering from a later page.' },
     ],
@@ -506,7 +489,6 @@ export const PDF_SEO_CONTENT: ToolSeoMap = {
     faqs: [
       { question: 'Can I add both a header and a footer at the same time?', answer: 'Yes, you can configure text for the header and footer independently and apply both in one pass.' },
       { question: 'Can I insert the current date automatically?', answer: 'Many configurations support a date placeholder that inserts the current date automatically into the header or footer.' },
-      { question: 'Is my document uploaded to add the header or footer?', answer: 'No, the text is drawn onto pages entirely within your browser.' },
       { question: 'Will the header or footer overlap with existing page content?', answer: 'It is placed in the page margin, so it should not overlap as long as your document has adequate margin space.' },
       { question: 'Can I apply different text to different pages?', answer: 'Standard usage applies the same header and footer to every page, though some setups support page-specific text.' },
       { question: 'Does adding a header and footer affect the original page size?', answer: 'No, the page dimensions stay the same; the text is simply layered into the existing margin area.' },
@@ -535,7 +517,6 @@ export const PDF_SEO_CONTENT: ToolSeoMap = {
     faqs: [
       { question: 'Is a signature added this way legally binding?', answer: 'It functions as an electronic signature similar to typing your name, but legal validity depends on your jurisdiction and the specific agreement, so check requirements for formal contracts.' },
       { question: 'Can I sign on my phone using my finger?', answer: 'Yes, the drawing option works with touch input on mobile devices and tablets.' },
-      { question: 'Is my document uploaded to a server to add the signature?', answer: 'No, the signing process happens entirely in your browser and the file is not transmitted anywhere.' },
       { question: 'Can I add multiple signatures to different pages?', answer: 'Yes, you can place the same or different signatures on as many pages as needed.' },
       { question: 'Can I save my signature for reuse later?', answer: 'Depending on your browser session, you may be able to reuse a drawn or uploaded signature during the same visit.' },
       { question: 'Does it work on scanned PDF documents?', answer: 'Yes, you can place a signature image on top of any PDF page, including scanned documents.' },
@@ -563,7 +544,6 @@ export const PDF_SEO_CONTENT: ToolSeoMap = {
     ],
     faqs: [
       { question: 'Does this work on any PDF, or only ones with form fields?', answer: 'It works on PDFs that contain actual interactive AcroForm fields; a plain scanned document has no fields to fill in this way.' },
-      { question: 'Is my personal information uploaded when I fill in a form?', answer: 'No, everything you type stays in your browser and is only embedded into the PDF you download.' },
       { question: 'Can I fill checkboxes and dropdown menus, not just text fields?', answer: 'Yes, common interactive field types including checkboxes, radio buttons, and dropdowns are supported.' },
       { question: 'Can I save my progress and finish the form later?', answer: 'You would need to download a partially filled copy and re-upload it later, since the session does not persist automatically after closing the tab.' },
       { question: 'Will the filled data be editable if I reopen the PDF elsewhere?', answer: 'Yes, unless you flatten the form afterward, the entered values remain in editable form fields when opened in another PDF viewer.' },
@@ -593,7 +573,6 @@ export const PDF_SEO_CONTENT: ToolSeoMap = {
     faqs: [
       { question: 'Can I still edit the form fields after flattening?', answer: 'No, flattening permanently converts fields into static page content, so they can no longer be edited as form fields.' },
       { question: 'Does flattening change how the document looks visually?', answer: 'No, the visual appearance stays the same; only the underlying interactivity of the fields is removed.' },
-      { question: 'Is my PDF uploaded to a server to flatten it?', answer: 'No, flattening is processed entirely within your browser.' },
       { question: 'Why would I want to flatten a completed form?', answer: 'Flattening prevents accidental changes to submitted values and ensures the document prints and displays consistently across viewers.' },
       { question: 'Does flattening also remove comments and annotations?', answer: 'Yes, comments and markup annotations are merged into the page content and are no longer separately editable after flattening.' },
       { question: 'Can I flatten only some fields and leave others editable?', answer: 'Typically flattening applies to the entire document at once rather than selectively per field.' },
@@ -621,7 +600,6 @@ export const PDF_SEO_CONTENT: ToolSeoMap = {
     ],
     faqs: [
       { question: 'Can every corrupted PDF be fully repaired?', answer: 'No, severely damaged files with missing critical data may only be partially recovered or may fail to repair at all.' },
-      { question: 'Is my damaged file uploaded to attempt the repair?', answer: 'No, the repair process happens locally in your browser without sending the file anywhere.' },
       { question: 'What usually causes a PDF to become corrupted?', answer: 'Common causes include an interrupted download, a crash during saving, or transfer errors over an unstable connection.' },
       { question: 'Will repairing a PDF change its original content?', answer: 'The tool tries to preserve original content while fixing structural issues, though in some recovery cases minor elements may be lost.' },
       { question: 'Can this tool fix a PDF that will not open at all?', answer: 'It is designed for exactly that scenario, though results depend on how much of the file structure is still intact.' },
@@ -650,8 +628,7 @@ export const PDF_SEO_CONTENT: ToolSeoMap = {
     ],
     faqs: [
       { question: 'Does it compare text content, visual layout, or both?', answer: 'It primarily compares text and page content differences, highlighting additions and removals between the two versions.' },
-      { question: 'Can I compare documents with a different number of pages?', answer: 'Yes, the tool will show which pages were added, removed, or shifted between the two versions.' },
-      { question: 'Are both files uploaded to a server for comparison?', answer: 'No, the comparison is computed entirely within your browser using both files you selected.' },
+      { question: 'Can I compare documents with a different number of pages?', answer: 'Yes, but know how it pairs them: page 1 is compared with page 1, page 2 with page 2, and extra pages at the end show as added or removed. If a page was inserted near the start, every later page is compared with the wrong one and looks heavily changed. For a document whose pagination shifted, extract the text of both and compare it with the text diff tool instead.' },
       { question: 'Does it work on scanned PDFs without selectable text?', answer: 'Comparison works best on PDFs with a text layer; purely scanned image pages may only be compared visually rather than by text differences.' },
       { question: 'Can I compare very large documents with hundreds of pages?', answer: 'Yes, though comparing very large files may take longer depending on your device performance.' },
       { question: 'Will minor formatting changes be flagged as differences?', answer: 'Depending on sensitivity settings, formatting-only changes without text differences may or may not be highlighted.' },
@@ -679,7 +656,6 @@ export const PDF_SEO_CONTENT: ToolSeoMap = {
     ],
     faqs: [
       { question: 'Is redacted text truly removed, or just covered visually?', answer: 'A proper redaction removes the underlying text content from that area rather than just drawing a black box over it, preventing copy-paste recovery.' },
-      { question: 'Is my document uploaded to apply the redaction?', answer: 'No, redaction is processed entirely in your browser, which is especially important for confidential material.' },
       { question: 'Can I redact multiple areas across several pages at once?', answer: 'Yes, you can draw as many redaction boxes as needed across any pages before applying them all together.' },
       { question: 'Will redacted content still be visible if someone copies the text?', answer: 'No, properly applied redaction removes the underlying text so it cannot be selected or copied from the redacted area.' },
       { question: 'Can I undo a redaction after applying it?', answer: 'Once applied and downloaded, the redaction is permanent on that file; keep your original unredacted copy separately if you need to make changes later.' },
@@ -708,9 +684,7 @@ export const PDF_SEO_CONTENT: ToolSeoMap = {
     ],
     faqs: [
       { question: 'Which metadata fields can I edit?', answer: 'Common editable fields include title, author, subject, and keywords, and sometimes creation and modification dates.' },
-      { question: 'Is my document uploaded to change its metadata?', answer: 'No, metadata is read and rewritten entirely within your browser.' },
       { question: 'Will editing metadata change the visible page content?', answer: 'No, metadata is separate from page content, so editing it does not alter what appears on the pages.' },
-      { question: 'Can I remove metadata entirely for privacy reasons?', answer: 'Yes, you can clear fields like author or keywords if you want to strip identifying information before sharing a file.' },
       { question: 'Why is metadata useful for a PDF?', answer: 'Accurate metadata improves searchability in document management systems and provides context like authorship without opening the file.' },
       { question: 'Does changing metadata affect the file size significantly?', answer: 'No, metadata changes are typically tiny compared to the overall page content and have negligible impact on file size.' },
     ],
@@ -737,7 +711,6 @@ export const PDF_SEO_CONTENT: ToolSeoMap = {
     ],
     faqs: [
       { question: 'Do I need Adobe Reader or another app to use this?', answer: 'No, the viewer renders PDFs entirely in your browser, so no external reader software or plugin is required.' },
-      { question: 'Is my PDF uploaded to a server just to view it?', answer: 'No, the file is rendered locally using your browser, keeping the document private to your device.' },
       { question: 'Can I view password-protected PDFs?', answer: 'You will need to enter the correct password if the file is encrypted, since the viewer cannot bypass PDF encryption.' },
       { question: 'Does it work well on mobile browsers?', answer: 'Yes, the viewer adapts to smaller screens with touch-friendly zoom and page navigation.' },
       { question: 'Can I print directly from the viewer?', answer: 'Yes, you can use your browser print function while the PDF is open to send it to a printer or save it as a new file.' },
@@ -767,7 +740,6 @@ export const PDF_SEO_CONTENT: ToolSeoMap = {
     faqs: [
       { question: 'How is this different from the Split PDF tool?', answer: 'Page Extractor is focused on pulling out one specific range as a single new document, while Split can break a file into several separate pieces at once.' },
       { question: 'Can I extract a non-contiguous set of pages, like 2, 5, and 9?', answer: 'Yes, most configurations let you specify individual pages and ranges together, not just one continuous block.' },
-      { question: 'Is my PDF uploaded to extract the pages?', answer: 'No, extraction is performed locally in your browser without sending the file to a server.' },
       { question: 'Will the extracted pages keep their original quality?', answer: 'Yes, extracted pages retain their original resolution and content since they are copied directly rather than re-rendered.' },
       { question: 'Can I extract pages from a scanned PDF?', answer: 'Yes, extraction works the same way regardless of whether pages contain scanned images or selectable text.' },
       { question: 'What happens to page numbering in the new file?', answer: 'The new file starts fresh with the extracted pages in order, though any printed page numbers within the content itself remain as originally printed.' },

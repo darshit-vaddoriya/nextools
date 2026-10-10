@@ -26,12 +26,34 @@ async function loadLibDoc(file: File): Promise<PDFDocument> {
 }
 
 // ─── COMPRESS PDF ───────────────────────────────────────────────
+/**
+ * Two ways to make a PDF smaller, because they suit different files.
+ *
+ * Structure: re-save with object streams and drop metadata. Text, links and
+ * vector graphics are untouched, and a PDF written inefficiently by its
+ * creator shrinks, but embedded images are left exactly as they were.
+ *
+ * Images: render every page and store it as a JPEG at a lower resolution. This
+ * is what shrinks a scan or a photo-heavy document, at the cost of turning
+ * each page into a picture, so text can no longer be selected or searched.
+ */
+type CompressMode = 'structure' | 'images';
+const IMAGE_LEVELS = [
+  { value: 'high', label: 'High quality (150 DPI)', dpi: 150, quality: 0.75 },
+  { value: 'balanced', label: 'Balanced (110 DPI)', dpi: 110, quality: 0.6 },
+  { value: 'small', label: 'Smallest (80 DPI)', dpi: 80, quality: 0.5 },
+] as const;
+type ImageLevel = typeof IMAGE_LEVELS[number]['value'];
+
 export const PdfCompressTool: React.FC = () => {
   const { file, pageCount, busy, error, load, reset } = usePdfSource(0);
+  const [mode, setMode] = useState<CompressMode>('structure');
+  const [level, setLevel] = useState<ImageLevel>('balanced');
   const [stripMeta, setStripMeta] = useState(true);
   const [isBusy, setIsBusy] = useState(false);
   const [err, setErr] = useState<string | null>(null);
   const [result, setResult] = useState<{ blob: Blob; name: string; original: number } | null>(null);
+  const [notSmaller, setNotSmaller] = useState(false);
   const { run, overlay } = useExportProgress();
 
   const handleFiles = useCallback((files: File[]) => {
@@ -39,31 +61,78 @@ export const PdfCompressTool: React.FC = () => {
     if (f) {
       setResult(null);
       setErr(null);
+      setNotSmaller(false);
       load(f);
     } else setErr('Please select a valid PDF file.');
   }, [load]);
+
+  const compressStructure = async (src: File, report: (p: number, label: string) => void): Promise<Uint8Array> => {
+    report(5, 'Reading document…');
+    const doc = await loadLibDoc(src);
+    if (stripMeta) {
+      doc.setTitle('');
+      doc.setAuthor('');
+      doc.setSubject('');
+      doc.setKeywords([]);
+      doc.setCreator('');
+      doc.setProducer('');
+    }
+    report(40, 'Re-encoding file structure…');
+    return doc.save({ useObjectStreams: true });
+  };
+
+  const compressImages = async (src: File, report: (p: number, label: string) => void): Promise<Uint8Array> => {
+    const { dpi, quality } = IMAGE_LEVELS.find(l => l.value === level) ?? IMAGE_LEVELS[1];
+    const [pdfjs, { renderPageForExport }] = await Promise.all([getPdfjs(), import('../convert/engines/pdf')]);
+    const task = pdfjs.getDocument({ data: new Uint8Array(await src.arrayBuffer()) });
+    const source = await task.promise;
+    const out = await PDFDocument.create();
+    try {
+      for (let p = 1; p <= source.numPages; p += 1) {
+        report(5 + Math.round(((p - 1) / source.numPages) * 90), `Compressing page ${p} of ${source.numPages}…`);
+        const page = await source.getPage(p);
+        // Page size in points (1/72 inch) is kept, so the document prints at its original size.
+        const { width, height } = page.getViewport({ scale: 1 });
+        const rendered = await renderPageForExport(page, dpi / 72);
+        // JPEG has no transparency, so pages are flattened onto white first.
+        const flat = document.createElement('canvas');
+        flat.width = rendered.width;
+        flat.height = rendered.height;
+        const g = flat.getContext('2d')!;
+        g.fillStyle = '#ffffff';
+        g.fillRect(0, 0, flat.width, flat.height);
+        g.drawImage(rendered, 0, 0);
+        const jpg = await new Promise<Blob>((resolve, reject) =>
+          flat.toBlob(b => (b ? resolve(b) : reject(new Error('Could not encode a page.'))), 'image/jpeg', quality));
+        const image = await out.embedJpg(await jpg.arrayBuffer());
+        out.addPage([width, height]).drawImage(image, { x: 0, y: 0, width, height });
+        rendered.width = 0;
+        flat.width = 0;
+        page.cleanup();
+      }
+    } finally {
+      await task.destroy();
+    }
+    report(97, 'Saving…');
+    return out.save({ useObjectStreams: true });
+  };
 
   const compress = async () => {
     if (!file) return;
     setIsBusy(true);
     setErr(null);
+    setResult(null);
+    setNotSmaller(false);
     try {
       await run(async (report) => {
-        report(5, 'Reading document…');
-        const doc = await loadLibDoc(file);
-        if (stripMeta) {
-          doc.setTitle('');
-          doc.setAuthor('');
-          doc.setSubject('');
-          doc.setKeywords([]);
-          doc.setCreator('');
-          doc.setProducer('');
+        const bytes = mode === 'images' ? await compressImages(file, report) : await compressStructure(file, report);
+        if (bytes.byteLength >= file.size * 0.98) {
+          // Under 2% smaller is not worth a second copy, and a bigger file never is.
+          setNotSmaller(true);
+        } else {
+          const buf = bytes.buffer.slice(bytes.byteOffset, bytes.byteOffset + bytes.byteLength) as ArrayBuffer;
+          setResult({ blob: new Blob([buf], { type: 'application/pdf' }), name: `${baseName(file.name)}_compressed.pdf`, original: file.size });
         }
-        report(40, 'Re-encoding file structure…');
-        const bytes = await doc.save({ useObjectStreams: true });
-        const buf = bytes.buffer.slice(bytes.byteOffset, bytes.byteOffset + bytes.byteLength) as ArrayBuffer;
-        const blob = new Blob([buf], { type: 'application/pdf' });
-        setResult({ blob, name: `${baseName(file.name)}_compressed.pdf`, original: file.size });
         report(100, 'Done');
       });
     } catch (e) {
@@ -79,7 +148,7 @@ export const PdfCompressTool: React.FC = () => {
   return (
     <div className="space-y-4">
       {!file ? (
-        <PdfDropzone onFiles={handleFiles} label="Select a PDF to compress" hint="Reduce file size by re-encoding the document structure" />
+        <PdfDropzone onFiles={handleFiles} label="Select a PDF to compress" hint="Rebuild the structure, or compress the page images for scans" />
       ) : (
         <>
           <SourceFileBar file={file} pageCount={pageCount} onReset={reset} />
@@ -87,20 +156,51 @@ export const PdfCompressTool: React.FC = () => {
           {busy && <LoadingBox label="Reading PDF…" />}
           {!busy && (
             <Card title="Compression options">
-              <label className="flex items-center gap-2.5 text-xs  text-muted-foreground cursor-pointer">
-                <input type="checkbox" checked={stripMeta} onChange={(e) => setStripMeta(e.target.checked)} className="w-4 h-4 accent-primary" />
-                <span>Remove metadata (author, dates, producer) for extra savings</span>
-              </label>
-              <p className="text-[11px]  text-muted-foreground leading-relaxed">
-                This tool rebuilds the internal structure of the PDF and removes redundant data,
-                which often shrinks the file. Results depend on how the original file was created.
-              </p>
+              <div className="grid gap-2 sm:grid-cols-2">
+                {([
+                  ['structure', 'Keep text selectable', 'Rebuilds the file structure and removes metadata. Best for documents made on a computer.'],
+                  ['images', 'Compress images', 'Re-saves every page as a smaller image. Best for scans and photo-heavy PDFs; text will no longer be selectable.'],
+                ] as [CompressMode, string, string][]).map(([value, title, desc]) => (
+                  <button
+                    key={value}
+                    type="button"
+                    onClick={() => { setMode(value); setResult(null); setNotSmaller(false); }}
+                    aria-pressed={mode === value}
+                    className={`text-left rounded-xl border p-3 transition-colors ${mode === value ? 'border-primary bg-primary/5' : 'border-border hover:bg-muted'}`}
+                  >
+                    <span className="block text-[13px] font-bold text-foreground">{title}</span>
+                    <span className="mt-1 block text-[11.5px] leading-relaxed text-muted-foreground">{desc}</span>
+                  </button>
+                ))}
+              </div>
+              {mode === 'images' ? (
+                <div className="space-y-1.5">
+                  <FieldLabel>Image quality</FieldLabel>
+                  <Select value={level} onChange={(v) => setLevel(v as ImageLevel)} options={IMAGE_LEVELS.map(l => ({ value: l.value, label: l.label }))} />
+                  <p className="text-[11px] text-muted-foreground leading-relaxed">
+                    Balanced keeps typed text readable on screen and in print. Use Smallest only when an upload limit leaves no choice, and check the result before sending it.
+                  </p>
+                </div>
+              ) : (
+                <label className="flex items-center gap-2.5 text-xs  text-muted-foreground cursor-pointer">
+                  <input type="checkbox" checked={stripMeta} onChange={(e) => setStripMeta(e.target.checked)} className="w-4 h-4 accent-primary" />
+                  <span>Remove metadata (author, dates, producer) for extra savings</span>
+                </label>
+              )}
               <ActionButton onClick={compress} busy={isBusy} busyLabel="Compressing…" disabled={pageCount === 0}>
                 <Minimize2 className="w-4 h-4" /> Compress PDF
               </ActionButton>
             </Card>
           )}
           <ErrorBox message={err} />
+          {notSmaller && !isBusy && (
+            <div className="rounded-xl border border-border bg-muted/60 p-3 text-[12.5px] leading-relaxed text-foreground">
+              This method would not make the file meaningfully smaller, so keep your original.
+              {mode === 'structure'
+                ? ' If the PDF is a scan or full of photos, try Compress images.'
+                : ' The PDF is already compact; a lower image quality is the only way to go further.'}
+            </div>
+          )}
           {result && !isBusy && (
             <>
               <div className="grid grid-cols-3 gap-2 text-center">

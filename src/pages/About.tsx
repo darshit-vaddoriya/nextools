@@ -98,6 +98,25 @@ export const About: React.FC<AboutProps> = ({ onBack, onOpenContact }) => {
           </p>
         </PageSection>
 
+        <PageSection title="How guides are written">
+          <p>
+            Every guide on this site starts from a question people bring to one of the tools: why a
+            CSV breaks in Excel, why a PDF will not shrink, why an iPhone photo will not open on
+            Windows. Each one explains the decision behind the task and ends at the tool that does it.
+          </p>
+          <PageList
+            items={[
+              <><strong className="text-foreground">Checked against the tool.</strong> Any statement about what a tool here does, which formats it reads, what it keeps and what it drops, is checked against that tool&apos;s code. Where a check found a page claiming more than the tool did, the page was corrected, and in some cases the tool was fixed instead.</>,
+              <><strong className="text-foreground">Sources you can check.</strong> Where a guide rests on a specification or official documentation, such as an RFC, a W3C standard or a vendor&apos;s manual, it is listed under Further reading at the end of the guide.</>,
+              <><strong className="text-foreground">Dated honestly.</strong> Each guide shows the date it was published and, if it has been corrected or expanded since, the date of that update.</>,
+              <><strong className="text-foreground">Removed when it stops earning its place.</strong> Guides that drifted away from what the tools here do, or that depended on rules outside our control, have been taken down rather than left to go stale.</>,
+            ]}
+          />
+          <p>
+            If you find a mistake in a guide, write to us. Corrections are made and dated.
+          </p>
+        </PageSection>
+
         <PageSection title="How we pay for it">
           <p>
             Hosting, bandwidth and development time are paid for by advertising served through

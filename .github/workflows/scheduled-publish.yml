@@ -1,0 +1,37 @@
+# Publishes guides on their scheduled date.
+#
+# A post in src/config/blog/posts with a future `published` date is left out of
+# the site until a build runs on or after that day (see BLOG_POSTS). Netlify only
+# builds on a push, so this checks every morning whether any post is dated today
+# and, if one is, asks Netlify for a fresh build through a build hook.
+#
+# Setup, once: Netlify → Site configuration → Build & deploy → Build hooks →
+# "Add build hook" (branch: main), then copy its URL into this repository's
+# Settings → Secrets and variables → Actions as NETLIFY_BUILD_HOOK.
+name: Publish scheduled guides
+
+on:
+  schedule:
+    - cron: '35 0 * * *' # 00:35 UTC, 06:05 IST
+  workflow_dispatch:
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Rebuild the site if a guide is dated today
+        env:
+          HOOK: ${{ secrets.NETLIFY_BUILD_HOOK }}
+        run: |
+          today=$(date -u +%F)
+          if ! grep -rq "published: '$today'" src/config/blog/posts; then
+            echo "No guide is scheduled for $today."
+            exit 0
+          fi
+          if [ -z "$HOOK" ]; then
+            echo "::warning::A guide is scheduled for $today but NETLIFY_BUILD_HOOK is not set, so it will not go live until the next push."
+            exit 0
+          fi
+          curl -fsS -X POST -d '{}' "$HOOK"
+          echo "Requested a Netlify build for the guide(s) dated $today."

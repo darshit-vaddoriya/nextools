@@ -51,7 +51,6 @@ export const CONVERTER_SEO_CONTENT: ToolSeoMap = {
       { question: 'Will converting PNG to JPG reduce quality?', answer: 'JPG is lossy, so some information is discarded. At quality 85–95 the loss is invisible in photographs. It is noticeable on sharp-edged graphics such as text, logos and UI screenshots, which show faint halos — those are better left as PNG.' },
       { question: 'How much smaller will the JPG be?', answer: 'For photographs, typically 70–90% smaller. For flat graphics with few colours the saving is much less, and occasionally the JPG ends up larger than a well-optimised PNG.' },
       { question: 'Can I resize at the same time?', answer: 'Yes. Enter a width in pixels and the height follows the aspect ratio. Shrinking a 4000 px photo to 1600 px before converting saves far more space than lowering the quality.' },
-      { question: 'Is the conversion done on a server?', answer: 'No. The PNG is decoded and re-encoded by your browser\'s own canvas engine, on your device.' },
     ],
     useCases: [
       'Shrinking photos that a phone or editing app exported as PNG before emailing them',
@@ -429,7 +428,6 @@ export const CONVERTER_SEO_CONTENT: ToolSeoMap = {
       { question: 'Will songs bought from iTunes convert?', answer: 'Songs purchased after 2009 are DRM-free AAC and convert normally. Older protected .m4p files are encrypted and cannot be decoded by any browser.' },
       { question: 'Does M4A to MP3 lose quality?', answer: 'Both formats are lossy, so there is a small generational loss. Choose a bitrate at or above the source (most M4A files are 128–256 kbps) and it will not be audible.' },
       { question: 'Why is my MP3 bigger than the M4A?', answer: 'AAC is more efficient than MP3, so matching its quality takes a somewhat higher bitrate and therefore a larger file.' },
-      { question: 'Is the conversion private?', answer: 'Yes. Recordings are decoded and encoded on your device and never uploaded — relevant for voice memos of meetings or interviews.' },
     ],
     useCases: [
       'Converting iPhone Voice Memos to MP3 for sharing or transcription services',
@@ -601,9 +599,7 @@ export const CONVERTER_SEO_CONTENT: ToolSeoMap = {
     faqs: [
       { question: 'Does it work with scanned PDFs?', answer: 'No. A scan is a picture of a table with no text in it. Run the file through PDF OCR first to add a text layer, then convert.' },
       { question: 'How accurate is the table detection?', answer: 'Very good for clean, single-table layouts such as statements, invoices and reports exported from software. Multi-column page designs, rotated text and cells that wrap over several lines can need manual fixing, because the PDF contains no record of the original table.' },
-      { question: 'Why are numbers like 1,200 stored as text?', answer: 'Thousand separators are kept exactly as they appear in the PDF, so nothing is misread across number formats. Excel\'s Text to Columns or VALUE() converts them in one step.' },
       { question: 'Are headings and paragraphs included?', answer: 'Yes, all text on the page is exported, so titles and notes appear as rows above or below the table. Delete them in Excel if you only need the table.' },
-      { question: 'Are my statements uploaded?', answer: 'No. The PDF is parsed by pdf.js inside your browser — useful for bank and payroll documents you should not upload.' },
     ],
     useCases: [
       'Analysing bank or credit card statements in a spreadsheet',

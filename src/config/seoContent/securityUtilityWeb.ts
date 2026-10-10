@@ -34,9 +34,9 @@ export const SECURITY_UTILITY_WEB_SEO_CONTENT: ToolSeoMap = {
       { title: 'Copy the passphrase', description: 'Grab the generated passphrase to use as your password.' },
     ],
     faqs: [
-      { question: 'Are passphrases as secure as random character passwords?', answer: 'With enough words (typically 4-6) drawn from a large wordlist, passphrases can match or exceed the entropy of shorter random passwords while being easier to remember.' },
-      { question: 'Where do the words come from?', answer: 'Words are drawn from a curated wordlist designed for passphrase generation, similar to the well-known EFF wordlist approach.' },
-      { question: 'Can I make the passphrase harder to guess?', answer: 'Increase the word count or mix in random casing/numbers for extra strength.' },
+      { question: 'Where do the words come from?', answer: 'From a built-in list of 250 short, common English words chosen to be easy to read and type. Each word is picked with the browser\'s cryptographic random number generator, so every word on the list is equally likely.' },
+      { question: 'Can I make the passphrase harder to guess?', answer: 'Add words: each one adds about 8 bits. Turning on the number adds about 6.6 bits more. Capital letters and the separator do not add strength here, because they are applied the same way to every word rather than chosen at random.' },
+      { question: 'How many words should I use?', answer: 'For an account protected by login limits, five or six words is reasonable. For anything an attacker could test offline, such as a password manager\'s master password, disk encryption or an encrypted archive, use eight words with the number turned on, which gives about 70 bits.' },
     ],
     useCases: [
       'Creating a master password for a password manager that you\'ll need to type from memory',
@@ -83,8 +83,9 @@ export const SECURITY_UTILITY_WEB_SEO_CONTENT: ToolSeoMap = {
     ],
     faqs: [
       { question: 'Why would a checksum not match?', answer: 'A mismatch usually means the file was corrupted during download, or in rare cases, tampered with, always re-download from the original source if checksums don\'t match.' },
-      { question: 'Is my file uploaded anywhere to compute the checksum?', answer: 'No, hashing happens locally in your browser using the file you selected.' },
       { question: 'Which checksum type should I trust more, SHA-256 or SHA-1?', answer: 'SHA-256 is stronger and preferred when available; SHA-1 is still commonly published by some sources but is considered weaker for security-critical verification.' },
+      { question: 'Can I paste the expected checksum to compare?', answer: 'Yes. Paste the value from the download page into the compare box. It is checked against both the SHA-256 and the SHA-1 result, ignoring capital letters and spaces at either end, so you do not need to know which of the two the site published.' },
+      { question: 'Why is MD5 not offered?', answer: 'MD5 is broken for this purpose: two different files with the same MD5 can be produced deliberately, so a matching MD5 shows a download was not corrupted in transit but not that it is genuine. This tool uses only the hashing built into the browser, which does not include MD5. If a site publishes only an MD5, ask for SHA-256.' },
     ],
     useCases: [
       'Verifying an OS ISO or software installer against the publisher\'s posted checksum before running it',
@@ -159,6 +160,7 @@ export const SECURITY_UTILITY_WEB_SEO_CONTENT: ToolSeoMap = {
       { question: 'How accurate are the conversions?', answer: 'Conversions use standard, precise conversion factors, so results are accurate to many decimal places.' },
       { question: 'Can I convert temperature the same way as length?', answer: 'Yes, temperature uses a different formula internally (not a simple multiplier) but works the same way from your side, just pick your units.' },
       { question: 'Does it support less common units?', answer: 'A wide range of common and several less common units are included per category; check the dropdown list for your specific unit.' },
+      { question: 'Which gallon does it use, US or UK?', answer: 'Both, labelled separately, because they differ by about 20%. Gallons (US) is 3.785 litres and Gallons (UK) is 4.546 litres, and pints come in both versions too. Cups and fluid ounces are the US measures, as most recipes online use them.' },
     ],
     useCases: [
       'Converting a recipe\'s measurements between metric and imperial units',
@@ -352,7 +354,6 @@ export const SECURITY_UTILITY_WEB_SEO_CONTENT: ToolSeoMap = {
       { question: 'What is the difference between GST-inclusive and exclusive calculation?', answer: 'Exclusive (Add GST) calculation adds GST on top of a base amount you enter; inclusive (Remove GST) calculation extracts the GST portion from a total that already includes tax.' },
       { question: 'Which GST rates are supported?', answer: 'The calculator offers the four standard Indian GST slabs, 5%, 12%, 18% and 28%, selectable from a dropdown; it does not currently accept an arbitrary custom percentage.' },
       { question: 'Which GST slab should I use for my product or service?', answer: 'The applicable slab depends on the specific goods or services involved, check current government GST rate schedules for your category if you are unsure which of the four rates applies.' },
-      { question: 'Is my amount data sent anywhere to calculate GST?', answer: 'No, the calculation is simple percentage arithmetic performed locally in your browser.' },
     ],
     useCases: [
       'Working out the GST amount to add to an invoice before billing a customer',
@@ -367,27 +368,29 @@ export const SECURITY_UTILITY_WEB_SEO_CONTENT: ToolSeoMap = {
     ],
   },
   'number-to-words': {
-    intro: 'Writing out an amount in words, like on a cheque or legal document, is easy to get wrong for large numbers. This tool spells out any integer as English words instantly.',
+    intro: 'Cheques, invoices, agreements and receipts ask for the amount in words as well as in figures, and large numbers are easy to get wrong by hand. This tool writes any amount in English words in either the Indian system, with lakh and crore, or the international system, with million and billion, and can format it the way a cheque expects: Rupees One Lakh Twenty-Five Thousand and Fifty Paise Only.',
     steps: [
-      { title: 'Type a number', description: 'Enter any integer, including negative numbers.' },
-      { title: 'View the word form', description: 'See it converted into English words instantly.' },
-      { title: 'Copy the result', description: 'Use the words directly on a cheque or document.' },
+      { title: 'Type the amount', description: 'Digits with or without commas both work, so 125000 and 1,25,000 give the same result. Decimals are allowed.' },
+      { title: 'Pick the numbering system', description: 'Indian for lakh and crore, International for million and billion. Indian is chosen automatically on an Indian-English device.' },
+      { title: 'Turn on rupees and paise if needed', description: 'Adds "Rupees" and "Only", and writes the decimal part as paise, rounded to two places.' },
+      { title: 'Copy the words', description: 'Paste them onto the cheque, invoice or document, and read them back against the figure.' },
     ],
     faqs: [
-      { question: 'Does it handle very large numbers, into the billions?', answer: 'Yes, numbers up to the billions range convert correctly into their full word form.' },
-      { question: 'Can it convert negative numbers?', answer: 'Yes, negative numbers are prefixed with "negative" or "minus" in the word output.' },
-      { question: 'Does it support decimal numbers?', answer: 'The tool is built for whole integers, matching typical cheque-writing conventions; decimals may need to be handled separately.' },
+      { question: 'How are lakh and crore counted?', answer: 'The last three digits are hundreds, and every two digits after that are a new unit: thousand, lakh, crore. So 12,34,56,789 is Twelve Crore Thirty-Four Lakh Fifty-Six Thousand Seven Hundred Eighty-Nine. The same number in the international system is One Hundred Twenty-Three Million Four Hundred Fifty-Six Thousand Seven Hundred Eighty-Nine.' },
+      { question: 'What happens above one hundred crore?', answer: 'The number of crores is itself written in the Indian system, so 1,00,00,00,00,000 becomes One Lakh Crore. That is the form used in Indian budgets and company accounts.' },
+      { question: 'How are decimals handled?', answer: 'With rupees and paise on, the decimal part becomes paise, rounded to two places, so 99.999 is written as Rupees One Hundred Only. Without it, each digit after the point is read separately: 3.05 is Three Point Zero Five.' },
+      { question: 'Why does a cheque end with "Only"?', answer: 'It closes the amount so nothing can be added after it. Words are far harder to alter than digits, which is why cheques and contracts carry both, and "Only" removes the last gap a forger could write into.' },
+      { question: 'What is the largest number it handles?', answer: 'Any whole number below one thousand trillion, which is 10 to the power 15, with decimals on top.' },
     ],
     useCases: [
-      'Writing out the amount in words when filling out a cheque',
-      'Spelling out a figure in words for a legal contract or affidavit',
-      'Double-checking the word form of a large invoice or payment amount',
-      'Converting a number to words for accounting or audit documentation',
+      'Writing the amount in words on a cheque',
+      'Filling the "amount in words" line on an invoice or receipt',
+      'Spelling out a figure for an agreement, affidavit or loan document',
+      'Converting between lakh-crore and million-billion figures when reading Indian and international reports',
     ],
     tips: [
-      'For amounts with cents or decimals, convert the whole and fractional parts separately since the tool is built for integers.',
-      'Double-check large numbers with many digit groups, it\'s easy to misread the source number before conversion.',
-      'For legal documents, always cross-verify the generated words against the numeric figure before finalizing.',
+      'Read the words back against the figure before signing. A wrong amount in words is the most common reason a bank returns a cheque.',
+      'For international readers, switch to the international system: ten lakh is one million, and one crore is ten million.',
     ],
   },
   'roman-numerals': {
@@ -474,7 +477,7 @@ export const SECURITY_UTILITY_WEB_SEO_CONTENT: ToolSeoMap = {
     faqs: [
       { question: 'What are "magic bytes"?', answer: 'They are a distinctive sequence of bytes at the start of a file that reliably identifies its true format, regardless of the file\'s extension.' },
       { question: 'Why might the reported and detected types differ?', answer: 'This usually happens when a file has been deliberately or accidentally renamed with a misleading extension.' },
-      { question: 'Is my file uploaded anywhere to check this?', answer: 'No, the file\'s header bytes are read directly in your browser.' },
+      { question: 'Why does a DOCX, XLSX or EPUB show up as a ZIP?', answer: 'Because it is one. Those formats are ZIP archives of XML files, so their first bytes are the ZIP signature. Magic bytes identify the container; the extension and the files inside tell you which Office or e-book format it is, so a ZIP result for a .docx is expected rather than a warning.' },
     ],
     useCases: [
       'Verifying a downloaded file is actually what its extension claims before opening it',

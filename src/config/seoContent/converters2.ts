@@ -19,7 +19,6 @@ export const CONVERTER_SEO_CONTENT_2: ToolSeoMap = {
     faqs: [
       { question: 'Does it keep the layers?', answer: 'No — PNG, JPG and WebP are single flat images, so the result is what the design looks like with all visible layers combined. Keep the PSD if you need to edit layers later.' },
       { question: 'Why does my PSD look different from Photoshop?', answer: 'The converter uses the flattened preview Photoshop stores inside the file when "Maximize PSD and PSB File Compatibility" is on, which is exact. If that preview is missing, visible layers are stacked in order, and blend modes, layer effects and adjustment layers are not reproduced. Re-saving the PSD with Maximize Compatibility turned on fixes it.' },
-      { question: 'Is my design uploaded anywhere?', answer: 'No. The PSD is parsed with a JavaScript reader inside this tab, which matters for unreleased artwork and client work under NDA.' },
       { question: 'Can it open very large PSD files?', answer: 'Files of a few hundred megabytes work on a laptop. The whole file has to fit in the browser\'s memory, so a phone may struggle with the largest ones.' },
       { question: 'Will CMYK PSDs convert correctly?', answer: 'They convert, but colours are shown in RGB for the screen. For print work, export from Photoshop with your colour profile instead.' },
     ],
@@ -50,7 +49,6 @@ export const CONVERTER_SEO_CONTENT_2: ToolSeoMap = {
       { question: 'Is the extracted image full resolution?', answer: 'For almost all modern cameras, yes — Canon, Nikon, Sony, Fujifilm, Olympus and Panasonic embed a full-size preview. Some older models and some phone DNGs store only a smaller preview, and the output will be that size.' },
       { question: 'Why did a DNG file fail?', answer: 'Some DNGs from phones and scanners contain only raw sensor data and no preview at all. Those need a RAW editor such as Lightroom, darktable or RawTherapee.' },
       { question: 'Is the preview re-compressed?', answer: 'Choosing JPG re-encodes it once at the quality you set; PNG and TIFF keep every pixel of the decoded preview exactly.' },
-      { question: 'Are my photos uploaded?', answer: 'No. The RAW file is scanned for its preview inside your browser.' },
     ],
     useCases: [
       'Sending quick previews from a shoot to a client before editing',
@@ -79,7 +77,6 @@ export const CONVERTER_SEO_CONTENT_2: ToolSeoMap = {
       { question: 'What page size is used?', answer: 'The page matches the SVG\'s own width and height (or its viewBox when no size is set), converted from CSS pixels to points at 96 per inch.' },
       { question: 'Will my fonts look right?', answer: 'Text is drawn with the fonts available to the PDF. If the SVG relies on an unusual web font, convert text to outlines in your design tool first for an exact result.' },
       { question: 'Are filters and effects supported?', answer: 'Common SVG features — gradients, clipping, masks, transforms, dashed strokes — convert well. Complex filter effects such as blurs have no PDF equivalent and may be simplified.' },
-      { question: 'Is anything uploaded?', answer: 'No, the SVG is converted by a JavaScript library inside the page.' },
     ],
     useCases: [
       'Sending a logo to a printer who asks for a vector PDF',
@@ -137,7 +134,6 @@ export const CONVERTER_SEO_CONTENT_2: ToolSeoMap = {
       { question: 'Will the quality drop noticeably?', answer: 'At Medium and 720p, most people cannot tell the difference on a phone screen. On a large TV, 1080p at High looks better — compress as much as the destination needs, not more.' },
       { question: 'Can I remove the sound to save space?', answer: 'Yes, choose Remove audio. Audio is usually a small part of the size, though, so resolution and quality matter more.' },
       { question: 'Does it compress to a target size, like 25 MB?', answer: 'Not directly; it uses quality levels rather than a size target. Start with 720p Medium and step down to 480p or Low if the result is still too large.' },
-      { question: 'Is my video uploaded?', answer: 'No. Compression uses your device\'s video encoder inside this page.' },
     ],
     useCases: [
       'Getting a phone video under an email attachment limit',
@@ -166,7 +162,6 @@ export const CONVERTER_SEO_CONTENT_2: ToolSeoMap = {
       { question: 'Why does my iPhone MOV fail in Chrome?', answer: 'Recent iPhones record HEVC. Copying HEVC into MP4 needs no decoding, but resizing or re-encoding it does, and Chrome can only decode HEVC on supported hardware. Keep settings at Original/High, or use Safari.' },
       { question: 'Will the MP4 play on Windows and Android?', answer: 'H.264 MP4 plays everywhere. HEVC MP4 plays on most recent devices, but some older Windows PCs need the HEVC extension from the Microsoft Store.' },
       { question: 'Are Live Photo or slow-motion clips supported?', answer: 'Slow-motion videos convert as recorded at their high frame rate. The video part of a Live Photo is a short MOV and converts like any other.' },
-      { question: 'Is anything uploaded?', answer: 'No. The rewrap happens inside your browser.' },
     ],
     useCases: [
       'Sharing iPhone videos with Android and Windows users',
@@ -195,7 +190,6 @@ export const CONVERTER_SEO_CONTENT_2: ToolSeoMap = {
       { question: 'Will I lose quality?', answer: 'Any re-encode loses a little, but at High quality it is not visible. Screen recordings in particular convert cleanly.' },
       { question: 'Why does the WebM play in my browser but not in PowerPoint?', answer: 'Browsers ship VP8/VP9 decoders; PowerPoint, QuickTime and many TVs do not. MP4 with H.264 is the format they all share.' },
       { question: 'What happens to the audio?', answer: 'Opus audio is kept where the MP4 player can handle it, or converted to AAC when the browser can encode AAC.' },
-      { question: 'Is the recording uploaded?', answer: 'No. It is converted on your device.' },
     ],
     useCases: [
       'Making a browser screen recording playable on an iPhone',
@@ -253,7 +247,6 @@ export const CONVERTER_SEO_CONTENT_2: ToolSeoMap = {
       { question: 'What happens with very wide sheets?', answer: 'More than six columns switches the page to landscape, and columns are scaled to fit the page width. Very long cell contents are shortened with an ellipsis rather than overflowing.' },
       { question: 'Do formulas show their results?', answer: 'Yes. The PDF shows the value Excel last calculated and saved for each formula cell.' },
       { question: 'Are non-English characters supported?', answer: 'Western European accented letters print correctly. Characters outside that set, such as Devanagari or Chinese, appear as "?" because the PDF uses the standard built-in fonts.' },
-      { question: 'Is my spreadsheet uploaded?', answer: 'No. It is read and laid out as a PDF inside your browser.' },
     ],
     useCases: [
       'Sending a price list or inventory to someone who does not use Excel',
@@ -282,7 +275,6 @@ export const CONVERTER_SEO_CONTENT_2: ToolSeoMap = {
       { question: 'Why convert instead of just opening it in Excel?', answer: 'If you have Excel, "Save As .xlsx" works too. This is for when you do not, or need .xlsx for a web app, script or system that rejects the old format.' },
       { question: 'Can it open password-protected .xls files?', answer: 'No. Remove the password in Excel or LibreOffice first.' },
       { question: 'Are macros kept?', answer: 'No, and that is usually safer: legacy VBA macros are a common way malware spreads. Keep the original if you need them.' },
-      { question: 'Is the file uploaded?', answer: 'No. The binary format is decoded by a JavaScript library in your browser, which loads only when you add an .xls file.' },
     ],
     useCases: [
       'Importing an old ERP or accounting export into a modern tool',
@@ -311,7 +303,6 @@ export const CONVERTER_SEO_CONTENT_2: ToolSeoMap = {
       { question: 'Why not just open the ODS in Excel?', answer: 'You can, but Excel sometimes mis-reads ODS formulas and formatting, and many web apps and data tools do not accept ODS at all.' },
       { question: 'Does it handle repeated rows and columns?', answer: 'Yes. ODS compresses runs of identical cells, and these are expanded back into ordinary rows and columns.' },
       { question: 'Can I go the other way, XLSX to ODS?', answer: 'Not here yet. LibreOffice opens XLSX directly and can save it as ODS.' },
-      { question: 'Is it private?', answer: 'Yes. The spreadsheet is read inside your browser and never uploaded.' },
     ],
     useCases: [
       'Opening open-data ODS downloads from a government portal in Excel',
@@ -340,7 +331,6 @@ export const CONVERTER_SEO_CONTENT_2: ToolSeoMap = {
       { question: 'Why is one element an object and another an array?', answer: 'An element that appears once becomes an object; one that repeats becomes an array. If your code needs a consistent shape, normalise single items to arrays after converting.' },
       { question: 'Are namespaces kept?', answer: 'Element and attribute names keep their prefixes, such as "dc:title", so no information is lost.' },
       { question: 'Are numbers converted?', answer: 'Plain integers and decimals become JSON numbers and "true"/"false" become booleans. Anything that could lose meaning — "007", long IDs — stays a string.' },
-      { question: 'Is my XML uploaded?', answer: 'No. It is parsed by the browser\'s own XML parser on your device.' },
     ],
     useCases: [
       'Turning an RSS or Atom feed into JSON for a web app',
@@ -369,7 +359,6 @@ export const CONVERTER_SEO_CONTENT_2: ToolSeoMap = {
       { question: 'Can I create attributes?', answer: 'Yes. Keys beginning with @ become attributes and "#text" becomes the element\'s text, the same convention XML to JSON uses.' },
       { question: 'What happens to keys that are not valid XML names?', answer: 'Spaces and symbols are replaced with underscores, and names starting with a digit get a leading underscore, so the output is always well-formed.' },
       { question: 'How is null represented?', answer: 'As an empty element, such as <middleName/>.' },
-      { question: 'Is my data uploaded?', answer: 'No, the conversion happens in your browser.' },
     ],
     useCases: [
       'Preparing a payload for a SOAP or XML-only API',
@@ -398,7 +387,6 @@ export const CONVERTER_SEO_CONTENT_2: ToolSeoMap = {
       { question: 'Why did "no" or "on" become a string?', answer: 'The parser follows YAML 1.2, where only true and false are booleans. The older YAML 1.1 treated yes/no/on/off as booleans — the famous "Norway problem" — which is a common source of surprises.' },
       { question: 'What about files with several documents separated by ---?', answer: 'Only single-document files are converted. Split multi-document files, such as combined Kubernetes manifests, first.' },
       { question: 'Are comments kept?', answer: 'No. JSON has no comments, so YAML comments are dropped.' },
-      { question: 'Is the config uploaded?', answer: 'No. Configs often contain secrets, which is exactly why this runs locally.' },
     ],
     useCases: [
       'Debugging a GitHub Actions workflow or Kubernetes manifest by seeing how it parses',
@@ -427,7 +415,6 @@ export const CONVERTER_SEO_CONTENT_2: ToolSeoMap = {
       { question: 'Are long strings wrapped?', answer: 'No. Lines are never folded, so long URLs and keys stay on one line and copy cleanly.' },
       { question: 'Can I add comments afterwards?', answer: 'Yes — that is one of the main reasons to switch to YAML. Add # comments anywhere in the output.' },
       { question: 'What if my JSON is invalid?', answer: 'You will see the parser\'s error message. The JSON Formatter can help locate and fix the problem.' },
-      { question: 'Is the data uploaded?', answer: 'No, it is converted in your browser.' },
     ],
     useCases: [
       'Turning a JSON config into a commented YAML file',
@@ -456,7 +443,6 @@ export const CONVERTER_SEO_CONTENT_2: ToolSeoMap = {
       { question: 'Can I edit the presentation afterwards?', answer: 'Yes. It is a standard PowerPoint file; every picture is an ordinary image object you can move, resize or replace.' },
       { question: 'Does it work with iPhone HEIC photos?', answer: 'Yes. HEIC, PSD, RAW, WebP and other formats are converted to JPG or PNG first, because PowerPoint only embeds common formats reliably.' },
       { question: 'How big will the file be?', answer: 'Roughly the total size of your images. Resize very large photos first if the deck needs to be emailed.' },
-      { question: 'Are my images uploaded?', answer: 'No. The presentation is assembled in your browser.' },
     ],
     useCases: [
       'Making a slideshow of event or holiday photos',
@@ -485,7 +471,6 @@ export const CONVERTER_SEO_CONTENT_2: ToolSeoMap = {
       { question: 'Why use this instead of just presenting the PDF?', answer: 'In PowerPoint you can reorder, delete and combine slides with your own deck, add transitions, and use presenter view with the notes.' },
       { question: 'What slide size is used?', answer: 'The slide matches the shape of the first page, so a 16:9 deck stays 16:9 and an A4 handout stays portrait.' },
       { question: 'Does it work with scanned PDFs?', answer: 'Yes, the pages convert as images. Scanned pages have no text layer, so the notes will be empty unless you run PDF OCR first.' },
-      { question: 'Is the PDF uploaded?', answer: 'No. Pages are rendered by pdf.js in your browser.' },
     ],
     useCases: [
       'Presenting a deck someone sent only as PDF',
@@ -514,7 +499,6 @@ export const CONVERTER_SEO_CONTENT_2: ToolSeoMap = {
       { question: 'Are images included in the PDF?', answer: 'The PDF keeps the text, headings and lists, but not images. Choose HTML output for a version that includes every picture.' },
       { question: 'What about books in Hindi, Arabic or Chinese?', answer: 'The PDF uses standard built-in fonts that cover Western European text only. For other scripts, convert to HTML and use your browser\'s Print → Save as PDF, which uses your system fonts.' },
       { question: 'Is the layout the same as in my e-reader?', answer: 'E-books have no fixed layout, so the PDF uses its own clean book layout: headings, paragraphs and lists on a 6 × 9 inch page.' },
-      { question: 'Is the book uploaded?', answer: 'No. The EPUB is unzipped and read inside your browser.' },
     ],
     useCases: [
       'Printing a public-domain book or a DRM-free publisher download',
@@ -572,7 +556,6 @@ export const CONVERTER_SEO_CONTENT_2: ToolSeoMap = {
       { question: 'Will the font look any different?', answer: 'No. WOFF2 is lossless: hinting, kerning and OpenType features are all preserved.' },
       { question: 'How do I use the file in CSS?', answer: 'Add an @font-face rule with src: url("/fonts/name.woff2") format("woff2"), a font-family name, and font-display: swap so text is visible while the font loads.' },
       { question: 'Can I make the file even smaller?', answer: 'Yes, by subsetting — removing characters you do not use, such as Cyrillic or Vietnamese glyphs. That is a separate step from format conversion.' },
-      { question: 'Is the font uploaded?', answer: 'No. The encoder runs as WebAssembly in your browser.' },
     ],
     useCases: [
       'Self-hosting a font instead of loading it from Google Fonts',
@@ -601,7 +584,6 @@ export const CONVERTER_SEO_CONTENT_2: ToolSeoMap = {
       { question: 'Is the converted font identical to the original?', answer: 'Yes. Every table is restored byte for byte. If you convert back to WOFF2 you get a file of the same size.' },
       { question: 'Can I install fonts downloaded from any website?', answer: 'Technically yes, legally not always. Fonts are software with licences; many free fonts (such as those on Google Fonts) allow desktop use, while commercial web licences often do not.' },
       { question: 'Why does the installed font show a different name?', answer: 'The name comes from the font\'s own name table, which may differ from the file name on the website.' },
-      { question: 'Is the font uploaded?', answer: 'No. Decompression happens in your browser.' },
     ],
     useCases: [
       'Installing an open-licence web font to use in design mock-ups',
@@ -630,7 +612,6 @@ export const CONVERTER_SEO_CONTENT_2: ToolSeoMap = {
       { question: 'Can it open password-protected RAR files?', answer: 'No. Extract encrypted archives with the password in 7-Zip, WinRAR or The Unarchiver, then zip the files.' },
       { question: 'What about multi-part archives (.part1.rar, .r00)?', answer: 'Split archives need all their parts together and are not supported here. Join or extract them with 7-Zip or WinRAR.' },
       { question: 'Why is the ZIP a different size?', answer: 'RAR and ZIP compress differently; RAR is often a little smaller. The files inside are the same.' },
-      { question: 'Is the archive uploaded?', answer: 'No. libarchive runs as WebAssembly in a background worker in your browser.' },
     ],
     useCases: [
       'Opening a RAR download on a computer without WinRAR or 7-Zip',
@@ -659,7 +640,6 @@ export const CONVERTER_SEO_CONTENT_2: ToolSeoMap = {
       { question: 'Can I create .7z files here?', answer: 'Not reliably in the browser, so 7z is offered as an input only. Convert to ZIP or TAR.GZ instead.' },
       { question: 'Are encrypted 7z archives supported?', answer: 'No. Extract password-protected archives in 7-Zip with the password first.' },
       { question: 'What about very large archives?', answer: 'Everything is extracted into memory before repacking, so a laptop handles archives of a few gigabytes; phones are better with smaller ones.' },
-      { question: 'Is the archive uploaded?', answer: 'No, it is processed by libarchive running in your browser.' },
     ],
     useCases: [
       'Opening a .7z download on a Mac or Chromebook',
@@ -688,7 +668,6 @@ export const CONVERTER_SEO_CONTENT_2: ToolSeoMap = {
       { question: 'Which compressions are supported?', answer: 'gzip (.tar.gz, .tgz), bzip2 (.tar.bz2) and xz (.tar.xz), plus uncompressed .tar.' },
       { question: 'Can it convert a single .gz file that is not a TAR?', answer: 'Files named .gz are treated as .tar.gz. A lone gzipped file (such as log.txt.gz) is not a TAR archive and may not convert.' },
       { question: 'Why is the ZIP larger than the .tar.xz?', answer: 'xz and bzip2 compress better than ZIP\'s Deflate. The files inside are identical.' },
-      { question: 'Is anything uploaded?', answer: 'No, the archive is read by libarchive in your browser.' },
     ],
     useCases: [
       'Opening a source-code release on Windows',
@@ -717,7 +696,6 @@ export const CONVERTER_SEO_CONTENT_2: ToolSeoMap = {
       { question: 'What file permissions do extracted files get?', answer: 'Files are stored with standard read/write permissions (644). ZIP archives do not reliably carry Unix permissions, so set executable bits after extracting if needed.' },
       { question: 'Why .tar.gz rather than .zip on Linux?', answer: 'tar is installed everywhere, streams well over pipes, and is what most deployment scripts, Dockerfiles and package tools expect.' },
       { question: 'Is compression the same as ZIP?', answer: 'Both use Deflate-family compression, but gzip compresses the whole archive as one stream, which is often slightly smaller for many small files.' },
-      { question: 'Is the archive uploaded?', answer: 'No. Extraction and the new TAR are both handled in your browser.' },
     ],
     useCases: [
       'Preparing files for upload to a Linux server',

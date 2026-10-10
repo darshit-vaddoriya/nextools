@@ -32,3 +32,25 @@
   for = "/assets/*"
   [headers.values]
     Cache-Control = "public, max-age=31536000, immutable"
+
+# Blog topics merged on 2026-09-29 (nine became five). Old hub URLs point to
+# the topic their guides moved into, so existing links keep working.
+[[redirects]]
+  from = "/blog/topic/docs"
+  to = "/blog/topic/pdf"
+  status = 301
+
+[[redirects]]
+  from = "/blog/topic/media"
+  to = "/blog/topic/image"
+  status = 301
+
+[[redirects]]
+  from = "/blog/topic/numbers"
+  to = "/blog/topic/data"
+  status = 301
+
+[[redirects]]
+  from = "/blog/topic/privacy"
+  to = "/blog/topic/security"
+  status = 301

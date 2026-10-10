@@ -133,7 +133,7 @@ The fastest way to locate a structural error in a large document is to format it
 
 **NDJSON** (one JSON object per line) is the right choice for logs and streams, because a broken line does not invalidate the whole file.
 
-Formatting, validating and converting JSON is pure string work, no server needed. NextTool's [JSON formatter](/tool/json-formatter) validates and pretty-prints in the browser, which matters when the document is an API response containing real customer data.`,
+When a parser rejects a document, paste it into a [JSON formatter](/tool/json-formatter). It shows the parser's own error message, which in current browsers includes the line and column of the first problem, and that is almost always one of the mistakes above.`,
   'base64-encoding-explained': `Base64 solves one narrow problem: moving binary data through a channel that only reliably carries text.
 
 Email bodies, JSON string values, URLs, XML documents and HTML attributes all expect text. Hand them raw binary, a PNG, a zip file, an encryption key, and bytes get mangled: a \`0x00\` truncates a C string, \`0x0A\` becomes a line break, high bytes get reinterpreted by whatever encoding is in play. Base64 sidesteps all of it by re-expressing arbitrary bytes using 64 characters that survive any text pipeline.
@@ -474,7 +474,7 @@ Use a native \`uuid\` type where the database has one (PostgreSQL does), or \`BI
 
 ## Generating them
 
-Both versions are cheap to generate client-side; there is no reason to ask a server for an identifier. The [UUID generator](/tool/uuid-generator) here produces them in the browser using the platform's crypto API, and the [timestamp converter](/tool/timestamp-converter) is handy for reading the embedded time out of a v7 value when you are debugging.`,
+Both versions are cheap to generate wherever the record is created, so there is no reason to ask a server for one. The [UUID generator](/tool/uuid-generator) produces v4 values in bulk with the browser's own random generator; for v7, use your language's UUID library, which adds the timestamp for you, and the [timestamp converter](/tool/timestamp-converter) to read that embedded time back out when you are debugging insertion order.`,
   'colour-contrast-and-wcag': `Light grey text on a white background is the signature look of a certain kind of modern web design, and it is the single most common accessibility failure measured on real websites. It is also trivially fixable.
 
 ## What the ratio measures
@@ -607,7 +607,7 @@ And the rest of the checklist:
 
 Step four catches almost everything. A code that scans on your screen at arm's length tells you very little about a code on matte card under a restaurant's lighting.
 
-Generating a QR code is pure computation with no network involved, which is why the [generator here](/tool/qr-generator) runs in the tab. That matters for the Wi-Fi case in particular: there is no good reason for your network password to travel to someone else's server on its way to becoming a picture.`,
+Before printing a code, scan it with two different phones at the size it will actually be printed. The [QR generator](/tool/qr-generator) lets you raise the error-correction level for codes that will be printed small, laminated or partly covered by a logo.`,
   'what-a-formatter-actually-does': `Prettifying and minifying feel like opposite tools. They are the same operation: parse the input into a syntax tree, discard the original formatting entirely, and print the tree back out. Only the printing rules differ, one optimising for a human reading it and the other for bytes on the wire.
 
 Almost every surprising formatter behaviour follows from that sentence.
@@ -656,9 +656,7 @@ Formatters are most useful away from the build pipeline:
 - **Checking syntax fast.** A formatter that refuses to run has found your unclosed brace.
 - **Normalising before a diff.** Two files that differ only in indentation produce an enormous diff. Formatting both with the same rules first reduces it to the real changes, which pairs well with a [diff checker](/tool/diff-checker).
 
-That last one is the underrated one, and it is worth reaching for before spending twenty minutes reading a diff that is mostly whitespace.
-
-All five formatters here parse and print in the tab, with nothing sent anywhere. That is worth having for the everyday reason that the code and API responses people paste into online formatters routinely contain keys, tokens, customer records and internal endpoints, pasted without much thought because the tool looked like a text box.`,
+That last one is the underrated one, and it is worth reaching for before spending twenty minutes reading a diff that is mostly whitespace.`,
   'three-kinds-of-escaping': `A user is called \`Ben & Co\`. Putting that name in a URL, on a page, and in a downloaded file all require doing something to the ampersand, and the three somethings are different. Mixing them up produces bugs that look the same from the outside and have unrelated causes.
 
 ## Percent-encoding is for URL parsers
@@ -735,7 +733,7 @@ For security, never trust an uploaded file's extension or its client-supplied \`
 | A URL inside an HTML attribute | Both, in that order |
 | Deciding what a file is | Magic bytes, not the extension |
 
-Each of these is a pure string or byte operation with no server involved, which is why the [URL encoder](/tool/url-encoder), [entity encoder](/tool/html-entity) and [MIME checker](/tool/mime-checker) here all run locally. The strings people paste into online encoders are disproportionately tokens, signed URLs and API responses, which is a good reason for the tool not to be somebody else's server.`,
+When something arrives garbled, identify which layer is wrong before changing anything: percent signs point to [URL encoding](/tool/url-encoder), ampersand sequences to [HTML entities](/tool/html-entity), and a file that opens in the wrong program to its [MIME type](/tool/mime-checker).`,
   'cleaning-a-block-of-text': `You have 4,000 email addresses pasted out of six spreadsheets. They need deduplicating, and afterwards the count is suspiciously high. The problem is almost never the deduplicator. It is that \`ben@x.com\` and \`ben@x.com \` are genuinely different strings, and you removed duplicates before removing the trailing spaces.
 
 Most text-cleaning frustration is this: the operations are trivial, and the order is not.
@@ -795,7 +793,7 @@ Two things to be careful about. Lorem ipsum has no long words, no numbers and no
 
 The reason this matters more than it sounds: the text people clean is mailing lists, exported user records, support transcripts and log extracts. A mailing list pasted into a random online deduplicator has been disclosed to whoever runs it, whatever the page says.
 
-Every operation here is string manipulation on data already in the page. [Whitespace cleanup](/tool/text-cleaner), [deduplication](/tool/remove-duplicates-text), [sorting](/tool/sort-lines) and [counting](/tool/word-counter) all run in the tab, so the list of 4,000 addresses stays where it started.`,
+Keep the order: [clean the whitespace](/tool/text-cleaner) first, then [remove duplicates](/tool/remove-duplicates-text), then [sort](/tool/sort-lines), and [count](/tool/word-counter) at the end to confirm how many lines survived each step.`,
   'yaml-json-and-tabular-interchange': `Three formats, all used for "structured data in a text file", all with a failure mode that only shows up once real data hits them.
 
 ## JSON is a wire format wearing a config format's clothes
@@ -863,7 +861,7 @@ A [JSON to CSV](/tool/json-to-csv) conversion has to pick one, so check which it
 | Data going into a spreadsheet | CSV, or TSV if values contain commas |
 | Pasting between database clients | TSV |
 
-All of these conversions are parsing and printing, which is why the [YAML](/tool/yaml-formatter), [JSON](/tool/json-formatter) and [TSV](/tool/tsv-converter) tools here run in the tab. The files people paste into online converters are disproportionately deployment configs and database exports, which is to say credentials and customer records.`,
+Whichever format you pick, validate it before it ships: the [YAML](/tool/yaml-formatter) and [JSON](/tool/json-formatter) formatters catch indentation and syntax errors, and the [TSV converter](/tool/tsv-converter) shows exactly how a table will split before you hand it to a spreadsheet.`,
   'gradients-and-palettes': `You build a gradient from a strong blue to a warm yellow. The ends look right and the middle is a dull grey-green that belongs to neither. Adding more stops does not fix it, and picking different blues does not either.
 
 The cause is that the browser is doing arithmetic in the wrong space.
@@ -922,7 +920,7 @@ That way \`--blue-100\` is always a background tint and \`--blue-700\` is always
 
 Working in OKLCH makes this far easier, because holding lightness constant across hues actually produces colours that look equally light, which is the thing sRGB cannot give you.
 
-Everything here is arithmetic on colour values with no server involved, so the [gradient builder](/tool/gradient-generator), [palette generator](/tool/palette-color) and [converter](/tool/color-converter) all run in the tab. For unreleased brand work that is a reasonable default.`,
+Build the gradient in the [gradient builder](/tool/gradient-generator), add a midpoint stop if the middle goes grey, and check any colour you place text on with the [contrast checker](/tool/contrast-checker) before it reaches a real screen.`,
   'find-replace-and-extraction': `You have 2,000 lines of exported text and you need every email address out of it. Or you need to change one field name throughout. These are the same operation, pattern matching over text, approached from opposite ends, and they share one way of going wrong.
 
 ## The substring trap
@@ -996,7 +994,7 @@ It is also a decent demonstration of the grapheme problem: reversing a string by
 3. Turn on whole-word matching unless you have a reason not to.
 4. Keep the original.
 
-All of this is string processing on text already in the page, which is why [find and replace](/tool/find-replace), the [regex tester](/tool/regex-tester) and every extractor here run locally. The text people paste into online tools to pull addresses out of is, almost by definition, a list of other people's contact details.`,
+Test a pattern on a small sample in the [regex tester](/tool/regex-tester) before running it across a whole document with [find and replace](/tool/find-replace), because a pattern that is almost right does its damage silently.`,
   'http-status-codes-that-matter': `You restructure a site, set up redirects, and traffic drops. The pages all load, the redirects all work, and a visitor would notice nothing. A crawler noticed a digit.
 
 ## The redirects
@@ -1265,7 +1263,7 @@ To make a WebP into a real PNG you have to decode the image and re-encode it in 
 3. Behaving oddly over HTTP → check \`Content-Type\` and \`Content-Disposition\`.
 4. Rejected by an upload → the server almost certainly checked the bytes, not the name.
 
-Checking a file's type is pure local inspection, so the [MIME checker](/tool/mime-checker) here reads it in the tab without the file going anywhere.`,
+When a file opens in the wrong program or an upload is rejected, check what it actually is with the [MIME checker](/tool/mime-checker) before renaming anything: the first few bytes settle the question that the extension only claims to answer.`,
   'what-a-user-agent-string-says': `Every HTTP request your browser makes carries a \`User-Agent\` header. It looks like a specification and reads like an archaeology site:
 
 \`\`\`
@@ -1323,4 +1321,72 @@ The practical consequence is that user-agent-derived analytics get vaguer every 
 2. Find the most specific browser token: \`Edg/\`, \`OPR/\`, \`SamsungBrowser/\`, then \`Chrome/\`, then \`Firefox/\`, then \`Safari/\`.
 3. Read the platform from the parenthesised section.
 4. Treat the numbers as approximate, because increasingly they are.`,
+  'json-to-typescript-types-from-a-sample': `You call a new API, copy the JSON response, and want types for it so your editor can autocomplete and your compiler can catch mistakes. Writing the interfaces by hand is tedious and error-prone. A generator does it in a second. The catch is that the types describe the example you pasted, and an API's real behaviour is usually wider than one example.
+
+## What a generator actually does
+
+The [JSON to TypeScript tool](/tool/json-to-types) walks the JSON and writes a type for each value it finds. Strings, numbers and booleans map directly. Each nested object becomes its own named interface, so \`user.address\` produces an \`Address\` type rather than one giant inline type. Arrays take the type of their elements. The same structure can be written as TypeScript interfaces, Zod schemas, Go structs or Python dataclasses.
+
+Arrays of objects get special treatment. The generator merges every object in the array into one shape, and any field that appears in some objects but not all is marked optional: \`?\` in TypeScript, \`.optional()\` in Zod, a pointer with \`omitempty\` in Go, and \`Optional[...] = None\` in Python. That is the single most useful thing it does, and it only works if the sample contains enough variety to reveal it.
+
+## Five places one sample misleads you
+
+**1. Fields that were not in the sample.** If an error response has a \`message\` field and your sample was a success, the type will never mention it. Paste one example of each response shape you expect.
+
+**2. Fields that were null.** A field that is \`null\` in the sample is typed as \`null\`, because there is nothing else to infer from. In reality it is probably "a string, or null when missing". Find a sample where it has a value, or widen the type by hand to \`string | null\`.
+
+**3. Empty arrays.** \`"tags": []\` gives the generator no element to look at, so it falls back to \`unknown[]\`. That is honest, and it is your cue to fill in the real element type.
+
+**4. Integers that are not always integers.** In Go and Python the generator chooses \`int\` for \`3\` and \`float64\` or \`float\` for \`3.5\`. A price that happened to be a whole number in your sample becomes an integer type, and the first \`19.99\` from the real API breaks decoding. TypeScript has only \`number\`, so this one only bites in typed backends.
+
+**5. Dates and enums.** JSON has no date type, so \`"2026-10-24T09:00:00Z"\` is typed as \`string\`. Likewise \`"status": "active"\` becomes \`string\`, not the union of statuses the API actually allows. Both are worth tightening by hand once you know the real values.
+
+## Types vanish at runtime; schemas do not
+
+A TypeScript interface is erased when the code is compiled. If the API changes and starts sending \`price\` as a string, your interface still says \`number\`, the compiler is happy, and the bug surfaces somewhere far from the cause.
+
+This is what the Zod output is for. A Zod schema is code that runs: you call \`schema.parse(response)\` at the point where data enters your program, and a response that does not match fails loudly, with a message saying which field was wrong. The generated schema also gives you the TypeScript type for free through \`z.infer\`. For data that crosses a trust boundary, such as a third-party API, a webhook or a file a user uploads, validating at the edge is worth the few lines.
+
+## A workflow that holds up
+
+1. Collect three or four real responses, including an empty list, an error and an object with every optional field filled. Tidy them in a [JSON formatter](/tool/json-formatter) first if they arrived minified.
+2. Wrap them in one array and generate from that, so the merge can find the optional fields.
+3. Fix the nulls, empty arrays, number types, dates and enums by hand.
+4. If the API publishes an OpenAPI or JSON Schema document, prefer types generated from that. It is the contract; your samples are only evidence.
+
+For the opposite job, testing your code against data that does not exist yet, a [mock JSON generator](/tool/mock-json) produces realistic fake records from a field list, and a [JSONPath tester](/tool/jsonpath-tester) helps you check the paths your code will read before you write them.`,
+  'hindi-text-in-files-and-pdfs': `Hindi works well on screens now: phones, browsers and messaging apps all handle it without any setup. Problems start when Hindi text moves between files and programs, and they show up in three recognisable ways: empty boxes, question marks, or text that turns into nonsense when copied. Each has a different cause, and knowing which one you are looking at tells you the fix.
+
+## How Hindi is stored
+
+Modern Hindi text is stored as **Unicode**, the standard that gives every character in every writing system its own number. Devanagari, the script Hindi is written in, has its own block of code points, from U+0900 to U+097F. "क" is U+0915, "ा" is U+093E, and so on. The [Unicode converter](/tool/unicode-converter) shows the code point behind any character you paste in.
+
+Devanagari also has a step that Latin text does not: *shaping*. A conjunct like "क्ष" is stored as three code points, क, the virama ् and ष, and the font combines them into one shape when it is drawn. Vowel signs such as ि are stored after the consonant but drawn before it. So correct Hindi needs two things: Unicode text, and a font and rendering engine that know how to shape Devanagari.
+
+## Failure 1: boxes
+
+Empty rectangles, sometimes called tofu, mean the text is fine but the font being used to draw it has no Devanagari letters. The program falls back to a "missing glyph" box for each one.
+
+This happens most often when a PDF is generated with a basic built-in font. The text is in the file correctly; there is simply nothing to draw it with. Generating the PDF again with a font that includes Devanagari, such as Nirmala UI on Windows, Kohinoor Devanagari on macOS or Noto Sans Devanagari anywhere, fixes it.
+
+## Failure 2: question marks
+
+Question marks are a harsher version of the same problem: the program that created the file replaced every character it could not encode with "?" at the moment of saving. Unlike boxes, the original letters are gone from that file. You have to go back to the source and convert again with a Devanagari-capable font.
+
+Several converters on this site use standard Latin PDF fonts, and they say so: the [text to PDF](/tool/text-to-pdf) tool prints Latin characters only, the Excel to PDF converter prints characters outside that set as question marks and warns you, and the EPUB to PDF converter refuses a book that is mostly in Devanagari rather than fill it with them. For Hindi, the [HTML to PDF](/tool/html-to-pdf) and DOCX to PDF converters work, because they draw each page with your browser's own fonts, which include Devanagari on every current system. The trade-off is that those pages are stored as images, so the text in the PDF cannot be selected or searched.
+
+## Failure 3: gibberish when you copy
+
+You copy a paragraph of perfectly readable Hindi from an old document, paste it somewhere else, and get something like \`fgUnh esa ;g okD; gS\`. This is not corruption. The document was typed in a **legacy font** such as Kruti Dev, Chanakya or DevLys, which were widely used in Indian offices, courts and newspapers before Unicode was common.
+
+Those fonts work by drawing Devanagari shapes in place of English letters. The file actually stores English characters, and only that particular font makes them look like Hindi. Copy the text into anything using a normal font and the English letters reappear. The fix is to convert the text from the legacy encoding to Unicode with a converter built for that specific font, then retype or proofread, since the conversions are not always perfect.
+
+> [!NOTE]
+> A quick test: select a single Hindi letter in the document and look at the font name. If it is Kruti Dev, Chanakya, DevLys or similar, the text is legacy-encoded. If it is Mangal, Nirmala UI, Noto Sans Devanagari or another modern font, it is Unicode.
+
+## Getting Hindi text out of a scan
+
+A scanned form or a photo of a printed page has no text at all, only pixels. To get editable Hindi from it, you need OCR with the Hindi language model. The [image OCR](/tool/ocr-image) tool offers Hindi, and English plus Hindi together for mixed documents such as forms with English labels. The [PDF OCR](/tool/pdf-ocr) tool offers Hindi for scanned PDFs: it gives you the recognised text to copy, but because of the font limit described above, the PDF it saves stays image-only for Hindi. Either way the text you copy is Unicode, so it can be pasted anywhere.
+
+OCR on Devanagari is less accurate than on English, especially for conjuncts, small print and low-contrast scans. Scan at 300 DPI or more, keep the page flat and well lit, and proofread the result, paying particular attention to matras and half letters, which are the most common mistakes.`,
 };

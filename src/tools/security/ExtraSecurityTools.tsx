@@ -14,7 +14,7 @@ const WORDLIST = [
   'beacon', 'bear', 'berry', 'bicycle', 'birch', 'blanket', 'blossom', 'bolt', 'bottle', 'boulder',
   'bramble', 'breeze', 'bridge', 'bright', 'brook', 'bubble', 'bucket', 'bugle', 'cabin', 'camel',
   'candle', 'canyon', 'captain', 'caramel', 'carrot', 'castle', 'cedar', 'cement', 'ceramic', 'chalk',
-  'charm', 'cheese', 'cherry', 'chimney', 'circle', 'clover', 'cloud', 'clover', 'coast', 'cobalt',
+  'charm', 'cheese', 'cherry', 'chimney', 'circle', 'clover', 'cloud', 'cypress', 'coast', 'cobalt',
   'coconut', 'comet', 'compass', 'copper', 'coral', 'cotton', 'cradle', 'crane', 'crater', 'cricket',
   'crown', 'crystal', 'dagger', 'daisy', 'dawn', 'delta', 'desert', 'diamond', 'dolphin', 'dragon',
   'drift', 'drum', 'eagle', 'ember', 'emerald', 'engine', 'falcon', 'feather', 'fence', 'fern',

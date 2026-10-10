@@ -66,7 +66,7 @@ Keep the DOCX. The PDF is the output, not the file.
 
 Almost every painful conversion starts with the original being lost and the PDF being the only copy left. When the source exists, you edit it and re-export in thirty seconds. When it does not, you are paying a reconstruction tax every time the document needs a change, and paying it again at every future revision.
 
-[DOCX to PDF](/tool/docx-to-pdf) and [PDF to Word](/tool/pdf-to-word) both run in the browser tab here, with no upload step. That is worth having for the ordinary reason that contracts, offer letters and medical forms are the documents people convert most, and they are a poor fit for a free service with an unread privacy policy.`,
+Convert [DOCX to PDF](/tool/docx-to-pdf) for anything final, and keep the original Word file for edits. Converting [PDF to Word](/tool/pdf-to-word) is a recovery step for when that original is lost, not a way to edit a document, so expect to tidy the result.`,
   'open-a-docx-without-word': `The .docx extension has been a zip file since 2007. Not "like" a zip file, actually one. Copy a document, rename it to \`report.zip\`, and any unzip tool will open it and show you a folder tree of XML.
 
 That single design decision is why a web page can read a Word document at all, and it is also why Word documents give away more than their authors expect.
@@ -133,9 +133,7 @@ All three drop \`docProps\` entirely, because none of the target formats has any
 1. **Accept or reject all tracked changes.** Not "hide" them.
 2. **Delete resolved comments.** Resolving is not deleting.
 3. **Check the author fields**, especially if the file started life as someone else's template.
-4. **Consider whether they need a DOCX at all.** If they are not going to edit it, a PDF or plain text carries far less.
-
-None of this requires uploading the document anywhere. Reading a zip archive and parsing XML is something a browser does natively, which is why the viewer, the metadata reader and all three converters here run on your own machine. The documents most worth checking are the ones you would least like to hand to a stranger, which is the whole point.`,
+4. **Consider whether they need a DOCX at all.** If they are not going to edit it, a PDF or plain text carries far less.`,
   'markdown-as-a-document-source': `Two people edit the same report. One sends back \`report-final-v2-JS.docx\`, the other \`report-final-AK-edits.docx\`. Now someone has to open both side by side and reconcile them by eye, because there is no way to ask what actually changed.
 
 This is not a discipline problem, it is a format problem. A DOCX is a zip archive of compressed XML, so two versions of it have no meaningful textual difference: a one-word edit changes compressed bytes throughout the file. Nothing can diff it, nothing can merge it, and nothing can show a reviewer the three lines that moved.
@@ -191,9 +189,7 @@ You do not need to convert anything to get the benefit. This works from the next
 3. Generate the DOCX or HTML when somebody needs one.
 4. Apply returned edits to the Markdown, never to the generated file.
 
-Step four is the one that decides whether this holds. The moment someone edits the DOCX and that becomes the real version, you are back to reconciling files by eye and the source is just an out-of-date copy.
-
-Every conversion named here runs in the browser tab. That matters less for a public blog post than for the internal documents this workflow attracts, which are the ones with salary bands, client names and unannounced plans in them.`,
+Step four is the one that decides whether this holds. The moment someone edits the DOCX and that becomes the real version, you are back to reconciling files by eye and the source is just an out-of-date copy.`,
   'word-styles-and-templates': `Two documents look identical on screen. One has headings made with the Heading 1 style; the other has bold 16pt text. Export both to PDF and one has a navigation tree and the other does not. Convert both to HTML and one produces real heading elements and the other produces paragraphs. Ask Word to build a table of contents and one works.
 
 The difference is invisible on the page and decides everything that happens to the document afterwards.
@@ -316,7 +312,5 @@ That does not help with a contract someone else drafted, which is exactly when y
 1. Get both as text if you can, rather than as scans.
 2. Normalise whitespace and quotes on both sides.
 3. Compare at word granularity.
-4. Read the seams, meaning the areas immediately around each reported change, because that is where a subtle edit hides next to an obvious one.
-
-All four steps run locally here, which matters given that the documents people compare are almost always the ones under negotiation.`,
+4. Read the seams, meaning the areas immediately around each reported change, because that is where a subtle edit hides next to an obvious one.`,
 };

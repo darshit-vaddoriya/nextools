@@ -54,11 +54,9 @@ Also worth knowing: compression is not encryption. Shrinking a file does nothing
 4. If only three pages of a fifty-page document matter, extract those pages instead. A smaller document beats a degraded one.
 5. Strip metadata separately if privacy is the concern; it barely affects size but it does remove author names, software fingerprints and edit timestamps.
 
-## Where this runs matters
+## Using the compressor here
 
-Every one of these steps is arithmetic on bytes your browser already has. There is no technical reason to send a contract, a bank statement or a passport scan to someone else's server to have its images resampled. NextTool's [PDF compressor](/tool/pdf-compress) does the whole pass locally, which is why there is no upload progress bar and no file-size cap beyond your own memory.
-
-The practical benefit is speed as much as privacy: a 50 MB file never has to travel up and back down a connection before you see the result.`,
+The [PDF compressor](/tool/pdf-compress) offers the two approaches that decide most results. *Keep text selectable* rebuilds the file structure and strips metadata, which helps a digital PDF that was saved inefficiently and leaves its text, links and drawings untouched. *Compress images* redraws every page as a JPEG at 150, 110 or 80 DPI, which is what brings a scan down to size, at the cost of text that can no longer be selected. If neither makes the file meaningfully smaller, the tool says so, and the original is the file to keep.`,
   'merge-pdf-files-without-uploading': `Merging two PDFs sounds like concatenating two files. It is not. A PDF is an object graph with an index at the end, so merging means copying objects out of one graph into another, renumbering every reference, and rebuilding the index. Most of the surprises come from what happens to the objects that are not simple page content.
 
 ## What survives reliably
@@ -267,11 +265,9 @@ When a form specifies both a size and a dimension requirement, common for photog
 - **Do not zip it** unless the portal asks for a zip. PDFs are already compressed internally, so the saving is marginal, and most upload forms only accept \`.pdf\`.
 - **Do not compress an already-approved document** you may need to submit again. Keep the original.
 
-## Doing this without uploading the document first
+## Putting it together
 
-There is a real absurdity in uploading a passport scan to an unknown compression service in order to make it small enough to upload to an official portal. You have handed the document to two parties instead of one.
-
-[Compression](/tool/pdf-compress), [page extraction](/tool/pdf-page-extractor) and [PDF-to-image conversion](/tool/pdf-to-jpg) on NextTool all run inside your browser, so the document only ever reaches the destination you actually intended.`,
+For a scan that is over the limit, [extract](/tool/pdf-page-extractor) only the pages the form needs, then run the [compressor](/tool/pdf-compress) with *Compress images* at Balanced, and step down to Smallest only if the file is still too large. For a digital PDF, try *Keep text selectable* first, since it keeps the text searchable. If a portal wants a single page as a picture instead, [PDF to JPG](/tool/pdf-to-jpg) gives you that page as an image you can resize and compress on its own.`,
   'taking-pages-out-of-a-pdf': `You need pages 12 to 18 of a 200-page report. There are three buttons in front of you and they all appear to do it. They do not produce the same thing, and the difference matters more once you have the output.
 
 ## The three operations
@@ -392,7 +388,7 @@ Three positions account for nearly every stamping problem, and checking them tak
 
 Compressing at step six rather than earlier matters, because stamping after compression adds new uncompressed content streams to a file you just squeezed.
 
-All of these are page-content and dictionary edits, which is why [numbering](/tool/pdf-page-numbers), [headers and footers](/tool/pdf-header-footer), [cropping](/tool/pdf-crop) and [rotation](/tool/pdf-rotate) all run locally here. A submission bundle is usually the last document you would want to hand to an anonymous web service, and none of this needs one.`,
+Work in that order: [crop](/tool/pdf-crop) and [rotate](/tool/pdf-rotate) first so every page has the same shape, then add [page numbers](/tool/pdf-page-numbers) and [headers or footers](/tool/pdf-header-footer), which are positioned relative to the page size and go wrong if it changes afterwards.`,
   'making-a-pdf-from-something-else': `Three different jobs get called "make a PDF": turn this web page into one, turn this text file into one, and give me back the form I just filled in. They share an output format and almost nothing else.
 
 ## HTML has no pages
@@ -497,9 +493,7 @@ Both have a failure mode worth knowing about.
 5. Check the order and [reorder](/tool/pdf-reorder) if anything is out of place.
 6. Run [OCR](/tool/pdf-ocr) if the text needs to be searchable or comparable later.
 
-Step six is the one people skip and later regret, because it is the difference between a document you can search, quote and diff, and twelve pictures.
-
-All of these run in the browser here. Given that the documents people photograph page by page are overwhelmingly contracts, identity documents and medical records, that is the property worth having.`,
+Step six is the one people skip and later regret, because it is the difference between a document you can search, quote and diff, and twelve pictures.`,
   'getting-tables-out-of-a-pdf': `You select a table in a PDF, copy it, paste into a spreadsheet, and get every value stacked in column A in an order that does not match what you saw.
 
 Nothing went wrong. You asked a format that has no concept of tables to give you one.
@@ -554,5 +548,73 @@ If the document is a bank statement, an invoice or any published report, ask whe
 
 Extraction is the right tool when the PDF genuinely is the only copy, which is common for older archives and for documents you received rather than generated.
 
-[Text extraction](/tool/pdf-extract-text), [OCR](/tool/pdf-ocr) and the [CSV tools](/tool/csv-editor) here all run in the browser, which is the relevant property given that the tables people most often need out of a PDF are financial statements and payroll reports.`,
+Try [PDF to Excel](/tool/pdf-to-excel) first for a digital PDF, fall back to [text extraction](/tool/pdf-extract-text) when the columns come out merged, and use [OCR](/tool/pdf-ocr) only for scans; then check totals in the [CSV editor](/tool/csv-editor) against the original before trusting a single figure.`,
+  'turning-a-pdf-or-photos-into-slides': `Two situations come up again and again. Someone sends a report as a PDF and you need to present it in a meeting where everything runs through PowerPoint or Google Slides. Or you have a folder of photos from an event and need a slideshow on the screen in ten minutes. Both are quick, as long as you know what the conversion can and cannot do.
+
+## A PDF into slides
+
+The tempting idea is that a converter will turn each page into editable slides, with real text boxes, bullet points and charts. In practice that almost never works, and the reason is the PDF format itself. A PDF records where each character and line is drawn on the page, not which of them form a heading, a list or a table. Any tool that rebuilds slides from that has to guess, and the guesses produce overlapping text boxes, substituted fonts and sentences broken mid-line.
+
+So the reliable approach is the opposite: each page becomes a sharp image on its own slide. The [PDF to PowerPoint converter](/tool/pdf-to-pptx) renders every page at roughly 1600 pixels wide, enough to stay crisp on a projector without bloating the file, and sizes the slides to the page's own shape so nothing is cropped or letterboxed. An A4 report gives tall slides; a deck that was exported to PDF gives widescreen ones.
+
+The text is not thrown away. For every page that has real text, it is copied into that slide's **speaker notes**. You present from the images, read from the notes, and copy any sentence you need into a new text box.
+
+> [!NOTE]
+> A scanned PDF has no text, only pictures of pages, so its slides arrive without notes. Run it through OCR first if you need the words.
+
+Long PDFs are worth trimming first. If you will only discuss five pages of a forty-page report, [split out](/tool/pdf-split) those pages and convert only them: the deck is smaller, and you will not scroll past thirty-five irrelevant slides in front of an audience.
+
+## Photos into a slideshow
+
+For photos, the [images to PowerPoint tool](/tool/images-to-pptx) puts one image on each slide, in the order you add them. The decision that matters is the slide shape:
+
+- **16:9** matches laptops, TVs, modern projectors and video calls. Choose this unless you have a reason not to.
+- **4:3** matches older projectors and printed handouts.
+- **Match** sizes the slides to the first photo. If every photo is the same shape, for example screenshots from one phone, this fills each slide with no bars at all.
+
+Photos are fitted inside the slide without cropping or stretching. A portrait photo on a widescreen slide gets bars at the sides, in white or black depending on the background you choose; black usually looks better for photos shown on a screen. JPG and PNG files go in as they are. Other formats, including iPhone HEIC photos, are converted first, because PowerPoint cannot display them.
+
+Phone photos are large. Forty 12-megapixel photos at a few megabytes each make a deck well over a hundred megabytes, which is slow to email and slow to open. If the slideshow is only for a screen, [resize](/tool/image-resize) the photos to around 1920 pixels wide first; on a 1080p display nobody will see the difference.
+
+## Opening the result
+
+Both kinds of deck are ordinary \`.pptx\` files. They open in PowerPoint, Keynote and LibreOffice Impress, and you can upload them to Google Slides, which converts them on import. Every slide image is a normal picture object, so you can still add titles, reorder slides, delete the ones you do not need, or add your own slides around them before you present.`,
+  'ebooks-epub-pdf-and-markdown': `You download a book and get an \`.epub\`. Your friend sends one as a PDF. Your Kindle wants something else again, and a manuscript you wrote in a text editor is in none of these. E-book formats look like a mess, but the confusion mostly comes from one difference.
+
+## Reflowable versus fixed
+
+An **EPUB** is essentially a small website in a ZIP file: chapters written in XHTML, a stylesheet, images, and a table of contents. A reading app lays the text out to fit whatever screen it is on and whatever font size you choose. That is why the same book has 300 pages on a phone and 180 on a tablet, and why changing the text size never makes you scroll sideways.
+
+A **PDF** is the opposite. It records exactly where every line sits on a fixed page. It looks identical everywhere, which is perfect for printing, for academic papers where page numbers matter, and for layouts with columns and figures. On a small screen, though, a page designed for paper means zooming and panning.
+
+So the rule of thumb is simple. For reading text on a device, prefer EPUB. For printing, annotating pages or preserving a precise layout, prefer PDF.
+
+## Which reader wants what
+
+| Reader | Format |
+|---|---|
+| Apple Books, Kobo, Google Play Books, most Android apps | EPUB |
+| Kindle | EPUB, sent through Send to Kindle, which converts it |
+| Any computer, any phone, any printer | PDF |
+
+Amazon's Send to Kindle service started accepting EPUB in 2022 and converts it for the device, so EPUB is now the format that works almost everywhere. The older Kindle formats, MOBI and AZW, are no longer needed for books you send yourself.
+
+## Reading an EPUB as a PDF
+
+Sometimes you need a PDF anyway: to print a book, annotate it on a tablet with a PDF app, or send it to someone with no e-reader. Converting means choosing a page size and laying the text out once. The [EPUB to PDF converter](/tool/epub-to-pdf) typesets the book on 6 × 9 inch pages, a common paperback size, with the title and author first and the chapters in reading order. Headings, paragraphs, bold and italic carry across; the e-book's own styling, written for flexible screens, does not.
+
+Two limits come from the book rather than the converter. Books bought from most stores are protected with DRM, which encrypts the text, and a DRM-protected book cannot be converted; the tool does not attempt to remove that protection. DRM-free books, such as those from Project Gutenberg, Standard Ebooks or many independent authors, convert normally. And the PDF uses standard Latin fonts, so books mostly in Hindi, Arabic or Chinese are better printed from a reading app that has the right fonts.
+
+## Turning your own writing into an e-book
+
+If you write in Markdown, or in plain text, you are one step away from a real e-book. The [Markdown to EPUB converter](/tool/markdown-to-epub) splits the document into chapters at each top-level heading, \`#\` in Markdown, or at \`##\` if there are no top-level headings, and builds the table of contents from them. The first heading becomes the book's title. The result is a valid EPUB 3 file that also includes an EPUB 2 contents file for older readers.
+
+A few habits make the result better:
+
+1. **One \`#\` heading per chapter,** with \`##\` and \`###\` inside chapters.
+2. **Preview the Markdown first** in a [Markdown preview](/tool/markdown-preview) to catch broken lists and stray symbols before they reach the reader.
+3. **Leave images out of the source,** or add them afterwards in an EPUB editor. Images referenced by file paths cannot be packed into the book automatically, so they are removed rather than left as broken links.
+4. **Check the language.** The book is marked as English, which readers use for hyphenation and text-to-speech; for another language, change it in an EPUB editor such as Sigil before publishing.
+
+Then send the EPUB to your Kindle, open it in Apple Books, or share it with beta readers. If someone insists on a PDF, convert it the other way, and [compress](/tool/pdf-compress) the PDF if it is going by email.`,
 };

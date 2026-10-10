@@ -12,11 +12,12 @@ import { useExportProgress } from './ExportProgress';
 import { ToolSteps } from '../../components/ui/ToolSteps';
 
 // ─── FORMAT OPTIONS ──────────────────────────────────────────
+// BMP is not offered: Chrome's canvas cannot encode it, so the export fell back
+// to JPG under a BMP label. The file converter has its own BMP encoder.
 const FORMATS = [
   { label: 'PNG', mime: 'image/png', ext: 'png' },
   { label: 'JPG', mime: 'image/jpeg', ext: 'jpg' },
   { label: 'WebP', mime: 'image/webp', ext: 'webp' },
-  { label: 'BMP', mime: 'image/bmp', ext: 'bmp' },
 ];
 
 const COMPRESSED_FORMATS = [

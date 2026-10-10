@@ -19,7 +19,6 @@ export const DEV_PRO_SEO_CONTENT: ToolSeoMap = {
       { question: 'What happens to nested objects?', answer: 'Each nested object becomes its own named interface or struct, named after the key that holds it, so you get a readable set of types rather than one deeply inlined blob.' },
       { question: 'Does it handle null values?', answer: 'A field that is null in the sample cannot be typed accurately, so it is emitted as `null` in TypeScript and `interface{}` / `Any` in Go and Python. Give the tool a sample where the field is populated for a more precise type.' },
       { question: 'Is the Zod output ready to use?', answer: 'Yes. It emits one schema per object plus matching `z.infer` types, so you get both runtime validation and static types from a single source.' },
-      { question: 'Is my JSON uploaded anywhere?', answer: 'No. Parsing and code generation happen entirely in your browser with JavaScript — nothing is sent to a server, which matters when the sample contains real customer data.' },
     ],
     useCases: [
       'Typing a third-party API response the moment you first call it',
@@ -75,7 +74,6 @@ export const DEV_PRO_SEO_CONTENT: ToolSeoMap = {
     faqs: [
       { question: 'Which curl flags are supported?', answer: 'The ones that affect the request: -X/--request, -H/--header, -d/--data and its variants, -u/--user for basic auth, -A/--user-agent, -b/--cookie, -F/--form, -G/--get and --url. Cosmetic or transport flags such as -s, -k, -L and --compressed are ignored because they do not change the generated code.' },
       { question: 'What method is used if the command has no -X?', answer: 'The same rule curl itself follows: GET when there is no body, POST when a data flag is present.' },
-      { question: 'Is my auth token safe to paste here?', answer: 'The parsing runs entirely in your browser and nothing is transmitted, but a copied cURL command usually contains a live session token, so treat it carefully and rotate it if it was ever shared elsewhere.' },
       { question: 'Why is my JSON body a plain string instead of an object?', answer: 'The body is only re-expanded into an object literal when it parses as valid JSON. Form-encoded or multipart bodies stay as strings, which is what those APIs expect.' },
       { question: 'Does it handle multi-line commands?', answer: 'Yes. Backslash line continuations are joined before parsing, so you can paste a wrapped command exactly as your terminal or DevTools produced it.' },
     ],
@@ -103,7 +101,6 @@ export const DEV_PRO_SEO_CONTENT: ToolSeoMap = {
     ],
     faqs: [
       { question: 'What is the difference between JSON and JavaScript escaping?', answer: 'JSON escaping targets double-quoted strings and follows the JSON spec exactly. JavaScript escaping here targets single-quoted source literals, so it escapes apostrophes and leaves double quotes alone.' },
-      { question: 'Is SQL escaping safe against injection?', answer: 'No. Doubling single quotes is correct for building a literal by hand, but parameterised queries and prepared statements are the only reliable defence against SQL injection. Use this for quick manual queries, not for application code.' },
       { question: 'Why does shell escaping wrap everything in single quotes?', answer: 'Single quotes are the only shell construct that disables all expansion, so wrapping the whole string and escaping any embedded apostrophe is the safest general rule for passing text through a shell.' },
       { question: 'What does regex escaping do?', answer: 'It backslash-escapes every character with special meaning in a pattern, which turns arbitrary text into a literal match — the same thing a RegExp.escape helper would do.' },
       { question: 'Does unescaping always return the original text?', answer: 'For JSON, XML, CSV and URL it round-trips exactly. For JavaScript and shell, some inputs are ambiguous, so check the result if the string contains stacked backslashes.' },
@@ -134,7 +131,6 @@ export const DEV_PRO_SEO_CONTENT: ToolSeoMap = {
       { question: 'Are comments preserved?', answer: 'No. Comment lines starting with # are skipped because JSON has no place to put them. Inline comments after an unquoted value are stripped from that value, matching how dotenv parsers behave.' },
       { question: 'How are quoted values handled?', answer: 'Surrounding single or double quotes are removed when converting to JSON, and re-added on the way back whenever the value contains a space, hash, quote or equals sign, or is empty.' },
       { question: 'Does it support nested JSON objects?', answer: 'Environment variables are flat strings, so a nested object is serialised to a JSON string on the .env side. Going the other way, keep the JSON flat for a clean result.' },
-      { question: 'Is it safe to paste production secrets?', answer: 'The conversion runs entirely in your browser and nothing is transmitted or stored. That said, treat any secret you paste into any browser tab as worth rotating if the machine is shared.' },
       { question: 'Does it handle `export KEY=value` lines?', answer: 'Yes. The `export ` prefix used in shell-sourced env files is stripped automatically.' },
     ],
     useCases: [
@@ -192,7 +188,6 @@ export const DEV_PRO_SEO_CONTENT: ToolSeoMap = {
       { question: 'What does recursive descent do?', answer: 'An expression like $..price searches the entire document at any depth and returns every value stored under that key, which is the quickest way to find a field when you do not know where it lives.' },
       { question: 'Why does my filter return nothing?', answer: 'Filters compare strictly, so @.status=="active" will not match the number 1 or the string "Active". Check the exact value and casing in the document, and use single quotes around string literals.' },
       { question: 'Does it support script expressions or functions?', answer: 'No. Length, slice and script expressions are deliberately left out — the goal is a predictable subset that behaves the same everywhere, not full parity with a specific JSONPath library.' },
-      { question: 'Is my data uploaded?', answer: 'No. The document is parsed and queried entirely in your browser, so you can safely test against a real response.' },
     ],
     useCases: [
       'Extracting a list of IDs from a paginated API response',

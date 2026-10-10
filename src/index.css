@@ -992,178 +992,206 @@ body {
 .rich-text-surface u { text-decoration: underline; }
 
 /* ── Markdown Preview tool ─────────────────────────────────────────────
-   The preview reuses .blog-prose so headings, lists, tables, code and
-   blockquotes match the rest of the site. These overrides scale it down
-   from article size to tool-panel size and add the GFM task-list bits
-   that articles never use. */
-.md-preview {
-  font-size: 15px;
-  line-height: 1.65;
-}
-.md-preview > p:first-child {
-  font-size: 15px;
-  line-height: 1.65;
-  color: rgb(var(--foreground) / 0.88);
-}
-.md-preview h2 { font-size: 21px; margin-top: 1.5em; }
-.md-preview h3 { font-size: 17px; margin-top: 1.3em; }
-.md-preview h4 { font-size: 15px; font-weight: 700; margin-top: 1.2em; color: rgb(var(--foreground)); }
-.md-preview h1 {
-  font-family: 'Plus Jakarta Sans Variable', system-ui, sans-serif;
-  font-size: 25px;
-  font-weight: 800;
-  letter-spacing: -0.025em;
+   Rendered the way a Markdown file reads in Claude's and GitHub's previews:
+   a plain document in the system font, rules under the two top heading
+   levels, gridded tables, grey code blocks and quiet blockquotes. Kept
+   separate from .blog-prose, whose article styling (a large lede, coloured
+   bullets, tinted quotes) is wrong for a file preview. */
+.md-doc {
+  --md-code-bg: rgb(var(--muted) / 0.75);
   color: rgb(var(--foreground));
-  margin-top: 1.4em;
-  margin-bottom: 0.5em;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans', Helvetica, Arial, sans-serif;
+  font-size: 16px;
+  line-height: 1.6;
+  overflow-wrap: break-word;
 }
-.md-preview > :first-child { margin-top: 0; }
-/* Tables match Claude / GitHub previews: full width, a visible grid on every
-   cell, plain header row. Overrides the article-style table from .blog-prose. */
-.md-preview .table-scroll {
-  border-radius: 8px;
-  box-shadow: none;
-  background: transparent;
-}
-.md-preview table { width: 100%; min-width: 0; font-size: 14px; border-collapse: collapse; }
-.md-preview th,
-.md-preview td {
-  border: 1px solid rgb(var(--border));
-  padding: 8px 14px;
-  vertical-align: top;
-}
-.md-preview th {
-  position: static;
-  background: rgb(var(--muted) / 0.6);
-  font-size: 14px;
-  font-weight: 700;
-  letter-spacing: 0;
-  text-transform: none;
-  white-space: normal;
-  color: rgb(var(--foreground));
-}
-.md-preview td:first-child { font-weight: 400; }
-.md-preview tbody tr:nth-child(even) { background: transparent; }
-.md-preview tbody tr:last-child td { border-bottom: 1px solid rgb(var(--border)); }
-.md-preview pre { font-size: 12.5px; border-radius: 10px; padding: 12px 14px; }
+.md-doc > :first-child { margin-top: 0 !important; }
+.md-doc > :last-child { margin-bottom: 0 !important; }
 
-/* Task lists: marked emits a disabled checkbox inside the <li>. */
-.md-preview li:has(> input[type='checkbox']) { list-style: none; margin-left: -1.1rem; }
-.md-preview input[type='checkbox'] {
-  accent-color: rgb(var(--primary));
-  margin-right: 0.5em;
+.md-doc p,
+.md-doc blockquote,
+.md-doc ul,
+.md-doc ol,
+.md-doc dl,
+.md-doc pre,
+.md-doc details,
+.md-doc .table-scroll,
+.md-doc .callout { margin-top: 0; margin-bottom: 16px; }
+
+.md-doc h1,
+.md-doc h2,
+.md-doc h3,
+.md-doc h4,
+.md-doc h5,
+.md-doc h6 {
+  margin-top: 24px;
+  margin-bottom: 16px;
+  font-family: inherit;
+  font-weight: 600;
+  letter-spacing: normal;
+  line-height: 1.25;
+  color: rgb(var(--foreground));
+}
+.md-doc h1 { font-size: 2em; padding-bottom: 0.3em; border-bottom: 1px solid rgb(var(--border)); }
+.md-doc h2 { font-size: 1.5em; padding-bottom: 0.3em; border-bottom: 1px solid rgb(var(--border)); }
+.md-doc h3 { font-size: 1.25em; }
+.md-doc h4 { font-size: 1em; }
+.md-doc h5 { font-size: 0.875em; }
+.md-doc h6 { font-size: 0.85em; color: rgb(var(--muted-foreground)); }
+
+.md-doc a { color: rgb(var(--primary)); text-decoration: none; }
+.md-doc a:hover { text-decoration: underline; text-underline-offset: 2px; }
+.md-doc strong { font-weight: 600; }
+.md-doc del { color: rgb(var(--muted-foreground)); }
+
+.md-doc ul,
+.md-doc ol { padding-left: 2em; }
+.md-doc ul { list-style: disc; }
+.md-doc ol { list-style: decimal; }
+.md-doc ul ul { list-style: circle; }
+.md-doc ul ul ul { list-style: square; }
+.md-doc ol ol { list-style: lower-roman; }
+.md-doc li + li { margin-top: 0.25em; }
+.md-doc li > p { margin-top: 16px; }
+.md-doc li > ul,
+.md-doc li > ol { margin-top: 0.25em; margin-bottom: 0; }
+
+/* GFM task lists: marked puts a disabled checkbox at the start of the <li>. */
+.md-doc li:has(> input[type='checkbox']) { list-style: none; }
+.md-doc li > input[type='checkbox'] {
+  margin: 0 0.35em 0.2em -1.4em;
   vertical-align: middle;
+  accent-color: rgb(var(--primary));
 }
 
-.md-preview img { max-width: 100%; border-radius: 10px; }
+.md-doc code,
+.md-doc kbd,
+.md-doc pre { font-family: ui-monospace, 'JetBrains Mono Variable', SFMono-Regular, Menlo, Consolas, monospace; }
+.md-doc :not(pre) > code {
+  font-size: 85%;
+  padding: 0.2em 0.4em;
+  border-radius: 6px;
+  background: var(--md-code-bg);
+  overflow-wrap: anywhere;
+}
+.md-doc pre {
+  padding: 16px;
+  overflow: auto;
+  font-size: 85%;
+  line-height: 1.45;
+  border-radius: 6px;
+  background: var(--md-code-bg);
+}
+.md-doc pre code { padding: 0; background: transparent; font-size: 100%; white-space: pre; }
 
-/* ── Preview polish ───────────────────────────────────────────────────
-   The preview is the product here, so it is styled like a finished
-   document rather than raw rendered markup. */
-
-/* h2 carries the section rhythm, so it gets a hairline rule under it. */
-.md-preview h2 {
-  padding-bottom: 0.3em;
-  border-bottom: 1px solid rgb(var(--border) / 0.8);
-}
-.md-preview h3 { letter-spacing: -0.01em; }
-
-.md-preview a {
-  text-decoration-thickness: 1px;
-  text-underline-offset: 3px;
-  transition: color 0.15s var(--ease, ease);
-}
-.md-preview a:hover { color: rgb(var(--primary)); filter: none; }
-
-/* Zebra striping and row hover make wide comparison tables scannable. */
-.md-preview tbody tr:nth-child(even) { background: rgb(var(--muted) / 0.45); }
-.md-preview tbody tr { transition: background 0.12s ease; }
-.md-preview tbody tr:hover { background: rgb(var(--primary) / 0.06); }
-.md-preview tbody tr:last-child td { border-bottom: 0; }
-.md-preview th { letter-spacing: 0.04em; }
-
-/* Code blocks read as a panel, with a language chip where marked gave us one. */
-.md-preview pre {
-  position: relative;
-  background: rgb(var(--muted) / 0.75);
-}
-.md-preview pre code[class*='language-']::before {
-  position: absolute;
-  top: 7px;
-  right: 10px;
-  font-size: 9.5px;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: rgb(var(--muted-foreground) / 0.75);
-  pointer-events: none;
-}
-.md-preview pre code.language-ts::before,
-.md-preview pre code.language-typescript::before { content: 'TS'; }
-.md-preview pre code.language-js::before,
-.md-preview pre code.language-javascript::before { content: 'JS'; }
-.md-preview pre code.language-json::before { content: 'JSON'; }
-.md-preview pre code.language-html::before { content: 'HTML'; }
-.md-preview pre code.language-css::before { content: 'CSS'; }
-.md-preview pre code.language-bash::before,
-.md-preview pre code.language-sh::before { content: 'SHELL'; }
-.md-preview pre code.language-python::before,
-.md-preview pre code.language-py::before { content: 'PYTHON'; }
-.md-preview pre code.language-sql::before { content: 'SQL'; }
-.md-preview pre code.language-go::before { content: 'GO'; }
-.md-preview pre code.language-yaml::before,
-.md-preview pre code.language-yml::before { content: 'YAML'; }
-
-/* Blockquote gets an opening quote mark instead of only a coloured bar. */
-.md-preview blockquote {
-  position: relative;
-  padding-left: 2.4em;
-  font-style: italic;
-}
-.md-preview blockquote::before {
-  content: '\201C';
-  position: absolute;
-  left: 0.5rem;
-  top: -0.05em;
-  font-size: 2.1em;
-  line-height: 1;
-  font-style: normal;
-  color: rgb(var(--primary) / 0.45);
-}
-
-/* Task lists: a checked item is visibly done, an open one clearly pending. */
-.md-preview li:has(> input[type='checkbox']) {
-  display: flex;
-  align-items: flex-start;
-  gap: 0.15em;
-}
-.md-preview input[type='checkbox'] {
-  width: 15px;
-  height: 15px;
-  margin-top: 0.22em;
-  border-radius: 4px;
-  flex-shrink: 0;
-  opacity: 1;
-}
-.md-preview li:has(> input[type='checkbox']:checked) {
-  color: rgb(var(--muted-foreground));
-}
-
-.md-preview hr {
-  border-top: 1px solid rgb(var(--border));
-  margin-top: 1.8em;
-  margin-bottom: 1.8em;
-}
-
-.md-preview kbd {
-  font-family: 'JetBrains Mono Variable', 'JetBrains Mono', monospace;
+.md-doc kbd {
+  display: inline-block;
+  padding: 0.15em 0.4em;
   font-size: 0.8em;
-  padding: 0.1em 0.4em;
+  line-height: 1;
   border: 1px solid rgb(var(--border));
   border-bottom-width: 2px;
-  border-radius: 5px;
+  border-radius: 6px;
   background: rgb(var(--card));
 }
+
+.md-doc blockquote {
+  padding: 0 1em;
+  color: rgb(var(--muted-foreground));
+  border-left: 0.25em solid rgb(var(--border));
+}
+.md-doc blockquote > :last-child { margin-bottom: 0; }
+
+.md-doc hr {
+  height: 0.25em;
+  margin: 24px 0;
+  padding: 0;
+  border: 0;
+  background: rgb(var(--border));
+}
+
+.md-doc .table-scroll { overflow-x: auto; }
+.md-doc table { border-collapse: collapse; border-spacing: 0; width: max-content; max-width: 100%; }
+.md-doc th,
+.md-doc td { padding: 6px 13px; border: 1px solid rgb(var(--border)); }
+.md-doc th { font-weight: 600; text-align: left; }
+.md-doc tr { background: rgb(var(--card)); }
+.md-doc tbody tr:nth-child(2n) { background: rgb(var(--muted) / 0.45); }
+
+.md-doc img { max-width: 100%; }
+
+/* GitHub-style alerts, from `> [!NOTE]`, `> [!TIP]` and `> [!WARNING]`. */
+.md-doc .callout { padding: 8px 16px; border-left: 0.25em solid; }
+.md-doc .callout > :last-child { margin-bottom: 0; }
+.md-doc .callout-label { margin-bottom: 4px; font-weight: 600; }
+.md-doc .callout-note { border-left-color: rgb(var(--primary)); }
+.md-doc .callout-note .callout-label { color: rgb(var(--primary)); }
+.md-doc .callout-tip { border-left-color: rgb(var(--success)); }
+.md-doc .callout-tip .callout-label { color: rgb(var(--success)); }
+.md-doc .callout-warning { border-left-color: rgb(var(--warning)); }
+.md-doc .callout-warning .callout-label { color: rgb(var(--warning)); }
+
+/* Code highlighting (Prism tokens), GitHub's light and dark palettes. */
+.md-doc .token.comment,
+.md-doc .token.prolog,
+.md-doc .token.doctype,
+.md-doc .token.cdata { color: #59636e; font-style: italic; }
+.md-doc .token.punctuation { color: #1f2328; }
+.md-doc .token.keyword,
+.md-doc .token.important,
+.md-doc .token.atrule,
+.md-doc .token.rule { color: #cf222e; }
+.md-doc .token.string,
+.md-doc .token.char,
+.md-doc .token.attr-value,
+.md-doc .token.regex,
+.md-doc .token.template-string { color: #0a3069; }
+.md-doc .token.number,
+.md-doc .token.boolean,
+.md-doc .token.constant,
+.md-doc .token.symbol,
+.md-doc .token.property { color: #0550ae; }
+.md-doc .token.function,
+.md-doc .token.class-name { color: #8250df; }
+.md-doc .token.tag,
+.md-doc .token.selector,
+.md-doc .token.deleted { color: #116329; }
+.md-doc .token.attr-name,
+.md-doc .token.variable,
+.md-doc .token.builtin,
+.md-doc .token.operator { color: #953800; }
+.md-doc .token.inserted { color: #116329; background: #dafbe1; }
+.md-doc .token.deleted { color: #82071e; background: #ffebe9; }
+
+.dark .md-doc .token.comment,
+.dark .md-doc .token.prolog,
+.dark .md-doc .token.doctype,
+.dark .md-doc .token.cdata { color: #9198a1; }
+.dark .md-doc .token.punctuation { color: #e6edf3; }
+.dark .md-doc .token.keyword,
+.dark .md-doc .token.important,
+.dark .md-doc .token.atrule,
+.dark .md-doc .token.rule { color: #ff7b72; }
+.dark .md-doc .token.string,
+.dark .md-doc .token.char,
+.dark .md-doc .token.attr-value,
+.dark .md-doc .token.regex,
+.dark .md-doc .token.template-string { color: #a5d6ff; }
+.dark .md-doc .token.number,
+.dark .md-doc .token.boolean,
+.dark .md-doc .token.constant,
+.dark .md-doc .token.symbol,
+.dark .md-doc .token.property { color: #79c0ff; }
+.dark .md-doc .token.function,
+.dark .md-doc .token.class-name { color: #d2a8ff; }
+.dark .md-doc .token.tag,
+.dark .md-doc .token.selector { color: #7ee787; }
+.dark .md-doc .token.attr-name,
+.dark .md-doc .token.variable,
+.dark .md-doc .token.builtin,
+.dark .md-doc .token.operator { color: #ffa657; }
+.dark .md-doc .token.inserted { color: #aff5b4; background: #033a16; }
+.dark .md-doc .token.deleted { color: #ffdcd7; background: #67060c; }
 
 /* ─── Word document rendering (.docx viewer / PDF export preview) ───────────
    mammoth emits bare semantic HTML with no classes, and this app's reset

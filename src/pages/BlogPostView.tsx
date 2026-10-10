@@ -234,6 +234,18 @@ export const BlogPostView: React.FC<BlogPostViewProps> = ({ post, initialBody, o
             : <div className="blog-prose" dangerouslySetInnerHTML={{ __html: html }} />}
         </article>
 
+        {/* The standards and documentation the guide's claims rest on, so a
+            reader can check them rather than take the page's word for it. */}
+        {post.furtherReading && post.furtherReading.length > 0 && <section aria-labelledby="further-reading" className="mt-12">
+          <h2 id="further-reading" className="text-[11.5px] font-bold text-muted-foreground pb-2.5 border-b border-border">Further reading</h2>
+          <ul className="mt-3.5 space-y-2.5">
+            {post.furtherReading.map(ref => <li key={ref.url} className="text-[14px] leading-relaxed">
+              <a href={ref.url} target="_blank" rel="noopener noreferrer" className="font-semibold text-foreground hover:text-primary hover:underline underline-offset-2">{ref.title}</a>
+              <span className="text-muted-foreground"> · {ref.publisher}</span>
+            </li>)}
+          </ul>
+        </section>}
+
         {/* Every guide argues towards doing something. This is where it is done,
             placed at the end of the argument rather than only in the rail. */}
         {primaryTool && <AppLink
@@ -255,6 +267,10 @@ export const BlogPostView: React.FC<BlogPostViewProps> = ({ post, initialBody, o
         </AppLink>}
 
         <footer className="mt-14 pt-6 border-t border-border">
+          <p className="mb-4 text-[12.5px] leading-relaxed text-muted-foreground">
+            Written for NextTool. Every statement about a tool is checked against that tool&apos;s code, and corrections are dated above.{' '}
+            <a href="/about#how-guides-are-written" className="font-semibold text-foreground hover:text-primary hover:underline underline-offset-2">How guides are written</a>
+          </p>
           <div className="flex flex-wrap gap-2">
             {post.tags.map(tag => <span key={tag} className="text-[11px] font-mono text-muted-foreground bg-muted px-2.5 py-1 rounded-lg">{tag}</span>)}
           </div>

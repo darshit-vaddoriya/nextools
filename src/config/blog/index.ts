@@ -8,10 +8,25 @@ import { SECURITY_POSTS } from './posts/security';
 import { DATA_POSTS } from './posts/data';
 import { NUMBERS_POSTS } from './posts/numbers';
 import { PRIVACY_POSTS } from './posts/privacy';
+import { FURTHER_READING } from './furtherReading';
 
 export * from './types';
 
-/** All posts, newest first. */
+/**
+ * The day this build was made (UTC, YYYY-MM-DD). Vite replaces the constant in
+ * the bundle; astro.config.ts imports this module before any define applies,
+ * so there it falls back to the clock, which is the same build.
+ */
+const BUILD_DATE: string = typeof __BUILD_DATE__ !== 'undefined'
+  ? __BUILD_DATE__
+  : new Date().toISOString().slice(0, 10);
+
+/**
+ * All published posts, newest first. A post whose `published` date is still in
+ * the future is written but not yet out: it has no page, no sitemap entry and
+ * no card until a build on or after that date. The scheduled-publish workflow
+ * (.github/workflows) triggers that build on each publication day.
+ */
 export const BLOG_POSTS: BlogPost[] = [
   ...PDF_POSTS,
   ...DOCS_POSTS,
@@ -22,7 +37,10 @@ export const BLOG_POSTS: BlogPost[] = [
   ...DATA_POSTS,
   ...NUMBERS_POSTS,
   ...PRIVACY_POSTS,
-].sort((a, b) => b.published.localeCompare(a.published));
+]
+  .filter(p => p.published <= BUILD_DATE)
+  .map(p => (FURTHER_READING[p.slug] ? { ...p, furtherReading: FURTHER_READING[p.slug] } : p))
+  .sort((a, b) => b.published.localeCompare(a.published));
 
 export const getPost = (slug: string): BlogPost | undefined =>
   BLOG_POSTS.find(p => p.slug === slug);

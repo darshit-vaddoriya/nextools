@@ -14,7 +14,6 @@ export const IMAGE_SEO_CONTENT: ToolSeoMap = {
       { question: 'Will compressing my image reduce its quality?', answer: 'Some quality is traded for smaller file size, but the tool uses lossy compression with a live preview so you can pick the point where savings are worthwhile without visible artifacts.' },
       { question: 'Which formats are supported?', answer: 'JPEG, PNG, WebP, and AVIF are all supported for both input and compressed output.' },
       { question: 'Is there a file size limit?', answer: 'The tool runs entirely in your browser, so the practical limit is your device memory rather than a server upload cap, most photos up to tens of megabytes compress instantly.' },
-      { question: 'Are my images uploaded anywhere?', answer: 'No. Compression happens locally using your browser Canvas API; the file never leaves your computer or phone.' },
       { question: 'Does it work on mobile browsers?', answer: 'Yes, the compressor works on modern mobile browsers, though very large images may take a moment longer to process than on desktop.' },
     ],
     useCases: [
@@ -43,7 +42,6 @@ export const IMAGE_SEO_CONTENT: ToolSeoMap = {
       { question: 'Can I resize by percentage instead of pixels?', answer: 'Yes, switch to percentage mode to scale the image up or down relative to its original size.' },
       { question: 'What image formats can I resize?', answer: 'Common formats like JPEG, PNG, and WebP are all supported for upload and export.' },
       { question: 'Does resizing reduce image quality?', answer: 'Enlarging an image beyond its original resolution can soften detail, but shrinking it generally preserves visual quality well.' },
-      { question: 'Is my photo uploaded to a server?', answer: 'No, resizing is done in-browser using canvas rendering, so your file stays on your device.' },
     ],
     useCases: [
       'Matching an exact 1200x1200 pixel requirement for a marketplace or Amazon product listing',
@@ -127,7 +125,6 @@ export const IMAGE_SEO_CONTENT: ToolSeoMap = {
       { question: 'Can I flip both horizontally and vertically at once?', answer: 'Yes, apply one flip, then apply the other flip direction to combine both.' },
       { question: 'Does flipping affect image quality?', answer: 'No, flipping is a lossless pixel-mirroring operation with no resampling.' },
       { question: 'Will text in my image be mirrored too?', answer: 'Yes, any text baked into the image pixels will appear reversed after a horizontal flip, since the whole image is mirrored.' },
-      { question: 'Is my image uploaded to process the flip?', answer: 'No, the flip happens locally in your browser.' },
     ],
     useCases: [
       'Correcting a front-camera selfie that appears mirrored compared to how it looked when taken',
@@ -143,30 +140,28 @@ export const IMAGE_SEO_CONTENT: ToolSeoMap = {
   },
   'image-convert': {
     intro:
-      'Different platforms and tools demand different image formats, a CMS might reject HEIC photos straight from an iPhone, or you might need a PNG turned into a lighter WebP for the web, and this converter handles JPG, PNG, WebP, AVIF, HEIC, BMP, TIFF, and more in one place. Web developers use it to modernize legacy image assets, while everyday users use it to make iPhone photos compatible with services that only accept JPG or PNG. Multiple files can be converted in a batch, all processed locally without uploading anything.',
+      'Websites, forms and apps each accept a different set of image formats, and the fastest fix for "format not supported" is usually a straight conversion. This tool reads images with your browser\'s own decoder, which handles JPG, PNG, WebP, GIF and BMP everywhere and AVIF in current browsers, and writes PNG, JPG or WebP. Convert a single file or a whole set at once. iPhone HEIC photos and TIFF scans have their own converters on this site, because most browsers cannot open those formats by themselves.',
     steps: [
-      { title: 'Add one or more images', description: 'Drop in a single file or multiple images at once using the multi-file drop zone.' },
-      { title: 'Choose the target format', description: 'Select the output format you need, such as PNG, WebP, AVIF, or JPG.' },
-      { title: 'Set quality if applicable', description: 'For lossy formats, adjust the quality level before converting.' },
-      { title: 'Convert and download', description: 'Run the conversion and download the converted file or files.' },
+      { title: 'Add one or more images', description: 'Drop a single file or several at once.' },
+      { title: 'Choose the target format', description: 'PNG for transparency and sharp graphics, JPG for photos that must open anywhere, WebP for websites.' },
+      { title: 'Convert one or all', description: 'Convert each file on its own, or use Convert All.' },
+      { title: 'Download', description: 'Download each result, or all of them together.' },
     ],
     faqs: [
-      { question: 'Can I convert HEIC photos from an iPhone?', answer: 'Yes, HEIC files can be converted to more widely supported formats like JPG or PNG.' },
-      { question: 'Can I convert multiple images at once?', answer: 'Yes, the drop zone accepts multiple files and converts them in a batch.' },
-      { question: 'Does converting to a lossy format reduce quality?', answer: 'Converting to JPG, WebP, or AVIF uses a quality slider so you can control the compression level and resulting file size.' },
-      { question: 'Which format should I use for the web?', answer: 'WebP or AVIF typically produce the smallest files at comparable visual quality, while JPG and PNG offer the broadest compatibility.' },
-      { question: 'Are my files uploaded to a server for conversion?', answer: 'No, all conversion happens locally in your browser.' },
+      { question: 'Can I convert HEIC photos from an iPhone?', answer: 'Use the HEIC to JPG converter for those. This tool relies on the browser\'s built-in decoder, and only Safari can read HEIC on its own; the HEIC converter brings its own decoder, so it works in every browser.' },
+      { question: 'Can I convert multiple images at once?', answer: 'Yes. Add several files and use Convert All, or convert them one at a time.' },
+      { question: 'What quality is used for JPG and WebP?', answer: 'A fixed high quality of 92 percent, which leaves photos visually unchanged. To trade quality for a smaller file, use the image compressor, which has a quality slider and shows the resulting size.' },
+      { question: 'What happens to transparent areas?', answer: 'PNG and WebP keep them. JPG has no transparency, so transparent areas are filled in when you convert to JPG; keep PNG for logos and graphics that sit on coloured backgrounds.' },
+      { question: 'Which format should I use for a website?', answer: 'WebP gives noticeably smaller files than JPG or PNG at the same visual quality and is supported by every current browser. For smaller still, the JPG to AVIF converter produces AVIF.' },
     ],
     useCases: [
-      'Converting HEIC photos exported from an iPhone into JPG so they open on any device or CMS',
-      'Turning a batch of PNG screenshots into WebP to cut page weight on a website',
-      'Converting a BMP or TIFF file from an old scanner into a modern, shareable format',
-      'Standardizing a mixed folder of image formats into a single format before uploading to a CMS',
+      'Turning a WebP image saved from a website into a JPG a form will accept',
+      'Converting a batch of PNG screenshots into WebP to cut page weight',
+      'Making a PNG version of a JPG before editing it repeatedly, so quality is not lost on every save',
     ],
     tips: [
-      'Use WebP or AVIF for web delivery when file size matters most, and JPG or PNG when maximum compatibility matters most',
-      'Keep PNG as the target when the source has transparency you need to preserve, since JPG will flatten it against a solid background',
-      'Batch conversion applies the same quality setting to every file, so separate out images that need different quality levels',
+      'Convert from the original file where you can; converting a JPG that was already compressed carries its artefacts into the new format.',
+      'Keep PNG as the target when the image has transparency you need to preserve.',
     ],
   },
   'svg-converter': {
@@ -182,7 +177,6 @@ export const IMAGE_SEO_CONTENT: ToolSeoMap = {
       { question: 'Can I convert SVG to a high resolution PNG?', answer: 'Yes, you can specify a custom pixel resolution so the SVG is rasterized much larger than its default viewBox size, ideal for print or retina displays.' },
       { question: 'Does converting to JPG support transparency?', answer: 'No, JPG does not support transparency, so transparent SVG areas will be filled with a background color; use PNG to preserve transparency.' },
       { question: 'Will fonts and gradients in my SVG render correctly?', answer: 'Standard SVG shapes, gradients, and embedded fonts render correctly, though externally linked fonts not embedded in the SVG may not display.' },
-      { question: 'Is my SVG file uploaded anywhere?', answer: 'No, the SVG is rendered and rasterized locally in your browser.' },
       { question: 'Can I batch convert multiple SVGs?', answer: 'This tool is optimized for converting one SVG at a time to a chosen resolution and format.' },
     ],
     useCases: [
@@ -211,7 +205,6 @@ export const IMAGE_SEO_CONTENT: ToolSeoMap = {
       { question: 'Why do I need multiple sizes in one ICO?', answer: 'Browsers, bookmarks, and Windows taskbars each request different icon resolutions, so a multi-size ICO ensures a crisp icon everywhere instead of one blurry scaled version.' },
       { question: 'Does the source image need to be square?', answer: 'Square source images work best since non-square images will be resized or cropped to fit each icon size.' },
       { question: 'Can I use a PNG with transparency as the source?', answer: 'Yes, transparency is preserved in the generated ICO sizes.' },
-      { question: 'Is this processed on a server?', answer: 'No, the ICO packaging happens entirely in your browser.' },
     ],
     useCases: [
       'Generating a favicon.ico for a website from an existing logo PNG',
@@ -268,7 +261,6 @@ export const IMAGE_SEO_CONTENT: ToolSeoMap = {
       { question: 'Can I over-sharpen an image?', answer: 'Yes, pushing the intensity too high can introduce visible halos and noise around edges, so it is best adjusted while watching the live preview.' },
       { question: 'What formats can I sharpen?', answer: 'JPEG, PNG, and WebP images are all supported.' },
       { question: 'Is this done with AI?', answer: 'No, sharpening uses a standard convolution filter applied via canvas, so it is fast and works on any device without a GPU.' },
-      { question: 'Are my images uploaded anywhere?', answer: 'No, the filter is applied locally in your browser.' },
     ],
     useCases: [
       'Crisping up a slightly soft phone photo before posting it online',
@@ -296,7 +288,6 @@ export const IMAGE_SEO_CONTENT: ToolSeoMap = {
       { question: 'Can I reset to the original if I go too far?', answer: 'Yes, sliders can be dragged back to their default position to undo an adjustment.' },
       { question: 'Does this work on PNG images with transparency?', answer: 'Yes, transparency is preserved while color and tonal adjustments are applied to the visible pixels.' },
       { question: 'Is there a quality loss from adjusting the image?', answer: 'The adjustments themselves are non-destructive until export, at which point the format and quality setting you choose determine final file size.' },
-      { question: 'Is my photo sent to a server?', answer: 'No, all adjustments are rendered locally using canvas filters.' },
     ],
     useCases: [
       'Correcting exposure on a photo that came out too dark or too flat',
@@ -323,7 +314,6 @@ export const IMAGE_SEO_CONTENT: ToolSeoMap = {
       { question: 'Does encoding to Base64 increase file size?', answer: 'Yes, Base64 encoding increases the effective size by roughly 33% compared to the original binary file.' },
       { question: 'Can I encode PNG, JPG, and other formats?', answer: 'Yes, any image format your browser can read can be encoded, including PNG, JPG, WebP, and GIF.' },
       { question: 'Is there a file size limit?', answer: 'Very large images can produce extremely long strings that may be slow to copy or paste, so it works best for icons, logos, and moderately sized photos.' },
-      { question: 'Is my image uploaded to generate the Base64 string?', answer: 'No, the FileReader API reads and encodes the file locally in your browser.' },
     ],
     useCases: [
       'Inlining a small icon or logo directly into a CSS background-image to avoid an extra HTTP request',
@@ -349,7 +339,6 @@ export const IMAGE_SEO_CONTENT: ToolSeoMap = {
       { question: 'Does the string need the "data:image/..." prefix?', answer: 'The tool accepts full data URLs with the prefix; if you paste raw Base64 without a prefix it will attempt to detect the image type, but including the prefix gives the most reliable results.' },
       { question: 'What happens if the Base64 string is invalid?', answer: 'An error is shown if the string cannot be decoded into a valid image, usually meaning it was truncated or corrupted.' },
       { question: 'What image formats can be decoded?', answer: 'PNG, JPG, WebP, and GIF data URLs are all supported.' },
-      { question: 'Is my pasted data sent anywhere?', answer: 'No, decoding happens entirely in your browser using the data URL directly.' },
       { question: 'Can I decode very large Base64 strings?', answer: 'Yes, though extremely long strings may take a brief moment to render depending on your device.' },
     ],
     useCases: [
@@ -394,30 +383,28 @@ export const IMAGE_SEO_CONTENT: ToolSeoMap = {
   },
   'image-watermark': {
     intro:
-      'Protecting photos from unauthorized reuse or branding images before sharing them publicly is easy here, add custom text or a logo watermark with full control over opacity, position, and size before exporting. Photographers protecting portfolio samples and businesses branding marketing images both use this to stamp ownership onto their work quickly. The watermark is composited directly onto the canvas in your browser, so originals stay private until you choose to export.',
+      'A text watermark marks a photo as yours before it is shared, so a copy that travels without you still carries your name. This tool writes your text, such as a copyright line, a studio name or the word SAMPLE, onto the image in bold white with a soft shadow so it stays readable on both light and dark areas. You set the size and opacity and choose a corner, the centre, or a tiled pattern across the whole picture.',
     steps: [
-      { title: 'Upload the base image', description: 'Select the photo you want to watermark.' },
-      { title: 'Add text or upload a logo', description: 'Type a watermark text string or upload a logo image to overlay.' },
-      { title: 'Position and set opacity', description: 'Drag the watermark to the desired position and adjust its opacity and size.' },
-      { title: 'Export the watermarked image', description: 'Download the final image with the watermark applied.' },
+      { title: 'Add the image', description: 'Select the photo you want to mark.' },
+      { title: 'Type the watermark text', description: 'For example © 2026 Your Name, or SAMPLE for a client proof.' },
+      { title: 'Choose position, size and opacity', description: 'A corner, the centre, or Tile to repeat it diagonally across the whole image.' },
+      { title: 'Compare and download', description: 'The before-and-after slider shows the result; download it as a new file and keep the original.' },
     ],
     faqs: [
-      { question: 'Can I use a logo image instead of text?', answer: 'Yes, you can upload a logo or icon image to use as the watermark instead of or alongside text.' },
-      { question: 'Can I control how visible the watermark is?', answer: 'Yes, an opacity slider lets you make the watermark subtle or bold.' },
-      { question: 'Where can I place the watermark?', answer: 'The watermark can be positioned anywhere on the image, including common presets like corners or center.' },
-      { question: 'Does watermarking reduce image quality?', answer: 'The base image quality is preserved except for the watermark overlay itself; export quality settings then determine final file size.' },
-      { question: 'Is my photo uploaded to apply the watermark?', answer: 'No, the watermark is composited locally on a canvas in your browser.' },
+      { question: 'Can I use a logo image instead of text?', answer: 'Not in this tool; it places text only. For a logo, a text version of your brand name in a corner gives a similar result, or place the logo with an image editor that supports layers.' },
+      { question: 'Which placement is hardest to remove?', answer: 'Tile. A small watermark in a corner can be cropped off in seconds, while a pattern repeated across the whole picture cannot be removed without visibly damaging the image.' },
+      { question: 'How visible should it be?', answer: 'Around 20 to 40 percent opacity deters reuse without spoiling the photo for the person you are showing it to. Client proofs can go higher, since the point is that they are not usable as final images.' },
+      { question: 'Does it change the quality of the photo?', answer: 'Only where the text is drawn. The result is exported as a new image, so keep the unmarked original for your own use.' },
     ],
     useCases: [
-      'Stamping a photography portfolio sample with a copyright notice before posting it publicly',
-      'Branding marketing images with a company logo before distribution',
-      'Adding a subtle "draft" or "sample" watermark to a proof image sent to a client',
-      'Marking ownership on images shared to social media to discourage unauthorized reuse',
+      'Stamping a copyright line on portfolio samples before posting them publicly',
+      'Marking client proofs as SAMPLE until the final files are paid for',
+      'Adding a shop or studio name to product photos shared on social media',
+      'Labelling screenshots as DRAFT before they circulate',
     ],
     tips: [
-      'Keep opacity low (around 20-40%) for a watermark that deters theft without distracting from the photo',
-      'Position the watermark over a busy area of the image, since it is harder to crop out cleanly than one placed in an empty corner',
-      'Use a logo watermark for brand consistency across a whole batch of images rather than retyping text each time',
+      'Use Tile for proofs and previews, and a corner mark for finished work you are happy to share.',
+      'Keep the original unmarked file; a watermark cannot be removed cleanly once it is part of the image.',
     ],
   },
   'image-draw': {
@@ -434,7 +421,6 @@ export const IMAGE_SEO_CONTENT: ToolSeoMap = {
       { question: 'Can I change the pen color and thickness?', answer: 'Yes, color and brush size can both be adjusted before or during drawing.' },
       { question: 'Does the annotation permanently alter the original file?', answer: 'The original upload is untouched in memory; a new merged file is only created when you export, so you can redo the annotation as many times as needed before saving.' },
       { question: 'What file formats can I annotate?', answer: 'JPEG, PNG, and WebP images can all be uploaded and annotated.' },
-      { question: 'Is my image uploaded anywhere while I draw?', answer: 'No, drawing happens on a canvas layer in your browser and nothing is sent to a server.' },
     ],
     useCases: [
       'Circling a bug in a UI screenshot before sending it to a developer',
@@ -463,7 +449,6 @@ export const IMAGE_SEO_CONTENT: ToolSeoMap = {
       { question: 'Can I undo an edit I made earlier in the session?', answer: 'The editor keeps your image in an editable state until export, so you can revisit and adjust earlier transforms before saving the final result.' },
       { question: 'What formats can I export to?', answer: 'You can export the edited image as JPEG, PNG, or WebP.' },
       { question: 'Is this a replacement for a full desktop editor?', answer: 'It covers the most common editing needs, crop, resize, rotate, flip, color, blur, and basic annotation, for quick edits, though it does not include layers or advanced retouching found in dedicated desktop software.' },
-      { question: 'Is my image uploaded during editing?', answer: 'No, the entire editing pipeline runs locally in your browser using canvas rendering.' },
     ],
     useCases: [
       'Preparing a final asset that needs cropping, color correction, and a logo watermark in one pass',
@@ -493,7 +478,6 @@ export const IMAGE_SEO_CONTENT: ToolSeoMap = {
       { question: 'What drawing tools are available?', answer: 'Pen brushes, shape tools, and a text tool are all available alongside adjustable color and brush size.' },
       { question: 'Can I use this on a tablet with a stylus?', answer: 'Yes, it works with touch and stylus input on tablets in addition to mouse input on desktop.' },
       { question: 'Is my drawing saved automatically?', answer: 'No, the canvas exists only in your browser session, so remember to export your work before closing the tab.' },
-      { question: 'Is anything uploaded while I draw?', answer: 'No, all drawing and layer rendering happens locally in your browser.' },
     ],
     useCases: [
       'Sketching a quick idea or wireframe from scratch on a blank canvas',
@@ -521,7 +505,6 @@ export const IMAGE_SEO_CONTENT: ToolSeoMap = {
       { question: 'Will removing metadata change how the image looks?', answer: 'No, only the embedded metadata is removed; the visible pixel content is unchanged.' },
       { question: 'Does this protect my location if I share the photo?', answer: 'Yes, GPS coordinates embedded in EXIF data are one of the fields removed, which helps prevent location leaks when sharing photos publicly.' },
       { question: 'Which formats carry metadata that can be stripped?', answer: 'JPEG and TIFF files commonly carry EXIF metadata; PNG files typically carry little to none by comparison.' },
-      { question: 'Is my photo uploaded to remove metadata?', answer: 'No, metadata stripping happens locally in your browser by re-encoding the image without the metadata fields.' },
     ],
     useCases: [
       'Stripping GPS location data from a photo before posting it publicly on social media',
@@ -549,7 +532,6 @@ export const IMAGE_SEO_CONTENT: ToolSeoMap = {
       { question: 'Do all images get resized to the exact same dimensions?', answer: 'Yes, the same width/height or percentage setting is applied uniformly across every image in the batch.' },
       { question: 'Can I mix different image formats in one batch?', answer: 'Yes, you can upload a mix of JPEG, PNG, and WebP files and resize them together.' },
       { question: 'Is there a way to keep aspect ratio consistent across all images?', answer: 'Yes, locking aspect ratio applies proportional scaling to each image individually based on its own original dimensions.' },
-      { question: 'Are my images uploaded to a server for batch processing?', answer: 'No, every image is resized locally in your browser, one at a time, without leaving your device.' },
     ],
     useCases: [
       'Standardizing an entire product catalog to one dimension before uploading to an online store',
@@ -577,7 +559,6 @@ export const IMAGE_SEO_CONTENT: ToolSeoMap = {
       { question: 'Can I control the order of images in the collage?', answer: 'Yes, you can arrange which image appears in which position within the chosen layout.' },
       { question: 'What file format is the exported collage?', answer: 'The combined collage is exported as a single JPEG or PNG image.' },
       { question: 'Does image quality suffer when combined into a collage?', answer: 'Each source image is placed at the resolution the layout allows, so very small collage cells will show less detail than the original full-size photo.' },
-      { question: 'Are my images uploaded to build the collage?', answer: 'No, the collage is composed locally on a canvas in your browser.' },
     ],
     useCases: [
       'Building a grid of vacation photos to share as a single image on social media',
@@ -605,7 +586,6 @@ export const IMAGE_SEO_CONTENT: ToolSeoMap = {
       { question: 'Can I adjust the font and text size?', answer: 'Yes, font size and text color can be adjusted so captions fit and remain readable over different backgrounds.' },
       { question: 'Does the meme text get baked into the image?', answer: 'Yes, the text is rendered permanently onto the image pixels when you export, so it displays correctly wherever you share it.' },
       { question: 'Is there a limit on how much text I can add?', answer: 'Longer captions will wrap or shrink to fit within the top and bottom caption areas, but very long text can start to look cramped.' },
-      { question: 'Is my image uploaded to a meme service?', answer: 'No, the entire meme is generated locally in your browser using canvas text rendering.' },
     ],
     useCases: [
       'Reacting to a trending image with a quick top/bottom caption for a group chat',
@@ -621,31 +601,31 @@ export const IMAGE_SEO_CONTENT: ToolSeoMap = {
   },
   'qr-generator': {
     intro:
-      'From sharing Wi-Fi credentials at a cafe to printing a vCard on a business card or linking a poster to a website, this tool generates high-resolution QR codes and barcodes for URLs, Wi-Fi networks, vCards, and more, all rendered at print-ready resolution. Event organizers, small business owners, and marketers use it to create scannable codes without relying on a third-party QR service that might expire or track scans. The QR and barcode images are generated entirely client-side, so the encoded data never passes through an external server.',
+      'A QR code stores its content directly in the pattern of squares, so the code works for as long as the content does, with no account and nothing that can expire. This generator makes codes for a web link, plain text, Wi-Fi network details, a contact card (vCard), or a UPI payment request that any UPI app can scan, with the size, colours and error-correction level you choose.',
     steps: [
-      { title: 'Choose a data type', description: 'Select what you want to encode: a URL, Wi-Fi network, vCard contact, plain text, or barcode data.' },
-      { title: 'Enter the details', description: 'Fill in the relevant fields, such as the URL, Wi-Fi password, or contact info.' },
-      { title: 'Customize appearance', description: 'Adjust size, color, or error correction level if available.' },
-      { title: 'Download the code', description: 'Export the generated QR code or barcode as a high-resolution image.' },
+      { title: 'Choose what to encode', description: 'URL, plain text, Wi-Fi, vCard contact or UPI payment.' },
+      { title: 'Fill in the details', description: 'For UPI, enter your UPI ID and the name payers should see; the amount and a note are optional.' },
+      { title: 'Set size and error level', description: 'Raise the error-correction level for codes printed small or partly covered.' },
+      { title: 'Generate, scan and download', description: 'Scan the result with a phone before you print it.' },
     ],
     faqs: [
-      { question: 'Do QR codes generated here expire?', answer: 'No, since the QR code directly encodes your data rather than pointing to a redirect service, it will never expire or stop working.' },
-      { question: 'Can I generate a QR code for Wi-Fi login?', answer: 'Yes, entering the network name, password, and security type produces a QR code that phones can scan to join the network automatically.' },
-      { question: 'What is a vCard QR code used for?', answer: 'A vCard QR code encodes contact details so scanning it lets someone save your name, phone, and email directly to their contacts, useful for business cards.' },
-      { question: 'Can I print the QR code at large sizes?', answer: 'Yes, the code is generated at high resolution so it stays scannable when printed large, such as on posters or signage.' },
-      { question: 'Are barcodes supported too, not just QR codes?', answer: 'Yes, common barcode formats are supported alongside QR codes for encoding data.' },
-      { question: 'Is the data I enter sent to any server?', answer: 'No, the QR code or barcode image is generated entirely in your browser from the data you type in.' },
+      { question: 'Do these QR codes expire?', answer: 'No. The content is stored in the code itself rather than behind a redirect service, so it keeps working as long as the link, network or UPI ID it contains does.' },
+      { question: 'How does the UPI payment code work?', answer: 'It encodes a standard UPI payment link containing your UPI ID, the name to display, and optionally a fixed amount in rupees and a note. Any UPI app, such as Google Pay, PhonePe or Paytm, opens it with those details filled in, and the payer still confirms with their own PIN.' },
+      { question: 'Should I put a fixed amount in a UPI code?', answer: 'Only for a code used once, such as one printed on a specific invoice. A shop counter code should leave the amount empty so each customer enters what they owe.' },
+      { question: 'Is it safe to scan a UPI code to receive money?', answer: 'No, and that is the point to remember. Scanning a UPI code always sends money from the person scanning. Anyone asking you to scan a code or enter your PIN so that you can receive a payment is attempting fraud.' },
+      { question: 'How does a Wi-Fi QR code work?', answer: 'It stores the network name, password and security type in a standard format that the camera apps on iPhone and Android recognise, so scanning it offers to join the network without typing the password.' },
+      { question: 'Does it make barcodes as well?', answer: 'No, only QR codes. Product barcodes such as EAN and UPC need a different generator and, for retail use, a registered number from GS1.' },
     ],
     useCases: [
-      'Sharing Wi-Fi credentials at a cafe or office by printing a scannable QR code near the router',
-      'Printing a vCard QR code on a business card so contacts can save your info by scanning',
-      'Linking a printed poster or flyer to a website or event registration page',
-      'Generating barcodes for inventory or product labeling without a paid service',
+      'A UPI payment code for a shop counter, stall or home business',
+      'A Wi-Fi code for guests at a cafe, office or home',
+      'A contact card code on a visiting card',
+      'A link from a printed poster, menu or flyer to a web page',
     ],
     tips: [
-      'Raise the error correction level if the QR code will be printed small or placed somewhere it might get partially obscured, like on packaging',
-      'Test scan the generated code with a phone before printing it at scale, especially for posters and signage',
-      'Since the data is encoded directly rather than through a redirect link, double-check the entered content is correct before generating, as it cannot be edited after printing',
+      'Check a UPI code by scanning it with your own UPI app before printing: the name it shows should be yours.',
+      'Raise the error-correction level to Q or H for codes printed small, laminated or with a logo placed over the middle.',
+      'Keep dark squares on a light background. Inverted or low-contrast colour schemes look good and fail on many phone cameras.',
     ],
   },
 };

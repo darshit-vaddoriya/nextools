@@ -383,7 +383,7 @@ From one high-resolution square source:
 3. Build the [ICO](/tool/ico-generator) with 16 and 32 included, from the simplified mark if you drew one.
 4. Look at the 16px version at 16px on both a light and a dark tab strip.
 
-Step four is the only one that is not mechanical, and it is the one that matters. All the mechanical parts run in the browser here, which for an unreleased brand is the difference between a build step and uploading your logo to a stranger's server before launch.`,
+Step four is the only one that is not mechanical, and it is the one that matters.`,
   'putting-things-on-top-of-images': `Adding a watermark, annotating a screenshot, making a meme and assembling a collage are the same operation underneath: draw something on top of an image and flatten the result to new pixels. What separates them is what happens if you get it wrong.
 
 ## Compositing is one-way
@@ -496,9 +496,7 @@ Sharpening last is not a preference, it is a consequence of how the operations i
 Sharpening before resizing means the resize averages away the effect while keeping the amplified noise, which is the worst of both. Sharpening before compression is correct, because the sharpened edges are what you want the encoder to preserve.
 
 > [!WARNING]
-> Sharpening is not reversible and it compounds. Sharpening an already-sharpened image is how photographs end up with white outlines around every object. Always work from the original rather than from a previously exported copy.
-
-All of these are pixel operations on data your browser already has in memory, which is why none of them here require an upload. For a photograph of a document, a child, or an unreleased product, that is the whole argument.`,
+> Sharpening is not reversible and it compounds. Sharpening an already-sharpened image is how photographs end up with white outlines around every object. Always work from the original rather than from a previously exported copy.`,
   'data-uris-when-to-inline-an-image': `A data URI puts the image inside the document:
 
 \`\`\`html
@@ -562,7 +560,7 @@ Compress the image first. Encoding is the last step, not the first.
 
 Inlining a 200 KB unoptimised PNG produces 270 KB of markup. [Compressing it](/tool/image-compressor) to 20 KB first produces 27 KB. The 33% penalty applies to whatever you hand it, so every byte you remove beforehand is removed with interest.
 
-Both [encoding](/tool/image-to-base64) and [decoding](/tool/base64-to-image) are pure string operations on data the browser already holds, which is why neither needs an upload here. That is the useful property when the image in question is an unreleased logo or a screenshot pulled out of an internal API response.`,
+Use the [encoder](/tool/image-to-base64) to inline small icons and check the resulting size, and the [decoder](/tool/base64-to-image) to recover an image from a data URI you found in a stylesheet or an API response.`,
   'cropping-well': `You upload a carefully composed photo. The site shows a square thumbnail with the top of someone's head missing. Nothing malfunctioned: the platform needed a square, your image was not one, and something had to choose what to throw away.
 
 ## Cropping and resizing are different operations
@@ -629,7 +627,7 @@ For a set, the sequence that works is:
 
 Step one is unavoidably manual. Steps two and three are exactly the kind of repetitive work worth batching.
 
-[Cropping](/tool/image-crop), [resizing](/tool/image-resize) and [batch resizing](/tool/batch-resize) here all run on the canvas in your own browser. For photographs of people, which is most of what gets cropped, not uploading them to an editing service in order to trim 200 pixels off the top is the sensible default.`,
+[Crop](/tool/image-crop) to the aspect ratio of the destination first, then [resize](/tool/image-resize) to its pixel size; for a whole set of photos, [batch resizing](/tool/batch-resize) applies the same dimensions to every file in one go.`,
   'screenshots-for-bug-reports': `Someone sends a screenshot of an error. It is a full-desktop capture at 3840 pixels wide, the error is a small grey box in the corner, and the top of the frame shows an email notification containing a customer name.
 
 Both problems are the same problem: the capture included everything, and nothing was done to it afterwards.
@@ -806,5 +804,163 @@ The fix is to re-take the photo: fill the frame with the page, hold the camera p
 
 For a scanned PDF rather than a photo, the same logic applies one layer up — see [what OCR can and cannot read off a scan](/blog/ocr-scanned-pdf-explained) for how the text layer gets attached to the page.
 
-The [image OCR](/tool/ocr-image) and [adjustment](/tool/image-adjust) tools here run in the browser, which matters given how often the thing being recognised is an ID document, a payslip or a contract — exactly the documents worth not uploading to an unknown server.`,
+For difficult images, [adjust the contrast](/tool/image-adjust) before running [OCR](/tool/ocr-image), and always proofread numbers, names and anything else where a single misread character changes the meaning.`,
+  'iphone-heic-photos-explained': `You take a photo on an iPhone, copy it to a Windows laptop or attach it to an upload form, and it will not open. The file ends in \`.heic\`, and the form says the format is not supported. Nothing is wrong with the photo. It is simply stored in a format that much of the world still does not read by default.
+
+## What HEIC is
+
+Since iOS 11 in 2017, iPhones have saved photos in HEIF, the High Efficiency Image File Format, with the picture inside compressed using HEVC, the same codec iPhones use for video. A file in that combination gets the \`.heic\` extension.
+
+The reason Apple switched is size. HEVC is a far newer compression method than JPEG, which dates from 1992, and Apple's own figure is that a HEIC photo takes about half the space of a JPG of the same quality. On a phone that holds thousands of photos and backs them up to the cloud, that is a real saving. HEIC can also carry things JPG cannot, such as the depth map used for Portrait mode and 10-bit colour.
+
+## Why it will not open elsewhere
+
+Inside Apple's world, HEIC is invisible: Photos, macOS Preview and Safari open it without comment. Outside, support is patchy.
+
+- **Windows** can display HEIC, but only after installing two extensions from the Microsoft Store, one of which, the HEVC codec, is a small paid add-on. Many PCs have neither.
+- **Websites and forms** frequently accept only JPG and PNG. Government portals, job applications and older content management systems are common examples.
+- **Older editing software** may not read HEIC at all.
+
+So the same file that looks perfect on the phone is unreadable for the person or system it was sent to.
+
+## Three ways to get a JPG
+
+**1. Change what the camera saves.** In Settings, then Camera, then Formats, choose *Most Compatible*. From then on, new photos are saved as JPG. The cost is that every photo takes roughly twice the storage. This is the right choice if you regularly send photos to Windows users or upload them to forms.
+
+**2. Let the iPhone convert when it shares.** In Settings, then Photos, the *Transfer to Mac or PC* option set to *Automatic* converts photos to JPG when they are copied to a computer by cable. Sharing through Mail and many apps also converts automatically. AirDrop between Apple devices keeps HEIC, because the receiver can read it.
+
+**3. Convert the files you already have.** For photos already on your computer, or for when you need a specific file in JPG right now, a converter is quickest. The [HEIC to JPG converter](/tool/heic-to-jpg) here does it in the browser. Safari decodes HEIC with the operating system's own support; other browsers load a WebAssembly build of libheif, the open-source HEIF library, the first time you use it. Several photos can be converted at once and arrive together in a ZIP.
+
+> [!NOTE]
+> A Live Photo is two files: a HEIC still and a short MOV video. Converting gives you the still. Some burst and Live Photo stills store their data in a way the decoder cannot read; if one fails, export it from the Photos app as JPG instead.
+
+## What changes in the conversion
+
+Converting to JPG means decoding the HEIC and encoding the picture again, so quality matters. At 90% the result is visually indistinguishable from the original for normal viewing, at the cost of a file around twice the HEIC's size. If the photo is going into a size-limited upload, run it through an [image compressor](/tool/image-compressor) afterwards, or reduce the dimensions, which saves far more than lowering quality.
+
+One change is often an advantage. The new JPG is drawn from the picture's pixels, so the metadata in the original, including the GPS location where the photo was taken and the camera model, is not copied across. That is worth knowing in both directions: it protects your location when you share a photo of your home, and it means the date and place are gone if you were relying on them for organising. To see exactly what an original carries before you share it, open it in the [image metadata viewer](/tool/image-metadata).
+
+## Which to choose
+
+If you mostly stay inside Apple's ecosystem, keep HEIC: you get the storage saving and lose nothing. If you share constantly with Windows users or upload to forms, switch the camera to *Most Compatible*. For everything in between, keep HEIC on the phone and convert the handful of photos that need to travel. And if the destination is a website rather than a person, consider skipping JPG entirely: [AVIF](/tool/jpg-to-avif) keeps most of HEIC's size advantage and every current browser displays it.`,
+  'camera-raw-files-and-the-hidden-jpg': `A friend sends you a folder of holiday photos from their new camera, and every file ends in \`.NEF\`, \`.CR3\` or \`.ARW\`. Your computer shows a blank icon, the photo app shows something dark and flat, or nothing opens at all. These are RAW files, and they are not quite photos yet.
+
+## What is inside a RAW file
+
+A camera sensor does not see colour. Each photosite measures only how much light hit it, and a grid of red, green and blue filters laid over the sensor, usually the Bayer pattern with two green filters for every red and blue, means each one measured only one colour. A RAW file stores those measurements, typically at 12 or 14 bits per photosite, along with notes about how the camera was set.
+
+Turning that into a picture takes several steps, together called developing:
+
+1. **Demosaicing:** estimating the two missing colours at every pixel from its neighbours.
+2. **White balance:** deciding what counts as neutral grey under that light.
+3. **Tone and colour:** applying a contrast curve and the camera maker's colour rendering.
+4. **Sharpening and noise reduction.**
+
+Every one of those is a decision, which is exactly why photographers shoot RAW. A blown sky or a wrong white balance can often be recovered from the extra data in a RAW file, where a JPG has already thrown it away.
+
+## Why there are so many RAW formats
+
+There is no single RAW format. Each manufacturer has its own: NEF for Nikon, CR2 and CR3 for Canon, ARW for Sony, RAF for Fujifilm, ORF for Olympus and OM System, RW2 for Panasonic, PEF for Pentax. Adobe's DNG is an openly documented alternative used by some cameras, many phones in their pro modes, and by people who convert their archives for long-term safety. Each new camera model can change the details, which is why editing software regularly needs updates just to open a new camera's files.
+
+## The JPG that is already in there
+
+Here is the useful part. Almost every camera also stores a finished JPG inside the RAW file. It is what the camera shows on its own screen when you review a shot, rendered with whatever picture style, white balance and sharpening the camera was set to. On most modern cameras that embedded preview is full size, the same pixel dimensions as the sensor.
+
+So if what you want is simply to see, share or print the photos as they looked on the camera, you do not need to develop anything. You need that preview. The [RAW to JPG converter](/tool/raw-to-jpg) finds it, picks the largest one in the file, and saves it as JPG, PNG or TIFF, in the browser. It reads DNG, NEF, CR2, CR3, ARW, RAF, ORF, RW2, PEF and several older formats.
+
+> [!WARNING]
+> Some DNG files, especially from phones and film scanners, contain only the sensor data and no preview at all. Those cannot be handled this way; open them in a RAW editor and export a JPG.
+
+## When you need real editing instead
+
+The embedded preview is the camera's interpretation, fixed at the moment of shooting. If the white balance is wrong, the shadows are too dark, or you want to pull detail back from a bright sky, extracting the preview will not help, because those decisions are already baked into it. That is when a RAW developer earns its place: Adobe Lightroom and Capture One on the commercial side, darktable and RawTherapee as free and open-source options. They go back to the sensor data and let you make every decision again.
+
+A sensible workflow for most people is both: extract previews to sort and share a shoot quickly, then open only the handful of photos that deserve it in a proper RAW editor.
+
+## Before you share
+
+Full-size camera JPGs are large, often 20 to 40 megapixels and several megabytes each. For email, chat or a website, [resize](/tool/image-resize) them to the size they will actually be viewed at, and [compress](/tool/image-compressor) if needed. RAW files and their previews also carry detailed camera metadata, and photos from cameras with GPS or a paired phone can carry location; the [image metadata viewer](/tool/image-metadata) shows what is there before you send anything.`,
+  'opening-psd-and-ai-files-without-adobe': `A designer finishes a logo or a poster and sends you the file they were working on: \`brand-final.psd\` or \`logo.ai\`. You do not own Photoshop or Illustrator, your computer shows a blank icon, and all you wanted was to see it, put it on a slide or send it to a printer.
+
+## What a PSD file holds
+
+A PSD is Photoshop's working document. It keeps every layer separately, along with masks, adjustment layers, blend modes, layer effects and text that is still editable. That structure is what lets a designer go back and move one element without redrawing the rest.
+
+Most PSD files also store one more thing: a flattened composite image, the finished picture with every visible layer combined. Photoshop writes it when the *Maximize PSD and PSB File Compatibility* preference is on, which it is by default, precisely so that other programs can show the file without understanding layers.
+
+That composite is all a viewer needs. The [PSD to PNG converter](/tool/psd-to-png) reads it in the browser and saves it as PNG, JPG or WebP. PNG keeps any transparent areas, which matters for logos placed on coloured backgrounds. Large \`.psb\` documents are accepted too.
+
+> [!NOTE]
+> If a PSD was saved with compatibility turned off, there is no composite inside. The converter then stacks the visible layers itself, but blend modes, layer effects and adjustment layers are not reproduced, so the result can differ from what Photoshop shows. Ask the designer to re-save with compatibility on, or to export a PNG.
+
+## What an AI file holds
+
+Illustrator files work in a similar way. An \`.ai\` file saved with the default *Create PDF Compatible File* option contains a complete PDF of the artwork alongside Illustrator's own editing data. Every version since Illustrator 9 has done this.
+
+So turning an AI file into a PDF is not really a conversion. The [AI to PDF tool](/tool/ai-to-pdf) checks the file for that PDF and, if it is there, hands it over as a \`.pdf\`. Nothing is redrawn: vectors stay vectors and colours are exactly as saved. It can also render the artwork as PNG or JPG for slides and documents. Files saved without PDF compatibility, or by very old versions of Illustrator, are PostScript and cannot be read this way; the tool says so rather than producing an empty page.
+
+## What you lose, and why it rarely matters
+
+Flattening a design into a PNG or PDF loses editability, not quality. You can no longer move a layer, change the text or swap a colour. For viewing, presenting and printing, that is irrelevant. For anything that will need changing later, keep the original file and treat the export as a copy.
+
+Two details are worth checking in the result:
+
+- **Fonts.** In a PSD the composite already shows text as pixels, so it looks right. In a PDF from an AI file, fonts are embedded if the designer saved them that way; if text looks substituted, ask for a PDF with fonts outlined.
+- **Resolution.** A PSD composite is exactly the document's pixel size. A 1000-pixel-wide logo will look soft on a large poster, and no conversion can add detail that was never there.
+
+## Ask for the right format next time
+
+The easiest fix is upstream. When you commission or receive design work, ask for the formats you will actually use:
+
+| Use | Ask for |
+|---|---|
+| Printing | PDF, ideally with fonts embedded or outlined |
+| Websites and apps | SVG for logos and icons, PNG or WebP for images |
+| Slides and documents | PNG with a transparent background |
+| Future edits | The original PSD or AI as well |
+
+If all you have is a PNG of a logo and you need it to scale cleanly, a tracer such as [PNG to SVG](/tool/png-to-svg) can rebuild it as vector shapes. It works well for flat logos with a few colours and poorly for anything photographic, so the original vector file from the designer is always the better answer when you can get it.`,
+  'photo-and-signature-size-for-online-forms': `Exam registrations, job portals, scholarship and government forms in India almost all ask for a photograph and a signature in a very specific format: JPG, a fixed size in pixels, and a file size between, say, 20 KB and 50 KB. A photo straight from a phone is usually 3 to 5 MB, a hundred times too large, and the upload fails with a terse error. The fix is straightforward once you know that the requirement is really three separate settings.
+
+## Three different numbers
+
+**File size, in KB.** How much space the file takes up. 50 KB is about 1% of a typical phone photo. This is controlled mostly by the pixel dimensions and by the JPG quality setting.
+
+**Dimensions, in pixels.** How many dots wide and tall the picture is, for example 200 × 230. This decides the shape and, more than anything else, the file size.
+
+**Resolution, in DPI.** How many of those pixels would be printed per inch on paper. On its own it does not change the image at all, and most upload checkers ignore it. Where a form gives a size in centimetres and a DPI instead of pixels, it is describing pixels indirectly, and you can work them out:
+
+\`\`\`
+pixels = centimetres ÷ 2.54 × DPI
+3.5 cm at 200 DPI ≈ 276 pixels
+4.5 cm at 200 DPI ≈ 354 pixels
+\`\`\`
+
+> [!NOTE]
+> Requirements differ between forms and change between years. Always work from the notice or instructions for the specific form you are filling, not from a value you remember from a previous application.
+
+## The order that works
+
+Doing these steps in the right order matters, because each one undoes the work of the next if they are done backwards.
+
+**1. Crop to the right shape.** Most forms want a head-and-shoulders photo in portrait orientation, so a phone photo needs cropping first. Use the [crop tool](/tool/image-crop) to cut away the background around the face, roughly matching the shape asked for: 200 × 230 is slightly taller than wide.
+
+**2. Resize to the exact pixels.** In the [resize tool](/tool/image-resize), enter the width and height the form asks for. If you cropped close to the right shape, the picture will not look stretched. If it does, crop again rather than accepting a distorted face, which some portals reject on manual review.
+
+**3. Bring the file size inside the limit.** Open the result in the [image compressor](/tool/image-compressor), choose JPG, and adjust the quality while watching the file size it shows. At small dimensions such as 200 × 230, the file is often already well under 50 KB, so the real job may be raising the quality to stay above a minimum rather than lowering it.
+
+**4. Check the minimum too.** Many forms set a lower limit, such as 10 or 20 KB, to stop people uploading tiny, unreadable images. If the file comes out below it, raise the quality again.
+
+## Signatures
+
+Signatures follow the same steps with two differences. They are usually wide rather than tall, for example 140 × 60 pixels, and they need contrast more than detail. Sign in black or dark blue ink on plain white paper, photograph it in daylight without a shadow across the page, and crop tightly around the signature before resizing. A signature with a grey, shadowed background compresses badly and can look smudged at small sizes.
+
+## Common reasons for rejection
+
+- **Wrong format.** The form asks for JPG and the file is PNG or WebP, which the [image converter](/tool/image-convert) turns into JPG, or an iPhone photo is still HEIC, which needs the [HEIC to JPG converter](/tool/heic-to-jpg).
+- **Too small as well as too large.** Check both limits.
+- **Distorted proportions,** from resizing without cropping first.
+- **Background or face rules.** Many forms require a plain light background and a visible face without dark glasses or a cap. No converter fixes a photo that breaks those rules; retake it.
+
+Keep the final files in a folder with their dimensions in the name, such as \`photo-200x230.jpg\`. The next form will ask for something slightly different, but starting from a well-cropped original makes the second time quick.`,
 };

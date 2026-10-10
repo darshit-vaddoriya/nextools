@@ -65,7 +65,7 @@ The correct approach is calendar arithmetic: compare year, then month, then day,
 4. **Use ISO 8601 in files and APIs.** \`2026-09-13T14:30:00Z\` is unambiguous and sorts correctly as plain text.
 5. **Test around the transitions.** A test suite that only runs in one half of the year will not find this class of bug.
 
-Converting a timestamp or comparing two zones is pure arithmetic against a rules table, with nothing to send anywhere. The [timestamp converter](/tool/timestamp-converter), [time zone converter](/tool/timezone-converter) and [age calculator](/tool/age-calculator) here all run in the tab, which is worth having when the timestamps you are debugging came out of a production log.`,
+When a date looks wrong, check the raw value first in the [timestamp converter](/tool/timestamp-converter), then compare zones for the actual date with the [time zone converter](/tool/timezone-converter); for ages and durations in calendar terms, the [age calculator](/tool/age-calculator) does the month-and-day arithmetic.`,
   'the-maths-behind-the-calculators': `A price rises 20% and then falls 20%. Most people expect to be back where they started. Starting at 100, you rise to 120, then fall by 20% *of 120*, which is 24, landing at 96.
 
 That 4% is not rounding. It is the single most common numerical mistake in everyday work, and the same misunderstanding produces wrong tax figures and wrong loan comparisons.
@@ -213,5 +213,5 @@ Some "conversions" are not unit conversions:
 4. Treat temperature differences separately from temperature values.
 5. Round at the end, once.
 
-The [unit converter](/tool/unit-converter) and [scientific calculator](/tool/scientific-calc) here run locally, so checking a figure is instant and the numbers you are checking stay on your machine.`,
+Check figures with the [unit converter](/tool/unit-converter), which names the system for every ambiguous unit, and use the [scientific calculator](/tool/scientific-calc) to carry a chain of conversions at full precision before rounding once at the end.`,
 };

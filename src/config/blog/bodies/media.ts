@@ -73,7 +73,7 @@ Converting between them is a re-encode unless you are only rewrapping, so going 
 4. Nothing opens at all → the container is unsupported. Remux; do not re-encode.
 5. Plays but is too big → bit rate, then resolution, then frame rate.
 
-When the diagnosis points at the container, [MOV to MP4](/tool/mov-to-mp4) and [WebM to MP4](/tool/webm-to-mp4) turn the two most common problem files into MP4, and the [video converter](/tool/video-converter) covers the other combinations between MP4, WebM, MOV and MKV. Reading a container's stream list is something a player or a local inspector such as \`ffprobe\`, MediaInfo or VLC's codec panel will tell you in seconds, without the file going anywhere. That matters when the clip is a recording of an internal meeting that should not be uploaded to a stranger's server just to find out which codec it uses.`,
+When the diagnosis points at the container, [MOV to MP4](/tool/mov-to-mp4) and [WebM to MP4](/tool/webm-to-mp4) turn the two most common problem files into MP4, and the [video converter](/tool/video-converter) covers the other combinations between MP4, WebM, MOV and MKV. To read a file's stream list first, a player or a local inspector such as \`ffprobe\`, MediaInfo or VLC's codec panel will tell you in seconds.`,
   'compressing-a-video-without-ruining-it': `An upload rejects your file at 25 MB and the recording is 200 MB. The temptation is to run a "compress" button until something fits. That works, but it usually gives up far more quality than it had to, because the three dials that make a video smaller do not degrade it equally.
 
 ## The arithmetic
