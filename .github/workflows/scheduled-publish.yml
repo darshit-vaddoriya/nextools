@@ -8,23 +8,41 @@
 # Setup, once: Netlify → Site configuration → Build & deploy → Build hooks →
 # "Add build hook" (branch: main), then copy its URL into this repository's
 # Settings → Secrets and variables → Actions as NETLIFY_BUILD_HOOK.
+#
+# To check the hook works, run this workflow by hand with "force" ticked: it
+# requests a build whatever the date, and fails if the secret is missing.
 name: Publish scheduled guides
 
 on:
   schedule:
     - cron: '35 0 * * *' # 00:35 UTC, 06:05 IST
   workflow_dispatch:
+    inputs:
+      force:
+        description: Rebuild even if no guide is dated today
+        type: boolean
+        default: false
 
 jobs:
   publish:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Rebuild the site if a guide is dated today
         env:
           HOOK: ${{ secrets.NETLIFY_BUILD_HOOK }}
+          FORCE: ${{ inputs.force || false }}
         run: |
           today=$(date -u +%F)
+          if [ "$FORCE" = true ]; then
+            if [ -z "$HOOK" ]; then
+              echo "::error::NETLIFY_BUILD_HOOK is not set."
+              exit 1
+            fi
+            curl -fsS -X POST -d '{}' "$HOOK"
+            echo "Requested a Netlify build (forced)."
+            exit 0
+          fi
           if ! grep -rq "published: '$today'" src/config/blog/posts; then
             echo "No guide is scheduled for $today."
             exit 0
