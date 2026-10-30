@@ -48,8 +48,8 @@ jobs:
             exit 0
           fi
           if [ -z "$HOOK" ]; then
-            echo "::warning::A guide is scheduled for $today but NETLIFY_BUILD_HOOK is not set, so it will not go live until the next push."
-            exit 0
+            echo "::error::A guide is scheduled for $today but NETLIFY_BUILD_HOOK is not set, so it will not go live until the next push."
+            exit 1
           fi
           curl -fsS -X POST -d '{}' "$HOOK"
           echo "Requested a Netlify build for the guide(s) dated $today."
