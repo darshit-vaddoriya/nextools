@@ -2742,7 +2742,7 @@ export const ImageEditorTool: React.FC<{ onExit?: () => void }> = ({ onExit }) =
         {exportOpen && (
           <>
             <div className="absolute inset-0 z-[45] lg:hidden bg-black/50" onClick={() => setExportOpen(false)} />
-            <div className="absolute top-14 right-0 bottom-0 z-[46] w-80 max-w-[92vw] flex flex-col border-l dark:bg-card border-border shadow-2xl fade-in">
+            <div className="absolute top-14 right-0 bottom-0 z-[46] w-80 max-w-[92vw] flex flex-col border-l bg-card border-border shadow-2xl fade-in">
               <div className="flex items-center justify-between px-4 pt-4 pb-3 shrink-0">
                 <h3 className="section-kicker flex items-center gap-1.5"><Download className="w-3.5 h-3.5" /> Export Image</h3>
                 <button type="button" onClick={() => setExportOpen(false)} title="Close export panel" aria-label="Close export panel" className="w-8 h-8 rounded-lg flex items-center justify-center hover:bg-muted  text-muted-foreground shrink-0">
@@ -2850,7 +2850,7 @@ export const ImageEditorTool: React.FC<{ onExit?: () => void }> = ({ onExit }) =
       {/* Replace confirmation */}
       {confirmReplace && pendingFile && (
         <div className="absolute inset-0 z-[70] bg-black/60 flex items-center justify-center p-4">
-          <div className="w-full max-w-sm rounded-2xl border dark:bg-card border-border p-5 shadow-2xl fade-in">
+          <div className="w-full max-w-sm rounded-2xl border bg-card border-border p-5 shadow-2xl fade-in">
             <h3 className="text-sm font-bold  text-foreground">You have unsaved edits. Replace image?</h3>
             <p className="text-xs  text-muted-foreground mt-1.5">Your current edits will be removed.</p>
             <div className="mt-4 flex gap-2">
@@ -2872,7 +2872,7 @@ export const ImageEditorTool: React.FC<{ onExit?: () => void }> = ({ onExit }) =
         </div>
       )}
       {toast && (
-        <div className="absolute bottom-12 left-1/2 -translate-x-1/2 z-50 flex items-center gap-2 px-4 py-2.5 rounded-xl border dark:dark:border-emerald-500/30 bg-card border-emerald-200 shadow-lg fade-in">
+        <div className="absolute bottom-12 left-1/2 -translate-x-1/2 z-50 flex items-center gap-2 px-4 py-2.5 rounded-xl border dark:border-emerald-500/30 bg-card border-emerald-200 shadow-lg fade-in">
           <CheckCircle2 className="w-4 h-4 text-emerald-700 dark:text-emerald-400" />
           <span className="text-xs font-medium  text-muted-foreground">{toast}</span>
         </div>
