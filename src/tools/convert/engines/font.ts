@@ -6,9 +6,10 @@
  * CompressionStream. WOFF2 adds table transforms and Brotli, so it uses
  * Google's reference woff2 library compiled to WebAssembly (woff2-encoder).
  *
- * The glyphs, hinting and metadata are untouched: every table comes out byte
- * for byte as it went in (only their order within the file may change), so
- * every conversion is lossless.
+ * Between TTF/OTF and WOFF every table comes out byte for byte as it went in
+ * (only their order within the file may change). WOFF2 is lossless for the
+ * glyphs but not for the bytes: decoding rebuilds the transformed glyf table,
+ * sets bit 11 of head.flags, and drops DSIG, which the format cannot carry.
  */
 import type { ConvFormat } from '../../../config/converters';
 

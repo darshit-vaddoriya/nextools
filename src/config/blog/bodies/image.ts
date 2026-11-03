@@ -5,6 +5,91 @@
 // the site into the entry bundle — downloaded by the homepage and every tool
 // page, which never display an article body.
 export const IMAGE_BODIES: Record<string, string> = {
+  'what-a-file-conversion-keeps-and-loses': `"Convert" sounds like one operation. It is really two, and which one you just did decides whether you can delete the original.
+
+Some conversions **repackage**. The content comes out of one container and goes into another, unchanged. Others **re-encode**. The content is decoded into raw pixels, samples or values and then written again under different rules. Repackaging can be undone. Re-encoding always gives something up, and what it gives up depends on the pair of formats.
+
+To find out exactly what, we ran test files through NextTool's own [file converter](/tool/file-converter) and compared what came out with what went in. The numbers below are from those runs, in Chrome, on 3 November 2026.
+
+## What we tested, and how
+
+- **A photo-style JPEG**: 1600 × 1200 pixels, 586 KB, carrying an EXIF block with a camera name and a GPS entry.
+- **A logo**: a red circle on a transparent PNG background.
+- **A spreadsheet**: one row with the product code "007", a quantity, a price, a total written as the formula \`=B2*C2\`, and a cell formatted as a date.
+- **A font**: Caladea Regular, an open-licence TrueType font, 81,600 bytes.
+- **An archive**: a ZIP with two folders, one holding 50 KB of random bytes and one a text file.
+
+For images we also measured how far each result had drifted from the original using PSNR (peak signal-to-noise ratio), a standard way of comparing two images pixel by pixel. Higher means closer. A drop of 3 dB means the average error has roughly doubled.
+
+## Repackaging: nothing lost
+
+**Archives.** We converted the ZIP to TAR.GZ and back to [ZIP](/tool/rar-to-zip). Both folders came back with the same names, and both files were identical to the originals, byte for byte. Only the wrapping changed. RAR and 7z input goes through the same extract-and-repack step, though we did not test those formats here.
+
+**Fonts, between TTF and WOFF.** WOFF is the desktop font with each of its tables compressed. After TTF to WOFF and back, all 18 tables in our font were identical to the original. The WOFF file was 40,760 bytes, half the TTF.
+
+## Fonts to WOFF2: lossless in effect, not in bytes
+
+This is where our test corrected our own pages. [TTF to WOFF2](/tool/ttf-to-woff2) produced a 31,664-byte file, 39% of the original. Converting it back to TTF, 15 of the 18 tables matched exactly. Three did not:
+
+- **glyf**, the glyph outlines. WOFF2 stores outlines in a transformed form and rebuilds them on the way out. The table came back the same length, but its bytes differ.
+- **head**, the font header. A flag is set to record that the font went through WOFF2's transforms, and the checksum is recalculated.
+- **DSIG**, the digital signature, was removed. The WOFF2 format drops it, because a signature cannot survive the transforms.
+
+WOFF2 is designed so the rebuilt outlines describe the same shapes, and for a website that is what matters. But "identical" is the wrong word. If you need the original file, for a licence check or a signed font, keep the TTF. Converting the rebuilt TTF to WOFF2 again gave exactly 31,664 bytes, and a second round trip changed nothing, so the change happens once.
+
+## Re-encoding images
+
+**Metadata does not survive.** JPG to JPG, JPG to PNG and JPG to WebP all came out with no EXIF block at all. The camera name and the GPS entry were gone. The converter decodes onto a canvas, and a canvas holds only pixels. Before you share a photo that is often what you want. If you will need the date taken or the location later, keep the original, because the converted copy will not have it. The [metadata remover](/tool/image-metadata) shows which metadata blocks a file carries, so you can check a copy before sending it.
+
+**Lossless output does not undo lossy input.** JPG to PNG turned 586 KB into 3.24 MB, five and a half times larger. The PNG's pixels matched the decoded JPG exactly. That is the point: it preserved the JPG's compression damage perfectly and added nothing back.
+
+**Transparency becomes a colour.** The logo, converted with [PNG to JPG](/tool/png-to-jpg), came out with pure white (255, 255, 255) where the background had been transparent. JPG has no transparency, so the converter fills it with white unless you choose another colour.
+
+**Re-saving is not what wears a photo out. Editing between saves is.** We saved the photo as JPG at the converter's default quality of 90, ten times in a row:
+
+| Saves | Plain re-save | Cropped by 3 px before each save |
+|---|---|---|
+| 1 | 36.5 dB | 36.5 dB |
+| 3 | 36.5 dB | 32.7 dB |
+| 10 | 36.4 dB | 27.9 dB |
+
+With the same settings, almost all of the loss happens on the first save. After that the encoder keeps arriving at nearly the same answer, so the next nine saves cost 0.1 dB between them. Crop a few pixels before each save and the 8 × 8 blocks JPEG works in no longer line up with the previous round's, so every save adds fresh damage. After ten rounds the average error was about seven times larger. Resizing or changing the quality between saves has the same effect. So edit once from the original and export once at the end.
+
+## Re-encoding data
+
+**Spreadsheets.** [Excel to CSV](/tool/excel-to-csv) gave this line for our test row:
+
+\`\`\`
+007,3,120,360,2026-11-01
+\`\`\`
+
+The total is 360, the last value Excel calculated, not the formula. Change the quantity later and nothing recalculates. The date came out in ISO form, which every program reads the same way. The product code kept its leading zeros.
+
+Going back from CSV to Excel, "007" stayed as text instead of becoming the number 7. But the date also stayed as text, "2026-11-01", rather than becoming a date cell again. Excel will not sort or filter it as a date until you convert the column. Formatting, merged cells and charts are not carried in either direction, because CSV has no way to hold them.
+
+## Conversions that change what the file is
+
+These are not tested above but follow from how the converter is built, and they catch people out:
+
+- **PDF to slides.** A PDF page has no slide structure, so each page becomes a picture on its own slide. The page's text goes into the speaker notes, so the deck stays searchable, but you cannot click into a slide and edit a sentence.
+- **Image to SVG.** A photo cannot become a vector. [PNG to SVG](/tool/png-to-svg) traces shapes with 2 to 16 colours. Logos trace cleanly. Photographs come out posterised.
+- **EPUB to PDF.** [EPUB to PDF](/tool/epub-to-pdf) uses the PDF standard font, which covers Western European characters. Anything it cannot print becomes "?". When most of a book is in another script, such as Hindi, the converter stops with an explanation rather than producing pages of question marks.
+- **Video to MP3.** [MP4 to MP3](/tool/mp4-to-mp3) encodes at 192 kbps by default. The audio track inside a video is usually already compressed, so this is a second lossy step. That is fine for listening, but not a source for editing.
+- **RAW to JPG.** The converter does not develop the RAW data. It extracts the full-size JPEG every camera embeds in the file, untouched. You get the camera's own rendering, but not the RAW file's room to recover highlights later.
+
+## The short version
+
+| Conversion | Comes back identical? | What changes |
+|---|---|---|
+| ZIP → TAR.GZ → ZIP | Yes, every file | Only the wrapping |
+| TTF ↔ WOFF | Yes, every table | Only the compression |
+| TTF ↔ WOFF2 | Same shapes, not same bytes | Outline table rebuilt, signature removed |
+| JPG → PNG | Pixels yes | File 5× bigger, metadata gone |
+| Any image → JPG | No | Quality, transparency, metadata |
+| Excel → CSV → Excel | Values yes | Formulas, formatting, date cells |
+| PDF → PPTX | No | Pages become pictures |
+
+> Keep the original. A conversion that loses nothing can be undone. A conversion that loses something can only be done again, and only from the file you started with.`,
   'jpeg-png-webp-avif-which-format': `Image formats are not interchangeable containers for the same thing. Each one made a different bet about what kind of picture it would hold, and using the wrong one costs you either file size or visual quality, sometimes both.
 
 ## The short version
@@ -103,9 +188,9 @@ What is broadly true across encoders:
 
 If you need one number: **80**. Then check the result on the content you actually have, a photo with fine texture tolerates more compression than one with large smooth areas, where banding shows up first.
 
-## Generation loss is real
+## Generation loss is real, and editing is what drives it
 
-Every lossy save re-runs quantisation on data that has already been quantised. The errors compound. Open a JPEG, crop it, save it, open it again, adjust it, save it again, after a few rounds you get visible blocking that no amount of care recovers.
+Re-saving a JPEG with the same settings costs most of its quality on the first save and then settles, because the encoder keeps arriving at the same answer. What compounds is change between saves. Crop it, save it, open it again, resize or adjust it, save it again: each edit shifts the image against JPEG's 8 × 8 blocks, so every save quantises fresh detail. In [our test](/blog/what-a-file-conversion-keeps-and-loses), ten plain re-saves left a photo almost exactly where the first save did, while cropping three pixels before each save made the average error about seven times larger. After a few rounds of that you get visible blocking that no amount of care recovers.
 
 Practical rules:
 
@@ -348,7 +433,7 @@ Media queries inside the SVG let the icon respond to the browser's theme, so a d
 The catch is that the SVG must be self-contained. No external stylesheet, no remote font, no linked image. If the icon uses text, convert it to paths, because the font will not be available.
 
 > [!TIP]
-> If your logo exists only as a raster image, [SVG conversion](/tool/svg-converter) goes the other way, rasterising a vector at a chosen resolution. That is how you produce the 180px and 512px PNGs from one source rather than resizing a JPEG four times and compounding artefacts at each step.
+> If your logo exists as an SVG, the [SVG converter](/tool/svg-converter) rasterises it to PNG at whatever size you choose. That is how you produce the 180px and 512px PNGs from one source, rather than resizing a JPEG four times and compounding artefacts at each step. If you only have a raster logo, start from the largest copy you can find.
 
 ## Design the small one separately
 
@@ -860,7 +945,7 @@ A sensible workflow for most people is both: extract previews to sort and share 
 
 ## Before you share
 
-Full-size camera JPGs are large, often 20 to 40 megapixels and several megabytes each. For email, chat or a website, [resize](/tool/image-resize) them to the size they will actually be viewed at, and [compress](/tool/image-compressor) if needed. RAW files and their previews also carry detailed camera metadata, and photos from cameras with GPS or a paired phone can carry location; the [image metadata viewer](/tool/image-metadata) shows what is there before you send anything.`,
+Full-size camera JPGs are large, often 20 to 40 megapixels and several megabytes each. For email, chat or a website, [resize](/tool/image-resize) them to the size they will actually be viewed at, and [compress](/tool/image-compressor) if needed. RAW files and their previews also carry detailed camera metadata, and photos from cameras with GPS or a paired phone can carry location; before sending the JPEG you extracted, open it in the [metadata tool](/tool/image-metadata), which shows the camera, the date and any GPS location it carries.`,
   'opening-psd-and-ai-files-without-adobe': `A designer finishes a logo or a poster and sends you the file they were working on: \`brand-final.psd\` or \`logo.ai\`. You do not own Photoshop or Illustrator, your computer shows a blank icon, and all you wanted was to see it, put it on a slide or send it to a printer.
 
 ## What a PSD file holds

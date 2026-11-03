@@ -275,6 +275,7 @@ export const SECURITY_UTILITY_WEB_SEO_CONTENT: ToolSeoMap = {
     steps: [
       { title: 'Enter the loan details', description: 'Input the principal amount, interest rate and tenure.' },
       { title: 'View the EMI breakdown', description: 'See the monthly EMI amount, total interest and total payable.' },
+      { title: 'Read the repayment schedule', description: 'Switch between years and months to see how each payment splits into interest and principal, and what is still owed.' },
       { title: 'Compare scenarios', description: 'Adjust the tenure or rate to see how the EMI changes.' },
     ],
     faqs: [

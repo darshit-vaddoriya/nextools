@@ -9,11 +9,14 @@ import {
 import { HOME_FAQ } from '../config/faq';
 import { getCategoryContent } from '../config/categoryContent';
 import { BLOG_SEO_TITLES } from '../config/blog/seoTitles';
+import { TOOL_SEO_TITLES } from '../config/toolSeoTitles';
 
 const SITE = 'https://nexttool.click';
-const DEFAULT_TITLE = 'NextTool - Free Online Tools';
+// The domain leads the title because several unrelated sites are called
+// NextTool: people searching the name need to tell this one apart.
+const DEFAULT_TITLE = 'NextTool.click: Free File Converter, PDF and Image Tools';
 const DEFAULT_DESC =
-  'Free browser tools for PDF, image, developer and AI tasks. Files are processed on your own device, so nothing is uploaded.';
+  'Free tools that run in your browser: convert files between 25+ formats, compress, merge and split PDFs, and edit images. No upload, no sign-up.';
 // Mirrors the static tag in index.html, so navigating home from a tool page
 // restores it rather than leaving that tool's keywords behind.
 const DEFAULT_KEYWORDS =
@@ -59,7 +62,8 @@ function setMeta(name: string, content: string, isProperty = false) {
  * rather than the tool name when a long name would push it past that.
  */
 const TITLE_LIMIT = 60;
-function toolTitle(name: string): string {
+function toolTitle(name: string, id?: string): string {
+  if (id && TOOL_SEO_TITLES[id]) return TOOL_SEO_TITLES[id];
   const full = `${name} Online - Free, No Upload | NextTool`;
   if (full.length <= TITLE_LIMIT) return full;
   const shorter = `${name} Online - Free | NextTool`;
@@ -267,7 +271,7 @@ export function updateToolMeta(toolId: string) {
 
   // Not clearPageSchema(), this route sets its own breadcrumb and FAQ below.
   clearArticleMeta();
-  const title = toolTitle(tool.name);
+  const title = toolTitle(tool.name, tool.id);
   const desc = truncateDescription(
     `${tool.description}. Free, runs in your browser, no upload and no sign-up.`,
   );

@@ -524,7 +524,7 @@ export const CONVERTER_SEO_CONTENT_2: ToolSeoMap = {
     ],
     faqs: [
       { question: 'Why did my WOFF2 become an .otf, not a .ttf?', answer: 'Fonts with PostScript (CFF) outlines are OpenType files and carry the .otf extension; fonts with TrueType outlines get .ttf. The converter names the output after what the font actually contains.' },
-      { question: 'Is anything lost in conversion?', answer: 'No. The font tables are byte-for-byte identical after conversion; only the container and compression change.' },
+      { question: 'Is anything lost in conversion?', answer: 'Between TTF, OTF and WOFF, no: every table comes back byte for byte. WOFF2 keeps the same glyph shapes, but rebuilds the outline table, so the bytes differ, and drops the DSIG digital signature, which cannot survive its transforms. Keep the original if you need the exact file.' },
       { question: 'How much smaller is WOFF2?', answer: 'Typically 30–50% smaller than TTF, and 20–30% smaller than WOFF, thanks to Brotli compression and glyph-table transforms.' },
       { question: 'Can I convert a .ttc font collection?', answer: 'Not yet: a collection holds several fonts in one file. Extract the one you need with a font editor such as FontForge first.' },
       { question: 'Am I allowed to convert any font?', answer: 'Conversion is technically lossless, but font licences often restrict web embedding or redistribution. Check the licence of commercial fonts before self-hosting them.' },
@@ -581,7 +581,7 @@ export const CONVERTER_SEO_CONTENT_2: ToolSeoMap = {
     ],
     faqs: [
       { question: 'Why did I get an .otf file?', answer: 'Fonts with PostScript (CFF) outlines are OpenType and use .otf; the converter keeps the correct extension so the operating system recognises it.' },
-      { question: 'Is the converted font identical to the original?', answer: 'Yes. Every table is restored byte for byte. If you convert back to WOFF2 you get a file of the same size.' },
+      { question: 'Is the converted font identical to the original?', answer: 'It has the same glyphs, but not the same bytes. WOFF2 stores outlines in a transformed form, so the rebuilt glyf table differs from the original byte for byte, a flag in the head table records the transform, and any DSIG signature is gone. Converting the result back to WOFF2 gives a file of the same size as the one you started with.' },
       { question: 'Can I install fonts downloaded from any website?', answer: 'Technically yes, legally not always. Fonts are software with licences; many free fonts (such as those on Google Fonts) allow desktop use, while commercial web licences often do not.' },
       { question: 'Why does the installed font show a different name?', answer: 'The name comes from the font\'s own name table, which may differ from the file name on the website.' },
     ],

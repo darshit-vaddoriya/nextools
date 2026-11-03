@@ -273,18 +273,18 @@ export const WORD_EXCEL_ARCHIVE_COLOR_SEO_CONTENT: ToolSeoMap = {
   },
   'csv-cleaner': {
     intro:
-      'This tool automatically tidies up messy CSV data by trimming stray whitespace from every cell, removing completely empty rows, and normalizing inconsistent line endings between Windows and Unix formats. It is a fast way to prep a raw data export before importing it into another system or spreadsheet. All cleaning options run locally in your browser, and you can toggle each fix on or off before downloading the result.',
+      'This tool tidies up messy CSV data: it trims stray whitespace, collapses repeated spaces, removes completely empty rows, normalises line endings, and can change the text case of values. The file is written back with consistent quoting in whichever delimiter you choose, with an optional UTF-8 BOM for Excel. All cleaning runs locally in your browser, and each fix can be turned on or off.',
     steps: [
       { title: 'Upload or paste your CSV data', description: 'Load the file or text you want to clean.' },
-      { title: 'Choose your cleaning options', description: 'Toggle whitespace trimming, empty row removal, and line-ending normalization.' },
+      { title: 'Choose your cleaning options', description: 'Toggle trimming, space collapsing, empty row removal and line endings, and pick a text case and output delimiter.' },
       { title: 'Preview the cleaned table', description: 'Check the resulting table and see how many empty rows were removed.' },
       { title: 'Download the cleaned CSV', description: 'Save the sanitized file to your device.' },
     ],
     faqs: [
-      { question: 'What kinds of issues does the cleaner fix?', answer: 'It trims leading/trailing whitespace in cells, removes rows that are entirely empty, and normalizes line endings between \\r\\n and \\n.' },
-      { question: 'Does it fix broken text encoding automatically?', answer: 'It normalizes line endings and whitespace; if a file has corrupted character encoding, you may need to re-export it with the correct encoding first.' },
-      { question: 'Can I choose which fixes to apply?', answer: 'Yes, each cleaning option, trimming, empty row removal, and line-ending normalization, has its own toggle.' },
-      { question: 'Does it work with tab-separated files too?', answer: 'Yes, you can switch the delimiter to tab, pipe, or semicolon before cleaning.' },
+      { question: 'What kinds of issues does the cleaner fix?', answer: 'It trims leading and trailing whitespace, collapses runs of spaces, removes rows that are entirely empty, normalises line endings, changes the case of values (lowercase, UPPERCASE or Title Case, leaving the header row alone), and rewrites quoting so a value is quoted only when it has to be.' },
+      { question: 'Does it fix broken text encoding?', answer: 'It removes a stray byte-order mark and can add a UTF-8 BOM so Excel opens accented and non-Latin text correctly. It cannot repair text that was already garbled by being saved in the wrong encoding; re-export that file as UTF-8.' },
+      { question: 'Can I choose which fixes to apply?', answer: 'Yes, each fix has its own toggle, and text case and output delimiter are separate choices.' },
+      { question: 'Does it work with tab-separated files too?', answer: 'Yes. Set the input delimiter to tab, pipe or semicolon, and use Write as to save in a different one, for example semicolon to comma.' },
     ],
     useCases: [
       'Prepping a raw data export from a third-party tool before importing it into a database',
@@ -294,7 +294,7 @@ export const WORD_EXCEL_ARCHIVE_COLOR_SEO_CONTENT: ToolSeoMap = {
     ],
     tips: [
       'Toggle off fixes you don\'t need, for example, skip line-ending normalization if your pipeline already handles it.',
-      'If cells still look garbled after cleaning, the issue is likely character encoding, which this tool doesn\'t rewrite.',
+      'If accented text looks right here but garbled in Excel, turn on Add UTF-8 BOM for Excel.',
       'Run the cleaner before deduplication so trailing whitespace doesn\'t cause near-identical rows to be treated as distinct.',
     ],
   },
@@ -435,15 +435,15 @@ export const WORD_EXCEL_ARCHIVE_COLOR_SEO_CONTENT: ToolSeoMap = {
   },
   'merge-csv': {
     intro:
-      'This tool combines multiple CSV or TSV files into a single file by stacking their rows together, using the header row from the first file as the combined header. It is useful for merging several monthly exports or split data files back into one dataset. All files are read and merged directly in your browser, and you get a warning if the files have mismatched headers.',
+      'This tool combines multiple CSV or TSV files into a single file by stacking their rows together. Columns are matched by header name, so a file with its columns in another order, or with an extra or missing column, still lines up. It is useful for merging several monthly exports or split data files back into one dataset. All files are read and merged directly in your browser.',
     steps: [
       { title: 'Add two or more CSV files', description: 'Upload at least two files you want to merge.' },
       { title: 'Review the file list', description: 'Remove any file you added by mistake before merging.' },
-      { title: 'Click Merge Files', description: 'The tool combines all rows using the first file\'s header order.' },
+      { title: 'Click Merge Files', description: 'Rows are combined with columns matched by name, in the order each column was first seen.' },
       { title: 'Download the merged CSV', description: 'Save the combined dataset to your device.' },
     ],
     faqs: [
-      { question: 'What happens if the files have different headers?', answer: 'You will see a warning noting that headers differ, and the rows are still merged using the first file\'s header order, so double-check column alignment afterward.' },
+      { question: 'What happens if the files have different headers?', answer: 'Columns are matched by name. The merged file has every column seen in any file, with blank cells where a file did not have that column, and a note lists which columns each file was missing. A column renamed between exports, such as customer_id and CustomerID, counts as two columns, so rename it in one file first.' },
       { question: 'Can I merge Excel .xlsx files this way?', answer: 'No, this tool merges plain CSV/TSV text files; binary .xlsx workbooks are not supported.' },
       { question: 'Is there a limit on how many files I can merge?', answer: 'There is no fixed limit, but merging many large files depends on your browser\'s available memory.' },
       { question: 'Can I remove a file before merging?', answer: 'Yes, each added file has a remove button so you can adjust the list before running the merge.' },
@@ -455,8 +455,8 @@ export const WORD_EXCEL_ARCHIVE_COLOR_SEO_CONTENT: ToolSeoMap = {
       'Merging exports from different tools that share the same column structure',
     ],
     tips: [
-      'Add files in the order you want their rows to appear, the first file\'s header sets the column order for the merge.',
-      'Heed the mismatched-headers warning; it usually means columns will be misaligned rather than automatically matched by name.',
+      'Add files in the order you want their rows to appear; columns appear in the order they are first seen.',
+      'Read the note about missing columns: it usually points to a column that was renamed between exports.',
       'Run the CSV Cleaner or Remove Duplicates afterward if the merged file might contain blank rows or repeats.',
     ],
   },

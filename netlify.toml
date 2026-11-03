@@ -33,6 +33,12 @@
   [headers.values]
     Cache-Control = "public, max-age=31536000, immutable"
 
+# Guide published and withdrawn on 2026-11-03.
+[[redirects]]
+  from = "/blog/age-as-on-a-cut-off-date"
+  to = "/tool/age-calculator"
+  status = 301
+
 # Blog topics merged on 2026-09-29 (nine became five). Old hub URLs point to
 # the topic their guides moved into, so existing links keep working.
 [[redirects]]

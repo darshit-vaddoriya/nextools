@@ -307,7 +307,7 @@ So "extract pages 12 to 18" means twelfth to eighteenth sheet in the file, which
 
 Converting pages to images renders each page, text and all, into a picture at a resolution you choose. You get a picture of the page.
 
-[Extracting images](/tool/pdf-extract-images) pulls the embedded image objects out of the file and gives you the originals. If a report contains eight photographs, you get eight image files at whatever resolution they were embedded at, with no page furniture around them and no re-encoding.
+[Extracting images](/tool/pdf-extract-images) pulls the embedded image objects out of the file. If a report contains eight photographs, you get eight image files at whatever resolution they were embedded at, with no page furniture around them. Photos stored as JPEG, which is most of them, come out as the original JPEG file, byte for byte. Other kinds of image are decoded and saved as PNG, which is lossless, so nothing is lost there either.
 
 The second is what you want when you need the pictures. It also reveals something people forget: an image cropped inside the document is usually stored uncropped, because cropping in a PDF changes the visible window rather than the data. Extracting can therefore hand you more of the photograph than the document displays.
 

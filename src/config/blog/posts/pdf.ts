@@ -77,7 +77,7 @@ export const PDF_POSTS: BlogPost[] = [
   {
     slug: 'reduce-pdf-file-size-for-upload-limits',
     title: 'Getting a PDF under a strict upload limit, without destroying it',
-    description: 'Government portals want 1 MB, email wants 25 MB, and your scan is 48 MB. A decision order that gets you under the limit with the least damage.',
+    description: 'A portal wants 1 MB and your scan is 48 MB. The order to try things in, from dropping pages to compressing images, with the least damage to the file.',
     excerpt: 'When a portal rejects your document at 1.2 MB against a 1 MB cap, panic-compressing to the lowest setting is the wrong move. There is a better order to try things in.',
     category: 'pdf',
     tags: ['pdf', 'file-size', 'compression'],

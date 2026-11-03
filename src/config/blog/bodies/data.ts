@@ -423,7 +423,7 @@ Before merging anything, list the header row of every file and compare the sets.
 **Renamed columns.** \`customer_id\` in one export and \`CustomerID\` in the next produce two separate columns, each half empty. This one is easy to spot in the merged header and very hard to spot in a summary figure later.
 
 > [!NOTE]
-> A [CSV merger](/tool/merge-csv) that matches on header names rather than position handles the first three correctly. The renamed-column case cannot be solved automatically: only you know that those two names mean the same thing.
+> The [CSV merger](/tool/merge-csv) matches columns on header names rather than position, so it handles the first three correctly: it builds the union of columns, leaves blanks where a file had no such field, and tells you which file was missing which column. The renamed-column case cannot be solved automatically: only you know that those two names mean the same thing.
 
 ## Stacking is not joining
 
@@ -579,47 +579,6 @@ Rows are written in batches of 500 per \`INSERT\`, which keeps each statement un
 2. **Add keys and indexes afterwards.** The script creates a plain table with no primary key or constraints. Load the data, check it, then add the primary key, foreign keys and indexes you need. Building an index once after the load is faster than updating it on every insert.
 
 One portability note: SQL Server has no \`BOOLEAN\` type or \`TRUE\`/\`FALSE\` literals. If you are loading into SQL Server, change \`BOOLEAN\` columns to \`BIT\` and the values to 1 and 0 before running the script.`,
-  'age-as-on-a-cut-off-date': `Most exam and job notifications in India do not ask for your age. They ask for your age **as on** a particular date, usually printed in the eligibility section: "age as on 1 January 2026" or "as on 1 August". That date is fixed for every applicant, so the answer does not change depending on the day you fill the form.
-
-The common mistake is to work out your age today and enter that. If your birthday falls between the cut-off date and the day you apply, the two answers differ by a full year, and that one year can decide whether you are eligible.
-
-## What "age" means on a form
-
-Age on a form is **completed** years, months and days. Someone born on 15 August 2003 is not "22.4 years old" on 1 January 2026. They are 22 years, 4 months and 17 days. Their 22nd birthday has passed, their 23rd has not, and since the last monthly date (15 December) another 17 days have gone by.
-
-That is calendar counting. You compare the year, then the month, then the day, and only count a unit once it is complete.
-
-## Why dividing by 365 goes wrong
-
-A tempting shortcut is to count the days between two dates and divide by 365, or by 365.25 to allow for leap years. It looks precise and it is close most of the time. The trouble is that "close" fails exactly where it matters, around the birthday.
-
-Take a birth date of 2 January 2004 and a cut-off of 1 January 2026. The person turns 22 the day after the cut-off, so on the cut-off they are 21 years, 11 months and 30 days. The day count is 8,035, and 8,035 divided by 365.25 is 21.998. Rounded, that becomes 22, which is wrong. Any rounding step in a spreadsheet formula can make the same mistake.
-
-Months have the same problem in a smaller way. They are 28 to 31 days long, so "30 days" and "one month" are not the same thing, and a calculator that treats them as equal drifts.
-
-## Birthdays that do not exist every month
-
-Two cases need a rule, because the plain method has nothing to compare against.
-
-**Born on the 29th, 30th or 31st.** Someone born on 31 January has no 31 February. The convention used by the [age calculator](/tool/age-calculator) is that the month's last day stands in for the missing one. So on 28 February they complete one month, and on 1 March the next year they are 1 year, 1 month and 1 day old.
-
-**Born on 29 February.** In a common year the same rule puts the birthday on 28 February. Someone born on 29 February 2000 is 25 years, 0 months and 0 days old on 28 February 2025, and 25 years, 0 months and 1 day on 1 March. Not every rule-maker agrees with this. Some treat 1 March as the birthday in common years. If you were born on 29 February and the cut-off is 28 February or 1 March, read the notification carefully or ask the recruiting body, because that one day is the whole question.
-
-## When the notification gives dates instead of an age
-
-Many notifications state the limit twice: once as an age ("between 21 and 32 years as on 1 August") and once as a pair of birth dates ("born not earlier than 2 August 1994 and not later than 1 August 2005", for example). When the dates are given, use them. Checking that your date of birth falls between two dates needs no arithmetic at all, and it settles questions such as whether the limit includes the birthday itself.
-
-Relaxations for reserved categories are usually written as extra years added to the upper limit. Apply them to the age limit in the notification, not to your own age.
-
-## Checking it yourself
-
-1. Find the "as on" date in the eligibility section of the notification.
-2. Open the [age calculator](/tool/age-calculator), enter your date of birth, and set **Age as on** to that date. It starts on today's date, so changing it is the step people miss.
-3. Read the years, months and days, and compare them with the limit.
-
-The tool counts calendar dates only, with no time of day. A date entered as 15 August is treated as 15 August wherever you are, so your device's time zone cannot shift the answer by a day.
-
-> Keep a copy of the date of birth exactly as it appears on your Class 10 certificate or whichever document the notification names. Forms check age against that document, and a typo in the date of birth on the form is harder to fix later than a wrong age calculation.`,
   'lakh-crore-and-amounts-in-words': `The same number can be written two ways. In India, 1234567 is written 12,34,567 and read as twelve lakh thirty-four thousand five hundred sixty-seven. Almost everywhere else it is written 1,234,567 and read as one million two hundred thirty-four thousand five hundred sixty-seven. Both are correct. Mixing the two on a cheque, an invoice or a contract is how amounts end up wrong by a factor of ten.
 
 ## How the Indian system groups digits

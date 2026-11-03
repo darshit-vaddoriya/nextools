@@ -936,7 +936,7 @@ The fix is word boundaries. In regex, \\b matches the position between a word ch
            does not match: category, concatenate
 \`\`\`
 
-Most [find and replace](/tool/find-replace) tools offer a "whole word" checkbox that does exactly this. Use it by default and turn it off only when you mean to, rather than the other way round.
+The [find and replace](/tool/find-replace) tool has a Whole word option that does exactly this, and unlike \`\\b\` it also treats Hindi and accented letters as part of a word. Use it by default and turn it off only when you mean to, rather than the other way round.
 
 > [!WARNING]
 > Replace-all is not undoable once the page is closed. Before committing a bulk change, search first and look at the match count. If you expect 12 replacements and the tool reports 340, stop. That gap is the warning you get.

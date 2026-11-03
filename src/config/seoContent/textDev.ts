@@ -214,7 +214,8 @@ export const TEXT_DEV_SEO_CONTENT: ToolSeoMap = {
     ],
     faqs: [
       { question: 'Can I use capture groups in the replacement text?', answer: 'Yes, when regex mode is enabled you can reference capture groups (like $1) in the replacement field, similar to most code editors.' },
-      { question: 'Is the plain-text search case-sensitive?', answer: 'Plain string matching is case-sensitive by default; use a regex with the case-insensitive flag if you need to ignore case.' },
+      { question: 'Is the plain-text search case-sensitive?', answer: 'By default, yes. Turn off Match case to ignore it; in regex mode, add the i flag instead.' },
+      { question: 'How do I stop it matching inside longer words?', answer: 'Turn on Whole word. "cat" then matches cat, (cat) and "cat" but not category or concatenate. It treats Hindi and accented letters as part of a word, which the regex \\b does not.' },
       { question: 'What happens if my regex pattern is invalid?', answer: 'The tool shows an error message rather than crashing, so you can fix the pattern before applying it.' },
       { question: 'Does it replace all occurrences or just the first?', answer: 'By default it replaces every match in the text; regex global behavior is applied automatically.' },
       { question: 'Is my text sent anywhere during find and replace?', answer: 'No, matching and replacing run entirely in your browser using JavaScript regex.' },
@@ -228,7 +229,7 @@ export const TEXT_DEV_SEO_CONTENT: ToolSeoMap = {
     tips: [
       'Test your regex in the dedicated Regex Tester first if the pattern is complex, this tool applies it but does not visualize matches.',
       'Reference capture groups like $1 in the replacement field to preserve parts of the matched text.',
-      'Remember plain-text search is case-sensitive by default; switch to regex mode with the "i" flag if you need case-insensitive matching.',
+      'Turn on Whole word before a bulk replace, then check the match count is what you expect.',
     ],
   },
 

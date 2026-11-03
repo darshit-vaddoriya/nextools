@@ -293,11 +293,11 @@ export const PDF_SEO_CONTENT: ToolSeoMap = {
     ],
     faqs: [
       { question: 'Does it extract vector graphics as well as photos?', answer: 'It primarily extracts embedded raster images; pure vector drawings built from PDF path data may not be captured as separate image files.' },
-      { question: 'What image format are the extracted files saved as?', answer: 'Images are typically saved in their original embedded format, such as JPG or PNG, depending on how they were stored in the PDF.' },
+      { question: 'What image format are the extracted files saved as?', answer: 'JPEG photos come out as the original JPEG file, copied byte for byte. Other image types, and JPEGs the PDF recolours when drawing them (CMYK or with a Decode array), are decoded and saved as PNG.' },
       { question: 'Is my PDF sent anywhere to find the images?', answer: 'No, the scan and extraction happen entirely within your browser.' },
-      { question: 'Can I extract images from just one page?', answer: 'Some tool configurations let you filter by page, though by default it scans the whole document.' },
+      { question: 'Can I extract images from just one page?', answer: 'It always scans the whole document, but file names include the page number, so you can keep only the ones from the page you need. Or split that page out first with Split PDF.' },
       { question: 'Will tiny background graphics also be extracted?', answer: 'Yes, any embedded image data will be detected, including small icons or background graphics, which can result in many extracted files.' },
-      { question: 'Does image quality change during extraction?', answer: 'No, images are pulled out at their original embedded resolution without additional recompression.' },
+      { question: 'Does image quality change during extraction?', answer: 'No. JPEGs are the original files, and everything else is saved as lossless PNG at the resolution it was embedded at.' },
     ],
     useCases: [
       'Reusing product photos or diagrams from an old catalog or manual',

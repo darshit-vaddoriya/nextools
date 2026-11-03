@@ -442,7 +442,7 @@ export const IMAGE_SEO_CONTENT: ToolSeoMap = {
       'Photos taken on phones and cameras often embed EXIF metadata like GPS coordinates, device model, and timestamps, which can be a privacy risk before sharing online, and this tool strips that metadata while leaving the visible image untouched. Metadata removal is performed locally by re-encoding the image in your browser, so the stripped data never has a chance to leave your device in the first place.',
     steps: [
       { title: 'Upload the image', description: 'Select the photo you want to clean of metadata.' },
-      { title: 'Review detected metadata', description: 'See what EXIF and other metadata fields were found, if shown.' },
+      { title: 'Review detected metadata', description: 'See the camera, date, exposure and any GPS location in the EXIF block, with location fields highlighted, plus a list of other metadata blocks.' },
       { title: 'Strip the metadata', description: 'Run the removal process to produce a clean version of the image.' },
       { title: 'Download the cleaned file', description: 'Save the image with metadata removed.' },
     ],

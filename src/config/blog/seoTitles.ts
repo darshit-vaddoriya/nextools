@@ -30,4 +30,11 @@ export const BLOG_SEO_TITLES: Record<string, string> = {
   'upi-qr-codes-explained': 'UPI QR codes: what is inside one, and making your own',
   'photo-and-signature-size-for-online-forms': 'Photo and signature size for online forms (KB, pixels, DPI)',
   'hindi-text-in-files-and-pdfs': 'Hindi text in PDFs: boxes, question marks and broken copy',
+  'what-actually-compresses-in-a-zip': 'Does a ZIP file reduce photo size or quality?',
+  'word-styles-and-templates': 'Word styles vs direct formatting: why styles matter',
+  'sending-a-spreadsheet-without-excel': 'Send a spreadsheet without Excel: XLSX, CSV or PDF?',
+  'reduce-pdf-file-size-for-upload-limits': 'Reduce PDF size under 1 MB for upload portals',
+  'camera-raw-files-and-the-hidden-jpg': 'RAW to JPG without editing software (NEF, CR2, ARW, DNG)',
+  'opening-psd-and-ai-files-without-adobe': 'Open PSD or AI files without Photoshop or Illustrator',
+  'comparing-two-documents': 'Compare two documents: Word, PDF and text differences',
 };

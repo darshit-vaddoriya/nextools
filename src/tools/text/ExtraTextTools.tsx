@@ -390,25 +390,32 @@ export const FindReplaceTool: React.FC = () => {
   const [replace, setReplace] = useState('dog');
   const [useRegex, setUseRegex] = useState(false);
   const [flags, setFlags] = useState('g');
+  const [wholeWord, setWholeWord] = useState(false);
+  const [matchCase, setMatchCase] = useState(true);
 
   const { result, count, error } = useMemo(() => {
     if (!find) return { result: text, count: 0, error: null as string | null };
     try {
       let matchCount = 0;
       let out: string;
+      // "Whole word": the match may not have a letter, digit, mark or underscore
+      // directly before or after it. \b only knows ASCII, so it would split
+      // Hindi or accented words; Unicode classes do not.
+      const bound = (src: string) => (wholeWord ? `(?<![\\p{L}\\p{M}\\p{N}_])(?:${src})(?![\\p{L}\\p{M}\\p{N}_])` : src);
       if (useRegex) {
-        const re = new RegExp(find, flags);
+        const f = wholeWord && !flags.includes('u') ? flags + 'u' : flags;
+        const re = new RegExp(bound(find), f);
         out = text.replace(re, (...args) => { matchCount++; return typeof replace === 'string' ? replace.replace(/\$(\d+)/g, (_, n) => args[Number(n)] ?? '') : replace; });
       } else {
         const escaped = find.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-        const re = new RegExp(escaped, flags.includes('g') ? (flags.includes('i') ? 'gi' : 'g') : (flags.includes('i') ? 'i' : ''));
+        const re = new RegExp(bound(escaped), 'gu' + (matchCase ? '' : 'i'));
         out = text.replace(re, () => { matchCount++; return replace; });
       }
       return { result: out, count: matchCount, error: null as string | null };
     } catch (err) {
       return { result: text, count: 0, error: errorMessage(err, 'Invalid regular expression') };
     }
-  }, [text, find, replace, useRegex, flags]);
+  }, [text, find, replace, useRegex, flags, wholeWord, matchCase]);
 
   return (
     <div className="space-y-4">
@@ -427,6 +434,8 @@ export const FindReplaceTool: React.FC = () => {
           </div>
         </div>
         <div className="flex flex-wrap items-center gap-4">
+          <Toggle checked={wholeWord} onChange={setWholeWord} label="Whole word" />
+          {!useRegex && <Toggle checked={matchCase} onChange={setMatchCase} label="Match case" />}
           <Toggle checked={useRegex} onChange={setUseRegex} label="Use regular expression" />
           {useRegex && (
             <label className="flex items-center gap-1.5 text-xs text-muted-foreground">

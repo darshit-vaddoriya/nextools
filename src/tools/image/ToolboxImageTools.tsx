@@ -1,3 +1,4 @@
+import { readExif, type ExifField } from '../../utils/exif';
 import React, { useState } from 'react';
 import { Image as ImageIcon, ShieldOff, Download, Copy } from 'lucide-react';
 import { CopyButton } from '../../components/CopyButton';
@@ -378,6 +379,7 @@ export const ImageMetadataTool: React.FC = () => {
   const [img, setImg] = useState<HTMLImageElement | null>(null);
   const [file, setFile] = useState<File | null>(null);
   const [meta, setMeta] = useState<{ fields: string[]; type: string } | null>(null);
+  const [exif, setExif] = useState<ExifField[] | null>(null);
   const [result, setResult] = useState<ProcessedImage | null>(null);
   const [error, setError] = useState<string | null>(null);
   const { run, overlay } = useExportProgress();
@@ -390,6 +392,7 @@ export const ImageMetadataTool: React.FC = () => {
       setImg(loaded);
       setFile(f);
       setMeta(scanMetadata(f, bytes));
+      setExif(readExif(bytes));
       setResult(null);
       setError(null);
     } catch {
@@ -434,7 +437,27 @@ export const ImageMetadataTool: React.FC = () => {
             </div>
           </div>
           <div className="rounded-xl border   bg-card border-border p-4 space-y-2">
-            <p className="section-label">Detected metadata</p>
+            {exif && exif.length > 0 && (
+              <div className="space-y-2 pb-2">
+                <p className="section-label">What the EXIF block says</p>
+                <div className="overflow-x-auto rounded-lg border border-border">
+                  <table className="w-full text-xs">
+                    <tbody>
+                      {exif.map((f) => (
+                        <tr key={f.label} className="border-b border-border last:border-0">
+                          <td className="px-3 py-1.5 text-muted-foreground font-medium whitespace-nowrap">{f.label}</td>
+                          <td className={`px-3 py-1.5 font-mono break-all ${f.sensitive ? 'text-rose-700 dark:text-rose-400 font-semibold' : 'text-foreground'}`}>{f.value}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+                {exif.some((f) => f.sensitive) && (
+                  <p className="text-[11px] text-rose-700 dark:text-rose-400">The highlighted fields can identify where the photo was taken or who took it. Strip them before sharing.</p>
+                )}
+              </div>
+            )}
+            <p className="section-label">Detected metadata blocks</p>
             <ul className="space-y-1">
               {meta?.fields.map((f, i) => (
                 <li key={i} className="text-xs flex items-center gap-2  text-muted-foreground">

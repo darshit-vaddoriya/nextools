@@ -626,18 +626,45 @@ export const EmiCalculatorTool: React.FC = () => {
   const [rate, setRate] = useState('9.5');
   const [tenureUnit, setTenureUnit] = useState<'months' | 'years'>('years');
   const [tenure, setTenure] = useState('5');
+  const [scheduleView, setScheduleView] = useState<'year' | 'month'>('year');
 
   const result = useMemo(() => {
     const p = parseFloat(principal);
     const annualRate = parseFloat(rate);
     const t = parseFloat(tenure);
-    if (!p || !annualRate || !t) return null;
-    const n = tenureUnit === 'years' ? t * 12 : t;
+    if (!(p > 0) || !(annualRate >= 0) || !(t > 0)) return null;
+    const n = Math.round(tenureUnit === 'years' ? t * 12 : t);
+    if (n < 1 || n > 1200) return null;
     const monthlyRate = annualRate / 12 / 100;
-    const emi = (p * monthlyRate * Math.pow(1 + monthlyRate, n)) / (Math.pow(1 + monthlyRate, n) - 1);
+    // At 0% the formula divides zero by zero; the loan is simply split evenly.
+    const emi = monthlyRate === 0
+      ? p / n
+      : (p * monthlyRate * Math.pow(1 + monthlyRate, n)) / (Math.pow(1 + monthlyRate, n) - 1);
+
+    // Amortisation: each month's interest is charged on what is still owed,
+    // and the rest of the EMI repays principal.
+    const months: { month: number; interest: number; principal: number; balance: number }[] = [];
+    let balance = p;
+    for (let m = 1; m <= n; m++) {
+      const interest = balance * monthlyRate;
+      // The last payment clears whatever rounding has left.
+      const toPrincipal = m === n ? balance : emi - interest;
+      balance = Math.max(0, balance - toPrincipal);
+      months.push({ month: m, interest, principal: toPrincipal, balance });
+    }
+    const years: { year: number; interest: number; principal: number; balance: number }[] = [];
+    for (let i = 0; i < months.length; i += 12) {
+      const chunk = months.slice(i, i + 12);
+      years.push({
+        year: i / 12 + 1,
+        interest: chunk.reduce((a, r) => a + r.interest, 0),
+        principal: chunk.reduce((a, r) => a + r.principal, 0),
+        balance: chunk[chunk.length - 1].balance,
+      });
+    }
     const totalPayment = emi * n;
     const totalInterest = totalPayment - p;
-    return { emi, totalPayment, totalInterest };
+    return { emi, totalPayment, totalInterest, months, years };
   }, [principal, rate, tenure, tenureUnit]);
 
   const fmt = (n: number) => n.toLocaleString(undefined, { maximumFractionDigits: 2 });
@@ -686,6 +713,48 @@ export const EmiCalculatorTool: React.FC = () => {
           <div className="bg-card rounded-xl border border-border p-4 text-center space-y-1">
             <p className="text-xl font-extrabold text-foreground">{fmt(result.totalPayment)}</p>
             <p className="text-xs text-muted-foreground font-medium">Total Payment</p>
+          </div>
+        </div>
+      )}
+
+      {result && (
+        <div className="bg-card rounded-xl border border-border p-4 space-y-3">
+          <div className="flex items-center justify-between gap-2 flex-wrap">
+            <p className="section-label">Repayment schedule</p>
+            <Select
+              value={scheduleView}
+              options={[{ value: 'year', label: 'By year' }, { value: 'month', label: 'By month' }]}
+              onChange={(v) => setScheduleView(v as 'year' | 'month')}
+              className="w-32"
+            />
+          </div>
+          <p className="text-xs text-muted-foreground">
+            Early payments are mostly interest, because interest is charged on the whole amount still owed. The principal share grows every month.
+          </p>
+          <div className="overflow-x-auto max-h-96 overflow-y-auto rounded-lg border border-border">
+            <table className="w-full text-xs font-mono">
+              <thead className="bg-muted text-muted-foreground sticky top-0">
+                <tr>
+                  <th className="text-left px-3 py-2 font-semibold">{scheduleView === 'year' ? 'Year' : 'Month'}</th>
+                  <th className="text-right px-3 py-2 font-semibold">Principal</th>
+                  <th className="text-right px-3 py-2 font-semibold">Interest</th>
+                  <th className="text-right px-3 py-2 font-semibold">Balance</th>
+                </tr>
+              </thead>
+              <tbody>
+                {(scheduleView === 'year'
+                  ? result.years.map(r => ({ key: r.year, ...r }))
+                  : result.months.map(r => ({ key: r.month, ...r }))
+                ).map(r => (
+                  <tr key={r.key} className="border-t border-border">
+                    <td className="px-3 py-1.5">{r.key}</td>
+                    <td className="px-3 py-1.5 text-right">{fmt(r.principal)}</td>
+                    <td className="px-3 py-1.5 text-right">{fmt(r.interest)}</td>
+                    <td className="px-3 py-1.5 text-right">{fmt(r.balance)}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
         </div>
       )}

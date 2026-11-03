@@ -94,7 +94,7 @@ export const TOOL_EXPLANATIONS: Record<string, string> = {
     'Converts SVG vector images into PNG or JPG at any size. It is useful for turning logos and icons into image formats that work everywhere. Upload your SVG, set the resolution or scale you need, and download the converted image.',
 
   'image-metadata':
-    'Removes hidden data from images, such as camera details, GPS location and editing history, to protect your privacy before sharing. Upload your image and it is cleaned automatically. Download the version with the metadata removed.',
+    'Shows what a photo\'s EXIF block says, including the camera, the date taken, exposure settings and any GPS location, and lists the other metadata blocks it carries. Strip Metadata then re-encodes the image without them, so you can share it without revealing where it was taken.',
 
   'image-watermark':
     'Adds a text watermark to your images with control over size, opacity and position: a corner, the centre, or tiled across the whole picture. Upload your image, type the text, adjust the settings, and download the marked copy.',
@@ -127,7 +127,7 @@ export const TOOL_EXPLANATIONS: Record<string, string> = {
     'Pulls all the text out of a PDF and saves it as a plain .txt file, with a marker at the start of each page. It is useful when you want to reuse or search the text of a document. Select your PDF and click Extract text, then download the .txt file.',
 
   'pdf-extract-images':
-    'Finds every embedded image inside a PDF and exports each one as a PNG file. It is useful for pulling logos, diagrams or photos out of a document. Select your PDF and click Extract images. Each found image downloads individually.',
+    'Finds every embedded image inside a PDF. JPEG photos are copied out as the original file, byte for byte, with no re-encoding; other kinds of image are decoded and saved as lossless PNG. Useful for pulling photos, logos or diagrams out of a document.',
 
   'pdf-rotate':
     'Changes the orientation of PDF pages by 90, 180 or 270 degrees. You can rotate every page or just selected ones. Select your PDF, use the rotate buttons under each page thumbnail (or Rotate all), and download the rotated document.',
@@ -228,7 +228,7 @@ export const TOOL_EXPLANATIONS: Record<string, string> = {
     'Cleans up messy text by collapsing extra whitespace, stripping HTML tags, and normalizing line endings, pick which fixes to apply. Paste your text and copy the cleaned result.',
 
   'find-replace':
-    'Finds every match of a word, phrase or regular expression in your text and replaces it with something else, showing how many replacements were made. Great for quick bulk edits without opening a code editor.',
+    'Finds every match of a word, phrase or regular expression in your text and replaces it with something else, showing how many replacements were made. A Whole word option stops "cat" from matching inside "category", and works for Hindi and accented words too. Great for quick bulk edits without opening a code editor.',
 
   'remove-empty-lines':
     'Strips out blank or whitespace-only lines from a block of text, leaving only the lines that actually contain content. Paste your text and the cleaned version appears.',
@@ -284,7 +284,7 @@ export const TOOL_EXPLANATIONS: Record<string, string> = {
     'Calculates Body Mass Index from height and weight, in either metric or imperial units, along with the standard BMI category (underweight, normal, overweight, obese). Enter your measurements to see your result.',
 
   'emi-calculator':
-    'Calculates the monthly EMI for a loan from the principal, interest rate and tenure, along with the total interest and total amount payable over the loan\'s life, using the standard reducing-balance formula.',
+    'Calculates the monthly EMI for a loan from the principal, interest rate and tenure, along with the total interest and total amount payable over the loan\'s life, using the standard reducing-balance formula. A repayment schedule shows, year by year or month by month, how much of each payment goes to interest and how much reduces the loan.',
 
 
   'gst-calculator':
@@ -335,7 +335,7 @@ export const TOOL_EXPLANATIONS: Record<string, string> = {
     'An editable spreadsheet-style table for CSV data: click any cell to edit it, add or remove rows and columns, then export your changes back to a CSV file.',
 
   'csv-cleaner':
-    'Cleans up messy CSV data by trimming whitespace from every cell, removing fully empty rows, and normalizing line endings, pick which fixes to apply and download the cleaned file.',
+    'Cleans up messy CSV data: trims whitespace in every cell, collapses repeated spaces, removes fully empty rows, normalises line endings, changes the text case of values, and writes the file back with consistent quoting in the delimiter you choose. A UTF-8 BOM can be added so Excel shows accented and non-Latin text correctly.',
 
   'csv-to-json':
     'Converts CSV or TSV rows into a JSON array of objects, using the first row as the object keys. Paste or upload your data and copy or download the resulting JSON.',
@@ -353,7 +353,7 @@ export const TOOL_EXPLANATIONS: Record<string, string> = {
     'Scans CSV data for exact-match duplicate rows and removes them, telling you how many were found and removed. Paste or upload your CSV and download the de-duplicated version.',
 
   'merge-csv':
-    'Combines multiple CSV files into one by appending all their rows together, checking that the headers match across files and warning you if they do not. Upload your files and download the merged CSV.',
+    'Combines multiple CSV files into one by appending their rows. Columns are matched by header name, so files with columns in a different order still line up, and a column one file lacks is left blank, with a note saying which file it was missing from. Upload your files and download the merged CSV.',
 
   // ─── Image tools ──────────────────────────────────────────────
   'ico-generator':

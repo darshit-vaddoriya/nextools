@@ -315,24 +315,44 @@ export const CsvCleanerTool: React.FC = () => {
   const [trim, setTrim] = useState(true);
   const [removeEmpty, setRemoveEmpty] = useState(true);
   const [normalizeEol, setNormalizeEol] = useState(true);
+  const [collapseSpaces, setCollapseSpaces] = useState(false);
+  const [caseMode, setCaseMode] = useState<'keep' | 'lower' | 'upper' | 'title'>('keep');
+  const [outDelimiter, setOutDelimiter] = useState<string>('same');
+  const [excelBom, setExcelBom] = useState(false);
 
   const cleaned = useMemo(() => {
     if (!text.trim()) return { rows: [] as string[][], removedCount: 0 };
-    let source = text;
+    // A byte-order mark left at the start ends up glued to the first header name.
+    let source = text.replace(/^\uFEFF/, '');
     if (normalizeEol) source = source.replace(/\r\n/g, '\n').replace(/\r/g, '\n');
     let rows = parseDelimited(source, delimiter);
     if (trim) rows = rows.map((r) => r.map((c) => c.trim()));
+    if (collapseSpaces) rows = rows.map((r) => r.map((c) => c.replace(/[ \t\u00a0]+/g, ' ')));
+    if (caseMode !== 'keep') {
+      const change = (c: string) =>
+        caseMode === 'lower' ? c.toLowerCase()
+          : caseMode === 'upper' ? c.toUpperCase()
+            : c.toLowerCase().replace(/(^|[\s\-/'(])(\p{L})/gu, (_, sep: string, ch: string) => sep + ch.toUpperCase());
+      // The header row keeps its names; only the values change.
+      rows = rows.map((r, i) => (i === 0 ? r : r.map(change)));
+    }
     const before = rows.length;
     if (removeEmpty) rows = rows.filter((r) => r.some((c) => c !== ''));
     return { rows, removedCount: before - rows.length };
-  }, [text, delimiter, trim, removeEmpty, normalizeEol]);
+  }, [text, delimiter, trim, removeEmpty, normalizeEol, collapseSpaces, caseMode]);
 
-  const cleanedCsv = useMemo(() => (cleaned.rows.length ? toDelimited(cleaned.rows, delimiter) : ''), [cleaned, delimiter]);
+  const writeDelimiter = outDelimiter === 'same' ? delimiter : outDelimiter;
+  // Every cell is written back through toDelimited, so quoting comes out
+  // uniform: a field is quoted only when it holds the delimiter, a quote or a
+  // line break, and inner quotes are doubled.
+  const cleanedCsv = useMemo(() => (cleaned.rows.length ? toDelimited(cleaned.rows, writeDelimiter) : ''), [cleaned, writeDelimiter]);
   useRecordTextResult(cleanedCsv, 'cleaned.csv', 'text/csv;charset=utf-8');
 
   const download = () => {
-    const csv = toDelimited(cleaned.rows, delimiter);
-    downloadBlob(new Blob([csv], { type: 'text/csv;charset=utf-8' }), 'cleaned.csv');
+    // Excel reads a CSV without a BOM in the system's legacy code page, which
+    // garbles accented and non-Latin text; the BOM tells it the file is UTF-8.
+    const csv = (excelBom ? '\uFEFF' : '') + toDelimited(cleaned.rows, writeDelimiter);
+    downloadBlob(new Blob([csv], { type: 'text/csv;charset=utf-8' }), writeDelimiter === '\t' ? 'cleaned.tsv' : 'cleaned.csv');
   };
 
   return (
@@ -343,6 +363,23 @@ export const CsvCleanerTool: React.FC = () => {
         <div className="flex items-center gap-2">
           <span className="section-label">Delimiter</span>
           <Select value={delimiter} onChange={setDelimiter} options={DELIMS} className="w-40" />
+          <span className="section-label ml-2">Write as</span>
+          <Select value={outDelimiter} onChange={setOutDelimiter} options={[{ value: 'same', label: 'Same as input' }, ...DELIMS]} className="w-40" />
+        </div>
+        <div className="flex items-center gap-2 flex-wrap">
+          <span className="section-label">Text case</span>
+          <Select
+            value={caseMode}
+            onChange={(v) => setCaseMode(v as 'keep' | 'lower' | 'upper' | 'title')}
+            options={[
+              { value: 'keep', label: 'Keep as is' },
+              { value: 'lower', label: 'lowercase' },
+              { value: 'upper', label: 'UPPERCASE' },
+              { value: 'title', label: 'Title Case' },
+            ]}
+            className="w-40"
+          />
+          <span className="text-[11px] text-muted-foreground">Applies to values, not the header row.</span>
         </div>
         <div className="flex flex-wrap gap-4 text-xs text-muted-foreground">
           <label className="flex items-center gap-1.5 cursor-pointer select-none">
@@ -354,7 +391,16 @@ export const CsvCleanerTool: React.FC = () => {
           <label className="flex items-center gap-1.5 cursor-pointer select-none">
             <input type="checkbox" checked={normalizeEol} onChange={(e) => setNormalizeEol(e.target.checked)} className="rounded text-primary" /> Normalize line endings
           </label>
+          <label className="flex items-center gap-1.5 cursor-pointer select-none">
+            <input type="checkbox" checked={collapseSpaces} onChange={(e) => setCollapseSpaces(e.target.checked)} className="rounded text-primary" /> Collapse repeated spaces
+          </label>
+          <label className="flex items-center gap-1.5 cursor-pointer select-none">
+            <input type="checkbox" checked={excelBom} onChange={(e) => setExcelBom(e.target.checked)} className="rounded text-primary" /> Add UTF-8 BOM for Excel
+          </label>
         </div>
+        <p className="text-[11px] text-muted-foreground">
+          Quoting is rewritten consistently: a value is quoted only when it contains the delimiter, a quote or a line break.
+        </p>
       </div>
       {cleaned.rows.length > 0 && (
         <div className="space-y-2">
@@ -656,23 +702,38 @@ export const MergeCsvTool: React.FC = () => {
   const merge = async () => {
     if (files.length < 2) { setError('Add at least two CSV files to merge.'); return; }
     try {
-      let header: string[] | null = null;
-      const allRows: string[][] = [];
-      let warning: string | null = null;
+      // Columns are matched by header name, not position: a file whose columns
+      // are in another order, or that lacks or adds a column, still lines up.
+      // The output has every column seen, in first-seen order, blank where a
+      // file had no such column.
+      const header: string[] = [];
+      const index = new Map<string, number>();
+      const parsed: { name: string; head: string[]; body: string[][] }[] = [];
       for (const f of files) {
-        const text = await f.text();
-        const delim = delimiterFromFileName(f.name);
-        const rows = parseDelimited(text, delim);
+        const rows = parseDelimited(await f.text(), delimiterFromFileName(f.name));
         if (!rows.length) continue;
         const [h, ...body] = rows;
-        if (header === null) {
-          header = h;
-        } else if (h.join('|') !== header.join('|')) {
-          warning = `Headers differ across files (e.g. "${f.name}"). Rows were still merged using the first file's header order.`;
+        const head = h.map((c) => c.trim());
+        for (const name of head) {
+          if (!index.has(name)) { index.set(name, header.length); header.push(name); }
         }
-        allRows.push(...body);
+        parsed.push({ name: f.name, head, body });
       }
-      setMerged({ rows: [header ?? [], ...allRows], warning });
+      const allRows: string[][] = [];
+      const gaps: string[] = [];
+      for (const { name, head, body } of parsed) {
+        const missing = header.filter((c) => !head.includes(c));
+        if (missing.length) gaps.push(`"${name}" has no ${missing.map((c) => `"${c}"`).join(', ')}`);
+        for (const r of body) {
+          const out = new Array<string>(header.length).fill('');
+          head.forEach((c, i) => { out[index.get(c)!] = r[i] ?? ''; });
+          allRows.push(out);
+        }
+      }
+      const warning = gaps.length
+        ? `Columns differ between files, so they were matched by name and left blank where missing: ${gaps.join('; ')}. A column renamed between exports (customer_id and CustomerID) counts as two different columns.`
+        : null;
+      setMerged({ rows: [header, ...allRows], warning });
       setError(null);
     } catch (e) {
       setError(errorMessage(e, 'Could not merge these files.'));
@@ -696,7 +757,7 @@ export const MergeCsvTool: React.FC = () => {
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Layers className="w-4 h-4 text-primary" />
-            <p className="section-label">CSV files to merge (same header assumed)</p>
+            <p className="section-label">CSV files to merge (columns matched by name)</p>
           </div>
           <button onClick={() => inputRef.current?.click()} className="btn-secondary text-[11px] px-2.5 py-1">
             <Upload className="w-3.5 h-3.5" /> Add files

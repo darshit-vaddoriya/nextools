@@ -76,7 +76,7 @@ export const DOCS_POSTS: BlogPost[] = [
   {
     slug: 'comparing-two-documents',
     title: 'Finding what changed between two versions of a document',
-    description: 'Comparing documents, PDFs and plain text each work differently, and knowing which comparison you are running explains the false positives.',
+    description: 'How to find what changed between two versions of a Word file, a PDF or plain text, and why each comparison reports differences that are not really there.',
     excerpt: 'A comparison that reports the whole document changed usually means one paragraph moved and everything after it reflowed.',
     category: 'pdf',
     tags: ['compare', 'diff', 'versions', 'review'],

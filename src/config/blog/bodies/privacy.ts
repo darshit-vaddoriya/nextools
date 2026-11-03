@@ -63,7 +63,7 @@ If you are publishing a document anonymously or externally, check its properties
 
 ## Checking your own files
 
-The only way to know what a file contains is to look. NextTool's [image metadata viewer](/tool/image-metadata) shows every EXIF field in a photo, and the [PDF metadata tool](/tool/pdf-metadata) does the same for documents. Both read the file in your browser, which is the correct behaviour for a tool whose entire purpose is finding out whether a file contains something you did not want to share.
+The only way to know what a file contains is to look. NextTool's [metadata tool](/tool/image-metadata) reads a photo's EXIF block and shows the camera, the date taken, the exposure settings and any GPS location, with the location fields highlighted, and lists the other metadata blocks the file carries. The [PDF metadata tool](/tool/pdf-metadata) shows a document's title, author, subject, keywords and the software that made it. Both read the file in your browser, which is the correct behaviour for a tool whose entire purpose is finding out whether a file contains something you did not want to share.
 
 Take a photo with your phone right now and inspect it. Most people are surprised by how precise the coordinates are.`,
 };

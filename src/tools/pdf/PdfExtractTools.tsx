@@ -1,5 +1,5 @@
 import React, { useCallback, useRef, useState } from 'react';
-import { PDFDocument, StandardFonts } from 'pdf-lib';
+import { PDFDocument, StandardFonts, PDFName, PDFDict, PDFRawStream, PDFRef, PDFArray, PDFNumber } from 'pdf-lib';
 import {
   ImageIcon, Images, ScanText, Type, FileCog, FileText, FilePlus,
 } from 'lucide-react';
@@ -322,6 +322,62 @@ function imageObjectToCanvas(obj: PdfImageObject): HTMLCanvasElement | null {
   return canvas;
 }
 
+
+/**
+ * JPEG images in a PDF are stored as the JPEG file itself (the DCTDecode
+ * filter), so they can be handed back byte for byte rather than decoded and
+ * re-encoded. Returns, per page, the JPEGs that page draws first, plus their
+ * pixel sizes so the rendering pass can skip them.
+ */
+function jpegImagesByPage(pdf: PDFDocument): { bytes: Uint8Array; w: number; h: number }[][] {
+  const seen = new Set<string>();
+  const ctx = pdf.context;
+  const isDctOnly = (dict: PDFDict) => {
+    const f = dict.lookup(PDFName.of('Filter'));
+    if (f instanceof PDFName) return f === PDFName.of('DCTDecode');
+    // An array is a filter chain; only a lone DCTDecode is a plain JPEG.
+    return f instanceof PDFArray && f.size() === 1 && f.lookup(0) === PDFName.of('DCTDecode');
+  };
+  const num = (dict: PDFDict, key: string) => {
+    const v = dict.lookup(PDFName.of(key));
+    return v instanceof PDFNumber ? v.asNumber() : 0;
+  };
+  const walk = (resources: PDFDict | undefined, out: { bytes: Uint8Array; w: number; h: number }[], depth: number) => {
+    if (!resources || depth > 8) return;
+    const xobjects = resources.lookup(PDFName.of('XObject'));
+    if (!(xobjects instanceof PDFDict)) return;
+    for (const [, value] of xobjects.entries()) {
+      const ref = value instanceof PDFRef ? value : null;
+      const key = ref ? ref.toString() : '';
+      if (key && seen.has(key)) continue;
+      const stream = ref ? ctx.lookup(ref) : value;
+      if (!(stream instanceof PDFRawStream)) continue;
+      const subtype = stream.dict.lookup(PDFName.of('Subtype'));
+      if (subtype === PDFName.of('Form')) {
+        const inner = stream.dict.lookup(PDFName.of('Resources'));
+        walk(inner instanceof PDFDict ? inner : undefined, out, depth + 1);
+        continue;
+      }
+      if (subtype !== PDFName.of('Image')) continue;
+      if (key) seen.add(key);
+      // A /Decode array or a CMYK colour space means the PDF adjusts the
+      // JPEG's colours when drawing it; the raw file would show them wrong,
+      // so those go through the render pass instead.
+      const cs = stream.dict.lookup(PDFName.of('ColorSpace'));
+      const plainColour = !stream.dict.has(PDFName.of('Decode')) && cs !== PDFName.of('DeviceCMYK');
+      if (isDctOnly(stream.dict) && plainColour) {
+        out.push({ bytes: stream.getContents(), w: num(stream.dict, 'Width'), h: num(stream.dict, 'Height') });
+      }
+    }
+  };
+  return pdf.getPages().map((page) => {
+    const out: { bytes: Uint8Array; w: number; h: number }[] = [];
+    const res = page.node.Resources();
+    walk(res, out, 0);
+    return out;
+  });
+}
+
 export const ExtractImagesTool: React.FC = () => {
   const { file, pageCount, busy, error, load, reset } = usePdfSource(0);
   const [isBusy, setIsBusy] = useState(false);
@@ -353,11 +409,31 @@ export const ExtractImagesTool: React.FC = () => {
       await run(async (report) => {
         const pdfjs = await getPdfjs();
         const data = new Uint8Array(await file.arrayBuffer());
+        // JPEGs are copied out of the file untouched first; the render pass
+        // below only has to turn the other kinds (Flate, JBIG2, CCITT…) into PNG.
+        let jpegs: { bytes: Uint8Array; w: number; h: number }[][] = [];
+        try {
+          const pdfLib = await PDFDocument.load(data.slice(), { ignoreEncryption: true, updateMetadata: false });
+          jpegs = jpegImagesByPage(pdfLib);
+        } catch {
+          jpegs = [];
+        }
         const doc = await pdfjs.getDocument({ data }).promise;
         const seen = new Set<string>();
         const out: { blob: Blob; name: string }[] = [];
         let scanned = 0;
+        let originals = 0;
         for (let p = 1; p <= doc.numPages; p++) {
+          const pageJpegs = jpegs[p - 1] ?? [];
+          // Sizes of this page's JPEGs, so the decoded copies can be skipped.
+          const jpegSizes = new Map<string, number>();
+          for (const j of pageJpegs) {
+            scanned++;
+            originals++;
+            out.push({ blob: new Blob([j.bytes as BlobPart], { type: 'image/jpeg' }), name: `${baseName(file.name)}_p${p}_${scanned}.jpg` });
+            const k = `${j.w}x${j.h}`;
+            jpegSizes.set(k, (jpegSizes.get(k) ?? 0) + 1);
+          }
           report(Math.round((p / doc.numPages) * 85), `Scanning page ${p}/${doc.numPages}…`);
           const page = await doc.getPage(p);
           // Rendering is what makes the worker decode the page's image
@@ -385,6 +461,14 @@ export const ExtractImagesTool: React.FC = () => {
             if (!obj || !objId || seen.has(objId)) continue;
             seen.add(objId);
 
+            const sizeKey = `${obj.width}x${obj.height}`;
+            const left = jpegSizes.get(sizeKey) ?? 0;
+            if (left > 0 && fn !== OPS.paintInlineImageXObject) {
+              // Already exported above as the original JPEG.
+              jpegSizes.set(sizeKey, left - 1);
+              continue;
+            }
+
             const canvas = imageObjectToCanvas(obj);
             if (!canvas) continue;
 
@@ -396,7 +480,11 @@ export const ExtractImagesTool: React.FC = () => {
         report(100, 'Done');
         setResults(out);
         setHasRun(true);
-        setSummary(`${out.length} image${out.length === 1 ? '' : 's'} found`);
+        setSummary(
+          `${out.length} image${out.length === 1 ? '' : 's'} found`
+          + (originals ? `, ${originals} as the original JPEG${originals === 1 ? '' : 's'}` : '')
+          + (out.length - originals ? `, ${out.length - originals} decoded to PNG` : ''),
+        );
       });
     } catch (e) {
       setErr(errorMessage(e, 'Could not extract images.'));
@@ -408,7 +496,7 @@ export const ExtractImagesTool: React.FC = () => {
   return (
     <div className="space-y-4">
       {!file ? (
-        <PdfDropzone onFiles={handleFiles} label="Select a PDF to extract images from" hint="Finds and exports every embedded image as PNG" />
+        <PdfDropzone onFiles={handleFiles} label="Select a PDF to extract images from" hint="Exports every embedded image: JPEG photos as the original file, others as PNG" />
       ) : (
         <>
           <SourceFileBar file={file} pageCount={pageCount} onReset={reset} />
