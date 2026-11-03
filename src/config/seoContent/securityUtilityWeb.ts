@@ -207,7 +207,7 @@ export const SECURITY_UTILITY_WEB_SEO_CONTENT: ToolSeoMap = {
     ],
     faqs: [
       { question: 'Does it account for leap years correctly?', answer: 'Yes, the calculation correctly handles leap years when computing exact days and the year/month/day breakdown.' },
-      { question: 'Can I calculate age as of a specific date, not today?', answer: 'The tool calculates age up to today by default; adjust your "to" date if a specific reference date option is available.' },
+      { question: 'Can I calculate age as of a specific date, not today?', answer: 'Yes. Change the "Age as on" date to the cut-off the form gives, for example 1 January of the exam year, and the breakdown is worked out to that day.' },
       { question: 'Is the total-days figure useful for anything specific?', answer: 'It is commonly used for eligibility rules, milestone tracking, or just satisfying curiosity about exact lifespan in days.' },
     ],
     useCases: [

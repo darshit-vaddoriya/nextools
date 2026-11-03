@@ -302,35 +302,54 @@ export const TimestampConverterTool: React.FC = () => {
 /* Age Calculator                                                      */
 /* ------------------------------------------------------------------ */
 
+/** A yyyy-mm-dd input value as a local calendar date (new Date('2026-01-01') is UTC midnight). */
+const parseLocalDate = (v: string): Date | null => {
+  const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(v);
+  if (!m) return null;
+  const d = new Date(Number(m[1]), Number(m[2]) - 1, Number(m[3]));
+  return isNaN(d.getTime()) ? null : d;
+};
+
+const daysInMonth = (y: number, m: number) => new Date(y, m + 1, 0).getDate();
+
+/**
+ * Completed years, months and days from `birth` to `on`. A month is counted once
+ * the same day number comes round again; when the birth day does not exist in a
+ * month (31 Jan → February) that month's last day stands in for it. Days are
+ * then counted from that monthly anniversary, so they are never negative.
+ */
+export const ageBetween = (birth: Date, on: Date) => {
+  let totalMonths = (on.getFullYear() - birth.getFullYear()) * 12 + (on.getMonth() - birth.getMonth());
+  const anniversary = (n: number) => {
+    const y = birth.getFullYear() + Math.floor((birth.getMonth() + n) / 12);
+    const mo = (birth.getMonth() + n) % 12;
+    return new Date(y, mo, Math.min(birth.getDate(), daysInMonth(y, mo)));
+  };
+  if (anniversary(totalMonths) > on) totalMonths -= 1;
+  const last = anniversary(totalMonths);
+  // Calendar days, counted at noon so a daylight-saving change cannot shave one off.
+  const dayNum = (d: Date) => Math.round(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()) / 86_400_000);
+  return {
+    years: Math.floor(totalMonths / 12),
+    months: totalMonths % 12,
+    days: dayNum(on) - dayNum(last),
+    totalDays: dayNum(on) - dayNum(birth),
+  };
+};
+
 export const AgeCalculatorTool: React.FC = () => {
   const [birthDate, setBirthDate] = useState<string>('');
+  const today = toDatetimeLocalValue(new Date()).split('T')[0];
+  // Exam and job forms ask for age "as on" a cut-off date, not today.
+  const [onDate, setOnDate] = useState<string>(today);
 
   const age = useMemo(() => {
-    if (!birthDate) return null;
-    const birth = new Date(birthDate);
-    const now = new Date();
-    if (isNaN(birth.getTime()) || birth > now) return null;
-
-    let years = now.getFullYear() - birth.getFullYear();
-    let months = now.getMonth() - birth.getMonth();
-    let days = now.getDate() - birth.getDate();
-
-    if (days < 0) {
-      months -= 1;
-      const prevMonth = new Date(now.getFullYear(), now.getMonth(), 0);
-      days += prevMonth.getDate();
-    }
-    if (months < 0) {
-      years -= 1;
-      months += 12;
-    }
-
-    const totalMs = now.getTime() - birth.getTime();
-    const totalDays = Math.floor(totalMs / 86_400_000);
-    const totalHours = Math.floor(totalMs / 3_600_000);
-
-    return { years, months, days, totalDays, totalHours };
-  }, [birthDate]);
+    const birth = parseLocalDate(birthDate);
+    const on = parseLocalDate(onDate);
+    if (!birth || !on || birth > on) return null;
+    const a = ageBetween(birth, on);
+    return { ...a, weeks: Math.floor(a.totalDays / 7) };
+  }, [birthDate, onDate]);
 
   return (
     <div className="space-y-4">
@@ -342,10 +361,25 @@ export const AgeCalculatorTool: React.FC = () => {
         <input
           type="date"
           value={birthDate}
-          max={toDatetimeLocalValue(new Date()).split('T')[0]}
+          max={onDate || today}
           onChange={(e) => setBirthDate(e.target.value)}
+          aria-label="Date of birth"
           className="input-base font-mono"
         />
+        <p className="section-label pt-1">Age as on</p>
+        <div className="flex gap-2">
+          <input
+            type="date"
+            value={onDate}
+            onChange={(e) => setOnDate(e.target.value)}
+            aria-label="Age as on date"
+            className="input-base font-mono flex-1"
+          />
+          {onDate !== today && (
+            <button type="button" onClick={() => setOnDate(today)} className="btn-secondary text-xs px-3 shrink-0">Today</button>
+          )}
+        </div>
+        <p className="text-xs text-muted-foreground">Leave it on today, or set the cut-off date a form asks for, such as 1 January of the exam year.</p>
       </div>
 
       {age && (
@@ -363,12 +397,12 @@ export const AgeCalculatorTool: React.FC = () => {
             <p className="text-xs text-muted-foreground font-medium">Days</p>
           </div>
           <div className="bg-muted border border-border rounded-xl p-3.5 flex items-center justify-between sm:col-span-3">
-            <span className="text-sm text-muted-foreground font-medium">Total Days Lived</span>
+            <span className="text-sm text-muted-foreground font-medium">Total Days</span>
             <span className="font-mono font-bold text-foreground">{age.totalDays.toLocaleString()}</span>
           </div>
           <div className="bg-muted border border-border rounded-xl p-3.5 flex items-center justify-between sm:col-span-3">
-            <span className="text-sm text-muted-foreground font-medium">Total Hours Lived</span>
-            <span className="font-mono font-bold text-foreground">{age.totalHours.toLocaleString()}</span>
+            <span className="text-sm text-muted-foreground font-medium">Total Weeks</span>
+            <span className="font-mono font-bold text-foreground">{age.weeks.toLocaleString()}</span>
           </div>
         </div>
       )}

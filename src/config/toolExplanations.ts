@@ -275,7 +275,7 @@ export const TOOL_EXPLANATIONS: Record<string, string> = {
     'Converts a Unix timestamp (in seconds or milliseconds) into a human-readable date, or converts any date back into a timestamp. Includes a "now" button to grab the current timestamp.',
 
   'age-calculator':
-    'Calculates exact age in years, months and days (plus total days) from a birthdate to today. Enter a birthdate and the full breakdown appears.',
+    'Calculates exact age in years, months and days (plus total days) from a birthdate to today, or to a cut-off date such as the "age as on 1 January" that exam forms ask for.',
 
   'percentage-calc':
     'Handles the three most common percentage questions: what is X% of Y, what percent X is of Y, and the percentage change between two numbers. Pick a calculator, enter your numbers, and get the answer.',

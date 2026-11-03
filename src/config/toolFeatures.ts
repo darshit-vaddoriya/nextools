@@ -149,7 +149,7 @@ export const PLANNED_FEATURES: Record<string, string[]> = {
   'currency-converter':   ['170+ world currencies', 'Configurable exchange rate source', 'Amount and rate precision control', 'Offline-capable base rates'],
   'timezone-converter':   ['Convert between any two time zones', 'World clock comparison', 'DST-aware calculation', 'Copy formatted time'],
   'timestamp-converter':  ['Unix timestamp to readable date', 'Date back to timestamp', 'Milliseconds and seconds modes', 'Local and UTC display'],
-  'age-calculator':       ['Exact age in years, months and days', 'Total days, hours and minutes', 'Countdown to next birthday', 'Date-of-birth input presets'],
+  'age-calculator':       ['Exact age in years, months and days', 'Age as on any cut-off date', 'Total days and weeks', 'Handles 29 February and month-end birthdays'],
   'percentage-calc':      ['What percent of X is Y', 'Percentage increase and decrease', 'Reverse percentage problems', 'Copy answers'],
   'bmi-calculator':       ['Metric and imperial units', 'Instant BMI score', 'Category classification', 'Healthy weight range guidance'],
   'emi-calculator':       ['Monthly EMI for any loan', 'Principal and interest breakdown', 'Payment schedule table', 'Adjustable tenure and rate'],

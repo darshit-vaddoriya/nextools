@@ -198,4 +198,21 @@ export const DATA_POSTS: BlogPost[] = [
     ],
     words: 678,
   },
+  {
+    slug: 'age-as-on-a-cut-off-date',
+    title: 'Age "as on" a cut-off date: working it out for exam and job forms',
+    description: 'Exam and job notifications fix age on a set date, not today. How to work out completed years, months and days, and the cases that trip people up.',
+    excerpt: 'A notification says "age as on 1 January". Counting from today gives the wrong answer, and so does dividing days by 365.',
+    category: 'data',
+    tags: ['india', 'age', 'dates', 'exams', 'forms'],
+    published: '2026-11-03',
+    relatedTools: ['age-calculator', 'timestamp-converter', 'timezone-converter'],
+    takeaways: [
+      'Use the cut-off date printed in the notification, not today. Your age today can be a year more than your age on that date.',
+      'Age is completed years, months and days, counted on the calendar. Dividing a day count by 365 or 365.25 drifts around birthdays.',
+      'When your birth day does not exist in a month, as with the 31st or 29 February, the month\'s last day stands in for it.',
+      'If a notification gives a pair of birth dates instead of an age, check your date against those. That wording leaves nothing to interpret.',
+    ],
+    words: 780,
+  },
 ];
