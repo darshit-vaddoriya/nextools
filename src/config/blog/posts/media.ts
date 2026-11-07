@@ -73,4 +73,21 @@ export const MEDIA_POSTS: BlogPost[] = [
     ],
     words: 884,
   },
+  {
+    slug: 'converting-video-copy-or-re-encode',
+    title: 'Converting a video: when it is a copy, when it is a re-encode, and why some files refuse',
+    description: 'Why MOV to MP4 can take two seconds or two minutes: when a converter copies streams, when it must re-encode, and why HEVC, AVI and WMV files fail.',
+    excerpt: 'The same Convert button can finish instantly, run for minutes or refuse outright. Which one you get depends on whether the video needs rebuilding or only moving.',
+    category: 'image',
+    tags: ['video', 'conversion', 'mp4', 'mov', 'webm', 'codecs'],
+    published: '2026-11-08',
+    relatedTools: ['video-converter', 'mov-to-mp4', 'webm-to-mp4', 'video-compressor'],
+    takeaways: [
+      'Remuxing copies the compressed streams into a new container: no quality change, done in seconds. Transcoding rebuilds every frame and always costs a little quality.',
+      'MOV to MP4 is usually a copy, because both containers accept H.264, HEVC and AAC. MP4 to WebM is always a re-encode, because WebM does not accept H.264.',
+      'Resizing or lowering quality forces a re-encode. Do it once, from the original recording.',
+      'A browser can only convert what it can decode: HEVC needs Safari or hardware support, and AVI and WMV are not read at all.',
+    ],
+    words: 1286,
+  },
 ];

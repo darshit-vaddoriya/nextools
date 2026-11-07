@@ -285,4 +285,71 @@ These are accessibility requirements as much as style preferences: captions exis
 Transcription is the step worth thinking hardest about, because the output is a searchable text copy of everything that was said. If the recording is an internal meeting, a local transcription model is worth the extra setup: the alternative leaves a full transcript of that meeting sitting on someone else's server.
 
 The sidecar is the part that most often needs converting. HTML5 players and YouTube expect WebVTT, while video editors and desktop players expect SRT, and the two differ mainly in the header and the decimal separator in each timestamp. [SRT to VTT](/tool/srt-to-vtt) and [VTT to SRT](/tool/vtt-to-srt) convert between them in the browser, so the transcript stays on your machine.`,
+  'converting-video-copy-or-re-encode': `You drop a 400 MB MOV into a converter, pick MP4, and one of three things happens. It finishes in two seconds. It takes two minutes and the fans spin up. Or it refuses, with a message about a codec you have never heard of. The same button produced all three, and the difference comes down to one question the converter asks before it does anything: does the video inside this file need to be rebuilt, or only moved?
+
+## Two jobs that look like one
+
+A video file is a container holding separate streams, usually one video track and one audio track. "Converting" can mean either of two very different operations on those streams.
+
+**Remuxing** takes the compressed streams out of one container and writes them into another, untouched. The pictures are not decoded or encoded again. Nothing about the quality changes, because the bytes that describe each frame are copied as they are. It runs at the speed of reading and writing the file, which is why a large clip can finish in seconds.
+
+**Transcoding** decodes every frame back into raw pixels and compresses them again, possibly with a different codec, size or bit rate. It is the only way to change what the video actually is, and it is where both the time and the quality loss come from. A lossy codec throws away detail each time it encodes, so a transcode is always a small step down from the source, even at a high quality setting.
+
+A good converter remuxes whenever it can and transcodes only when it must. The [video converter](/tool/video-converter) here works that way: if the codecs in your file are already allowed in the format you picked and you have not asked for a smaller size or a lower quality, the streams are copied as they are.
+
+## When a copy is enough
+
+Each container accepts a particular set of codecs. MP4 and MOV both take H.264 and HEVC video with AAC audio. WebM takes only VP8, VP9 and AV1 video with Opus or Vorbis audio. MKV takes almost anything.
+
+That table decides most outcomes:
+
+| From | To | Typical result |
+|---|---|---|
+| MOV (H.264 + AAC) | MP4 | Copy, seconds, no quality change |
+| MP4 (H.264) | MKV | Copy |
+| MKV (H.264 + AAC) | MP4 | Copy |
+| MP4 (H.264) | WebM | Transcode: WebM does not allow H.264 |
+| WebM (VP9 + Opus) | MP4 | Transcode for compatibility (see below) |
+| Any | Any, at a smaller size | Transcode: changing the size means new frames |
+
+The MOV to MP4 row is the common one. Most iPhone and QuickTime recordings are H.264 or HEVC with AAC audio, and MP4 already allows those codecs, so [MOV to MP4](/tool/mov-to-mp4) is usually a rewrap rather than a conversion. If a site rejects your \`.mov\`, it is often rejecting the container name, not the video, and a copy fixes it without touching a frame.
+
+## When it has to be rebuilt
+
+Three things force a transcode.
+
+**The target container forbids the codec.** H.264 cannot live in WebM, so MP4 to WebM always means encoding new VP9 (or VP8, or AV1) video. The reverse is subtler: modern MP4 can technically hold VP9 and Opus, but plenty of players and upload forms only accept H.264 and AAC in an MP4. For an MP4 target the converter here tries H.264 first, then HEVC, VP9 and AV1, so the result plays in as many places as possible.
+
+**You changed the picture.** Lowering the resolution to 720p, or picking a lower quality to make the file smaller, means every frame has to be re-encoded. There is no way to resize compressed video without decoding it first.
+
+**The audio does not fit.** A WebM's Opus track has to become AAC for an MP4 that older players will accept. Audio re-encodes are cheap and fast, so this rarely costs much time, but it is still a lossy step.
+
+Because a transcode costs quality, do it once. Convert from the original recording, not from a file you already compressed for WhatsApp. Each pass encodes the previous pass's artefacts as if they were detail.
+
+## Why some files refuse
+
+A browser can only convert what it can decode. That limit produces most of the error messages people see.
+
+**HEVC (H.265).** Recent iPhones record in HEVC by default. Safari decodes it everywhere Apple ships it. Chrome and Edge decode it only where the operating system and graphics hardware provide a decoder. On a machine without one, the file opens but the video track cannot be read, so the converter cannot transcode it. A remux to MP4 or MKV can still work, because a remux never decodes the frames. When a decode fails partway, the converter here retries once with software decoding before giving up. If it still fails, the practical fixes are converting in Safari, or setting the iPhone to "Most Compatible" under Settings → Camera → Formats for future recordings.
+
+**AVI and WMV.** These older containers are not read here at all. They often hold codecs like DivX, MPEG-4 Part 2 or Windows Media Video that browsers have never decoded. A desktop tool such as HandBrake or FFmpeg is the honest answer for those.
+
+**No encoder for the target.** Converting needs an encoder as well as a decoder. Most browsers ship H.264 and VP9 encoders, often hardware-backed, but encoder support for AV1 or HEVC varies. If no allowed codec can be encoded, the conversion stops with a message rather than producing a broken file. If only the audio track cannot be encoded, the video can still finish without sound. Check the result before you delete the original.
+
+## Why it is fast without an upload
+
+Older browser converters shipped a WebAssembly build of FFmpeg, often 25 MB or more, and encoded on the CPU in software. That works, but a minute of 1080p can take several minutes.
+
+The converter here uses WebCodecs, the browser's own interface to the same video encoders and decoders your system uses for video calls and playback. On most laptops and phones those are hardware blocks on the graphics chip, so a transcode is often many times faster than real time. The code that does the work is about 200 KB, and the file itself never leaves the tab: it is read from your disk, processed in memory and handed back as a download. For a recording of a meeting, an interview or a family event, that is the difference between converting a file and giving a copy of it to a stranger's server.
+
+The trade-off is memory. The output is assembled in the tab before you download it, so a multi-gigabyte file on a phone with little free RAM can fail where a desktop would cope. Trim long recordings first, or convert them on a computer.
+
+## Choosing a target
+
+- **To send or upload anywhere:** MP4 with H.264 and AAC. It is the format almost every phone, browser, editor and upload form accepts.
+- **For a web page you control:** WebM with VP9 is smaller at the same quality. Offer MP4 as a fallback for older Safari.
+- **To keep every track as recorded:** MKV holds multiple audio tracks and subtitles and accepts almost any codec, but phones and social sites often reject it.
+- **For Apple editing apps:** MOV, which for H.264 content is effectively the same as MP4 with a different label.
+
+Whatever you choose, the quickest check is the time it took. A conversion that finished almost instantly copied your video untouched. One that took a while rebuilt it, and the settings you chose decided how much it changed.`,
 };
