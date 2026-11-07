@@ -213,10 +213,10 @@ export const Card: React.FC<{ title?: string; children: React.ReactNode; classNa
   ({ title, children, className = '' }) => (
     <div className={`rounded-2xl border border-border bg-card p-4 sm:p-5 space-y-4 shadow-card ${className}`}>
       {title && (
-        <h3 className="flex items-center gap-2 text-[13px] font-bold text-foreground">
+        <h2 className="flex items-center gap-2 text-[13px] font-bold text-foreground">
           <Sparkles className="w-4 h-4 text-primary" />
           {title}
-        </h3>
+        </h2>
       )}
       {children}
     </div>
