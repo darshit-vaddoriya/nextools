@@ -148,7 +148,7 @@ export const TOOL_EXPLANATIONS: Record<string, string> = {
     'Puts your signature on a PDF page. You can draw it with your mouse or finger, type your name in a handwriting-style font, or upload a signature image. Choose the page and position, then click Sign PDF to download the signed document.',
 
   'pdf-redact':
-    'Permanently blacks out words or sections that contain sensitive information, so the text underneath cannot be recovered. Enter keywords (comma separated) to black out matching text automatically, then download the redacted PDF.',
+    'Permanently blacks out the words you list, so the text underneath cannot be recovered. Enter keywords (comma separated), and every page with a match is rebuilt as an image with the boxes burned in, then download the redacted PDF.',
 
   'pdf-metadata':
     'Shows and lets you edit the hidden properties of a PDF, such as title, author, subject and keywords. Select your PDF to see its current metadata, change the fields you want, and click Save metadata to download a copy with the new properties.',

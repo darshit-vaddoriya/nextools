@@ -154,7 +154,7 @@ If all three come back clean, the content is gone.
 
 There is an obvious irony in uploading a document to a third-party server precisely because it contains material too sensitive to share. Redaction is the one operation where local processing is not a nice-to-have.
 
-NextTool's [PDF redaction tool](/tool/pdf-redact) removes the underlying content in your browser and never transmits the file; the [flatten](/tool/pdf-flatten) and [metadata](/tool/pdf-metadata) tools cover the other two steps. Whatever tool you use, run the copy-paste test on the result before it leaves your machine.`,
+NextTool's [PDF redaction tool](/tool/pdf-redact) takes the image route described above for every page with a match, in your browser, and never transmits the file; the [flatten](/tool/pdf-flatten) and [metadata](/tool/pdf-metadata) tools cover the other two steps. Whatever tool you use, run the copy-paste test on the result before it leaves your machine.`,
   'ocr-scanned-pdf-explained': `There are two completely different kinds of PDF, and telling them apart takes two seconds: try to select a sentence with your cursor. If the text highlights, the document contains real text. If nothing happens, you are looking at pictures of pages and no amount of "extract text" will help, you need OCR.
 
 ## What OCR is doing

@@ -31,7 +31,7 @@ export const TOOLS: Tool[] = [
   { id: 'pdf-fill-forms',    name: 'Fill PDF Forms',         description: 'Fill in interactive PDF form fields directly in your browser',                        category: 'pdf', icon: 'FormInput',     keywords: ['pdf','form','fill','fields'] },
   { id: 'pdf-flatten',       name: 'Flatten PDF',            description: 'Flatten form fields and annotations into the PDF page content',                       category: 'pdf', icon: 'Layers',        keywords: ['pdf','flatten','forms','annotations'] },
   { id: 'pdf-compare',       name: 'Compare PDFs',           description: 'Highlight differences between two PDF documents side by side',                        category: 'pdf', icon: 'GitCompare',    keywords: ['pdf','compare','diff','difference'] },
-  { id: 'pdf-redact',        name: 'Redact PDF',             description: 'Permanently black out sensitive text or regions in a PDF',                            category: 'pdf', icon: 'EyeOff',        keywords: ['pdf','redact','censor','hide','black'] },
+  { id: 'pdf-redact',        name: 'Redact PDF',             description: 'Permanently black out sensitive words and numbers in a PDF',                            category: 'pdf', icon: 'EyeOff',        keywords: ['pdf','redact','censor','hide','black'] },
   { id: 'pdf-metadata',      name: 'PDF Metadata Editor',    description: 'View and edit title, author, subject and keywords stored in a PDF',                   category: 'pdf', icon: 'Info',          keywords: ['pdf','metadata','title','author'] },
 
   // ─── WORD TOOLS (10) ────────────────────────────────────────────

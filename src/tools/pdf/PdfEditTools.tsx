@@ -527,7 +527,12 @@ export const PdfPageNumbersTool: React.FC = () => {
 };
 
 // ─── REDACT ─────────────────────────────────────────────────────
-interface RedactRect { page: number; x: number; y: number; width: number; height: number; }
+/** A matched run of text in PDF user space: bottom-left corner plus size. */
+interface RedactRect { x: number; y: number; width: number; height: number; }
+
+// Pages with matches are rebuilt as images at this resolution, so text-like
+// detail stays sharp while the text layer underneath is gone.
+const REDACT_DPI = 200;
 
 export const PdfRedactTool: React.FC = () => {
   const { file, pageCount, busy, error, load, reset } = usePdfSource(0);
@@ -548,31 +553,6 @@ export const PdfRedactTool: React.FC = () => {
     } else setErr('Please select a valid PDF file.');
   }, [load]);
 
-  const findMatches = useCallback(async (): Promise<RedactRect[]> => {
-    const pdfjs = await getPdfjs();
-    const data = new Uint8Array(await file!.arrayBuffer());
-    const doc = await pdfjs.getDocument({ data }).promise;
-    const words = keywords.split(',').map(k => k.trim().toLowerCase()).filter(Boolean);
-    const rects: RedactRect[] = [];
-    for (let p = 1; p <= doc.numPages; p++) {
-      const page = await doc.getPage(p);
-      const content = await page.getTextContent();
-      for (const item of content.items) {
-        const it = item as { str?: string; transform?: number[]; width?: number };
-        if (!it.str || !it.transform || it.transform.length < 6) continue;
-        const hay = it.str.toLowerCase();
-        if (words.some(w => w.length > 0 && hay.includes(w))) {
-          const x = it.transform[4];
-          const y = it.transform[5];
-          const height = Math.abs(it.transform[3]);
-          const width = it.width ?? it.str.length * height * 0.5;
-          rects.push({ page: p, x: x - 2, y, width: width + 4, height: height * 1.25 + 4 });
-        }
-      }
-    }
-    return rects;
-  }, [keywords, file]);
-
   const redact = async () => {
     if (!file) return;
     setIsBusy(true);
@@ -580,34 +560,108 @@ export const PdfRedactTool: React.FC = () => {
     try {
       await run(async (report) => {
         report(5, 'Scanning for text matches…');
-        const rects = await findMatches();
-        setMatchCount(rects.length);
-        if (rects.length === 0) {
-          setResult(null);
-          report(100, 'Done');
-          return;
-        }
-        report(30, 'Reading document…');
-        const doc = await loadLibDoc(file);
-        const pages = doc.getPages();
-        const byPage = new Map<number, RedactRect[]>();
-        for (const r of rects) {
-          const list = byPage.get(r.page) ?? [];
-          list.push(r);
-          byPage.set(r.page, list);
-        }
-        for (const [pageNum, list] of byPage) {
-          const page = pages[pageNum - 1];
-          for (const r of list) {
-            page.drawRectangle({ x: r.x, y: r.y - r.height, width: r.width, height: r.height, color: rgb(0, 0, 0) });
+        const words = keywords.split(',').map(k => k.trim().toLowerCase()).filter(Boolean);
+        const [pdfjs, { renderPageForExport }] = await Promise.all([getPdfjs(), import('../convert/engines/pdf')]);
+        const task = pdfjs.getDocument({ data: new Uint8Array(await file.arrayBuffer()) });
+        try {
+          const source = await task.promise;
+          const byPage = new Map<number, RedactRect[]>();
+          let total = 0;
+          for (let p = 1; p <= source.numPages; p++) {
+            const page = await source.getPage(p);
+            const content = await page.getTextContent();
+            const rects: RedactRect[] = [];
+            for (const item of content.items) {
+              const it = item as { str?: string; transform?: number[]; width?: number };
+              if (!it.str || !it.transform || it.transform.length < 6) continue;
+              const hay = it.str.toLowerCase();
+              // transform[5] is the baseline, so the box reaches below it for
+              // descenders and above it by the font size.
+              const size = Math.abs(it.transform[3]) || 10;
+              const width = it.width ?? it.str.length * size * 0.5;
+              // A text item is often a whole line, so each match is boxed on
+              // its own, placed by its share of the line's characters. The
+              // extra padding absorbs the error for proportional fonts.
+              const perChar = width / it.str.length;
+              for (const w of words) {
+                for (let at = hay.indexOf(w); at !== -1; at = hay.indexOf(w, at + w.length)) {
+                  rects.push({
+                    x: it.transform[4] + at * perChar - size * 0.3,
+                    y: it.transform[5] - size * 0.3 - 2,
+                    width: w.length * perChar + size * 0.6,
+                    height: size * 1.3 + 4,
+                  });
+                }
+              }
+            }
+            if (rects.length) {
+              byPage.set(p, rects);
+              total += rects.length;
+            }
+            page.cleanup();
           }
+          setMatchCount(total);
+          if (total === 0) {
+            setResult(null);
+            report(100, 'Done');
+            return;
+          }
+
+          // Drawing a box over text leaves the text in the file, where it can
+          // still be selected and copied. Each page with a match is replaced
+          // by a picture of itself with the boxes burned in. The output is a
+          // new document, because removing a page from the original would
+          // leave its old content stream behind as an unused object.
+          // Pages without matches are copied across untouched.
+          report(30, 'Reading document…');
+          const src = await loadLibDoc(file);
+          const doc = await PDFDocument.create();
+          let done = 0;
+          for (let p = 1; p <= source.numPages; p++) {
+            const rects = byPage.get(p);
+            if (!rects) {
+              const [copied] = await doc.copyPages(src, [p - 1]);
+              doc.addPage(copied);
+              continue;
+            }
+            report(30 + Math.round((done / byPage.size) * 55), `Redacting page ${p}…`);
+            const page = await source.getPage(p);
+            const scale = REDACT_DPI / 72;
+            const viewport = page.getViewport({ scale });
+            const rendered = await renderPageForExport(page, scale);
+            const flat = document.createElement('canvas');
+            flat.width = rendered.width;
+            flat.height = rendered.height;
+            const g = flat.getContext('2d')!;
+            g.fillStyle = '#ffffff';
+            g.fillRect(0, 0, flat.width, flat.height);
+            g.drawImage(rendered, 0, 0);
+            g.fillStyle = '#000000';
+            for (const r of rects) {
+              const [x1, y1] = viewport.convertToViewportPoint(r.x, r.y);
+              const [x2, y2] = viewport.convertToViewportPoint(r.x + r.width, r.y + r.height);
+              g.fillRect(Math.min(x1, x2), Math.min(y1, y2), Math.abs(x2 - x1), Math.abs(y2 - y1));
+            }
+            const png = await new Promise<Blob>((resolve, reject) =>
+              flat.toBlob(b => (b ? resolve(b) : reject(new Error('Could not encode a page.'))), 'image/png'));
+            const image = await doc.embedPng(await png.arrayBuffer());
+            // The page keeps its displayed size and orientation in points.
+            const { width, height } = page.getViewport({ scale: 1 });
+            doc.addPage([width, height]).drawImage(image, { x: 0, y: 0, width, height });
+            rendered.width = 0;
+            flat.width = 0;
+            page.cleanup();
+            done++;
+          }
+          report(88, 'Saving PDF…');
+          const bytes = await doc.save();
+          const buf = bytes.buffer.slice(bytes.byteOffset, bytes.byteOffset + bytes.byteLength) as ArrayBuffer;
+          const blob = new Blob([buf], { type: 'application/pdf' });
+          setResult({ blob, name: `${baseName(file.name)}_redacted.pdf` });
+          report(100, 'Done');
+        } finally {
+          await task.destroy();
         }
-        report(85, 'Saving PDF…');
-        const bytes = await doc.save();
-        const buf = bytes.buffer.slice(bytes.byteOffset, bytes.byteOffset + bytes.byteLength) as ArrayBuffer;
-        const blob = new Blob([buf], { type: 'application/pdf' });
-        setResult({ blob, name: `${baseName(file.name)}_redacted.pdf` });
-        report(100, 'Done');
       });
     } catch (e) {
       setErr(errorMessage(e, 'Redaction failed.'));
@@ -639,8 +693,9 @@ export const PdfRedactTool: React.FC = () => {
                 </p>
               )}
               <p className="text-[11px]  text-muted-foreground leading-relaxed">
-                Matching words are permanently covered with black boxes. Redaction is destructive and
-                cannot be undone, so keep a backup of the original file.
+                Matching words are covered with black boxes and their text is removed. Pages with a match
+                are rebuilt as images, so their other text can no longer be selected or searched. Scanned
+                pages have no text layer to match. Keep a backup of the original file.
               </p>
               <ActionButton onClick={redact} busy={isBusy} busyLabel="Redacting…" disabled={pageCount === 0}>
                 <EyeOff className="w-4 h-4" /> Redact & Save PDF

@@ -619,30 +619,30 @@ export const PDF_SEO_CONTENT: ToolSeoMap = {
   },
   'pdf-redact': {
     intro:
-      'Redact PDF permanently blacks out sensitive text or regions, such as social security numbers, account details, or confidential clauses, before sharing a document externally. HR teams removing personal identifiers from records and legal teams preparing court filings for public release both depend on proper redaction rather than a cosmetic highlight that can be reversed. Redaction is applied to the page content locally in your browser, so the unredacted original never leaves your device during the process.',
+      'Redact PDF finds the words and numbers you list, such as names, account details or confidential terms, and blacks them out before you share a document externally. HR teams removing personal identifiers from records and legal teams preparing filings for release both need redaction that cannot be reversed, not a cosmetic box. Every page with a match is rebuilt as an image with the black boxes burned in, so the hidden text is gone from the file rather than sitting under a rectangle. It all happens locally in your browser, so the unredacted original never leaves your device.',
     steps: [
       { title: 'Upload your PDF', description: 'Select the PDF file that contains sensitive information to hide.' },
-      { title: 'Draw redaction boxes', description: 'Click and drag over the text or regions you want permanently blacked out.' },
-      { title: 'Apply the redactions', description: 'Confirm the selected areas to permanently remove the underlying content.' },
-      { title: 'Download the redacted PDF', description: 'Save the finished document with sensitive areas irreversibly blacked out.' },
+      { title: 'List what to hide', description: 'Type the words, names or numbers to redact, separated by commas.' },
+      { title: 'Redact and save', description: 'Every match is blacked out and the pages that contained one are rebuilt without their text layer.' },
+      { title: 'Check and download', description: 'Download the redacted PDF, then try selecting and searching the hidden terms to confirm they are gone.' },
     ],
     faqs: [
-      { question: 'Is redacted text truly removed, or just covered visually?', answer: 'A proper redaction removes the underlying text content from that area rather than just drawing a black box over it, preventing copy-paste recovery.' },
-      { question: 'Can I redact multiple areas across several pages at once?', answer: 'Yes, you can draw as many redaction boxes as needed across any pages before applying them all together.' },
-      { question: 'Will redacted content still be visible if someone copies the text?', answer: 'No, properly applied redaction removes the underlying text so it cannot be selected or copied from the redacted area.' },
-      { question: 'Can I undo a redaction after applying it?', answer: 'Once applied and downloaded, the redaction is permanent on that file; keep your original unredacted copy separately if you need to make changes later.' },
-      { question: 'Does redaction work on scanned image-based PDFs?', answer: 'Yes, you can black out any visual area on a scanned page, though there is no separate text layer to remove in that case.' },
+      { question: 'Is redacted text truly removed, or just covered visually?', answer: 'It is removed. Each page with a match is turned into an image with the black boxes drawn into it, so the original text on that page is no longer in the file and cannot be copied or extracted.' },
+      { question: 'Can I redact several terms across many pages at once?', answer: 'Yes. Enter as many comma-separated terms as you need. Every match on every page is redacted in one pass, and matching is not case sensitive.' },
+      { question: 'Will the rest of a redacted page still be selectable?', answer: 'No. Because the whole page is rebuilt as an image, its other text can no longer be selected or searched either. Pages without a match keep their normal text.' },
+      { question: 'Can I undo a redaction after applying it?', answer: 'No, the downloaded file is permanently redacted. Keep your original unredacted copy separately if you might need to change it later.' },
+      { question: 'Does redaction work on scanned image-based PDFs?', answer: 'Not automatically. A scanned page is a picture with no text layer, so there is nothing for a keyword search to match. Run the scan through OCR first, or black out the area in an image editor.' },
     ],
     useCases: [
       'Removing social security numbers or account details before sharing a record externally',
-      'Preparing a court filing for public release with confidential clauses hidden',
+      'Preparing a filing for public release with names of private individuals hidden',
       'Blacking out personal identifiers from HR records before archiving',
       'Hiding pricing or proprietary terms in a contract shared with a third party',
     ],
     tips: [
       'Always keep an unredacted original copy separately, since redaction is permanent once applied and downloaded.',
-      'Verify a proper redaction removes the underlying text, not just draws a black box, especially before sending sensitive documents externally.',
-      'Draw boxes generously over sensitive areas rather than tightly, to avoid leaving a sliver of visible text at the edges.',
+      'Search for each variant of a term: a full name, a surname alone, and an account number with and without spaces.',
+      'After downloading, select all text and paste it into a plain text editor to confirm nothing sensitive is left.',
     ],
   },
   'pdf-metadata': {
