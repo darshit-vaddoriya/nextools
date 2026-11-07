@@ -13,13 +13,13 @@ import { FURTHER_READING } from './furtherReading';
 export * from './types';
 
 /**
- * The day this build was made (UTC, YYYY-MM-DD). Vite replaces the constant in
+ * The day this build was made (IST, YYYY-MM-DD). Vite replaces the constant in
  * the bundle; astro.config.ts imports this module before any define applies,
  * so there it falls back to the clock, which is the same build.
  */
 const BUILD_DATE: string = typeof __BUILD_DATE__ !== 'undefined'
   ? __BUILD_DATE__
-  : new Date().toISOString().slice(0, 10);
+  : new Date().toLocaleDateString('en-CA', { timeZone: 'Asia/Kolkata' });
 
 /**
  * All published posts, newest first. A post whose `published` date is still in
