@@ -1,7 +1,7 @@
 import { TOOLS } from '../config/tools';
 import { ToolCategory } from '../types';
 import { TOOL_SEO_CONTENT } from '../config/seoContent';
-import { StaticPageId, getStaticPage, getStaticPageByPath } from '../config/pages';
+import { StaticPageId, getStaticPage, getStaticPageByPath, OPERATOR_NAME, OPERATOR_YOUTUBE } from '../config/pages';
 import {
   BLOG_POSTS, getPost, BLOG_CATEGORY_LABELS, BLOG_CATEGORY_META,
   BlogCategory, isBlogCategory, postsInCategory, readingMinutes,
@@ -602,7 +602,7 @@ export function updateBlogPostMeta(slug: string) {
     ...(post.furtherReading?.length
       ? { citation: post.furtherReading.map(ref => ({ '@type': 'CreativeWork', name: ref.title, url: ref.url, publisher: ref.publisher })) }
       : {}),
-    author: { '@type': 'Organization', name: 'NextTool', url: `${SITE}/` },
+    author: { '@type': 'Person', name: OPERATOR_NAME, url: `${SITE}/about`, sameAs: [OPERATOR_YOUTUBE] },
     publisher: {
       '@type': 'Organization',
       name: 'NextTool',

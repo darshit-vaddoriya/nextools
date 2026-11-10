@@ -16,7 +16,7 @@
 - [Text to PDF](https://nexttool.click/tool/text-to-pdf): Convert plain text content into a formatted PDF document
 - [PDF OCR](https://nexttool.click/tool/pdf-ocr): Extract text from scanned or image-based PDFs using OCR technology in browser
 - [Extract Text from PDF](https://nexttool.click/tool/pdf-extract-text): Pull all text content out of any PDF file and copy or download as TXT
-- [Extract Images from PDF](https://nexttool.click/tool/pdf-extract-images): Extract all embedded images from a PDF and download them individually
+- [Extract Images from PDF](https://nexttool.click/tool/pdf-extract-images): Pull every embedded image out of a PDF, JPEG photos as the original files
 - [Rotate PDF](https://nexttool.click/tool/pdf-rotate): Rotate all or selected PDF pages by 90, 180 or 270 degrees
 - [Reorder PDF Pages](https://nexttool.click/tool/pdf-reorder): Drag and drop PDF pages into any order and save the rearranged document
 - [Delete PDF Pages](https://nexttool.click/tool/pdf-delete-pages): Remove specific pages from a PDF document quickly in browser
@@ -28,7 +28,7 @@
 - [Fill PDF Forms](https://nexttool.click/tool/pdf-fill-forms): Fill in interactive PDF form fields directly in your browser
 - [Flatten PDF](https://nexttool.click/tool/pdf-flatten): Flatten form fields and annotations into the PDF page content
 - [Compare PDFs](https://nexttool.click/tool/pdf-compare): Highlight differences between two PDF documents side by side
-- [Redact PDF](https://nexttool.click/tool/pdf-redact): Permanently black out sensitive text or regions in a PDF
+- [Redact PDF](https://nexttool.click/tool/pdf-redact): Permanently black out sensitive words and numbers in a PDF
 - [PDF Metadata Editor](https://nexttool.click/tool/pdf-metadata): View and edit title, author, subject and keywords stored in a PDF
 
 ## word tools
@@ -46,13 +46,13 @@
 
 - [CSV Viewer](https://nexttool.click/tool/csv-viewer): View and browse CSV files in a clean table layout in browser
 - [CSV Editor](https://nexttool.click/tool/csv-editor): Edit CSV data in an interactive spreadsheet-style table editor
-- [CSV Cleaner](https://nexttool.click/tool/csv-cleaner): Remove extra spaces, fix encodings, and sanitize CSV data automatically
+- [CSV Cleaner](https://nexttool.click/tool/csv-cleaner): Trim spaces, drop empty rows, fix text case, change the delimiter and rewrite quoting
 - [CSV to JSON](https://nexttool.click/tool/csv-to-json): Convert CSV files to JSON arrays with configurable key mapping
 - [JSON to CSV](https://nexttool.click/tool/json-to-csv): Flatten JSON arrays into CSV rows with automatic header detection
 - [TSV Converter](https://nexttool.click/tool/tsv-converter): Convert between TSV (tab-separated) and CSV or JSON formats
 - [Delimiter Converter](https://nexttool.click/tool/delimiter-converter): Change the delimiter of any delimited text file, comma, tab, pipe, semicolon
 - [Remove Duplicate Rows](https://nexttool.click/tool/remove-duplicates): Detect and delete duplicate rows in any CSV or XLSX file
-- [Merge CSV Files](https://nexttool.click/tool/merge-csv): Merge multiple CSV files by appending rows or joining on a key column
+- [Merge CSV Files](https://nexttool.click/tool/merge-csv): Stack several CSV files into one, matching columns by header name
 
 ## image tools
 
@@ -73,7 +73,7 @@
 - [Watermark Image](https://nexttool.click/tool/image-watermark): Add a text watermark to images, in a corner, the centre or tiled across
 - [Image Editor](https://nexttool.click/tool/image-editor): Full in-browser image editor: crop, resize, rotate, flip, adjust colors, blur, annotate and export
 - [Drawing Board](https://nexttool.click/tool/drawing): Full-screen drawing app: sketch on a blank canvas or over a photo with brushes, shapes, text and layers
-- [Remove Metadata](https://nexttool.click/tool/image-metadata): Strip EXIF and other metadata from images for privacy
+- [Remove Metadata](https://nexttool.click/tool/image-metadata): See the camera, date and GPS location in a photo, then strip that metadata
 - [Batch Resize](https://nexttool.click/tool/batch-resize): Resize hundreds of images at once to the same dimensions
 - [QR Code Generator](https://nexttool.click/tool/qr-generator): Generate QR codes for links, Wi-Fi, contact cards and UPI payments
 
@@ -150,7 +150,7 @@
 - [Lorem Ipsum Generator](https://nexttool.click/tool/lorem-ipsum): Generate placeholder Lorem Ipsum text by paragraphs, sentences or words
 - [Slug Generator](https://nexttool.click/tool/slug-generator): Convert any text to a URL-friendly slug with customizable separators
 - [Text Cleaner](https://nexttool.click/tool/text-cleaner): Remove extra whitespace, special characters, HTML tags and fix encoding issues
-- [Find & Replace](https://nexttool.click/tool/find-replace): Find and replace text with plain string or regex patterns across a document
+- [Find & Replace](https://nexttool.click/tool/find-replace): Find and replace text by plain string, whole word or regex, with a live match count
 - [Remove Empty Lines](https://nexttool.click/tool/remove-empty-lines): Strip all blank or empty lines from a block of text
 - [Extract Emails](https://nexttool.click/tool/extract-emails): Pull all email addresses from any block of text using regex
 - [Extract URLs](https://nexttool.click/tool/extract-urls): Extract all URLs and hyperlinks from a text block or HTML source
@@ -200,10 +200,10 @@
 - [Unit Converter](https://nexttool.click/tool/unit-converter): Convert between length, weight, temperature, area, volume, speed and more
 - [Time Zone Converter](https://nexttool.click/tool/timezone-converter): Convert times between any two time zones and see world clock
 - [Timestamp Converter](https://nexttool.click/tool/timestamp-converter): Convert Unix timestamps to human-readable dates and back
-- [Age Calculator](https://nexttool.click/tool/age-calculator): Calculate exact age in years, months, days and hours from a birthdate
+- [Age Calculator](https://nexttool.click/tool/age-calculator): Exact age in years, months and days, today or as on a cut-off date
 - [Percentage Calculator](https://nexttool.click/tool/percentage-calc): Calculate percentages, percentage change, and reverse percentage problems
 - [BMI Calculator](https://nexttool.click/tool/bmi-calculator): Calculate Body Mass Index with metric and imperial unit support
-- [EMI Calculator](https://nexttool.click/tool/emi-calculator): Calculate monthly EMI for loans with breakdown of principal and interest
+- [EMI Calculator](https://nexttool.click/tool/emi-calculator): Monthly EMI, total interest and a year-by-year or month-by-month repayment schedule
 - [GST Calculator](https://nexttool.click/tool/gst-calculator): Calculate GST inclusive/exclusive amounts and breakdown by tax slab
 - [Number to Words](https://nexttool.click/tool/number-to-words): Write any amount in words, in lakh and crore or millions, with rupees and paise
 
@@ -218,6 +218,20 @@
 
 ## Guides
 
+- [Converting a video: when it is a copy, when it is a re-encode, and why some files refuse](https://nexttool.click/blog/converting-video-copy-or-re-encode): Why MOV to MP4 can take two seconds or two minutes: when a converter copies streams, when it must re-encode, and why HEVC, AVI and WMV files fail.
+- [Hindi text in files: boxes, question marks and broken copy-paste](https://nexttool.click/blog/hindi-text-in-files-and-pdfs): Why Hindi turns into boxes, question marks or gibberish in PDFs and documents, Unicode versus old Hindi fonts, and getting text out of a scan.
+- [Getting a photo or signature under an online form's size limit](https://nexttool.click/blog/photo-and-signature-size-for-online-forms): Online application forms ask for a photo under 50 KB at exact pixel sizes. What KB, pixels and DPI each mean, and the order of steps that gets a file accepted.
+- [What a file conversion keeps and what it throws away: we tested it](https://nexttool.click/blog/what-a-file-conversion-keeps-and-loses): We ran photos, a logo, a spreadsheet, a font and an archive through the converter and measured what came back. What survives, what does not.
+- [Lakh, crore and million: writing amounts in words correctly](https://nexttool.click/blog/lakh-crore-and-amounts-in-words): How the Indian numbering system groups digits, how to convert lakh and crore to millions and back, and how to write an amount in words on a cheque or invoice.
+- [UPI QR codes: what is inside one, and how to make your own safely](https://nexttool.click/blog/upi-qr-codes-explained): What a UPI QR code actually contains, how to make one for a shop or a home business, and the one rule that stops the most common UPI scam.
+- [E-books without the confusion: EPUB, PDF, Kindle and Markdown](https://nexttool.click/blog/ebooks-epub-pdf-and-markdown): Why an EPUB reflows and a PDF does not, which format each reader app wants, how to read an EPUB as a PDF, and how to turn your own writing into an e-book.
+- [Getting a spreadsheet into a database without an import wizard](https://nexttool.click/blog/loading-a-spreadsheet-into-a-database): When a SQL script beats your database's import tool, how column types get chosen, and the leading-zero, NULL and date problems to check before you run it.
+- [Generating TypeScript types from JSON, and where they go wrong](https://nexttool.click/blog/json-to-typescript-types-from-a-sample): Turning an API response into TypeScript interfaces, Zod schemas, Go structs or Python dataclasses, and five places a type from one sample misleads you.
+- [RAR, 7z and TAR.GZ: archives your computer will not open](https://nexttool.click/blog/rar-7z-and-tar-archives-explained): Why some archives open with a double-click and others need extra software, how RAR, 7z and TAR differ from ZIP, and how to turn any of them into a ZIP.
+- [Turning a PDF or a folder of photos into a PowerPoint deck](https://nexttool.click/blog/turning-a-pdf-or-photos-into-slides): How to present a PDF from PowerPoint or Google Slides, build a photo slideshow in a minute, and why each slide becomes an image rather than editable text.
+- [Sending a spreadsheet to someone who does not have Excel](https://nexttool.click/blog/sending-a-spreadsheet-without-excel): XLSX, CSV or PDF? What each one keeps and loses, which the recipient can actually open, and how to convert between them without breaking dates.
+- [Opening a PSD or AI file when you do not have Adobe software](https://nexttool.click/blog/opening-psd-and-ai-files-without-adobe): A designer sent a .psd or .ai file and you only need to view or use it. How to get a PNG out of a PSD, and usually a PDF out of an AI file, without Adobe.
+- [Camera RAW files, and the JPG hidden inside every one](https://nexttool.click/blog/camera-raw-files-and-the-hidden-jpg): Every RAW file carries a full-size JPG made by the camera. How to get it out of DNG, NEF, CR2 or ARW without Lightroom, and when you need a RAW editor.
 - [iPhone photos in HEIC: opening, sharing and converting them](https://nexttool.click/blog/iphone-heic-photos-explained): Why your iPhone saves photos as .heic, why Windows and some websites will not open them, and the three ways to get a JPG instead.
 - [Making a GIF that is not 40 megabytes](https://nexttool.click/blog/making-a-gif-worth-sending): GIF is a 1987 format with 256 colours and no real compression for photos. Knowing what it is bad at is how you get a small, clean loop.
 - [Reading text off an image: what OCR gets right and where it fails](https://nexttool.click/blog/reading-text-off-an-image): OCR turns pixels into characters, and its accuracy is decided before it runs: by resolution, contrast and whether the page is straight.
@@ -238,7 +252,7 @@
 - [Opening a DOCX without Word, and what is hiding inside it](https://nexttool.click/blog/open-a-docx-without-word): A .docx is a zip file full of XML. That explains how any browser can read one, and why documents leak author names and edit history.
 - [Writing in Markdown and generating the Word file later](https://nexttool.click/blog/markdown-as-a-document-source): Keeping the source as Markdown and producing DOCX or HTML on demand solves versioning, diffing and consistency problems that Word cannot.
 - [Word styles: why formatting by hand costs you later](https://nexttool.click/blog/word-styles-and-templates): Direct formatting and styles look identical and behave completely differently. One converts, exports and restyles; the other does not.
-- [Finding what changed between two versions of a document](https://nexttool.click/blog/comparing-two-documents): Comparing documents, PDFs and plain text each work differently, and knowing which comparison you are running explains the false positives.
+- [Finding what changed between two versions of a document](https://nexttool.click/blog/comparing-two-documents): How to find what changed between two versions of a Word file, a PDF or plain text, and why each comparison reports differences that are not really there.
 - [Favicons: the sizes that still matter and the ones that do not](https://nexttool.click/blog/favicon-sizes-and-formats): Browsers, phones and search results all want a different icon. Here is the short list that actually covers them without shipping fourteen files.
 - [Watermarks and annotations: drawing on top of an image](https://nexttool.click/blog/putting-things-on-top-of-images): A watermark and an annotation both put something on top of a picture. What each is good for, and the mistakes that make them useless.
 - [Rotate, flip and sharpen: the small fixes, and which ones cost quality](https://nexttool.click/blog/rotate-flip-and-sharpen): Three corrections that look equally trivial. One is free, one is free, and one permanently alters your image and cannot be undone.
@@ -257,14 +271,14 @@
 - [What you are actually sharing when you paste a link](https://nexttool.click/blog/cleaning-a-url-before-sharing): Most shared links carry tracking parameters, and some carry a session token. Both survive being forwarded.
 - [Signing a PDF: what a signature image proves, and what it does not](https://nexttool.click/blog/signing-a-pdf-what-it-proves): Pasting a picture of your signature onto a PDF and applying a digital signature are unrelated operations. One is a drawing; the other is cryptography.
 - [Generating a random string that is actually random](https://nexttool.click/blog/random-strings-and-tokens): Math.random is not a source of secrets. The difference between a pseudo-random generator and a cryptographic one decides whether a token is guessable.
-- [Why zipping your photos saves nothing, and what to do instead](https://nexttool.click/blog/what-actually-compresses-in-a-zip): ZIP finds repetition. JPEGs have none left, which is why a folder of 200 photos zips to 199 MB. Here is what zipping is actually for.
+- [Why zipping your photos saves nothing, and what to do instead](https://nexttool.click/blog/what-actually-compresses-in-a-zip): No to both. ZIP is lossless, so photos come out identical, and JPEGs are already compressed, so zipping a folder of photos barely shrinks it. What ZIP is for.
 - [Unix timestamps, UTC and the off-by-one-hour bug](https://nexttool.click/blog/timestamps-time-zones-and-the-missing-hour): A timestamp is a count of seconds with no time zone in it. Almost every date bug comes from adding a zone too early or too late.
 - [EMI, GST and percentages: the formulas the calculators are running](https://nexttool.click/blog/the-maths-behind-the-calculators): Loan instalments, tax-inclusive prices and percentage change all have one formula each. Knowing them tells you when an answer is wrong.
 - [How PDF compression actually works (and why some files refuse to shrink)](https://nexttool.click/blog/how-pdf-compression-actually-works): A PDF is a bundle of streams, fonts and images. Knowing which part is heavy tells you whether compression will help or waste your time.
 - [Merging PDFs: what gets preserved, what quietly breaks](https://nexttool.click/blog/merge-pdf-files-without-uploading): Combining PDFs is not just stapling pages. Forms, bookmarks, links and page sizes each behave differently, here is what survives a merge.
 - [How to redact a PDF properly (a black rectangle is not redaction)](https://nexttool.click/blog/how-to-redact-a-pdf-properly): Drawing a black box over text leaves the text underneath, fully copyable. Here is what real redaction removes and how to verify it worked.
 - [OCR on scanned PDFs: what it can read, what it cannot, and why DPI matters](https://nexttool.click/blog/ocr-scanned-pdf-explained): Optical character recognition turns page images into searchable text. Scan quality, resolution and layout decide whether you get 99% accuracy or gibberish.
-- [Getting a PDF under a strict upload limit, without destroying it](https://nexttool.click/blog/reduce-pdf-file-size-for-upload-limits): Government portals want 1 MB, email wants 25 MB, and your scan is 48 MB. A decision order that gets you under the limit with the least damage.
+- [Getting a PDF under a strict upload limit, without destroying it](https://nexttool.click/blog/reduce-pdf-file-size-for-upload-limits): A portal wants 1 MB and your scan is 48 MB. The order to try things in, from dropping pages to compressing images, with the least damage to the file.
 - [JPEG, PNG, WebP or AVIF: picking the right image format](https://nexttool.click/blog/jpeg-png-webp-avif-which-format): Four formats, four different jobs. A practical comparison of compression, transparency, browser support and when each one is the wrong choice.
 - [How image compression works: lossy, lossless, and the quality slider](https://nexttool.click/blog/how-image-compression-works): What the quality slider actually changes, why 80 is usually the sweet spot, and why re-saving the same image twice makes it worse.
 - [Resize or compress? The difference that decides your file size](https://nexttool.click/blog/resize-vs-compress-images): Resizing changes pixel dimensions, compressing changes how those pixels are stored. Reaching for the wrong one is why images end up blurry and still too big.

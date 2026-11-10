@@ -78,5 +78,9 @@ export const getStaticPageByPath = (path: string): StaticPageMeta | undefined =>
 /** Contact address published on the site, must match the AdSense account owner. */
 export const CONTACT_EMAIL = 'dk.coder7250@gmail.com';
 
+/** Who runs the site, as named on the About page and in the guides' author markup. */
+export const OPERATOR_NAME = 'DK Coder';
+export const OPERATOR_YOUTUBE = 'https://www.youtube.com/channel/UCtQW-FcIiB7DCiFBCjV0G7Q';
+
 /** Human-readable date shown at the bottom of every policy page. */
 export const POLICY_LAST_UPDATED = 'November 8, 2026';

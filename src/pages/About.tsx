@@ -1,7 +1,7 @@
 import React from 'react';
 import { Info, Cpu, Lock, Infinity as InfinityIcon, Mail } from 'lucide-react';
 import { PageLayout, PageProse, PageSection, PageList, PageHighlights } from './PageLayout';
-import { CONTACT_EMAIL } from '../config/pages';
+import { CONTACT_EMAIL, OPERATOR_YOUTUBE } from '../config/pages';
 import { workingToolCount } from '../utils/toolStats';
 import { TOOLS } from '../config/tools';
 import { ALL_CATEGORIES } from '../config/categories';
@@ -87,8 +87,17 @@ export const About: React.FC<AboutProps> = ({ onBack, onOpenContact }) => {
 
         <PageSection title="Who runs it">
           <p>
-            NextTool is an independent project, built and maintained in India. It is not
-            affiliated with, endorsed by or sponsored by Adobe, Google, Microsoft, iLovePDF,
+            NextTool is an independent project, built and maintained in India by DK Coder. You
+            can also find the developer on the{' '}
+            <a
+              href={OPERATOR_YOUTUBE}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-primary underline underline-offset-2 hover:brightness-110"
+            >
+              DK Coder YouTube channel
+            </a>
+            . It is not affiliated with, endorsed by or sponsored by Adobe, Google, Microsoft, iLovePDF,
             SmallPDF or any other company whose file formats or products are mentioned on this
             site.
           </p>
