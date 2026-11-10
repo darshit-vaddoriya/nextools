@@ -76,7 +76,7 @@ Most "free" tool sites upload your files to a server. NextTool is different:
 | Styling | Tailwind CSS 3 (dark/light modes) |
 | PDF | pdf-lib, pdfjs-dist |
 | OCR | tesseract.js |
-| AI (background removal) | @imgly/background-removal, ONNX Runtime WebGPU/WASM |
+| AI (background removal) | ONNX Runtime Web (WebGPU/WASM) with BiRefNet lite (MIT) and IS-Net (Apache-2.0) |
 | Icons | lucide-react |
 | QR codes | qrcode |
 | Hosting | Netlify (static, with SPA redirects + security headers) |

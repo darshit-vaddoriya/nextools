@@ -53,8 +53,8 @@ export const PrivacyPolicy: React.FC<PrivacyPolicyProps> = ({ onBack, onOpenCook
           </p>
           <p>
             Some tools need a library or model that is too large to ship with every page. The AI
-            Background Remover downloads its model from IMG.LY's content delivery network
-            (staticimgly.com), and the OCR tools download their recognition engine and language
+            Background Remover downloads its model from Hugging Face (huggingface.co and its
+            download servers), and the OCR tools download their recognition engine and language
             data from jsDelivr (cdn.jsdelivr.net). Those downloads go from the provider to you:
             like any web request they reveal your IP address and browser to that provider, but
             your file is never sent to them.
@@ -186,7 +186,7 @@ export const PrivacyPolicy: React.FC<PrivacyPolicyProps> = ({ onBack, onOpenCook
           </p>
           <p>
             The service providers named in this policy (Netlify, Supabase, Cloudflare, Google,
-            IMG.LY, jsDelivr and Razorpay) may process data in countries other than yours,
+            Hugging Face, jsDelivr and Razorpay) may process data in countries other than yours,
             including India and the United States. Where the law requires it, they rely on
             safeguards such as the European Commission's standard contractual clauses. You also
             have the right to complain to your local data protection authority.

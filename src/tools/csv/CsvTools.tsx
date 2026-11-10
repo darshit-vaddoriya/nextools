@@ -280,8 +280,8 @@ export const CsvEditorTool: React.FC = () => {
               {header.map((h, ci) => (
                 <th key={ci} className="px-1 py-1 border-b border-border">
                   <div className="flex items-center gap-1">
-                    <input value={h} onChange={(e) => updateCell(0, ci, e.target.value)} className="input-base w-28 font-bold text-[11px] px-2 py-1" />
-                    <button onClick={() => removeColumn(ci)} className="p-1 text-muted-foreground hover:text-danger shrink-0"><Minus className="w-3 h-3" /></button>
+                    <input value={h} onChange={(e) => updateCell(0, ci, e.target.value)} aria-label={`Column ${ci + 1} name`} className="input-base w-28 font-bold text-[11px] px-2 py-1" />
+                    <button onClick={() => removeColumn(ci)} aria-label={`Remove column ${ci + 1}`} className="p-1 text-muted-foreground hover:text-danger shrink-0"><Minus className="w-3 h-3" /></button>
                   </div>
                 </th>
               ))}
@@ -293,11 +293,11 @@ export const CsvEditorTool: React.FC = () => {
               <tr key={ri}>
                 {header.map((_, ci) => (
                   <td key={ci} className="px-1 py-1 border-b border-border">
-                    <input value={row[ci] ?? ''} onChange={(e) => updateCell(ri + 1, ci, e.target.value)} className="input-base w-28 font-mono text-[11px] px-2 py-1" />
+                    <input value={row[ci] ?? ''} onChange={(e) => updateCell(ri + 1, ci, e.target.value)} aria-label={`Row ${ri + 1}, ${header[ci] || `column ${ci + 1}`}`} className="input-base w-28 font-mono text-[11px] px-2 py-1" />
                   </td>
                 ))}
                 <td className="px-1 py-1 border-b border-border">
-                  <button onClick={() => removeRow(ri + 1)} className="p-1 text-muted-foreground hover:text-danger"><Trash2 className="w-3.5 h-3.5" /></button>
+                  <button onClick={() => removeRow(ri + 1)} aria-label={`Remove row ${ri + 1}`} className="p-1 text-muted-foreground hover:text-danger"><Trash2 className="w-3.5 h-3.5" /></button>
                 </td>
               </tr>
             ))}
@@ -769,7 +769,7 @@ export const MergeCsvTool: React.FC = () => {
             {files.map((f, i) => (
               <div key={`${f.name}-${i}`} className="flex items-center justify-between rounded-lg border border-border px-3 py-1.5 text-xs">
                 <span className="truncate text-muted-foreground">{f.name}</span>
-                <button onClick={() => removeFile(i)} className="p-1 text-muted-foreground hover:text-danger"><Trash2 className="w-3.5 h-3.5" /></button>
+                <button onClick={() => removeFile(i)} aria-label={`Remove ${f.name}`} className="p-1 text-muted-foreground hover:text-danger"><Trash2 className="w-3.5 h-3.5" /></button>
               </div>
             ))}
           </div>

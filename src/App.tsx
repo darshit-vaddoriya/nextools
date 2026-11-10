@@ -52,6 +52,8 @@ import { ConverterDirectory }     from './components/ConverterDirectory';
 import { CategoryDirectory }      from './components/CategoryDirectory';
 import { AppLink }                from './components/AppLink';
 import { FavoriteButton }         from './components/FavoriteButton';
+import { EmbedThisTool }          from './components/EmbedThisTool';
+import { EMBED_BY_ID }            from './config/embeds';
 import { ToolViewSkeleton }       from './components/Skeleton';
 import { useFavorites }           from './utils/favorites';
 import { useTheme }               from './utils/theme';
@@ -116,18 +118,36 @@ const ssrSafe = <T extends Record<string, unknown>>(loader: () => Promise<T>) =>
     ? () => loader().catch((e) => { if (process.env.DEBUG_TOOL_SSR) console.warn('ssrSafe', e); return {} as T; })
     : loader;
 
+type PreloadableFC = React.FC & { preload?: () => Promise<unknown> };
+
+/**
+ * A code-split tool. `preload()` fetches its module; once that has resolved the
+ * tool renders directly, with no Suspense fallback. The shell preloads a tool
+ * page's module before swapping out the prerendered markup (see renderTool),
+ * because showing the skeleton in between shifted the whole page twice:
+ * Lighthouse measured CLS 0.70 on /tool/json-formatter.
+ */
 const lazyComponent = (
   loader: () => Promise<Record<string, unknown>>,
   exportName: string,
-): React.FC => {
-  const Cmp = React.lazy(() =>
-    ssrSafe(loader)().then(m => ({ default: (m[exportName] ?? HeavyToolFallback) as React.ComponentType })),
-  );
-  return () => (
-    <React.Suspense fallback={<HeavyToolFallback />}>
-      <Cmp />
-    </React.Suspense>
-  );
+): PreloadableFC => {
+  let loaded: React.ComponentType | undefined;
+  let pending: Promise<React.ComponentType> | undefined;
+  const load = () => (pending ??= ssrSafe(loader)().then(m => {
+    loaded = (m[exportName] ?? HeavyToolFallback) as React.ComponentType;
+    return loaded;
+  }));
+  const Cmp = React.lazy(() => load().then(c => ({ default: c })));
+  const Tool: PreloadableFC = () => {
+    const Loaded = loaded;
+    return Loaded ? <Loaded /> : (
+      <React.Suspense fallback={<HeavyToolFallback />}>
+        <Cmp />
+      </React.Suspense>
+    );
+  };
+  Tool.preload = load;
+  return Tool;
 };
 
 const lazyTool = <K extends 'PdfMergeTool'>(
@@ -176,10 +196,8 @@ const CaseConverter          = lazyComponent(() => import('./tools/CaseConverter
 const JwtDecoder             = lazyComponent(() => import('./tools/JwtDecoder'), 'JwtDecoder');
 const TextCounter            = lazyComponent(() => import('./tools/TextCounter'), 'TextCounter');
 const ColorPicker            = lazyComponent(() => import('./tools/ColorPicker'), 'ColorPicker');
-const GlassmorphismGenerator = lazyComponent(() => import('./tools/GlassmorphismGenerator'), 'GlassmorphismGenerator');
 const AiBgRemover            = lazyComponent(() => import('./tools/AiBgRemover'), 'AiBgRemover');
 const DrawingTool            = lazyComponent(() => import('./tools/DrawingTool'), 'DrawingTool');
-const ImageDrawTool          = lazyComponent(() => import('./tools/image/ImageDrawTool'), 'ImageDrawTool');
 // pdf-lib (~470 KB) rides in on this one, so it must never be static.
 const PdfMergeFlow           = lazyComponent(() => import('./tools/pdf/PdfMergeFlow'), 'PdfMergeFlow');
 
@@ -549,6 +567,17 @@ export const App: React.FC<{
   const activeBlogTopic = route.blogTopic ?? null;
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const mounted = useMounted();
+  // The prerendered tool stays on screen until the live tool's module is in,
+  // so the swap is a single render at the same size, not markup → skeleton → tool.
+  const [toolReady, setToolReady] = useState(false);
+  useEffect(() => {
+    if (currentView !== 'tool') return;
+    let live = true;
+    const preload = (IMPLEMENTED_TOOLS[activeToolId] as PreloadableFC | undefined)?.preload;
+    const ready = () => { if (live) setToolReady(true); };
+    (preload ? preload() : Promise.resolve()).then(ready, ready);
+    return () => { live = false; };
+  }, [currentView, activeToolId]);
 
   const { preference: theme, resolvedDark, setTheme } = useTheme();
 
@@ -603,9 +632,9 @@ export const App: React.FC<{
     // The tool UI is prerendered into the HTML at build time (its labels and
     // reference text are part of what crawlers read; see toolHtmlFor in
     // src/astro/build.ts) but is not hydrated: tools are code-split and touch
-    // browser-only APIs. Until mount the client leaves that markup untouched,
-    // then swaps in the live tool.
-    if (!mounted) {
+    // browser-only APIs. The client leaves that markup untouched until the
+    // tool's module has loaded, then swaps in the live tool.
+    if (!toolReady) {
       return prerenderedTool ?? <ToolViewSkeleton />;
     }
     return <ToolBody toolId={activeToolId} plannedFeatures={data.plannedFeatures} onExit={goHome} />;
@@ -773,7 +802,7 @@ export const App: React.FC<{
  */
 const WHY_FEATURES = [
   { icon: Lock,              title: 'Your file stays in this tab', desc: 'Opening a file reads it from your disk into this browser tab. The work runs on your own processor: pdf-lib and pdf.js for PDFs, Tesseract for OCR, libarchive for RAR and 7z, and the browser\'s own encoder for MP4 and WebM. There is no upload step because there is no server to receive one.' },
-  { icon: Globe,             title: 'Two tools download extra code', desc: 'The AI background remover fetches its model from IMG.LY\'s CDN, and OCR fetches Tesseract and its language data from jsDelivr. That is code coming to you, not your file going out, and the browser caches it, so the second run starts straight away.' },
+  { icon: Globe,             title: 'Two tools download extra code', desc: 'The AI background remover fetches its model from Hugging Face, and OCR fetches Tesseract and its language data from jsDelivr. That is code coming to you, not your file going out, and the browser caches it, so the second run starts straight away.' },
   { icon: MonitorSmartphone, title: 'Your device sets the limits', desc: 'With no server doing the heavy lifting, how large a file a tool can handle depends on your memory and processor. A laptop merges a long PDF comfortably; a phone may struggle with a long 4K video. Each tool page lists its own limits.' },
   { icon: ShieldCheck,       title: 'What is stored, and where', desc: 'There are no accounts. Results you keep in My Files are saved in this browser\'s own storage and can be cleared from Settings. What reaches us is a message you send through the contact form, or a payment record if you choose to support the site.' },
   { icon: InfinityIcon,      title: 'Free, paid for by ads', desc: 'No paid tiers and no watermarks. The site is paid for by advertising and optional support payments. Analytics and advertising scripts see page visits, as the privacy policy explains, but never the contents of your files.' },
@@ -1384,6 +1413,10 @@ const ToolView: React.FC<{
                   <strong>Free and private.</strong> Everything runs on your own device, with no account and no uploads.
                 </p>
               </div>}
+
+              {!appMode && EMBED_BY_ID[activeTool.id] && (
+                <EmbedThisTool toolId={activeTool.id} toolName={activeTool.name} />
+              )}
 
               {/* Learn more / FAQs, lives in the main column so it fills the space below the
                   privacy note instead of leaving a gap when the sidebar runs taller. */}

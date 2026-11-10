@@ -1,0 +1,45 @@
+---
+// A tool by itself, for other sites to show in an <iframe> (see src/config/embeds.ts).
+// Deliberately not the shared layout: no Google Analytics or AdSense (ads may
+// not run inside someone else's page, and their visitors never consented to
+// our analytics), no service worker, no app shell. noindex, with the canonical
+// on the real tool page, so these never compete with it in search.
+import '@fontsource-variable/plus-jakarta-sans';
+import '@fontsource-variable/jetbrains-mono';
+import '../../../index.css';
+import EmbedIsland from '../../../islands/Embed';
+import { EMBEDS, EMBED_SITE } from '../../../config/embeds';
+import { TOOLS } from '../../../config/tools';
+
+export function getStaticPaths() {
+  return EMBEDS.map(e => ({ params: { tool: e.toolId } }));
+}
+
+const { tool: toolId } = Astro.params as { tool: string };
+const tool = TOOLS.find(t => t.id === toolId)!;
+const canonical = `${EMBED_SITE}/tool/${toolId}`;
+---
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{tool.name} | NextTool</title>
+    <meta name="description" content={tool.description} />
+    <meta name="robots" content="noindex, follow" />
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <script is:inline>
+      // ?theme=dark or ?theme=auto (follows the visitor's OS); light otherwise.
+      try {
+        var t = new URLSearchParams(location.search).get('theme');
+        if (t === 'dark' || (t === 'auto' && matchMedia('(prefers-color-scheme: dark)').matches)) {
+          document.documentElement.classList.add('dark');
+        }
+      } catch (e) {}
+    </script>
+  </head>
+  <body class="font-sans antialiased">
+    <EmbedIsland client:load toolId={toolId} />
+  </body>
+</html>

@@ -280,10 +280,14 @@ export const MimeCheckerTool: React.FC = () => {
    4. HTML Entity Encoder/Decoder
 ───────────────────────────────────────────────────────── */
 
+// Exactly what serialising a text node through innerHTML escapes, written out
+// so the tool also renders at build time, where there is no DOM.
 function htmlEncode(str: string): string {
-  const div = document.createElement('div');
-  div.textContent = str;
-  return div.innerHTML;
+  return str
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/\u00a0/g, '&nbsp;');
 }
 
 function htmlDecode(str: string): string {

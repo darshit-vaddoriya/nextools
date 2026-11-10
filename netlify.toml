@@ -6,10 +6,13 @@
 [build.environment]
   NODE_VERSION = "22"
 
+# X-Frame-Options is not set here: /embed/* pages must be frameable by other
+# sites, and a header from this catch-all would also land on them (Netlify
+# applies every matching rule). The build writes dist/_headers with
+# X-Frame-Options: DENY for every other page; see writeHeaders in astro.config.ts.
 [[headers]]
   for = "/*"
   [headers.values]
-    X-Frame-Options = "DENY"
     X-Content-Type-Options = "nosniff"
     Referrer-Policy = "strict-origin-when-cross-origin"
     Permissions-Policy = "camera=(), microphone=(), geolocation=()"

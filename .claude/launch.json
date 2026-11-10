@@ -22,6 +22,15 @@
         "4180"
       ],
       "port": 4180
+    },
+    {
+      "name": "dist-static",
+      "runtimeExecutable": "node",
+      "runtimeArgs": [
+        "scripts/serve-dist.mjs",
+        "4190"
+      ],
+      "port": 4190
     }
   ]
 }

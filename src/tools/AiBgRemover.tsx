@@ -356,7 +356,7 @@ export const AiBgRemover: React.FC = () => {
             <div className="h-full bg-primary transition-[width] duration-300" style={{ width: `${progress}%` }} />
           </div>
           <p className="text-[11px]  text-muted-foreground">
-            First run downloads the AI model (~85 MB) and caches it, then processing is instant. Your image stays on your device.
+            First run downloads the AI model (115–180 MB, depending on your browser) and caches it, so later runs skip the download. Your image stays on your device.
           </p>
         </div>
       )}
