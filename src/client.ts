@@ -4,7 +4,10 @@ import { initPwa } from './lib/pwa';
 
 initPwa();
 
-if (AD_CONFIG.enabled && !AD_CONFIG.client.includes('XXXX')) {
+// Same rule as the tag loader in src/astro/head.html: only the live site asks for ads.
+const liveHost = location.hostname === 'nexttool.click' || location.hostname === 'www.nexttool.click';
+
+if (liveHost && AD_CONFIG.enabled && !AD_CONFIG.client.includes('XXXX')) {
   const adScript = document.createElement('script');
   adScript.async = true;
   adScript.crossOrigin = 'anonymous';

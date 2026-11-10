@@ -33,6 +33,11 @@
       gtag('config', 'G-M60L9W8G3B');
 
       (function () {
+        // Only the live site reports. localhost, `astro preview` and Netlify
+        // deploy previews (*.netlify.app) would otherwise count as real
+        // visits in Analytics and request ads from AdSense.
+        var host = location.hostname;
+        if (host !== 'nexttool.click' && host !== 'www.nexttool.click') return;
         var TAGS = [
           'https://www.googletagmanager.com/gtag/js?id=G-M60L9W8G3B',
           'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3383457039703768',
