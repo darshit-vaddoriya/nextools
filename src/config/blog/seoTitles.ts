@@ -55,4 +55,5 @@ export const BLOG_SEO_TITLES: Record<string, string> = {
   'http-status-codes-that-matter': 'HTTP status codes that matter for SEO',
   'reading-text-off-an-image': 'OCR explained: reading text from an image, and its limits',
   'what-a-file-conversion-keeps-and-loses': 'What a file conversion keeps and what it loses',
+  'converting-xml-to-json-and-back': 'XML to JSON: attributes, arrays and round-trip losses',
 };

@@ -218,6 +218,7 @@
 
 ## Guides
 
+- [XML to JSON and back: attributes, one-item arrays and what a round trip changes](https://nexttool.click/blog/converting-xml-to-json-and-back): How XML maps to JSON: @attributes, #text, why one item is an object but two are an array, guessed number types, and what converting back loses.
 - [Converting a video: when it is a copy, when it is a re-encode, and why some files refuse](https://nexttool.click/blog/converting-video-copy-or-re-encode): Why MOV to MP4 can take two seconds or two minutes: when a converter copies streams, when it must re-encode, and why HEVC, AVI and WMV files fail.
 - [Hindi text in files: boxes, question marks and broken copy-paste](https://nexttool.click/blog/hindi-text-in-files-and-pdfs): Why Hindi turns into boxes, question marks or gibberish in PDFs and documents, Unicode versus old Hindi fonts, and getting text out of a scan.
 - [Getting a photo or signature under an online form's size limit](https://nexttool.click/blog/photo-and-signature-size-for-online-forms): Online application forms ask for a photo under 50 KB at exact pixel sizes. What KB, pixels and DPI each mean, and the order of steps that gets a file accepted.

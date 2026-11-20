@@ -267,4 +267,9 @@ export const FURTHER_READING: Record<string, FurtherReading[]> = {
   'lakh-crore-and-amounts-in-words': [
     { title: 'Number.prototype.toLocaleString()', publisher: 'MDN Web Docs', url: 'https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/toLocaleString' },
   ],
+  'converting-xml-to-json-and-back': [
+    { title: 'Extensible Markup Language (XML) 1.0', publisher: 'W3C', url: 'https://www.w3.org/TR/xml/' },
+    { title: 'RFC 8259: The JavaScript Object Notation (JSON) Data Interchange Format', publisher: 'RFC Editor', url: 'https://www.rfc-editor.org/rfc/rfc8259.html' },
+    { title: 'DOMParser', publisher: 'MDN Web Docs', url: 'https://developer.mozilla.org/en-US/docs/Web/API/DOMParser' },
+  ],
 };

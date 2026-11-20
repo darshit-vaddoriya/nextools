@@ -396,4 +396,23 @@ export const DEV_POSTS: BlogPost[] = [
     ],
     words: 821,
   },
+
+  {
+    slug: 'converting-xml-to-json-and-back',
+    title: 'XML to JSON and back: attributes, one-item arrays and what a round trip changes',
+    description: 'How XML maps to JSON: @attributes, #text, why one item is an object but two are an array, guessed number types, and what converting back loses.',
+    excerpt: 'Monday\'s order has one item and converts to an object. Tuesday\'s has two and converts to an array, and the code that read Monday\'s crashes. XML and JSON do not describe the same things.',
+    category: 'dev',
+    tags: ['xml', 'json', 'conversion', 'api', 'data'],
+    published: '2026-11-20',
+    relatedTools: ['xml-to-json', 'json-to-xml', 'xml-formatter', 'json-formatter'],
+    takeaways: [
+      'There is no standard XML-to-JSON mapping. This converter writes attributes as "@name" keys and shared text as "#text"; other libraries use other conventions, so convert both ways with the same tool.',
+      'An element that appears once becomes an object and one that repeats becomes an array. Normalise every list-like element to an array in your code.',
+      'Values are typed from text: 3 and true are converted, 007 and very long IDs stay strings, and 1.50 becomes 1.5.',
+      'A round trip keeps data-shaped XML intact but loses comments, whitespace, the order between different elements and the position of text mixed with markup.',
+      'JSON to XML renames keys that are not valid XML names and drops empty arrays entirely.',
+    ],
+    words: 1479,
+  },
 ];

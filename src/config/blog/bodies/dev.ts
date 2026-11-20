@@ -1381,4 +1381,104 @@ Those fonts work by drawing Devanagari shapes in place of English letters. The f
 A scanned form or a photo of a printed page has no text at all, only pixels. To get editable Hindi from it, you need OCR with the Hindi language model. The [image OCR](/tool/ocr-image) tool offers Hindi, and English plus Hindi together for mixed documents such as forms with English labels. The [PDF OCR](/tool/pdf-ocr) tool offers Hindi for scanned PDFs: it gives you the recognised text to copy, but because of the font limit described above, the PDF it saves stays image-only for Hindi. Either way the text you copy is Unicode, so it can be pasted anywhere.
 
 OCR on Devanagari is less accurate than on English, especially for conjuncts, small print and low-contrast scans. Scan at 300 DPI or more, keep the page flat and well lit, and proofread the result, paying particular attention to matras and half letters, which are the most common mistakes.`,
+  'converting-xml-to-json-and-back': `A supplier sends an XML order feed. Monday's order has one item, you convert it to JSON, and your code reads \`order.item.sku\`. Tuesday's order has two items, the same conversion produces an array, and \`order.item.sku\` is suddenly \`undefined\`. Nothing is wrong with the converter. XML and JSON describe different kinds of things, and every conversion between them is a set of decisions about how to squeeze one into the other.
+
+## Why there is no single right answer
+
+JSON has six kinds of value: objects, arrays, strings, numbers, booleans and null. XML has none of those. It has elements, attributes on those elements, text between them, comments, processing instructions and namespaces, and it keeps everything in document order. An element can hold text and child elements at the same time. An attribute and a child element can share a name.
+
+There is no standard that says how to map one onto the other, so every library invents a convention. This site's converter uses the most common one: attributes become keys starting with \`@\`, element text sits under \`#text\` when it has to share an object with attributes or children, and an element that appears more than once becomes an array. Other libraries choose differently. The Node package xml2js, for example, puts attributes under a \`$\` key and text under \`_\`, so JSON produced by one tool is not something another tool's reverse conversion understands. If XML is going to come back out the other end, convert in both directions with the same tool.
+
+Here is how the [XML to JSON converter](/tool/xml-to-json) maps the common cases:
+
+| XML | JSON |
+|---|---|
+| \`<title>Dune</title>\` | \`"title": "Dune"\` |
+| \`<book id="7"/>\` | \`"book": { "@id": 7 }\` |
+| \`<item sku="A1">Pen</item>\` | \`"item": { "@sku": "A1", "#text": "Pen" }\` |
+| \`<note/>\` or \`<note></note>\` | \`"note": null\` |
+| Two \`<item>\` elements in a row | \`"item": [ {...}, {...} ]\` |
+| \`<dc:title>\` | \`"dc:title"\`, prefix kept |
+
+## One item is an object, two are an array
+
+This is the problem from the opening, and it catches almost everyone once. A converter that reads only the document cannot know that \`<item>\` is the kind of element that repeats. It sees one, and writes an object:
+
+\`\`\`json
+{ "order": { "item": { "@sku": "A1", "#text": "Pen" } } }
+\`\`\`
+
+It sees two, and writes an array:
+
+\`\`\`json
+{ "order": { "item": [
+  { "@sku": "A1", "#text": "Pen" },
+  { "@sku": "B2", "#text": "Ink" }
+] } }
+\`\`\`
+
+And for an order with no items, the \`item\` key is not there at all. A schema (XSD) would say \`maxOccurs="unbounded"\` and settle the question, but the document alone does not carry that information.
+
+The fix belongs in your code, at the point where you read the converted data. Normalise every element you know can repeat into an array, whatever shape it arrived in:
+
+\`\`\`js
+const asArray = (v) => (v == null ? [] : Array.isArray(v) ? v : [v]);
+const items = asArray(data.order.item);
+\`\`\`
+
+Do this for every list-like element, not only the ones that happened to repeat in your sample. The sample is exactly what misled you.
+
+## Types are guessed from text
+
+Everything in XML is text. \`<qty>3</qty>\` contains the characters "3", not the number three. A converter that left every value as a string would be correct and annoying, so this one types the values that are obviously numbers or booleans and leaves the rest alone. Running a sample through it:
+
+| XML | JSON | Why |
+|---|---|---|
+| \`<qty>3</qty>\` | \`3\` | Plain integer |
+| \`<gift>true</gift>\` | \`true\` | Exactly true or false |
+| \`<pin>380015</pin>\` | \`380015\` | Plain integer |
+| \`<id>007</id>\` | \`"007"\` | A leading zero would be lost, so it stays text |
+| \`<ref>919876543210123456</ref>\` | \`"919876543210123456"\` | Too long to be a safe JavaScript number |
+| \`<price>1.50</price>\` | \`1.5\` | A decimal, so typed, and the trailing zero goes |
+
+The last row is the one to watch. A price written as 1.50 comes back as 1.5, and converting the JSON back to XML writes \`<price>1.5</price>\`. The value is the same number, but if a receiving system compares the text, or a report prints it, the difference shows. Format money with two decimals when you display it, rather than trusting the converted value to keep its original spelling.
+
+The reverse direction has the opposite loss. A JSON string \`"7"\` becomes \`<id>7</id>\`, and XML has no way to record that it was a string. Convert it back and you get the number \`7\`.
+
+## What a round trip loses
+
+For data-shaped XML, such as feeds, sitemaps, API responses and configuration files, XML to JSON and back gives you the same document in every way that matters. We tested the cases where it does not, and they share a pattern: anything XML records that JSON has no slot for.
+
+**Order between different elements.** \`<a>1</a><b>2</b><a>3</a>\` becomes \`{ "a": [1, 3], "b": 2 }\`, because both \`a\` values have to live under one key. Back in XML it reads \`<a>1</a><a>3</a><b>2</b>\`. That matters when position carries meaning, such as a playlist of interleaved \`<song>\` and \`<ad>\` elements.
+
+**Text mixed with elements.** \`<p>Pay <b>now</b> or later</p>\` becomes \`{ "b": "now", "#text": "Pay  or later" }\`. The text pieces are joined and the bold word no longer has a position in the sentence. Converted back, the paragraph reads "Pay  or later" followed by "now". This is why document-shaped XML, such as XHTML, DocBook or the XML inside a Word file, should not go through a JSON conversion at all. Work on it with an XML tool instead.
+
+**Comments and processing instructions.** \`<!-- note -->\` disappears, and the output always gets a fresh UTF-8 declaration.
+
+**CDATA sections.** \`<![CDATA[Tom & Jerry]]>\` becomes the plain string "Tom & Jerry", and on the way back it is written as \`Tom &amp; Jerry\`. To an XML parser those are identical. To a byte-for-byte comparison they are not.
+
+**Whitespace around text.** \`<code>  A1  </code>\` becomes "A1". For fixed-width fields where the padding is part of the value, that is a real change.
+
+**Exact bytes.** Even when the meaning survives, the formatting changes: attribute quotes, indentation, self-closing tags. If the XML carries a digital signature, as some e-invoices and bank files do, any of these changes breaks it. Keep the original file and convert a copy.
+
+Namespaces, on the other hand, survive. A declaration like \`xmlns:dc="..."\` becomes an \`@xmlns:dc\` key and \`dc:title\` keeps its prefix, so the round trip restores both. In JavaScript you will need bracket access, \`item["dc:title"]\`, because of the colon.
+
+## JSON to XML has its own gaps
+
+Going the other way with [JSON to XML](/tool/json-to-xml), JSON allows things XML does not.
+
+- **Keys that are not valid XML names.** XML names cannot contain spaces or start with a digit, so \`"first name"\` becomes \`<first_name>\` and \`"2024"\` becomes \`<_2024>\`. The output is well-formed, but converting it back gives you the new names, not the originals.
+- **Empty arrays.** \`"tags": []\` has no items to repeat, so it produces no element at all. Converting back, the key is simply missing. An empty object \`{}\` becomes \`<meta/>\` and comes back as \`null\`.
+- **More than one top-level key.** XML needs exactly one root element, so \`{ "a": 1, "b": 2 }\` is wrapped as \`<root><a>1</a><b>2</b></root>\`, and a top-level array becomes \`<root><item>...</item></root>\`. Converted back, your data sits one level deeper, under \`root\`. Wrap your JSON in a single key yourself if you want to choose the root's name.
+- **Element order.** Some XML schemas require children in a fixed order. The JSON specification calls objects unordered, and while converters keep keys in the order they appear, check the result against the target's schema before you send it to a SOAP service or a filing portal.
+
+## Before you convert
+
+1. **Decide what kind of XML it is.** Records and fields convert cleanly. Paragraphs with inline markup do not.
+2. **Validate it first.** A missing closing tag stops any conversion. The [XML Formatter](/tool/xml-formatter) shows the parser's error, which in most browsers names the line and column where it gave up.
+3. **Normalise lists in your code.** Treat every element that can repeat as an array, whatever one sample showed.
+4. **Check values that look like numbers.** IDs, phone numbers and prices are where guessed types bite. Choosing YAML as the output instead of JSON makes deeply nested results easier to read and check by eye.
+5. **Keep the original.** Signed documents, exact formatting and comments only exist in the source file.
+
+Both converters run in your browser: the file is parsed by the browser's own XML parser, converted in the tab and handed back as a download. For a supplier feed, a bank export or an API response full of customer records, that means the data never leaves your machine.`,
 };
